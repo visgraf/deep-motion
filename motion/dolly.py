@@ -322,6 +322,24 @@ def flow_depth_cmd(a) -> int:
     return rc
 
 
+def flow_depth_fixtures(a) -> int:
+    from . import flow_fixtures, matcher
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    t0 = time.perf_counter()
+    res = flow_fixtures.run_fixtures(sensors.Foveated().model("full"), log=lambda m: print(m, flush=True))
+    res.update({"schema": "foveal-motion-m3-fixtures-v1", "settings": matcher.SETTINGS,
+                "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
+                "seconds": round(time.perf_counter() - t0, 1)})
+    (out / "fixtures.json").write_text(json.dumps(res, indent=1, default=float))
+    for g in res["gates"]:
+        print(f"{PREFIX} fixture gate {'PASS' if g['ok'] else 'FAIL'} {g['fixture']}/{g['label']} B {g['B_m']:.3f}: "
+              f"median {g['median_px']} p90 {g['p90_px']} accepted {g['accepted_fraction']}")
+    print(f"{PREFIX} {'ALL PASS' if res['ok'] else 'NOT ALL PASS'}, controls {'all fail' if res['controls_fail'] else 'NOT ALL FAIL'}"
+          f" ({res['seconds']} s) -> {out / 'fixtures.json'}")
+    return 0 if res["ok"] and res["controls_fail"] else 1
+
+
 # ----------------------------------------------------------------------------- visualize
 
 def visualize(a) -> int:
@@ -404,6 +422,8 @@ def main(argv=None) -> int:
     sub.add_parser("selftest")
     p = sub.add_parser("flow-depth-selftest")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("flow-depth-fixtures")
+    p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth")
     p.add_argument("--run", required=True)
     p.add_argument("--mode", default="ahead")
@@ -422,7 +442,7 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     return {"preflight": preflight, "run": run, "checks": checks, "visualize": visualize, "selftest": selftest,
             "sandbox": sandbox, "depth": depth_cmd, "flow-depth-selftest": flow_depth_selftest,
-            "flow-depth": flow_depth_cmd}[a.cmd](a)
+            "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures}[a.cmd](a)
 
 
 if __name__ == "__main__":

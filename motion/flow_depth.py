@@ -272,3 +272,22 @@ def selftest() -> tuple[list, dict]:
     num["grid"] = {"shape": list(g.shape), "supported_fraction": float(sup.mean()), "by_ecc_deg": rows}
     res.append(("grid: every supported node's bilinear footprint is on valid pixels", bool(ok_sup)))
     return res, num
+
+
+# ----------------------------------------------------------------------------- RGB correspondences
+
+def rgb_correspondences(oa: Obs, ob: Obs, B: float, settings: dict | None = None) -> dict:
+    """The matcher on two observed looks (luminance of the linear RGB), in the correspondence format
+    of the oracle sources. Accepted matches only carry finite intervals; every anchor keeps its reason."""
+    from . import matcher
+    if not (isinstance(oa.model, FoveatedModel) and oa.model.n == ob.model.n):
+        raise ValueError("M3a matches Foveated looks of one raster size")
+    r = matcher.match_pair(matcher.luminance(oa.rgb), matcher.luminance(ob.rgb), ob.model, B, settings)
+    n = ob.model.n
+    inv = np.full(n * n, -1, dtype=np.int64)
+    inv[ob.rec.raster_index] = np.arange(ob.rec.n_samples)
+    sample_b = inv[r["flat"]]
+    keep = sample_b >= 0
+    out = {k: (v[keep] if isinstance(v, np.ndarray) and v.shape[:1] == r["flat"].shape else v) for k, v in r.items()}
+    out.update({"source": "rgb", "sample_b": sample_b[keep]})
+    return out
