@@ -19,6 +19,7 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D6 | The dolly's hole limit (Luiz, 2026-11-12, issue #1) | 0.046 in `paths/classroom_dolly.json`: the scene's 0.025 failed at heads 6–46 (0.0250–0.0383), every hole on the right-hand window band; the measured maximum plus about a fifth, as D18 |
 | M-D7 | The next step after M1 (Luiz, 2026-11-12, in Chat) | M2: range from the head's motion on the foveated raster, with M1's path run again fixating a target far off the path's line |
 | M-D8 | The side target (Luiz, 2026-11-12, issue #3, option A) | accept what `target_ray` finds, `worldMap` at (−2.116, 3.540, 1.323): a hanging map 3.3 cm proud of the front wall, visible from every head, 22°→47° off the heading; the target sits 6.5 cm above the map's lower edge, so the fovea holds a small depth step. The spec is unchanged |
+| M-D9 | M3, depth from RGB log-polar flow (Luiz, 2026-11-14, in Chat; #5 reviewed there) | #5's plan amended (A1–A8 of #6: shift + radial-stretch matcher, radial-gradient texture score, patch sizes in native pixels, ray-based sensor-agnostic code, M2's bracket as the reference, interval calibration on the calibration room, static figures first, the oracle ladder O1–O3 before any RGB matching) and split: M3a (#6, Chat, calibration room) builds and freezes the estimator; M3b (#7, Code, Classroom `dolly-1`) runs it unchanged |
 
 ## Experiment M1, the dolly
 
