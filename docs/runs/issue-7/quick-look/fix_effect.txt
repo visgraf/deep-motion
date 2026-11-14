@@ -1,0 +1,4 @@
+identical arrays: ['B', 'd', 'd_back', 'd_coarse', 'e_b', 'flat', 'ka', 'kappa', 'kb', 'ncc_coarse', 'ncc_fine', 'ncc_second', 'phi_b', 'px_per_q_a', 'q_b', 'sample_b', 'sigma_d', 'sigma_px', 'support', 'texture']
+differing (array, elements): [('reason', 3)]
+anchors whose reason changed: 3 of 48752: {'accepted -> half_disagree': 3}
+accepted before / after: 3591 3588

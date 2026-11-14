@@ -1,0 +1,4 @@
+# python -c "...matcher.REASONS per pair..." (Chat's command, #7), at 3927982 (clean)
+a0000-b0005.npz {'accepted': 3588, 'invalid_support': 2347, 'low_texture': 340, 'low_ncc': 23326, 'ambiguous': 6515, 'unresolved_far': 1594, 'near_boundary': 23, 'gn_failed': 1203, 'fb_inconsistent': 2268, 'unsupported': 2382, 'depth_edge': 2035, 'half_disagree': 3131}
+a0020-b0025.npz {'accepted': 3951, 'invalid_support': 2349, 'low_texture': 340, 'low_ncc': 23318, 'ambiguous': 5516, 'unresolved_far': 1901, 'near_boundary': 36, 'gn_failed': 1177, 'fb_inconsistent': 1987, 'unsupported': 2134, 'depth_edge': 2444, 'half_disagree': 3599}
+a0040-b0045.npz {'accepted': 4657, 'invalid_support': 2347, 'low_texture': 339, 'low_ncc': 24051, 'ambiguous': 4343, 'unresolved_far': 1831, 'near_boundary': 16, 'gn_failed': 1055, 'fb_inconsistent': 1361, 'unsupported': 1824, 'depth_edge': 2819, 'half_disagree': 4109}

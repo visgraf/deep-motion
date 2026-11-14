@@ -1,42 +1,12 @@
-18:55:52 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
-18:55:52   den = cm - 2 * c1 + cp
-18:55:55 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
-18:55:55   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
-18:56:06 /home/lvelho/rd/foveal-motion/motion/matcher.py:214: RuntimeWarning: invalid value encountered in subtract
-18:56:06   r = Ib - alpha[:, None] * Ia - beta[:, None]
-18:56:06 /home/lvelho/rd/foveal-motion/motion/matcher.py:215: RuntimeWarning: invalid value encountered in multiply
-18:56:06   J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
-18:56:07 [flow-depth] rgb pair (0, 5) B 0.495 m: accepted 0.074, 17.4 s
-18:56:18 Traceback (most recent call last):
-18:56:18   File "<frozen runpy>", line 198, in _run_module_as_main
-18:56:18   File "<frozen runpy>", line 88, in _run_code
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 525, in <module>
-18:56:18     sys.exit(main())
-18:56:18              ^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 517, in main
-18:56:18     return {"preflight": preflight, "run": run, "checks": checks, "visualize": visualize, "selftest": selftest,
-18:56:18            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 300, in flow_depth_cmd
-18:56:18     cfg = flow_depth.estimate(r, a.mode, a.strides, Path(a.out), pairs=flow_depth.parse_pairs(a.pairs), git=git,
-18:56:18           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/flow_depth.py", line 342, in estimate
-18:56:18     c = rgb_correspondences(obs[ka], obs[kb], B, s)
-18:56:18         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/flow_depth.py", line 285, in rgb_correspondences
-18:56:18     r = matcher.match_pair(matcher.luminance(oa.rgb), matcher.luminance(ob.rgb), ob.model, B, settings)
-18:56:18         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/matcher.py", line 328, in match_pair
-18:56:18     fine = _gn(img_a, img_b, model, qb, pb, gq_b, gp_b, d0, s)
-18:56:18            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/matcher.py", line 186, in _gn
-18:56:18     r = _gn1(img_a, img_b, model, qb[retry], pb[retry], gq[retry], gp[retry], d0[retry], k0, s)
-18:56:18         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/motion/matcher.py", line 265, in _gn1
-18:56:18     step = -np.linalg.solve(H, gvec[..., None])[..., 0]
-18:56:18             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/.venv/lib/python3.12/site-packages/numpy/linalg/_linalg.py", line 410, in solve
-18:56:18     r = gufunc(a, b, signature=signature)
-18:56:18         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-18:56:18   File "/home/lvelho/rd/foveal-motion/.venv/lib/python3.12/site-packages/numpy/linalg/_linalg.py", line 104, in _raise_linalgerror_singular
-18:56:18     raise LinAlgError("Singular matrix")
-18:56:18 numpy.linalg.LinAlgError: Singular matrix
+19:21:40 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+19:21:40   den = cm - 2 * c1 + cp
+19:21:43 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+19:21:43   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+19:21:54 /home/lvelho/rd/foveal-motion/motion/matcher.py:248: RuntimeWarning: invalid value encountered in subtract
+19:21:54   r = Ib - alpha[:, None] * Ia - beta[:, None]
+19:21:54 /home/lvelho/rd/foveal-motion/motion/matcher.py:249: RuntimeWarning: invalid value encountered in multiply
+19:21:54   J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
+19:21:55 [flow-depth] rgb pair (0, 5) B 0.495 m: accepted 0.074, 16.7 s
+19:22:11 [flow-depth] rgb pair (20, 25) B 0.495 m: accepted 0.081, 16.9 s
+19:22:28 [flow-depth] rgb pair (40, 45) B 0.495 m: accepted 0.096, 16.9 s
+19:22:28 [dolly] rgb estimate: 3 pairs in 50.4 s -> runs/m3-classroom-look
