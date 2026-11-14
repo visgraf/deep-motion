@@ -399,3 +399,38 @@ A first reading: the matcher reaches 0.03–0.06 px median on textured synthetic
 ladder asks for; long baselines on surfaces parallel to the heading are where it runs out (17 % accepted at 1 m), as
 the A1 amendment expected. Whether the renders' noise and texture allow the same is the calibration room's question
 (Stages 4–5).
+
+### Real renders: first calibration-room pairs (M3a Stages 4–5 under way, Chat sandbox)
+
+**Protocol** (`33bfcad`). `flow-depth --correspondence rgb` runs the matcher on observation fields only and hashes its
+inputs; `flow-depth-calibrate` opens truth for the declared calibration set only (pairs with even ka), sets the interval
+scale to the 95th percentile of |d − d_true| / σ_d over accepted **interior** anchors / 1.96, and writes `freeze.json`
+(settings, scale, hashes of every estimation output); `flow-depth-evaluate` verifies the freeze, writes the PLYs without
+truth, then opens the held-out pairs (odd ka) for M3.COV (≥ 0.90 coverage of nominal 95 % intervals; control: intervals
+× 0.5), M3.CAL (#5's calibration gate at stride 5; control: baseline × 1.2) and M3.PLY. Anchors within 2 px of an
+object boundary in b are **edge** and evaluated apart: Position averages a pixel's samples, so its truth is not a
+surface point there (#5's failure-mode table). The first evaluation code omitted that; it is now in.
+
+**What the first pairs showed** (pair (0, 5), calibration set):
+
+1. **Foreground fattening at the cards' edges.** 14 % of accepted matches were > 1 px off, in bands just outside the
+   Siemens-star cards: a patch straddling a card edge is dragged to the card's motion. Two tests followed, both checked
+   on this pair before being kept: *half windows* (the inner and outer radial halves, fitted alone with κ held, must be
+   informative, σ ≤ 0.25 px, and agree within 0.5 px) and *depth edge* (no candidate within ± 3 px may deviate from the
+   anchor's d + κ u by more than 0.5 px). With both, the interval scale is 1.66 (2.46 without), usable interior range
+   is about the same (0.066 against 0.062 of all hits), and usable edge points over 50 % wrong fall from 11 % to 7 %.
+2. **91 % of the remaining > 1 px errors lie within 2 px of an object boundary**, where the truth itself is unreliable.
+   Interior accepted matches: median 0.069 px, p90 0.20 px, 0.9 % over 1 px.
+
+Fixtures rerun with the two tests (`33bfcad`, clean, 687 s, [`fixtures_33bfcad.json`](runs/issue-6/fixtures_33bfcad.json)):
+all 13 gates PASS, every control fails; acceptance 3–8 points lower; occlusion edges now 1.1 % over 1 px of accepted
+(was 6.5 %).
+
+**Smoke evaluation** (pairs (0, 5), (1, 6) calibrating, (3, 8) held out; [`smoke_evaluation.json`](runs/issue-6/smoke_evaluation.json)).
+Both smoke runs opened truth of a pair meant for the held-out set, (1, 6) and then (3, 8); both are therefore moved to
+the calibration set for the full run. Scale 1.68. M3.COV PASS (0.943, control 0.730); M3.PLY PASS; **M3.CAL FAIL on
+coverage**: of the textured, jointly visible, interior 5–40° hits only 0.113 are usable (gate ≥ 0.50), with median range
+error 1.8 % and p90 5.2 % (gate ≤ 5 %, ≤ 10 %). Field usable 0.108, against 0.114 for pixel-rounded oracle matches (O2)
+and 0.846 for 0.1 px oracle matches (O3) on the same pair: **the matcher is precise where it accepts, but it accepts
+about a quarter to a third of the anchors**, mainly rejected as low NCC (plain checker walls under 64 spp noise) and
+ambiguous (the Siemens stars' spokes look periodic along a radial search line).

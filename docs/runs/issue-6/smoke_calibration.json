@@ -1,0 +1,30 @@
+{
+ "schema": "foveal-motion-m3-calibration-v1",
+ "set": "pairs with even ka, and [[1, 6]]",
+ "pairs": [
+  [
+   0,
+   5
+  ],
+  [
+   1,
+   6
+  ]
+ ],
+ "method": "interval_scale = 95th percentile of |d - d_true| / sigma_d over accepted interior anchors (hit, more than 2 px from an object boundary in b), / 1.96",
+ "n": 10099,
+ "interval_scale": 1.6757629949664625,
+ "abs_z_quantiles": {
+  "0.5": 0.9297887228621401,
+  "0.68": 1.4136309790244537,
+  "0.9": 2.5767579316721556,
+  "0.95": 3.2844351167592425,
+  "0.99": 8.667556164107458
+ },
+ "by_stride": {
+  "5": {
+   "n": 10099,
+   "scale_if_alone": 1.6757629949664625
+  }
+ }
+}
