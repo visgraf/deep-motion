@@ -451,3 +451,12 @@ unwrapped (q, φ) images, |J_b − J_a| before and after moving J_a by the estim
 estimate, interval and the evaluation truth) and `slit_scan` (one azimuth over the whole sequence, with the traces the
 pair's two-frame depths predict for every frame, and the multi-frame relation cot e = (z_b − s) / L). Truth overlays are
 drawn dashed and marked EVALUATION; `--no-truth` omits them. An unfrozen result needs `--scale`, shown as provisional.
+
+**Flat-patch guard (#7, `7bb5e70`; Luiz's OK on #7, freeze moved there).** The frozen matcher raised `LinAlgError` on
+Classroom pair (20, 25): an anchor whose look-a patch lay on the ceiling lamps' glass (constant luminance 2.00018) gave
+a gain of 5e14 and a rank-1 system that stopped the whole batch (Code's diagnosis). A look-a patch flatter than 1e-9 is
+now rejected (`gn_failed`), and a singular batch is solved row by row. Against `1a1ffc9` the outputs are bit for bit
+identical on calibration-room pair (0, 5) and the front and corridor fixtures (Chat sandbox,
+[`identity_check.txt`](runs/issue-7/fix/identity_check.txt)). On the Classroom, which has flat emitters, they are not
+quite: at pair (0, 5) 3 of 48,752 anchors move from accepted to `half_disagree` through the guard in `_half`, every
+other array identical (Code, workstation, `fix_effect.txt` on `experiment/m3b-flow-depth-classroom`).
