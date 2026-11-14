@@ -353,3 +353,49 @@ O1's row is the ceiling: the jointly visible share. A first reading, to be check
    p90 ≤ 0.25 px) from a guess into the measured requirement.
 3. **The fovea still gives nothing at short baselines.** Below 2°, stride 5 needs σ ≈ 0.05 px (0.716); at 0.1 px it is
    0.025, at pixel rounding 0. Looking ahead, the fovea's depth is a long-baseline matter, as M2 found.
+
+### The matcher and its synthetic fixtures (M3a Stage 3, Chat sandbox)
+
+**Matcher** ([`motion/matcher.py`](../motion/matcher.py), observation only: two luminance rasters, the sensor model, B).
+*Coarse* on the log-polar grid (q step 0.01, 800 azimuths): a fronto-parallel patch moves by one q shift
+everywhere, so every node is searched at once by shifting the whole grid; zero-mean NCC over ± 3 native px radially and
+± 1 native px in azimuth (window sizes per grid row, A3); d = 0 included. *Fine* on the native raster through
+`pixel_of`, at b's own pixels between 1° and 44°: Gauss–Newton on I_b(q + u, φ + v) = α I_a(q + u − d − κu, φ + v) + β,
+with κ the radial stretch (A1; about B / z_a on a surface parallel to the heading), started at κ = 0 and, where that fit's
+NCC is under 0.97, also at 0.25 and 0.5; σ_d from the Gauss–Newton covariance. *Rejections*, each recorded: invalid
+support, radial texture under 0.02 (A2: rms radial gradient per native px over the patch mean), NCC under 0.8, a second
+peak within 0.05 outside ± 1.5 px, beyond the 20 m envelope (unresolved), near boundary (0.25 m), Gauss–Newton moved
+> 1.5 px or κ outside [−0.5, 1.5], forward–backward disagreement > 1 px, and fewer than 3 of the 8 neighbouring pixels
+holding a candidate within 0.5 px (a test, not a filter: nothing is smoothed or replaced).
+
+*Added after the first fixture run* (at the uncommitted state before `afe3c58`; the gates were already fixed): that run
+passed every gate but one, the corridor's parallel surfaces at B ≈ 1 m (p90 0.85 px, 24 % accepted). Diagnosis: wrong
+peaks of the long one-dimensional search (median error 4 px, NCC 0.90) and Gauss–Newton stuck at κ ≈ 0 where the true
+stretch was 0.25–0.4. Hence the neighbour-support test and the κ restarts. No threshold of the gates moved.
+
+**Fixtures** ([`motion/flow_fixtures.py`](../motion/flow_fixtures.py)): analytic planes ray-cast through the Foveated warp
+(`full`, 4 × 4 rays a pixel: the box filter), band-limited multi-scale texture, Gaussian noise 0.005 (about 1 % of the
+mean), the dolly's axes, B of strides 1, 5, 10. Truth: the point on each pixel's centre ray, its exact d. Gates of #6
+(median ≤ 0.1 px, p90 ≤ 0.25 px of a's native pixels over accepted matches, at least 100 accepted), by surface.
+
+`python -m motion.dolly flow-depth-fixtures --out runs/m3-fixtures` at `afe3c58` (clean), 637 s, Chat sandbox
+([`fixtures.json`](runs/issue-6/fixtures.json)). Accepted fraction | median | p90 (native px):
+
+| fixture / surface | B 0.10 m | B 0.49 m | B 0.99 m |
+|---|---|---|---|
+| front (3 m) | 0.938 \| 0.030 \| 0.088 | 0.891 \| 0.037 \| 0.115 | 0.844 \| 0.038 \| 0.117 |
+| tilted 50° | 0.851 \| 0.040 \| 0.134 | 0.814 \| 0.040 \| 0.122 | 0.712 \| 0.041 \| 0.119 |
+| corridor, parallel surfaces | 0.745 \| 0.048 \| 0.159 | 0.582 \| 0.050 \| 0.153 | 0.173 \| 0.062 \| 0.210 |
+| corridor, end wall (8 m) | 0.963 \| 0.045 \| 0.119 | 0.969 \| 0.037 \| 0.100 | 0.940 \| 0.036 \| 0.102 |
+
+All 13 gates PASS (with the occlusion fixture's interior: 0.859 | 0.039 | 0.121). Controls, each fails:
+scrambled frame b (median 9.6 px); a's eye rolled 1° (median 0.159, p90 0.49 px); shift-only matcher on the
+parallel surfaces at B 0.49 m (median 0.096, p90 0.257 px; 0.492 of anchors within 0.25 px against 0.568 with stretch).
+Not gated, reported: the radial-edge wall and the log-periodic wall give **no** accepted match (rejected as low texture,
+ambiguous or unresolved); the occlusion fixture's edges (within 3 px of the board's outline) keep 0.40 accepted with
+6.5 % of them over 1 px (interior 0.1 %).
+
+A first reading: the matcher reaches 0.03–0.06 px median on textured synthetic surfaces, below the 0.1 px the oracle
+ladder asks for; long baselines on surfaces parallel to the heading are where it runs out (17 % accepted at 1 m), as
+the A1 amendment expected. Whether the renders' noise and texture allow the same is the calibration room's question
+(Stages 4–5).
