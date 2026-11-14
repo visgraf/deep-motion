@@ -23,7 +23,10 @@ q = ln tan e by d = q_b - q_a > 0. The search is one-dimensional, along fixed-ph
    support_min of the 8 neighbouring native pixels hold a candidate within support_tol_px. A correct
    match on a surface agrees with its neighbours; a false peak of the long 1-D search does not. This
    is a test, not a filter: no value is smoothed or replaced, and pixels on either side of a depth
-   edge keep the support of their own surface.
+   edge keep the support of their own surface. Last, depth_edge: a candidate within +/- edge_half_px
+   (the patch's reach) whose d deviates from the anchor's own local model d + kappa (q_nb - q) by more
+   than edge_tol_px. A patch straddling a depth edge is dragged to the more textured side (foreground
+   fattening); its neighbours across the edge reveal it. The edge is left as a hole (#5).
 
 Settings are fixed in SETTINGS before any measurement; M3a Stage 4 calibrates only the interval
 scale on the declared calibration-room set, and the result is frozen.
@@ -52,6 +55,11 @@ SETTINGS = {
     "fb_tol_px": 1.0,
     "support_min": 3,           # of the 8 neighbouring anchors, those with a candidate within support_tol_px
     "support_tol_px": 0.5,      # (added after the first fixture run, #6: accepted false peaks at stride 10)
+    "half_tol_px": 0.5,         # half-window test: inner and outer radial halves fitted alone must agree ...
+    "half_sigma_max_px": 0.25,  # ... and each be informative (added after calibration-room pair (0, 5), #6)
+    "edge_half_px": 3,          # depth-edge test over +/- 3 native px (the patch's radial reach) ...
+    "edge_tol_px": 0.5,         # ... no candidate may deviate from the anchor's d + kappa u by more (added
+                                # after calibration-room pair (0, 5), #6: foreground fattening at card edges)
     "stretch": True,            # False: shift-only (the A1 control)
     "kappa_starts": (0.0, 0.25, 0.5),   # Gauss-Newton starts (added after the first fixture run, #6)
     "restart_below_ncc": 0.97,          # ... tried only where the first start's NCC is below this
@@ -59,7 +67,7 @@ SETTINGS = {
 }
 Z95 = 1.959963984540054
 REASONS = ("accepted", "invalid_support", "low_texture", "low_ncc", "ambiguous", "unresolved_far",
-           "near_boundary", "gn_failed", "fb_inconsistent", "unsupported")
+           "near_boundary", "gn_failed", "fb_inconsistent", "unsupported", "depth_edge", "half_disagree")
 
 
 # ----------------------------------------------------------------------------- sampling
@@ -181,6 +189,42 @@ def _gn(img_a, img_b, model, qb, pb, gq, gp, d0, s):
             if k != "texture":
                 best[k][retry] = np.where(take, r[k], best[k][retry])
     return best
+
+
+def _half(img_a, img_b, model, qb, pb, gq, gp, d0, kap, s, side):
+    """Shift-only Gauss-Newton (kappa held) on one radial half of the patch: side -1 inner (k <= 0), +1 outer."""
+    rh, ah = s["r_half_px"], s["a_half_px"]
+    k = np.arange(-rh, 1, dtype=np.float64) if side < 0 else np.arange(0, rh + 1, dtype=np.float64)
+    j = np.arange(-ah, ah + 1, dtype=np.float64)
+    K, Jj = np.meshgrid(k, j, indexing="ij")
+    u = K.reshape(1, -1) / gq[:, None]
+    v = Jj.reshape(1, -1) / gp[:, None]
+    Qb, Pb = qb[:, None] + u, pb[:, None] + v
+    Ib = sample(img_b, model, Qb, Pb)
+    hq = 0.25 / gq[:, None]
+    d = d0.copy()
+    Ia = sample(img_a, model, Qb - d[:, None] - kap[:, None] * u, Pb)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        alpha = np.nanstd(Ib, -1) / np.nanstd(Ia, -1)
+        beta = np.nanmean(Ib, -1) - alpha * np.nanmean(Ia, -1)
+    for it in range(s["gn_iters"] + 1):
+        Qa = Qb - d[:, None] - kap[:, None] * u
+        Ia = sample(img_a, model, Qa, Pb)
+        dI = (sample(img_a, model, Qa + hq, Pb) - sample(img_a, model, Qa - hq, Pb)) / (2 * hq)
+        r = Ib - alpha[:, None] * Ia - beta[:, None]
+        J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
+        good = np.isfinite(r).all(-1) & np.isfinite(J).all((-1, -2))
+        Jg, rg = np.where(good[:, None, None], J, 0.0), np.where(good[:, None], r, 0.0)
+        H = np.einsum("nki,nkj->nij", Jg, Jg) + 1e-12 * np.eye(3)
+        if it == s["gn_iters"]:
+            s2 = np.sum(rg ** 2, -1) / max(Ib.shape[1] - 3, 1)
+            with np.errstate(invalid="ignore"):
+                sig = np.sqrt(np.maximum(s2 * np.linalg.inv(H)[:, 0, 0], 0.0))
+            return np.where(good, d, np.nan), np.where(good, sig, np.nan)
+        step = -np.linalg.solve(H, np.einsum("nki,nk->ni", Jg, rg)[..., None])[..., 0]
+        d = d + np.where(good, step[:, 0], 0.0)
+        alpha = alpha + np.where(good, step[:, 1], 0.0)
+        beta = beta + np.where(good, step[:, 2], 0.0)
 
 
 def _gn1(img_a, img_b, model, qb, pb, gq, gp, d0, k0, s):
@@ -332,9 +376,48 @@ def match_pair(img_a, img_b, model, B: float, settings: dict | None = None) -> d
                 sup += (np.abs(Dn / Gn - D / G) * G <= s["support_tol_px"]).astype(np.int16)
     support = sup.reshape(-1)[flat]
     mark(cand & (support < s["support_min"]), REASONS.index("unsupported"))
+    # half windows: inner and outer radial halves, each alone (kappa held), must be informative and agree
+    ci = np.flatnonzero(reason == 0)
+    half_dev = np.full(len(flat), np.nan)
+    half_sig = np.full(len(flat), np.nan)
+    if ci.size:
+        args = (img_a, img_b, model, qb[ci], pb[ci], gq_b[ci], gp_b[ci], d[ci], fine["kappa"][ci], s)
+        d1, s1 = _half(*args, side=-1)
+        d2, s2_ = _half(*args, side=+1)
+        half_dev[ci] = np.abs(d1 - d2) * gq_a[ci]
+        half_sig[ci] = np.fmax(s1, s2_) * gq_a[ci]
+    mark((reason == 0) & ~((half_dev <= s["half_tol_px"]) & (half_sig <= s["half_sigma_max_px"])),
+         REASONS.index("half_disagree"))
+    # depth edges: neighbours (candidates that passed every test above) against the anchor's local model
+    cand2 = reason == 0
+    Dq = np.full(n * n, np.nan)
+    Dq[flat[cand2]] = d[cand2]
+    Qb = np.full(n * n, np.nan)
+    Qb[flat] = qb
+    Dq, Qb = Dq.reshape(n, n), Qb.reshape(n, n)
+    Kr = np.full(n * n, np.nan)
+    Kr[flat] = fine["kappa"]
+    Kr = Kr.reshape(n, n)
+    dev = np.zeros((n, n))
+    h = int(s["edge_half_px"])
+    for di in range(-h, h + 1):
+        for dj in range(-h, h + 1):
+            if di == 0 and dj == 0:
+                continue
+            Dn = np.full((n, n), np.nan)
+            Qn = np.full((n, n), np.nan)
+            sl_src = (slice(max(di, 0), n + min(di, 0)), slice(max(dj, 0), n + min(dj, 0)))
+            sl_dst = (slice(max(-di, 0), n + min(-di, 0)), slice(max(-dj, 0), n + min(-dj, 0)))
+            Dn[sl_dst], Qn[sl_dst] = Dq[sl_src], Qb[sl_src]
+            with np.errstate(invalid="ignore"):
+                dv = np.abs(Dn - (Dq + Kr * (Qn - Qb))) * G
+            dev = np.fmax(dev, np.where(np.isfinite(dv), dv, 0.0))
+    edge_dev = dev.reshape(-1)[flat]
+    mark(cand2 & (edge_dev > s["edge_tol_px"]), REASONS.index("depth_edge"))
     half = Z95 * s["interval_scale"] * fine["sigma_d"]
     return {"flat": flat, "e_b": eb, "phi_b": pb, "q_b": qb, "d": d, "d_lo": d - half, "d_hi": d + half,
             "sigma_d": fine["sigma_d"], "sigma_px": fine["sigma_d"] * gq_a, "kappa": fine["kappa"],
             "ncc_coarse": cb_, "ncc_second": c2b, "ncc_fine": fine["ncc_fine"], "texture": fine["texture"],
-            "d_coarse": d0, "d_back": d_back, "px_per_q_a": gq_a, "reason": reason, "support": support,
+            "d_coarse": d0, "d_back": d_back, "px_per_q_a": gq_a, "reason": reason, "support": support, "edge_dev_px": edge_dev, "half_dev_px": half_dev,
+            "half_sigma_px": half_sig,
             "envelope": {"d_min": float(d_min), "d_max": float(d_max), "T": T}, "settings": s}

@@ -291,3 +291,62 @@ def rgb_correspondences(oa: Obs, ob: Obs, B: float, settings: dict | None = None
     out = {k: (v[keep] if isinstance(v, np.ndarray) and v.shape[:1] == r["flat"].shape else v) for k, v in r.items()}
     out.update({"source": "rgb", "sample_b": sample_b[keep]})
     return out
+
+
+# ----------------------------------------------------------------------------- Stage 5: estimation (no truth)
+
+def _sha(p) -> str:
+    import hashlib
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def parse_pairs(spec):
+    """"0:5" -> [(0, 5)]: exactly that pair, not a slice; "0:5,1:6" -> two pairs."""
+    if not spec:
+        return None
+    return [tuple(int(x) for x in p.split(":")) for p in spec.split(",")]
+
+
+def estimate(run: dict, mode: str, strides, out: Path, *, pairs=None, settings=None, git=None, log=print) -> dict:
+    """The matcher on every pair (k, k + stride), observation fields only. Writes config.json and
+    pairs/s<stride>/a<ka>-b<kb>.npz with the raw estimates (d, sigma_d, reason, diagnostics). The interval
+    scale is not applied here: it is calibrated afterwards (Stage 4) and frozen with these outputs."""
+    import time
+    from . import matcher
+    out = Path(out)
+    if (out / "config.json").exists():
+        raise SystemExit(f"[flow-depth] refused: {out} already holds an estimate")
+    es = {e["k"]: e for e in run["looks"][mode]}
+    ks = sorted(es)
+    todo = pairs if pairs else [(ka, ka + s) for s in strides for ka in ks if ka + s in es]
+    obs = {k: load_observation(run, es[k]) for k in sorted({k for p in todo for k in p})}
+    align = alignment({k: (o.c, o.R) for k, o in obs.items()}, todo)
+    if not align["ok"]:
+        raise SystemExit(f"[flow-depth] refused: alignment gate failed: {align['detail']}")
+    s = dict(matcher.SETTINGS, **(settings or {}))
+    inputs = {str(k): {"record": _sha(Path(run["_dir"]) / es[k]["out_dir"] / "record_C.npz"),
+                       "meta": _sha(Path(run["_dir"]) / es[k]["out_dir"] / "meta.json")} for k in obs}
+    out.mkdir(parents=True, exist_ok=True)
+    cfg = {"schema": "foveal-motion-m3-estimate-v1", "source": "rgb", "run": run["_dir"], "run_git": run["git"],
+           "mode": mode, "strides": list(strides), "pairs": [list(p) for p in todo], "settings": s,
+           "computed_by": git, "inputs_sha256": inputs, "alignment": {k: v for k, v in align.items() if k != "rows"},
+           "note": "observation fields only; interval_scale is calibrated afterwards and frozen"}
+    t0 = time.perf_counter()
+    for ka, kb in todo:
+        t1 = time.perf_counter()
+        B = float(np.linalg.norm(obs[kb].c - obs[ka].c))
+        c = rgb_correspondences(obs[ka], obs[kb], B, s)
+        pdir = out / "pairs" / f"s{kb - ka}"
+        pdir.mkdir(parents=True, exist_ok=True)
+        keys = ("sample_b", "flat", "e_b", "phi_b", "q_b", "d", "sigma_d", "sigma_px", "kappa", "ncc_coarse",
+                "ncc_second", "ncc_fine", "texture", "d_coarse", "d_back", "px_per_q_a", "reason", "support")
+        np.savez_compressed(pdir / f"a{ka:04d}-b{kb:04d}.npz", B=B, ka=ka, kb=kb, **{k: c[k] for k in keys})
+        acc = float(np.mean(c["reason"] == 0))
+        log(f"[flow-depth] rgb pair ({ka}, {kb}) B {B:.3f} m: accepted {acc:.3f}, {time.perf_counter() - t1:.1f} s")
+    cfg["seconds"] = round(time.perf_counter() - t0, 1)
+    (out / "config.json").write_text(json.dumps(cfg, indent=1, default=float))
+    return cfg

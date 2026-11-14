@@ -294,13 +294,16 @@ def flow_depth_cmd(a) -> int:
     if a.mode not in r["looks"]:
         print(f"{PREFIX} refused: the run has no {a.mode} looks", file=sys.stderr)
         return 2
-    if a.correspondence == "rgb":
-        print(f"{PREFIX} refused: the RGB matcher is M3a Stage 3, not implemented yet", file=sys.stderr)
-        return 2
-    if a.pairs:
-        print(f"{PREFIX} refused: --pairs is for the RGB matcher (Stage 5)", file=sys.stderr)
-        return 2
     git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    if a.correspondence == "rgb":
+        from . import flow_depth
+        cfg = flow_depth.estimate(r, a.mode, a.strides, Path(a.out), pairs=flow_depth.parse_pairs(a.pairs), git=git,
+                                  log=lambda m: print(m, flush=True))
+        print(f"{PREFIX} rgb estimate: {len(cfg['pairs'])} pairs in {cfg['seconds']} s -> {a.out}")
+        return 0
+    if a.pairs:
+        print(f"{PREFIX} refused: --pairs is for the RGB matcher", file=sys.stderr)
+        return 2
     sigmas = a.sigma_px if a.correspondence == "oracle-noise" else [0.0]
     rc = 0
     for sg in sigmas:
@@ -338,6 +341,37 @@ def flow_depth_fixtures(a) -> int:
     print(f"{PREFIX} {'ALL PASS' if res['ok'] else 'NOT ALL PASS'}, controls {'all fail' if res['controls_fail'] else 'NOT ALL FAIL'}"
           f" ({res['seconds']} s) -> {out / 'fixtures.json'}")
     return 0 if res["ok"] and res["controls_fail"] else 1
+
+
+def flow_depth_calibrate(a) -> int:
+    from . import flow_depth_eval
+    from . import flow_depth
+    cal = flow_depth_eval.calibrate(Path(a.result), a.parity, also=flow_depth.parse_pairs(a.also) or ())
+    print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} from {cal['n']} accepted anchors of {len(cal['pairs'])} pairs "
+          f"({cal['set']}); |z| quantiles {json.dumps(cal['abs_z_quantiles'])}; by stride {json.dumps(cal['by_stride'])}")
+    print(f"{PREFIX} frozen -> {Path(a.result) / 'freeze.json'}")
+    return 0
+
+
+def flow_depth_evaluate(a) -> int:
+    from . import flow_depth_eval
+    res = flow_depth_eval.evaluate(Path(a.result), log=lambda m: print(m, flush=True))
+    res["computed_by"] = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    (Path(a.result) / "evaluation.json").write_text(json.dumps(res, indent=1, default=float))
+    rc = 0
+    for c in res["checks"]:
+        rc = rc or (0 if c["ok"] and c["control_fails"] else 1)
+        print(f"{PREFIX} {c['id']:7s} {'PASS' if c['ok'] else 'FAIL'}  control {'fails' if c['control_fails'] else 'DOES NOT FAIL'}"
+              f"  {c['what']}: {json.dumps(c['detail'])}")
+    print(f"{PREFIX} displacement error, accepted held-out interior: {json.dumps(res['displacement_error_px_interior'])}")
+    print(f"{PREFIX} usable edge points, range error: {json.dumps(res['edge_usable_range_error'])}")
+    g = lambda v: "-" if v is None else f"{v:.3f}"
+    for key, s in res["summary"].items():
+        f, b = s["field"], s["band_5_40"]
+        print(f"        stride {s['stride']:2d}: field usable {g(f['usable_of_all'])} within10% {g(f['within_10pct_of_all'])}"
+              f" | 5-40deg usable {g(b['usable_of_all'])} median {g(b['median_rel'])} | fovea usable {g(s['fovea_2deg']['usable_of_all'])}"
+              f" | ladder " + ", ".join(f"{n} {g(v.get(key))}" for n, v in res["ladder_same_pairs_field_usable"].items()))
+    return rc
 
 
 # ----------------------------------------------------------------------------- visualize
@@ -422,6 +456,12 @@ def main(argv=None) -> int:
     sub.add_parser("selftest")
     p = sub.add_parser("flow-depth-selftest")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("flow-depth-calibrate")
+    p.add_argument("--result", required=True)
+    p.add_argument("--parity", default="even", choices=("even", "odd"))
+    p.add_argument("--also", default=None, help="further pairs for the calibration set, e.g. 1:6")
+    p = sub.add_parser("flow-depth-evaluate")
+    p.add_argument("--result", required=True)
     p = sub.add_parser("flow-depth-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth")
@@ -442,7 +482,8 @@ def main(argv=None) -> int:
     a = ap.parse_args(argv)
     return {"preflight": preflight, "run": run, "checks": checks, "visualize": visualize, "selftest": selftest,
             "sandbox": sandbox, "depth": depth_cmd, "flow-depth-selftest": flow_depth_selftest,
-            "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures}[a.cmd](a)
+            "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
+            "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate}[a.cmd](a)
 
 
 if __name__ == "__main__":
