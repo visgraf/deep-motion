@@ -174,6 +174,39 @@ def _peaks(curves, excl_rows):
 
 # ----------------------------------------------------------------------------- fine
 
+FLAT_STD = 1e-9      # a patch of a flatter than this has no gradient to fit (#7: the ceiling lamps' glass)
+
+
+def _solve(H, g, good):
+    """Batched H x = g, as before; only if the batch is singular are the good rows solved one by one and
+    those that fail marked bad (#7): one degenerate patch must not stop a pair. Rows already bad carry
+    H = 1e-12 I and g = 0 (their Jacobian is zeroed), so x = 0 for them either way."""
+    try:
+        return np.linalg.solve(H, g[..., None])[..., 0], good
+    except np.linalg.LinAlgError:
+        x, ok = np.zeros_like(g), good.copy()
+        for i in range(len(H)):
+            try:
+                x[i] = np.linalg.solve(H[i], g[i])
+            except np.linalg.LinAlgError:
+                ok[i] = False
+        return x, ok
+
+
+def _inv00(H, good):
+    """(H^-1)[0, 0] per row, as before; per-row fallback as _solve (failed rows nan and bad)."""
+    try:
+        return np.linalg.inv(H)[:, 0, 0], good
+    except np.linalg.LinAlgError:
+        out, ok = np.full(len(H), np.nan), good.copy()
+        for i in range(len(H)):
+            try:
+                out[i] = np.linalg.inv(H[i])[0, 0]
+            except np.linalg.LinAlgError:
+                ok[i] = False
+        return out, ok
+
+
 def _gn(img_a, img_b, model, qb, pb, gq, gp, d0, s):
     """Gauss-Newton from each kappa start in s["kappa_starts"] (shift-only: kappa = 0 only); per anchor the
     start with the highest final NCC wins (a stretched surface is a local minimum away from kappa = 0)."""
@@ -207,21 +240,26 @@ def _half(img_a, img_b, model, qb, pb, gq, gp, d0, kap, s, side):
     with np.errstate(invalid="ignore", divide="ignore"):
         alpha = np.nanstd(Ib, -1) / np.nanstd(Ia, -1)
         beta = np.nanmean(Ib, -1) - alpha * np.nanmean(Ia, -1)
+    flat = ~(np.nanstd(Ia, -1) > FLAT_STD) | ~np.isfinite(alpha)
     for it in range(s["gn_iters"] + 1):
         Qa = Qb - d[:, None] - kap[:, None] * u
         Ia = sample(img_a, model, Qa, Pb)
         dI = (sample(img_a, model, Qa + hq, Pb) - sample(img_a, model, Qa - hq, Pb)) / (2 * hq)
         r = Ib - alpha[:, None] * Ia - beta[:, None]
         J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
-        good = np.isfinite(r).all(-1) & np.isfinite(J).all((-1, -2))
+        good = np.isfinite(r).all(-1) & np.isfinite(J).all((-1, -2)) & ~flat
         Jg, rg = np.where(good[:, None, None], J, 0.0), np.where(good[:, None], r, 0.0)
         H = np.einsum("nki,nkj->nij", Jg, Jg) + 1e-12 * np.eye(3)
         if it == s["gn_iters"]:
             s2 = np.sum(rg ** 2, -1) / max(Ib.shape[1] - 3, 1)
             with np.errstate(invalid="ignore"):
-                sig = np.sqrt(np.maximum(s2 * np.linalg.inv(H)[:, 0, 0], 0.0))
+                c00, good = _inv00(H, good)
+                sig = np.sqrt(np.maximum(s2 * c00, 0.0))
             return np.where(good, d, np.nan), np.where(good, sig, np.nan)
-        step = -np.linalg.solve(H, np.einsum("nki,nk->ni", Jg, rg)[..., None])[..., 0]
+        x, solved = _solve(H, np.einsum("nki,nk->ni", Jg, rg), good)
+        flat |= good & ~solved
+        good = solved
+        step = -x
         d = d + np.where(good, step[:, 0], 0.0)
         alpha = alpha + np.where(good, step[:, 1], 0.0)
         beta = beta + np.where(good, step[:, 2], 0.0)
@@ -247,7 +285,8 @@ def _gn1(img_a, img_b, model, qb, pb, gq, gp, d0, k0, s):
         alpha = sa / np.nanstd(Ia0, -1)
         beta = ma - alpha * np.nanmean(Ia0, -1)
     npar = 4 if s["stretch"] else 3
-    ok = np.isfinite(Ib).all(-1)
+    degenerate = ~(np.nanstd(Ia0, -1) > FLAT_STD) | ~np.isfinite(alpha)
+    ok = np.isfinite(Ib).all(-1) & ~degenerate
     for _ in range(s["gn_iters"]):
         Qa = Qb - d[:, None] - kap[:, None] * u
         Ia = sample(img_a, model, Qa, Pb)
@@ -262,7 +301,10 @@ def _gn1(img_a, img_b, model, qb, pb, gq, gp, d0, k0, s):
         rg = np.where(good[:, None], r, 0.0)
         H = np.einsum("nki,nkj->nij", Jg, Jg) + 1e-12 * np.eye(npar)
         gvec = np.einsum("nki,nk->ni", Jg, rg)
-        step = -np.linalg.solve(H, gvec[..., None])[..., 0]
+        x, solved = _solve(H, gvec, good)
+        degenerate |= good & ~solved
+        good = solved
+        step = -x
         d = d + np.where(good, step[:, 0], 0.0)
         if s["stretch"]:
             kap = kap + np.where(good, step[:, 1], 0.0)
@@ -283,11 +325,14 @@ def _gn1(img_a, img_b, model, qb, pb, gq, gp, d0, k0, s):
     dof = max(Ib.shape[1] - npar, 1)
     s2 = np.sum(rg ** 2, -1) / dof
     with np.errstate(invalid="ignore"):
-        cov00 = np.linalg.inv(H)[:, 0, 0]
+        cov00, inv_ok = _inv00(H, good)
+        degenerate |= good & ~inv_ok
+        good = inv_ok
         sigma_d = np.sqrt(np.maximum(s2 * cov00, 0.0))
         za, zb = Ib - Ib.mean(-1, keepdims=True), Ia - Ia.mean(-1, keepdims=True)
         ncc = np.sum(za * zb, -1) / np.sqrt(np.sum(za ** 2, -1) * np.sum(zb ** 2, -1))
-    return {"d": d, "kappa": kap, "sigma_d": sigma_d, "ncc_fine": ncc, "valid": good, "texture": texture}
+    return {"d": d, "kappa": kap, "sigma_d": sigma_d, "ncc_fine": ncc, "valid": good, "texture": texture,
+            "degenerate": degenerate}
 
 
 # ----------------------------------------------------------------------------- the pair
@@ -342,6 +387,7 @@ def match_pair(img_a, img_b, model, B: float, settings: dict | None = None) -> d
 
     def mark(cond, code):
         reason[(reason == 0) & cond] = code
+    mark(fine["degenerate"], REASONS.index("gn_failed"))       # a flat patch in a: nothing to fit (#7)
     mark(~np.isfinite(cb_) | ~fine["valid"] | ~np.isfinite(d), REASONS.index("invalid_support"))
     mark(~(fine["texture"] >= s["texture_min"]), REASONS.index("low_texture"))
     mark(~(cb_ >= s["ncc_min"]), REASONS.index("low_ncc"))
