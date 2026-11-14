@@ -20,6 +20,7 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D7 | The next step after M1 (Luiz, 2026-11-12, in Chat) | M2: range from the head's motion on the foveated raster, with M1's path run again fixating a target far off the path's line |
 | M-D8 | The side target (Luiz, 2026-11-12, issue #3, option A) | accept what `target_ray` finds, `worldMap` at (−2.116, 3.540, 1.323): a hanging map 3.3 cm proud of the front wall, visible from every head, 22°→47° off the heading; the target sits 6.5 cm above the map's lower edge, so the fovea holds a small depth step. The spec is unchanged |
 | M-D9 | M3, depth from RGB log-polar flow (Luiz, 2026-11-14, in Chat; #5 reviewed there) | #5's plan amended (A1–A8 of #6: shift + radial-stretch matcher, radial-gradient texture score, patch sizes in native pixels, ray-based sensor-agnostic code, M2's bracket as the reference, interval calibration on the calibration room, static figures first, the oracle ladder O1–O3 before any RGB matching) and split: M3a (#6, Chat, calibration room) builds and freezes the estimator; M3b (#7, Code, Classroom `dolly-1`) runs it unchanged |
+| M-D10 | Freeze M3a's estimator (Luiz, 2026-11-14, in Chat; #6) | option A: freeze the estimator as it stands (matcher settings, calibration procedure), run the full calibration room as declared and report its result, coverage failure included; then the Classroom with the frozen estimator and scale. Both runs on the workstation (#7): the calibration room first, because it provides the interval scale the Classroom reuses unchanged. Calibration set: even ka plus (1, 6), (3, 8), (5, 10), whose truth Chat's smoke tests opened |
 
 ## Experiment M1, the dolly
 
@@ -434,3 +435,10 @@ error 1.8 % and p90 5.2 % (gate ≤ 5 %, ≤ 10 %). Field usable 0.108, against 
 and 0.846 for 0.1 px oracle matches (O3) on the same pair: **the matcher is precise where it accepts, but it accepts
 about a quarter to a third of the anchors**, mainly rejected as low NCC (plain checker walls under 64 spp noise) and
 ambiguous (the Siemens stars' spokes look periodic along a radial search line).
+
+**Frozen (M-D10).** The estimator is frozen at the commit that adds this paragraph: `motion/matcher.py` (its
+`SETTINGS`), `motion/logpolar.py`, `motion/flow_depth.py` unchanged since `33bfcad`, whose fixture gates hold. Added for
+the hand-off: `flow-depth-calibrate --from-result` (imports a frozen scale; opens no truth of the new result),
+`flow-depth-evaluate --gate classroom` (#5's Classroom thresholds: median ≤ 10 %, p90 ≤ 25 %, > 50 % errors ≤ 5 % of
+accepted, ≥ 25 % coverage), `flow-depth-preview` (cloud views). The smoke evaluation of (5, 10) in testing them is the
+third opened held-out pair; it too moves to the calibration set. The full runs are #7's.

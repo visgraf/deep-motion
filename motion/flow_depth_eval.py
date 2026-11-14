@@ -190,7 +190,10 @@ EDGE_PX = 2                      # #5: Position averages a pixel's samples, so t
                                  # boundaries; anchors within 2 px of one in b are "edge", evaluated apart
 COV_MIN = 0.90                   # held-out empirical coverage of nominal 95 % intervals (#6 Stage 4)
 COV_CONTROL_SCALE = 0.5
-CAL_GATE = {"median": 0.05, "p90": 0.10, "coverage": 0.50, "band_deg": (5.0, 40.0)}    # #5/#6 calibration gate
+GATES = {   # fixed in #5 before measurement; stride 5, textured, jointly visible, interior 5-40 deg hits
+    "calibration": {"median": 0.05, "p90": 0.10, "coverage": 0.50, "outlier50": None, "band_deg": (5.0, 40.0)},
+    "classroom": {"median": 0.10, "p90": 0.25, "coverage": 0.25, "outlier50": 0.05, "band_deg": (5.0, 40.0)}}
+CAL_GATE = GATES["calibration"]
 BASELINE_CONTROL = 1.2
 
 
@@ -277,6 +280,30 @@ def calibrate(result: Path, parity: str = "even", also=()) -> dict:
     return cal
 
 
+def import_freeze(result: Path, source: Path) -> dict:
+    """M3b: freeze a new estimate (e.g. the Classroom) with the interval scale frozen on the calibration room,
+    without opening any of its truth. The matcher settings must be identical; every pair is held out."""
+    result, source = Path(result), Path(source)
+    if (result / "freeze.json").exists():
+        raise SystemExit(f"[flow-depth] refused: {result} is already frozen")
+    src = _verify(source)
+    cfg = json.loads((result / "config.json").read_text())
+    a = {k: v for k, v in cfg["settings"].items() if k != "interval_scale"}
+    b = {k: v for k, v in src["frozen_settings"].items() if k != "interval_scale"}
+    if json.loads(json.dumps(a)) != json.loads(json.dumps(b)):
+        raise SystemExit("[flow-depth] refused: the estimate's matcher settings differ from the frozen ones")
+    cal = {"schema": "foveal-motion-m3-calibration-v1", "set": f"imported from {source}", "pairs": [],
+           "interval_scale": src["frozen_settings"]["interval_scale"], "source_freeze_sha256": _sha(source / "freeze.json"),
+           "source_calibration": json.loads((source / "calibration.json").read_text())}
+    (result / "calibration.json").write_text(json.dumps(cal, indent=1, default=float))
+    files = {str(p.relative_to(result)): _sha(p) for p in [result / "config.json", result / "calibration.json", *_pairs(result)]}
+    held = [[int(np.load(p)["ka"]), int(np.load(p)["kb"])] for p in _pairs(result)]
+    fr = {"schema": "foveal-motion-m3-freeze-v1", "frozen_settings": dict(src["frozen_settings"]), "sha256": files,
+          "held_out_pairs": held, "note": f"scale imported from {source}; no truth of this result was opened"}
+    (result / "freeze.json").write_text(json.dumps(fr, indent=1, default=float))
+    return cal
+
+
 def _verify(result: Path) -> dict:
     fr = json.loads((result / "freeze.json").read_text())
     bad = [k for k, h in fr["sha256"].items() if not (result / k).is_file() or _sha(result / k) != h]
@@ -301,7 +328,7 @@ def _rgb_rows(z, t, ob, scale, B=None):
             "acc": acc, "truth": t, "z": z}
 
 
-def evaluate(result: Path, log=print) -> dict:
+def evaluate(result: Path, log=print, gate: str = "calibration") -> dict:
     """Stage 5: verify the freeze, reconstruct every pair with the frozen scale (PLY), then open truth for
     the held-out pairs only and run the gates with their controls."""
     t0 = time.perf_counter()
@@ -311,6 +338,10 @@ def evaluate(result: Path, log=print) -> dict:
     fr = _verify(result)
     cfg = json.loads((result / "config.json").read_text())
     scale = fr["frozen_settings"]["interval_scale"]
+    G = GATES[gate]
+    frozen = {k: v for k, v in fr["frozen_settings"].items() if k != "interval_scale"}
+    if json.loads(json.dumps(frozen)) != json.loads(json.dumps({k: v for k, v in cfg["settings"].items() if k != "interval_scale"})):
+        raise SystemExit("[flow-depth] refused: estimate settings differ from the frozen settings")
     run = analysis.load_run(cfg["run"])
     es = {e["k"]: e for e in run["looks"][cfg["mode"]]}
     held = {tuple(p) for p in fr["held_out_pairs"]}
@@ -376,7 +407,7 @@ def evaluate(result: Path, log=print) -> dict:
         disp.append(((z["d"] - t["d"]) * z["px_per_q_a"])[ok_d])
         e = np.degrees(z["e_b"])
         subset = t["hit"] & t["visible_in_a"] & ~t["edge"] & (z["texture"] >= cfg["settings"]["texture_min"]) \
-            & (e >= CAL_GATE["band_deg"][0]) & (e < CAL_GATE["band_deg"][1])
+            & (e >= G["band_deg"][0]) & (e < G["band_deg"][1])
         band.append((subset, r["rec"]["usable"] & r["acc"], r["rel"], s))
         rB = _rgb_rows(z, t, ob, scale, B=float(z["B"]) * BASELINE_CONTROL)
         ctrlB.append((subset, rB["rec"]["usable"] & rB["acc"], rB["rel"]))
@@ -401,21 +432,25 @@ def evaluate(result: Path, log=print) -> dict:
         gate_rows[s] = {"subset": int(sub.sum()), "accepted_usable": int(a.sum()),
                         "coverage": float(a.sum() / max(int(sub.sum()), 1)),
                         "median_rel": float(np.median(rel[a])) if a.any() else None,
-                        "p90_rel": float(np.quantile(rel[a], 0.9)) if a.any() else None}
+                        "p90_rel": float(np.quantile(rel[a], 0.9)) if a.any() else None,
+                        "over_50pct": float(np.mean(rel[a] > 0.5)) if a.any() else None}
     g5 = gate_rows.get(PRIMARY_STRIDE)
-    okg = lambda g: g is not None and g["median_rel"] is not None and g["median_rel"] <= CAL_GATE["median"] \
-        and g["p90_rel"] <= CAL_GATE["p90"] and g["coverage"] >= CAL_GATE["coverage"]
+    okg = lambda g: g is not None and g["median_rel"] is not None and g["median_rel"] <= G["median"] \
+        and g["p90_rel"] <= G["p90"] and g["coverage"] >= G["coverage"] \
+        and (G["outlier50"] is None or g["over_50pct"] <= G["outlier50"])
     sel = [x for x, b in zip(ctrlB, band) if b[3] == PRIMARY_STRIDE]
     subC, useC, relC = (np.concatenate([x[i] for x in sel]) for i in range(3))
     aC = subC & useC
     gC = {"coverage": float(aC.sum() / max(int(subC.sum()), 1)), "median_rel": float(np.median(relC[aC])) if aC.any() else None,
-          "p90_rel": float(np.quantile(relC[aC], 0.9)) if aC.any() else None}
-    checks.append({"id": "M3.CAL", "what": "held-out calibration-room gate at stride 5: textured, jointly visible, interior 5-40 deg hits: "
-                   f"median <= {CAL_GATE['median']}, p90 <= {CAL_GATE['p90']}, accepted >= {CAL_GATE['coverage']}",
+          "p90_rel": float(np.quantile(relC[aC], 0.9)) if aC.any() else None,
+          "over_50pct": float(np.mean(relC[aC] > 0.5)) if aC.any() else None}
+    checks.append({"id": "M3.CAL" if gate == "calibration" else "M3.ROOM", "what": f"held-out {gate} gate at stride 5: textured, jointly visible, interior 5-40 deg hits: "
+                   f"median <= {G['median']}, p90 <= {G['p90']}, accepted >= {G['coverage']}"
+                   + (f", > 50 % errors <= {G['outlier50']} of accepted" if G["outlier50"] is not None else ""),
                    "ok": okg(g5), "control_fails": not okg(gC), "control": f"baseline x {BASELINE_CONTROL}",
                    "detail": {"by_stride": gate_rows, "control": gC}})
     dd = np.abs(np.concatenate(disp))
-    res = {"schema": "foveal-motion-m3-eval-v1", "source": "rgb", "freeze_verified": True, "interval_scale": scale,
+    res = {"schema": "foveal-motion-m3-eval-v1", "source": "rgb", "freeze_verified": True, "interval_scale": scale, "gate": gate,
            "held_out_pairs": sorted(list(p) for p in held), "checks": checks, "summary": summary,
            "displacement_error_px_interior": {"n": int(dd.size), "median": float(np.median(dd)), "p90": float(np.quantile(dd, 0.9)),
                                               "over_1px": float(np.mean(dd > 1))},

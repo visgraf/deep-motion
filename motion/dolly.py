@@ -346,6 +346,11 @@ def flow_depth_fixtures(a) -> int:
 def flow_depth_calibrate(a) -> int:
     from . import flow_depth_eval
     from . import flow_depth
+    if a.from_result:
+        cal = flow_depth_eval.import_freeze(Path(a.result), Path(a.from_result))
+        print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} imported from {a.from_result}; every pair held out")
+        print(f"{PREFIX} frozen -> {Path(a.result) / 'freeze.json'}")
+        return 0
     cal = flow_depth_eval.calibrate(Path(a.result), a.parity, also=flow_depth.parse_pairs(a.also) or ())
     print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} from {cal['n']} accepted anchors of {len(cal['pairs'])} pairs "
           f"({cal['set']}); |z| quantiles {json.dumps(cal['abs_z_quantiles'])}; by stride {json.dumps(cal['by_stride'])}")
@@ -355,7 +360,7 @@ def flow_depth_calibrate(a) -> int:
 
 def flow_depth_evaluate(a) -> int:
     from . import flow_depth_eval
-    res = flow_depth_eval.evaluate(Path(a.result), log=lambda m: print(m, flush=True))
+    res = flow_depth_eval.evaluate(Path(a.result), log=lambda m: print(m, flush=True), gate=a.gate)
     res["computed_by"] = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
     (Path(a.result) / "evaluation.json").write_text(json.dumps(res, indent=1, default=float))
     rc = 0
@@ -372,6 +377,13 @@ def flow_depth_evaluate(a) -> int:
               f" | 5-40deg usable {g(b['usable_of_all'])} median {g(b['median_rel'])} | fovea usable {g(s['fovea_2deg']['usable_of_all'])}"
               f" | ladder " + ", ".join(f"{n} {g(v.get(key))}" for n, v in res["ladder_same_pairs_field_usable"].items()))
     return rc
+
+
+def flow_depth_preview(a) -> int:
+    from . import visuals
+    p = visuals.flow_depth_preview(Path(a.result), Path(a.out), Path(a.reference) if a.reference else None)
+    print(f"{PREFIX} wrote {p}")
+    return 0
 
 
 # ----------------------------------------------------------------------------- visualize
@@ -460,8 +472,14 @@ def main(argv=None) -> int:
     p.add_argument("--result", required=True)
     p.add_argument("--parity", default="even", choices=("even", "odd"))
     p.add_argument("--also", default=None, help="further pairs for the calibration set, e.g. 1:6")
+    p.add_argument("--from-result", default=None, help="import the frozen scale of this result (M3b); opens no truth")
     p = sub.add_parser("flow-depth-evaluate")
     p.add_argument("--result", required=True)
+    p.add_argument("--gate", default="calibration", choices=("calibration", "classroom"))
+    p = sub.add_parser("flow-depth-preview")
+    p.add_argument("--result", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--reference", default=None, help="an oracle result (e.g. O1) to show beside")
     p = sub.add_parser("flow-depth-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth")
@@ -483,7 +501,8 @@ def main(argv=None) -> int:
     return {"preflight": preflight, "run": run, "checks": checks, "visualize": visualize, "selftest": selftest,
             "sandbox": sandbox, "depth": depth_cmd, "flow-depth-selftest": flow_depth_selftest,
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
-            "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate}[a.cmd](a)
+            "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
+            "flow-depth-preview": flow_depth_preview}[a.cmd](a)
 
 
 if __name__ == "__main__":
