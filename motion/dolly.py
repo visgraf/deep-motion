@@ -386,6 +386,15 @@ def flow_depth_preview(a) -> int:
     return 0
 
 
+def flow_depth_figures(a) -> int:
+    from . import flow_depth, flow_figures
+    for pr in flow_depth.parse_pairs(a.pair):
+        for p in flow_figures.figures(Path(a.result), pr, Path(a.out), scale=a.scale, reference=a.reference,
+                                      truth=not a.no_truth):
+            print(f"{PREFIX} wrote {p}")
+    return 0
+
+
 # ----------------------------------------------------------------------------- visualize
 
 def visualize(a) -> int:
@@ -480,6 +489,13 @@ def main(argv=None) -> int:
     p.add_argument("--result", required=True)
     p.add_argument("--out", required=True)
     p.add_argument("--reference", default=None, help="an oracle result (e.g. O1) to show beside")
+    p = sub.add_parser("flow-depth-figures")
+    p.add_argument("--result", required=True)
+    p.add_argument("--pair", required=True, help="e.g. 0:5 (or several: 0:5,20:25)")
+    p.add_argument("--out", required=True)
+    p.add_argument("--scale", type=float, default=None, help="interval scale when the result is not frozen (labelled provisional)")
+    p.add_argument("--reference", default=None, help="an oracle result (O1) drawn grey under the cloud")
+    p.add_argument("--no-truth", action="store_true", help="omit the evaluation overlays")
     p = sub.add_parser("flow-depth-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth")
@@ -502,7 +518,7 @@ def main(argv=None) -> int:
             "sandbox": sandbox, "depth": depth_cmd, "flow-depth-selftest": flow_depth_selftest,
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
-            "flow-depth-preview": flow_depth_preview}[a.cmd](a)
+            "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures}[a.cmd](a)
 
 
 if __name__ == "__main__":
