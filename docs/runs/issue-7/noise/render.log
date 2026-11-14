@@ -1,0 +1,7 @@
+20:29:17 [dolly] ahead k= 20 head [0.897, -1.814, 1.6] 64 spp seed 0: render 0.796 s, wall 0.94 s
+20:29:18 [dolly] 1 looks in 1.65 s on OPTIX -> runs/noise/k20-spp64-seed0
+20:29:19 [dolly] ahead k= 20 head [0.897, -1.814, 1.6] 64 spp seed 1: render 0.728 s, wall 0.86 s
+20:29:19 [dolly] 1 looks in 1.53 s on OPTIX -> runs/noise/k20-spp64-seed1
+20:29:21 [dolly] ahead k= 20 head [0.897, -1.814, 1.6] 1024 spp seed 2: render 1.168 s, wall 1.31 s
+20:29:22 [dolly] ahead k= 25 head [0.897, -1.319, 1.6] 1024 spp seed 2: render 0.537 s, wall 0.67 s
+20:29:22 [dolly] 2 looks in 2.65 s on OPTIX -> runs/noise/spp1024-seed2

@@ -1,0 +1,11 @@
+20:30:06 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+20:30:06   den = cm - 2 * c1 + cp
+20:30:08 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+20:30:08   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+20:30:17 /home/lvelho/rd/foveal-motion/motion/matcher.py:248: RuntimeWarning: invalid value encountered in subtract
+20:30:17   r = Ib - alpha[:, None] * Ia - beta[:, None]
+20:30:17 /home/lvelho/rd/foveal-motion/motion/matcher.py:249: RuntimeWarning: invalid value encountered in multiply
+20:30:17   J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
+20:30:18 [flow-depth] rgb pair (20, 25) B 0.495 m: accepted 0.261, 15.3 s
+20:30:18 [dolly] rgb estimate: 1 pairs in 15.3 s -> runs/noise/m3-look-1024
+20:30:18 exit 0

@@ -1,0 +1,6 @@
+20:30:25 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+20:30:25   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+20:30:25 [dolly] wrote visuals/noise-1024/overview_a0020-b0025.png
+20:30:25 [dolly] wrote visuals/noise-1024/matching_a0020-b0025.png
+20:30:25 [dolly] wrote visuals/noise-1024/slit_scan_a0020-b0025.png
+20:30:25 exit 0

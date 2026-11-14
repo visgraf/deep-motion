@@ -1,0 +1,101 @@
+{
+ "schema": "foveal-motion-m3-estimate-v1",
+ "source": "rgb",
+ "run": "/home/lvelho/rd/foveal-motion/runs/noise/spp1024-seed2",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "2f8278f99f6a864d2436bd845fa406fbf0383a46",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "mode": "ahead",
+ "strides": [
+  5
+ ],
+ "pairs": [
+  [
+   20,
+   25
+  ]
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.0
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "2f8278f99f6a864d2436bd845fa406fbf0383a46",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "inputs_sha256": {
+  "20": {
+   "record": "e76311de3a85a6abd24bb2cd48c9019d79ae3b7e98f1841b784e64ae9123b8b4",
+   "meta": "58ed8db74bba64b33700f7d29142ee61d46e0f626277d29914c681a6671366bc"
+  },
+  "25": {
+   "record": "8eb9cc5fdbc17b794e78f81e8c49485e144e5f28ca2d859166cc3c30229e8b9f",
+   "meta": "37c5f2a56066b8c43b49e54faae1f28b1f81bee792d73a509f3622020fa2aed1"
+  }
+ },
+ "alignment": {
+  "id": "M3.0",
+  "what": "heading = eye axis in both looks, no rotation between them (#5's gate)",
+  "ok": true,
+  "control_fails": true,
+  "control": "0.1 deg yaw of b, and b's centre 0.01 m sideways: every pair must fail",
+  "detail": {
+   "pairs": 1,
+   "tol_rad": 1e-06,
+   "max_axis_rad": 0.0,
+   "max_rotation_rad": 0.0,
+   "min_B_m": 0.49478260869565216
+  }
+ },
+ "note": "observation fields only; interval_scale is calibrated afterwards and frozen",
+ "seconds": 15.3
+}

@@ -1,0 +1,67 @@
+# PYTHONPATH=. .venv/bin/python docs/runs/issue-7/noise/noise.py --out docs/runs/issue-7/noise  (at b60b5fe, clean True)
+
+# checks (each with a control that must fail)
+pose     PASS  control fails  {"s0": true, "s1": true, "r20": true, "r25": true}
+same     PASS  control fails  {"corr_seed0": 0.9999999999991461, "corr_seed1_control": 0.050538770518889595, "bitwise_equal": false, "max_abs_rgb_diff": 1.3306736946105957e-05, "pixels_differing": 42617}
+anchors  PASS  control fails  {"n_anchors": 48752}
+
+# look 20, 49245 pixels with a full window (5 x 5); luminance linear (matcher.luminance)
+sigma_64 RMS 0.0395 (robust 0.0176); sigma_1024 RMS 0.0100; ratio 3.97 (1/sqrt(spp) predicts 4)
+median luminance 0.1142, median local contrast 0.0222, median c/sigma_64 0.97 (over 49238 pixels)
+zero-noise pixels (the seeds agree exactly over the window): 7, luminance [2.000168], contrast at most 0.004700185350490531; left out of c/sigma
+pixels with c/sigma >= 2 (NCC 0.8 by the model): 0.253 at 64 spp, 0.732 at 1024 spp (sigma_1024 = sigma_64 / 4)
+
+sigma_1024 per bin is the difference of two nearly equal heavy-tailed means: noisy; the overall ratio above is the stable one
+contrast c bin  | pixels | median L | sigma_64 RMS | sigma_1024 RMS | sigma_64 / median L | zero-noise px | median c/sigma_64 | c/sigma_64 >= 2 | c/sigma_1024 >= 2
+0.0000-0.0025 |   1276 | 0.0355 | 0.0077 | 0.0029 | 0.22 | 6 | 0.31 | 0.000 | 0.156
+0.0025-0.0050 |   4491 | 0.0498 | 0.0115 | 0.0027 | 0.23 | 1 | 0.38 | 0.001 | 0.294
+0.0050-0.0100 |   8549 | 0.1116 | 0.0217 | 0.0059 | 0.19 | 0 | 0.37 | 0.008 | 0.320
+0.0100-0.0200 |   8866 | 0.1126 | 0.0253 | 0.0055 | 0.22 | 0 | 0.65 | 0.031 | 0.710
+0.0200-0.0400 |   9207 | 0.1169 | 0.0320 | 0.0048 | 0.27 | 0 | 1.10 | 0.134 | 0.944
+0.0400-0.0800 |   9045 | 0.1200 | 0.0356 | 0.0061 | 0.30 | 0 | 2.09 | 0.540 | 0.993
+0.0800-0.1600 |   3800 | 0.2043 | 0.0568 | 0.0159 | 0.28 | 0 | 2.24 | 0.628 | 1.000
+0.1600-inf |   4011 | 0.3795 | 0.0911 | 0.0262 | 0.24 | 0 | 3.07 | 0.894 | 1.000
+
+# noise at the same pixel in looks 20 and 25 (residuals against the 1024-spp looks)
+dolly-1 (seed 0 in both): corr 0.158; seed 1 at k = 20 against dolly-1's k = 25: corr 0.006
+
+# the 48752 anchors of pair (20, 25), placed on look 25; c and sigma_64 from look 25 (sigma_64^2 = (L_dolly1 - L_1024)^2 / (1 + 1/16), window-averaged)
+reason | 64 spp (dolly-1) | 1024 spp
+low_ncc | 23318 (47.8 %) | 6399 (13.1 %)
+ambiguous | 5516 (11.3 %) | 12233 (25.1 %)
+accepted | 3951 (8.1 %) | 12703 (26.1 %)
+half_disagree | 3599 (7.4 %) | 5043 (10.3 %)
+depth_edge | 2444 (5.0 %) | 5152 (10.6 %)
+invalid_support | 2349 (4.8 %) | 2311 (4.7 %)
+unsupported | 2134 (4.4 %) | 1976 (4.1 %)
+fb_inconsistent | 1987 (4.1 %) | 1610 (3.3 %)
+unresolved_far | 1901 (3.9 %) | 231 (0.5 %)
+gn_failed | 1177 (2.4 %) | 651 (1.3 %)
+low_texture | 340 (0.7 %) | 430 (0.9 %)
+near_boundary | 36 (0.1 %) | 13 (0.0 %)
+
+anchors without an SNR (off the full window, or zero noise): 336
+SNR c/sigma_64 bin | anchors | accepted 64 | accepted 1024 | low_ncc 64 | low_ncc 1024 | ambiguous 64 | ambiguous 1024
+0-0.5 | 12908 | 0.001 | 0.046 | 0.759 | 0.337 | 0.022 | 0.302
+0.5-1 | 12011 | 0.006 | 0.189 | 0.677 | 0.098 | 0.081 | 0.324
+1-1.5 | 6369 | 0.042 | 0.321 | 0.418 | 0.049 | 0.193 | 0.251
+1.5-2 | 5026 | 0.114 | 0.413 | 0.269 | 0.039 | 0.191 | 0.191
+2-3 | 7151 | 0.227 | 0.498 | 0.135 | 0.029 | 0.165 | 0.138
+3-4 | 3195 | 0.286 | 0.485 | 0.085 | 0.033 | 0.180 | 0.164
+4-6 | 1155 | 0.298 | 0.426 | 0.087 | 0.035 | 0.186 | 0.213
+6-8 | 126 | 0.119 | 0.286 | 0.119 | 0.024 | 0.143 | 0.167
+8-inf | 475 | 0.272 | 0.175 | 0.021 | 0.013 | 0.160 | 0.246
+
+where the 64-spp anchors go at 1024 spp (rows: reason at 64 spp)
+accepted: accepted 2942, depth_edge 483, ambiguous 266, half_disagree 179, fb_inconsistent 37, unsupported 26, low_ncc 13, gn_failed 4, unresolved_far 1
+invalid_support: invalid_support 2297, low_ncc 21, low_texture 15, unsupported 5, ambiguous 4, accepted 3, depth_edge 2, gn_failed 1, half_disagree 1
+low_texture: low_texture 336, invalid_support 4
+low_ncc: ambiguous 5909, low_ncc 5704, accepted 4226, half_disagree 2364, depth_edge 2168, unsupported 1260, fb_inconsistent 1082, gn_failed 405, unresolved_far 136, low_texture 48, invalid_support 10, near_boundary 6
+ambiguous: ambiguous 3057, accepted 1270, half_disagree 425, depth_edge 412, unsupported 165, fb_inconsistent 102, low_ncc 48, gn_failed 27, unresolved_far 8, near_boundary 2
+unresolved_far: ambiguous 819, low_ncc 490, unsupported 111, depth_edge 102, fb_inconsistent 94, half_disagree 85, unresolved_far 72, accepted 62, gn_failed 36, low_texture 30
+near_boundary: ambiguous 15, fb_inconsistent 5, near_boundary 4, unsupported 3, accepted 2, gn_failed 2, depth_edge 2, half_disagree 2, low_ncc 1
+gn_failed: ambiguous 317, accepted 284, depth_edge 181, half_disagree 171, unsupported 69, gn_failed 58, low_ncc 49, fb_inconsistent 43, unresolved_far 5
+fb_inconsistent: ambiguous 827, accepted 464, half_disagree 197, depth_edge 184, fb_inconsistent 156, unsupported 87, low_ncc 37, gn_failed 31, unresolved_far 3, low_texture 1
+unsupported: accepted 579, ambiguous 512, half_disagree 414, depth_edge 340, unsupported 161, fb_inconsistent 53, gn_failed 48, low_ncc 23, unresolved_far 3, near_boundary 1
+depth_edge: accepted 1468, depth_edge 573, half_disagree 194, ambiguous 162, unsupported 22, fb_inconsistent 13, low_ncc 8, gn_failed 4
+half_disagree: accepted 1403, half_disagree 1011, depth_edge 705, ambiguous 345, unsupported 67, gn_failed 35, fb_inconsistent 25, low_ncc 5, unresolved_far 3
