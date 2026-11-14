@@ -325,7 +325,7 @@ Source `runs/m3-calib-source`: `paths/calib_dolly.json`, `ahead` only, profile `
 ([table](runs/issue-6/ladder.txt), [script](runs/issue-6/ladder_table.py)). Chat sandbox numbers:
 
 - Baseline: `selftest` passes; the two-mode sandbox (`small`, 16 spp) reproduces the recorded M1/M2 numbers exactly.
-  On the M3 source, M1.0, M1.1, M1.3 PASS (M1.3 0.930–0.991), M1.2 not applicable (no `target`), M3.0 PASS with
+  On the M3 source, M1.0, M1.1, M1.3 PASS (M1.3 0.930–0.962), M1.2 not applicable (no `target`), M3.0 PASS with
   axis and rotation errors exactly 0, every control fails; M2.1 PASS (max 2.1e-8).
 - M3 selftest: 14/14 PASS, every control fails. (One control was corrected before any measurement: a wrong E2 moves
   the Jacobian in opposite directions through K and E2 + e, so its error crosses zero near one eccentricity; the
