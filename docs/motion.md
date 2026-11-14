@@ -287,3 +287,69 @@ corrected one).
    supports about 9 % from one 10 cm step, not 1–3 %, and about 2 % from 0.5 m. Looking ahead, the fovea supports
    nothing usable at any stride. The Classroom's brackets are for Code to measure (`depth` again on both runs, no
    rendering).
+
+## Experiment M3, depth from RGB log-polar flow (M3a #6, M3b #7)
+
+**Question.** M2 got its correspondences from the renderer. M3 asks whether the image texture can supply them,
+under the motion the Foveated sensor is matched to: a forward step along the eye's axis (`ahead`), where a static
+point keeps its azimuth and moves only along q = ln tan e. Plan: #5, amended and split by M-D9 into M3a (#6, Chat,
+calibration room: build, validate, freeze) and M3b (#7, Code, Classroom `dolly-1`: run unchanged).
+
+**Geometry** ([`motion/logpolar.py`](../motion/logpolar.py), ray-based: a sensor enters only through `rays()` /
+`pixel_of()`). For a step B along the axis, d = q_b − q_a, z_b = B / expm1(d), r_b = z_b / cos e_b,
+P = c_b + r_b R_b d_B(e_b, φ). A displacement interval [d_lo, d_hi] gives a range interval; reaching d ≤ 0 leaves the
+far bound unbounded. A range is **usable** when its interval's relative half-width is ≤ 10 % (the analogue of M2's
+bracket); **within 10 %** is error-based (M2's "usable").
+
+**Checks fixed before measuring** (each with a control that must fail):
+
+| id | what | passes when | control (must fail) |
+|---|---|---|---|
+| M3.0 | `ahead` looks are aligned (#5's gate) | heading = eye axis in both looks and no rotation, ≤ 1e-6 rad; B > 0; the estimator's loader refuses oracle fields | 0.1° yaw of b; b's centre 1 cm sideways |
+| M3 selftest | Stage 1 geometry (14 known answers, numpy only) | round trips < 1e-6 px (Foveated `small`/`full`, 90° pinhole); Jacobian = #5's closed form within 1e-5; #5's known answer within 1e-9; analytic points within 1e-6 | wrong row sign; a sensor with E2 = 2.2°; native radius used as pinhole radius |
+| M3.O1a | O1 keeps azimuth | \|φ_a − φ_b\| ≤ 1e-6 rad at e_b ≥ 1° | b yawed 0.1° |
+| M3.O1b | O1 depth | relative range error ≤ 1e-6 at parallax ≥ 0.01° | baseline × 1.01 (median ≥ 1e-3) |
+| M3.O3 | O3 interval propagation | nominal 95 % intervals cover the truth within ± 0.01 | intervals × 0.5 (coverage ≤ 0.80) |
+| M3.PLY | the cloud | reads back identical, finite; every point on its anchor ray (≤ 1e-3°) | x and y swapped |
+
+**The oracle ladder** ([`motion/flow_depth_oracle.py`](../motion/flow_depth_oracle.py), evaluation side; the
+estimator never imports it). O1: b's Position seen from both eye centres, exact. O2: b at its pixel centre, P's
+projection into a rounded to a's pixel centre, interval half a's pixel along the radial line. O3: O1 with a's location
+moved radially by Gaussian noise of σ native pixels (seed 0), interval ± 1.96 σ. All are labelled oracle.
+
+### Chat sandbox, calibration room (M3a Stages 0–2)
+
+Source `runs/m3-calib-source`: `paths/calib_dolly.json`, `ahead` only, profile `full` (253 × 253, as the Classroom),
+64 spp, CPU, rendered at `9cf234b` (clean), fov-render `0f6fa7d`, bpy 5.2.1 wheel, Python 3.13, numpy 2.2.6;
+22 looks in 248 s. Everything below computed at `2f4e4e8` (clean). Records: [`docs/runs/issue-6/`](runs/issue-6/)
+([table](runs/issue-6/ladder.txt), [script](runs/issue-6/ladder_table.py)). Chat sandbox numbers:
+
+- Baseline: `selftest` passes; the two-mode sandbox (`small`, 16 spp) reproduces the recorded M1/M2 numbers exactly.
+  On the M3 source, M1.0, M1.1, M1.3 PASS (M1.3 0.930–0.991), M1.2 not applicable (no `target`), M3.0 PASS with
+  axis and rotation errors exactly 0, every control fails; M2.1 PASS (max 2.1e-8).
+- M3 selftest: 14/14 PASS, every control fails. (One control was corrected before any measurement: a wrong E2 moves
+  the Jacobian in opposite directions through K and E2 + e, so its error crosses zero near one eccentricity; the
+  control is now that the wrong sensor fails the 1e-5 check, max 0.036.)
+- O1: M3.O1a max 4.4e-16 rad (control 0.099); M3.O1b max 8.2e-14 (control median 0.010); M3.PLY 771,333 points at
+  stride 5, on their rays within 1.2e-13° (control 89°). O3: coverage 0.9501 at every σ (control 0.673); identical
+  across σ because the same draws are scaled, which is what an exact propagation must give.
+
+Usable range (interval ≤ 10 %) as a fraction of **all** of look b's hits, whole field:
+
+| stride (B) | O1 exact | O2 pixel | O3 0.05 px | O3 0.10 px | O3 0.25 px | M2 bracket | M2 within 10 % |
+|---|---|---|---|---|---|---|---|
+| 1 (0.10 m) | 0.953 | 0.000 | 0.265 | 0.025 | 0.000 | 0.000 | 0.117 |
+| 5 (0.50 m) | 0.903 | 0.169 | 0.890 | 0.835 | 0.227 | 0.170 | 0.661 |
+| 10 (1.00 m) | 0.849 | 0.529 | 0.845 | 0.832 | 0.682 | 0.530 | 0.796 |
+
+O1's row is the ceiling: the jointly visible share. A first reading, to be checked by the RGB matcher (Stage 5):
+
+1. **M3 ties to M2.** O2, through M3's own pipeline, gives M2's bracket fraction to within 0.001 at strides 5 and 10,
+   and its error-based fraction (0.661, 0.795 against 0.661, 0.796). Its interval covers the truth for 98–99 % of
+   matches. The geometry, the depth formula and the interval are consistent with M2's triangulation.
+2. **Sub-pixel matching is where the gain is, and the requirement is about 0.1 px.** At stride 5, 0.1 px
+   correspondences make 0.835 of the field usable (5× M2's bracket, 92 % of the ceiling); 0.25 px only 0.227. The
+   5–40° band at stride 5 is at its ceiling for σ ≤ 0.1 px. This turns #5's synthetic gate (median ≤ 0.1 px,
+   p90 ≤ 0.25 px) from a guess into the measured requirement.
+3. **The fovea still gives nothing at short baselines.** Below 2°, stride 5 needs σ ≈ 0.05 px (0.716); at 0.1 px it is
+   0.025, at pixel rounding 0. Looking ahead, the fovea's depth is a long-baseline matter, as M2 found.

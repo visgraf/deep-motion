@@ -1,0 +1,43 @@
+O1 exact    computed_by 2f4e4e8 clean True  checks M3.0 PASS/ctrl fails, M3.O1a PASS/ctrl fails, M3.O1b PASS/ctrl fails, M3.PLY PASS/ctrl fails
+O2 pixel    computed_by 2f4e4e8 clean True  checks M3.0 PASS/ctrl fails, M3.PLY PASS/ctrl fails
+O3 0.05 px  computed_by 2f4e4e8 clean True  checks M3.0 PASS/ctrl fails, M3.O3 PASS/ctrl fails, M3.PLY PASS/ctrl fails
+O3 0.10 px  computed_by 2f4e4e8 clean True  checks M3.0 PASS/ctrl fails, M3.O3 PASS/ctrl fails, M3.PLY PASS/ctrl fails
+O3 0.25 px  computed_by 2f4e4e8 clean True  checks M3.0 PASS/ctrl fails, M3.O3 PASS/ctrl fails, M3.PLY PASS/ctrl fails
+
+Usable range (interval relative half-width <= 10 %) as a fraction of ALL of look b's hits; M2: usable by bracket
+and (in brackets) within 10 % by error. Calibration room, ahead, full profile, 64 spp, Chat sandbox.
+
+field
+stride  B (m)      O1 exact     O2 pixel   O3 0.05 px   O3 0.10 px   O3 0.25 px    M2 bracket (M2 within 10 %)
+     1  0.100         0.953        0.000        0.265        0.025        0.000     0.000 ( 0.117)
+     5  0.500         0.903        0.169        0.890        0.835        0.227     0.170 ( 0.661)
+    10  1.000         0.849        0.529        0.845        0.832        0.682     0.530 ( 0.796)
+
+band_5_40
+stride  B (m)      O1 exact     O2 pixel   O3 0.05 px   O3 0.10 px   O3 0.25 px    M2 bracket (M2 within 10 %)
+     1  0.100         0.946        0.000        0.271        0.029        0.000       -   (   -  )
+     5  0.500         0.890        0.178        0.890        0.890        0.234       -   (   -  )
+    10  1.000         0.832        0.567        0.832        0.832        0.759       -   (   -  )
+
+fovea_2deg
+stride  B (m)      O1 exact     O2 pixel   O3 0.05 px   O3 0.10 px   O3 0.25 px    M2 bracket (M2 within 10 %)
+     1  0.100         0.993        0.000        0.000        0.000        0.000     0.000 ( 0.000)
+     5  0.500         0.986        0.000        0.716        0.025        0.000     0.000 ( 0.238)
+    10  1.000         0.975        0.000        0.902        0.631        0.003     0.000 ( 0.468)
+
+Error within 10 % of all hits (error-based, as M2's 'usable'):
+     1        0.953        0.136        0.784        0.534        0.248    M2  0.117
+     5        0.903        0.661        0.899        0.885        0.725    M2  0.661
+    10        0.849        0.795        0.848        0.845        0.809    M2  0.796
+
+By eccentricity, stride 5: usable of all hits | median relative error
+bin (deg)           O1 exact           O2 pixel         O3 0.05 px         O3 0.10 px         O3 0.25 px
+   0-1        1.000 |  0.000     0.000 |  0.231     0.224 |  0.045     0.000 |  0.090     0.000 |  0.218
+   1-2        0.979 |  0.000     0.000 |  0.183     0.973 |  0.023     0.038 |  0.046     0.000 |  0.114
+   2-5        0.927 |  0.000     0.040 |  0.077     0.927 |  0.012     0.727 |  0.025     0.087 |  0.061
+   5-10       0.922 |  0.000     0.128 |  0.075     0.922 |  0.010     0.922 |  0.021     0.158 |  0.052
+  10-20       0.880 |  0.000     0.149 |  0.057     0.880 |  0.009     0.880 |  0.018     0.187 |  0.046
+  20-30       0.863 |  0.000     0.169 |  0.053     0.863 |  0.008     0.863 |  0.016     0.219 |  0.041
+  30-45       0.919 |  0.000     0.318 |  0.044     0.919 |  0.007     0.919 |  0.014     0.444 |  0.035
+
+O2 interval coverage of the truth (field): stride 1 0.993, stride 5 0.980, stride 10 0.979
