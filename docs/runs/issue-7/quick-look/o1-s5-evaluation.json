@@ -1,0 +1,728 @@
+{
+ "schema": "foveal-motion-m3-eval-v1",
+ "source": "oracle-exact",
+ "sigma_px": 0.0,
+ "seed": 0,
+ "mode": "ahead",
+ "strides": [
+  5
+ ],
+ "run": "/home/lvelho/rd/foveal-motion/runs/dolly-1",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "8c1856a80949781fb20cb1c21a992677a5ddace4",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "e53f5d6c02db601b732947c143d4c43bf3366731",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "exposure": 0.8281672042801536,
+ "checks": [
+  {
+   "id": "M3.0",
+   "what": "heading = eye axis in both looks, no rotation between them (#5's gate)",
+   "ok": true,
+   "control_fails": true,
+   "control": "0.1 deg yaw of b, and b's centre 0.01 m sideways: every pair must fail",
+   "detail": {
+    "pairs": 42,
+    "tol_rad": 1e-06,
+    "max_axis_rad": 0.0,
+    "max_rotation_rad": 0.0,
+    "min_B_m": 0.4947826086956515
+   },
+   "rows": [
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      0,
+      5
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      1,
+      6
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      2,
+      7
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      3,
+      8
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      4,
+      9
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      5,
+      10
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      6,
+      11
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      7,
+      12
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      8,
+      13
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      9,
+      14
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      10,
+      15
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      11,
+      16
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      12,
+      17
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      13,
+      18
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565216,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      14,
+      19
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565216,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      15,
+      20
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      16,
+      21
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      17,
+      22
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      18,
+      23
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565216,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      19,
+      24
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565216,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      20,
+      25
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      21,
+      26
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      22,
+      27
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      23,
+      28
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      24,
+      29
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      25,
+      30
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      26,
+      31
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      27,
+      32
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      28,
+      33
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      29,
+      34
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      30,
+      35
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      31,
+      36
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      32,
+      37
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      33,
+      38
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      34,
+      39
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      35,
+      40
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.49478260869565194,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      36,
+      41
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956515,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      37,
+      42
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956515,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      38,
+      43
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      39,
+      44
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956524,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      40,
+      45
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.4947826086956528,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      41,
+      46
+     ],
+     "ok": true
+    }
+   ]
+  },
+  {
+   "id": "M3.O1a",
+   "what": "O1 keeps azimuth: |phi_a - phi_b| <= 1e-06 rad at e_b >= 1.0 deg",
+   "ok": true,
+   "control_fails": true,
+   "control": "b's eye yawed 0.1 deg (every fifth pair)",
+   "detail": {
+    "n": 1937259,
+    "max_rad": 4.440892098500626e-16,
+    "median_rad": 0.0,
+    "control_max_rad": 0.09857788321406624
+   }
+  },
+  {
+   "id": "M3.O1b",
+   "what": "O1 depth: relative range error <= 1e-06 at parallax >= 0.01 deg",
+   "ok": true,
+   "control_fails": true,
+   "control": "baseline x 1.01: median relative error >= 1e-3",
+   "detail": {
+    "n": 1971527,
+    "max_rel": 1.8483073777074846e-14,
+    "control_median_rel": 0.010000000000000064
+   }
+  },
+  {
+   "id": "M3.PLY",
+   "what": "reconstruction.ply reads back (finite, same xyz and colours) and every point lies on its anchor ray (<= 0.001 deg)",
+   "ok": true,
+   "control_fails": true,
+   "control": "the read-back cloud with x and y swapped: median angle to the anchor rays > the limit",
+   "detail": {
+    "points": 1972077,
+    "readback_identical": true,
+    "max_ray_angle_deg": 1.8557382569990753e-13,
+    "control_median_deg": 44.278659923800014
+   }
+  }
+ ],
+ "summary": {
+  "stride_5": {
+   "pairs": 42,
+   "B_m": 0.4947826086956524,
+   "field": {
+    "of_all": 2093562,
+    "matched": 1972077,
+    "finite": 1972077,
+    "median_rel": 1.0607319013263693e-15,
+    "p90_rel": 3.176865195147286e-15,
+    "median_rel_half": 0.0,
+    "within_10pct_of_all": 0.9419721030473422,
+    "usable_of_all": 0.9419721030473422,
+    "usable_of_matched": 1.0,
+    "outlier_50pct_of_finite": 0.0,
+    "unresolved_of_matched": 0.0,
+    "coverage": null
+   },
+   "band_5_40": {
+    "of_all": 1617564,
+    "matched": 1513278,
+    "finite": 1513278,
+    "median_rel": 1.034432003676503e-15,
+    "p90_rel": 2.9543384778697128e-15,
+    "median_rel_half": 0.0,
+    "within_10pct_of_all": 0.9355289806152955,
+    "usable_of_all": 0.9355289806152955,
+    "usable_of_matched": 1.0,
+    "outlier_50pct_of_finite": 0.0,
+    "unresolved_of_matched": 0.0,
+    "coverage": null
+   },
+   "fovea_2deg": {
+    "of_all": 101514,
+    "matched": 101514,
+    "finite": 101514,
+    "median_rel": 1.5877501470925123e-15,
+    "p90_rel": 5.42663960754916e-15,
+    "median_rel_half": 0.0,
+    "within_10pct_of_all": 1.0,
+    "usable_of_all": 1.0,
+    "usable_of_matched": 1.0,
+    "outlier_50pct_of_finite": 0.0,
+    "unresolved_of_matched": 0.0,
+    "coverage": null
+   },
+   "by_eccentricity": [
+    {
+     "of_all": 34818,
+     "matched": 34818,
+     "finite": 34818,
+     "median_rel": 1.8988824394459035e-15,
+     "p90_rel": 6.703442564041302e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 1.0,
+     "usable_of_all": 1.0,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "of_all": 66696,
+     "matched": 66696,
+     "finite": 66696,
+     "median_rel": 1.456995755574673e-15,
+     "p90_rel": 4.82171837757667e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 1.0,
+     "usable_of_all": 1.0,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      1.0,
+      2.0
+     ]
+    },
+    {
+     "of_all": 230664,
+     "matched": 229742,
+     "finite": 229742,
+     "median_rel": 1.4547582901839938e-15,
+     "p90_rel": 4.606236675945907e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 0.996002843963514,
+     "usable_of_all": 0.996002843963514,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      2.0,
+      5.0
+     ]
+    },
+    {
+     "of_all": 347424,
+     "matched": 342037,
+     "finite": 342037,
+     "median_rel": 1.4410075248937658e-15,
+     "p90_rel": 4.059067630673868e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 0.9844944505848762,
+     "usable_of_all": 0.9844944505848762,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      5.0,
+      10.0
+     ]
+    },
+    {
+     "of_all": 537936,
+     "matched": 514055,
+     "finite": 514055,
+     "median_rel": 1.2095990476473035e-15,
+     "p90_rel": 3.1208090013117377e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 0.9556062431218584,
+     "usable_of_all": 0.9556062431218584,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      10.0,
+      20.0
+     ]
+    },
+    {
+     "of_all": 409214,
+     "matched": 368692,
+     "finite": 368692,
+     "median_rel": 8.429722951349416e-16,
+     "p90_rel": 2.2700970508444063e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 0.9009760174383086,
+     "usable_of_all": 0.9009760174383086,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      20.0,
+      30.0
+     ]
+    },
+    {
+     "of_all": 466810,
+     "matched": 416037,
+     "finite": 416037,
+     "median_rel": 6.594962450270235e-16,
+     "p90_rel": 1.828092261861996e-15,
+     "median_rel_half": 0.0,
+     "within_10pct_of_all": 0.8912341209485658,
+     "usable_of_all": 0.8912341209485658,
+     "usable_of_matched": 1.0,
+     "outlier_50pct_of_finite": 0.0,
+     "unresolved_of_matched": 0.0,
+     "coverage": null,
+     "bin": [
+      30.0,
+      45.0
+     ]
+    }
+   ],
+   "stride": 5
+  }
+ },
+ "seconds": 9.2
+}

@@ -1,0 +1,52 @@
+## singular_probe.py runs/dolly-1 <scratch> 20:25
+LinAlgError reproduced: Singular matrix
+{
+ "caller": "_gn1",
+ "batch": 46216,
+ "singular_rows": 1,
+ "patch_px": 21,
+ "e_b_deg": [
+  27.02
+ ],
+ "phi_b_deg": [
+  30.9
+ ],
+ "Ib_mean": [
+  1.7815611398398676
+ ],
+ "Ib_std": [
+  0.4789715893879019
+ ],
+ "Ia_mean": [
+  2.000180215692521
+ ],
+ "Ia_std": [
+  8.828758145789139e-16
+ ],
+ "alpha": [
+  526875305493962.0
+ ],
+ "H_diag": [
+  [
+   7.872814919538932e+30,
+   6.912483900997744e+28,
+   84.01513880020431,
+   21.000000000001
+  ]
+ ],
+ "H_rank": [
+  1
+ ]
+}
+
+## lamp_pixels.py runs/dolly-1 0 5 20 25 40 45
+k= 0: max luminance 2.000180; 273 px above 1.9999, distinct values [2.000180216], instance ids {259: 273}, eccentricity 12.6..30.3 deg
+k= 5: max luminance 2.000180; 299 px above 1.9999, distinct values [2.000180216], instance ids {259: 299}, eccentricity 14.0..35.0 deg
+k=20: max luminance 2.000180; 158 px above 1.9999, distinct values [2.000180216], instance ids {259: 158}, eccentricity 19.7..44.2 deg
+k=25: max luminance 2.000180; 171 px above 1.9999, distinct values [2.000180216], instance ids {259: 171}, eccentricity 22.7..33.8 deg
+k=40: max luminance 2.000180; 36 px above 1.9999, distinct values [2.000180216], instance ids {259: 36}, eccentricity 41.6..44.2 deg
+k=45: max luminance 1.598486; 0 px above 1.9999, distinct values [], instance ids {}
+
+## lamp_name.py (Blender 5.2.1) -- . scenes/classroom/classroom_eye.blend 259
+[lamp_name] {'id': 259, 'name': 'Circle.006 [lib]', 'type': 'MESH', 'via_instance_of': 'ceilingLamp', 'renumbered': True}
+[lamp_name] materials ['ceillingLamp_glass']
