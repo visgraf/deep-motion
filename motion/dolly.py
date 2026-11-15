@@ -409,6 +409,67 @@ def m4_selftest(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def _m4_log(m):
+    print(m, flush=True)
+
+
+def _m4_summary(res):
+    for w, r in res.items():
+        c = {x["id"]: (x["ok"], x["control_fails"]) for x in r["checks"]}
+        print(f"{PREFIX} M4 {w} ({r['gate_name']} gate, held-out {r['held_out_refs']}): "
+              + json.dumps({k: r[k] for k in ("M4", "M3")}, default=float))
+        print(f"{PREFIX} M4 {w}: gate {'PASS' if c['M4.GATE'][0] else 'FAIL'} (control {'fails' if c['M4.GATE'][1] else 'DOES NOT FAIL'}), "
+              f"interval coverage {'PASS' if c['M4.COVER'][0] else 'FAIL'} (control {'fails' if c['M4.COVER'][1] else 'DOES NOT FAIL'})")
+
+
+def m4_calibration(a) -> int:
+    from . import m4_pipeline as mp
+    git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    _m4_summary(mp.run_calibration(a.run, Path(a.out), a.windows, a.m3_scale, git=git, log=_m4_log))
+    return 0
+
+
+def m4_classroom(a) -> int:
+    from . import m4_pipeline as mp
+    git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    _m4_summary(mp.run_import(a.run, Path(a.out), a.windows, a.m3_scale, a.every, a.exclude, a.gate, Path(a.frozen),
+                              git=git, log=_m4_log))
+    return 0
+
+
+def m4_freeze(a) -> int:
+    from . import m4_pipeline as mp
+    rec = mp.write_frozen({w: Path(a.source) / w for w in a.windows}, Path(a.out),
+                          git={"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)})
+    print(json.dumps({w: v["interval_scale"] for w, v in rec["windows"].items()}), "->", a.out)
+    return 0
+
+
+def m4_oracle(a) -> int:
+    from . import analysis, multiframe as mf
+    run = analysis.load_run(a.run)
+    ks = sorted(e["k"] for e in run["looks"]["ahead"])
+    refs = [r for r in a.refs if r not in set(a.exclude)]
+    cfgs = {"M3 pair (r - 5, r)": lambda r: [r - 5], "before5": lambda r: mf.window(ks, r, 5, "before"),
+            "both5": lambda r: mf.window(ks, r, 5, "both")}
+    kinds = [("exact", 0.0), ("pixel", 0.0), ("noise", 0.05), ("noise", 0.1), ("noise", 0.25), ("noise", 0.5)]
+    loads, out = {}, {"run": run["_dir"], "refs": refs,
+                      "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}, "ladder": {}}
+    t0 = time.perf_counter()
+    for name, fr in cfgs.items():
+        ok = [r for r in refs if all(k in ks for k in fr(r)) and len(fr(r)) == (1 if name.startswith("M3") else
+                                                                                  (5 if name == "before5" else 10))]
+        out["ladder"][name] = {"refs": ok}
+        for kind, sg in kinds:
+            lab = kind if kind != "noise" else f"{sg} px"
+            out["ladder"][name][lab] = mf.summarize([mf.oracle(run, r, fr(r), kind, sg, seed=0, loads=loads) for r in ok])
+            print(f"{PREFIX} O-M {name} {lab}: field usable {out['ladder'][name][lab]['field_usable']:.3f}", flush=True)
+    out["seconds"] = round(time.perf_counter() - t0, 1)
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+    Path(a.out).write_text(json.dumps(out, indent=1, default=float))
+    return 0
+
+
 def m4_figures(a) -> int:
     from . import m4_figures as mf
     for p in mf.figures(Path(a.result), a.windows, a.ref, Path(a.out), a.m3_scale, truth=not a.no_truth):
@@ -543,6 +604,29 @@ def main(argv=None) -> int:
     sub.add_parser("m4-selftest")
     p = sub.add_parser("m4-fixtures")
     p.add_argument("--out", required=True)
+    p = sub.add_parser("m4-calibration", help="M4 Stage 5 protocol: calibrate, freeze, estimate held-out, evaluate")
+    p.add_argument("--run", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--windows", nargs="+", default=["both5", "before5"])
+    p.add_argument("--m3-scale", type=float, default=1.625204104083527, help="M3's frozen scale (#7)")
+    p = sub.add_parser("m4-classroom", help="the frozen M4 estimator and scale on a run, every n-th reference frame")
+    p.add_argument("--run", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--windows", nargs="+", default=["both5", "before5"])
+    p.add_argument("--every", type=int, default=5)
+    p.add_argument("--exclude", type=int, nargs="*", default=[])
+    p.add_argument("--gate", default="classroom", choices=["classroom", "calibration"])
+    p.add_argument("--frozen", default="docs/runs/issue-10/frozen.json")
+    p.add_argument("--m3-scale", type=float, default=1.625204104083527, help="M3's frozen scale (#7)")
+    p = sub.add_parser("m4-freeze", help="write the frozen M4 record from calibration-room freezes (Chat)")
+    p.add_argument("--source", default="docs/runs/issue-10/stage5")
+    p.add_argument("--windows", nargs="+", default=["both5", "before5"])
+    p.add_argument("--out", default="docs/runs/issue-10/frozen.json")
+    p = sub.add_parser("m4-oracle", help="the multi-frame oracle ladder O-M at given reference frames")
+    p.add_argument("--run", required=True)
+    p.add_argument("--refs", type=int, nargs="+", required=True)
+    p.add_argument("--exclude", type=int, nargs="*", default=[])
+    p.add_argument("--out", required=True)
     p = sub.add_parser("m4-figures", help="M4 process figures for one reference of a frozen m4_pipeline result")
     p.add_argument("--result", required=True, help="the m4_pipeline output directory (holding one folder per window)")
     p.add_argument("--windows", nargs="+", default=["before5", "both5"])
@@ -573,7 +657,9 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures}[a.cmd](a)
+            "m4-selftest": m4_selftest, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
+            "m4-calibration": m4_calibration, "m4-classroom": m4_classroom, "m4-freeze": m4_freeze,
+            "m4-oracle": m4_oracle}[a.cmd](a)
 
 
 if __name__ == "__main__":
