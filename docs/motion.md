@@ -460,3 +460,13 @@ identical on calibration-room pair (0, 5) and the front and corridor fixtures (C
 [`identity_check.txt`](runs/issue-7/fix/identity_check.txt)). On the Classroom, which has flat emitters, they are not
 quite: at pair (0, 5) 3 of 48,752 anchors move from accepted to `half_disagree` through the guard in `_half`, every
 other array identical (Code, workstation, `fix_effect.txt` on `experiment/m3b-flow-depth-classroom`).
+
+**Render noise limits the Classroom (#7, Code, workstation, OPTIX; `docs/runs/issue-7/noise/` on
+`experiment/m3b-flow-depth-classroom`).** At 64 spp the per-pixel noise of a Classroom look is σ ≈ 0.04 RMS, about 20–30 %
+of the pixel's luminance at every contrast; median local contrast over noise is 0.97, and only a quarter of the pixels
+reach the c / σ ≥ 2 that NCC ≥ 0.8 needs (estimated). At 1024 spp σ falls by 3.97 (1/√spp: 4). The frozen matcher on pair
+(20, 25) with 1024-spp looks: accepted 0.26 (0.08 at 64 spp), usable 0.21 of anchors (0.04), interior median | p90 range
+error 0.019 | 0.057 (0.038 | 0.119); `low_ncc` 13 % (48 %), `ambiguous` 25 % (11 %): once the noise is gone, the board's
+weak or repetitive texture is the limit. `dolly-1` used one seed for every look, so its noise repeats across frames
+(residual correlation 0.158 between looks 20 and 25; 0.006 with different seeds). `run --seed-base N` now gives each look
+its own seed (N + k), recorded in `run.json`; without it, runs are as before.
