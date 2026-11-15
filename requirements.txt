@@ -16,3 +16,8 @@ pillow==12.3.0
 # its bpy wheel (pip install -e "external/fov-render[bpy]") needs Python 3.13 and renders on CPU.
 matplotlib==3.10.9
 -e external/fov-render
+
+# M4 (motion/multibaseline.py): torch. The version is pinned; the build is the machine's choice. Chat's sandbox
+# uses the CPU wheel (pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu); the workstation
+# the CUDA wheel from PyPI (2.15.0+cu132). The M4 commands record which one ran in env.json beside each result.
+torch==2.15.0

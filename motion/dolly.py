@@ -422,9 +422,27 @@ def _m4_summary(res):
               f"interval coverage {'PASS' if c['M4.COVER'][0] else 'FAIL'} (control {'fails' if c['M4.COVER'][1] else 'DOES NOT FAIL'})")
 
 
+def m4_env(out: Path, cmd: str) -> dict:
+    """What ran the M4 matcher (device, torch and CUDA build, numpy, Python), beside a result: env_<cmd>.json."""
+    import platform
+    import torch
+    from . import multibaseline as mb
+    dev = mb.device()
+    env = {"command": cmd, "argv": sys.argv[1:], "device": str(dev),
+           "device_name": torch.cuda.get_device_name(dev) if dev.type == "cuda" else platform.processor() or platform.machine(),
+           "torch": torch.__version__, "torch_cuda": torch.version.cuda, "cudnn": torch.backends.cudnn.version(),
+           "numpy": np.__version__, "python": platform.python_version(), "platform": platform.platform(),
+           "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}}
+    out.mkdir(parents=True, exist_ok=True)
+    (out / f"env_{cmd}.json").write_text(json.dumps(env, indent=1))
+    print(f"{PREFIX} M4 matcher on {env['device']} ({env['device_name']}), torch {env['torch']}")
+    return env
+
+
 def m4_calibration(a) -> int:
     from . import m4_pipeline as mp
     git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    m4_env(Path(a.out), "m4-calibration")
     _m4_summary(mp.run_calibration(a.run, Path(a.out), a.windows, a.m3_scale, git=git, log=_m4_log))
     return 0
 
@@ -432,6 +450,7 @@ def m4_calibration(a) -> int:
 def m4_classroom(a) -> int:
     from . import m4_pipeline as mp
     git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    m4_env(Path(a.out), "m4-classroom")
     _m4_summary(mp.run_import(a.run, Path(a.out), a.windows, a.m3_scale, a.every, a.exclude, a.gate, Path(a.frozen),
                               git=git, log=_m4_log))
     return 0
