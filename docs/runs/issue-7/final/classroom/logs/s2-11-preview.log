@@ -1,0 +1,2 @@
+22:14:48 $ .venv/bin/python -m motion.dolly flow-depth-preview --result runs/m3-classroom-1024-rgb --reference runs/m3-classroom-1024-O1 --out visuals/m3-classroom-1024-rgb.png
+22:14:54 [dolly] wrote visuals/m3-classroom-1024-rgb.png

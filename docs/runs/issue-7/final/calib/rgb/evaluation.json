@@ -1,0 +1,729 @@
+{
+ "schema": "foveal-motion-m3-eval-v1",
+ "source": "rgb",
+ "freeze_verified": true,
+ "interval_scale": 1.625204104083527,
+ "gate": "calibration",
+ "held_out_pairs": [
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   11
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   5,
+   15
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   7,
+   12
+  ],
+  [
+   7,
+   17
+  ],
+  [
+   9,
+   10
+  ],
+  [
+   9,
+   14
+  ],
+  [
+   9,
+   19
+  ],
+  [
+   11,
+   12
+  ],
+  [
+   11,
+   16
+  ],
+  [
+   11,
+   21
+  ],
+  [
+   13,
+   14
+  ],
+  [
+   13,
+   18
+  ],
+  [
+   15,
+   16
+  ],
+  [
+   15,
+   20
+  ],
+  [
+   17,
+   18
+  ],
+  [
+   19,
+   20
+  ]
+ ],
+ "checks": [
+  {
+   "id": "M3.PLY",
+   "what": "reconstruction.ply reads back and every point lies on its anchor ray (<= 0.001 deg)",
+   "ok": true,
+   "control_fails": true,
+   "control": "x and y swapped",
+   "detail": {
+    "points": 205614,
+    "max_ray_angle_deg": 1.1085439139543844e-05,
+    "control_median_deg": 93.88244201143274
+   }
+  },
+  {
+   "id": "M3.COV",
+   "what": "held-out coverage of nominal 95 % intervals >= 0.9 (interior anchors)",
+   "ok": true,
+   "control_fails": true,
+   "control": "intervals x 0.5",
+   "detail": {
+    "n": 202370,
+    "coverage": 0.9485200375549736,
+    "control_coverage": 0.7871868359934773,
+    "scale": 1.625204104083527
+   }
+  },
+  {
+   "id": "M3.CAL",
+   "what": "held-out calibration gate at stride 5: textured, jointly visible, interior 5-40 deg hits: median <= 0.05, p90 <= 0.1, accepted >= 0.5",
+   "ok": false,
+   "control_fails": true,
+   "control": "baseline x 1.2",
+   "detail": {
+    "by_stride": {
+     "1": {
+      "subset": 243078,
+      "accepted_usable": 14591,
+      "coverage": 0.06002599988481064,
+      "median_rel": 0.020837012897442272,
+      "p90_rel": 0.06749971160648952,
+      "over_50pct": 0.017133849633335616
+     },
+     "5": {
+      "subset": 115544,
+      "accepted_usable": 38383,
+      "coverage": 0.3321937963027072,
+      "median_rel": 0.009071878713217331,
+      "p90_rel": 0.027956327997774418,
+      "over_50pct": 0.002761639267383998
+     },
+     "10": {
+      "subset": 128759,
+      "accepted_usable": 34782,
+      "coverage": 0.27013257325701506,
+      "median_rel": 0.0056295565411181026,
+      "p90_rel": 0.01774407714267338,
+      "over_50pct": 0.00736012880225404
+     }
+    },
+    "control": {
+     "coverage": 0.3321937963027072,
+     "median_rel": 0.19786948387434425,
+     "p90_rel": 0.22098350997019278,
+     "over_50pct": 0.0022926816559414322
+    }
+   }
+  }
+ ],
+ "summary": {
+  "stride_1": {
+   "pairs": 10,
+   "B_m": 0.09999999999999987,
+   "field": {
+    "of_all": 502690,
+    "matched": 487520,
+    "finite": 171244,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.24117188770928194,
+    "within_10pct_of_all": 0.2263900216833436,
+    "usable_of_all": 0.04791422148839245,
+    "usable_of_matched": 0.04940515260912373,
+    "outlier_50pct_of_finite": 0.036100534909252295,
+    "unresolved_of_matched": 0.0028060387266163438,
+    "coverage": 0.3092119297669839
+   },
+   "band_5_40": {
+    "of_all": 387920,
+    "matched": 387920,
+    "finite": 152669,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.2404682334053744,
+    "within_10pct_of_all": 0.2662739740152609,
+    "usable_of_all": 0.05430758919364818,
+    "usable_of_matched": 0.05430758919364818,
+    "outlier_50pct_of_finite": 0.029514832742731006,
+    "unresolved_of_matched": 0.0014796865333058364,
+    "coverage": 0.3471643637863477
+   },
+   "fovea_2deg": {
+    "of_all": 24170,
+    "matched": 15880,
+    "finite": 2948,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.9013677375642557,
+    "within_10pct_of_all": 0.0287546545304096,
+    "usable_of_all": 0.0,
+    "usable_of_matched": 0.0,
+    "outlier_50pct_of_finite": 0.19742198100407055,
+    "unresolved_of_matched": 0.031612090680100756,
+    "coverage": 0.16630982367758188
+   },
+   "by_eccentricity": [
+    {
+     "of_all": 8290,
+     "matched": 0,
+     "finite": 0,
+     "median_rel": null,
+     "p90_rel": null,
+     "median_rel_half": null,
+     "within_10pct_of_all": 0.0,
+     "usable_of_all": 0.0,
+     "usable_of_matched": null,
+     "outlier_50pct_of_finite": null,
+     "unresolved_of_matched": null,
+     "coverage": null,
+     "bin": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "of_all": 15880,
+     "matched": 15880,
+     "finite": 2948,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.9013677375642557,
+     "within_10pct_of_all": 0.04376574307304786,
+     "usable_of_all": 0.0,
+     "usable_of_matched": 0.0,
+     "outlier_50pct_of_finite": 0.19742198100407055,
+     "unresolved_of_matched": 0.031612090680100756,
+     "coverage": 0.16630982367758188,
+     "bin": [
+      1.0,
+      2.0
+     ]
+    },
+    {
+     "of_all": 54920,
+     "matched": 54920,
+     "finite": 14759,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.20506558068162437,
+     "within_10pct_of_all": 0.1668244719592134,
+     "usable_of_all": 0.0510924981791697,
+     "usable_of_matched": 0.0510924981791697,
+     "outlier_50pct_of_finite": 0.07229487092621452,
+     "unresolved_of_matched": 0.005316824471959213,
+     "coverage": 0.23089949016751637,
+     "bin": [
+      2.0,
+      5.0
+     ]
+    },
+    {
+     "of_all": 82720,
+     "matched": 82720,
+     "finite": 23129,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.27780769331097904,
+     "within_10pct_of_all": 0.16159332688588007,
+     "usable_of_all": 0.0378384912959381,
+     "usable_of_matched": 0.0378384912959381,
+     "outlier_50pct_of_finite": 0.048683470967184055,
+     "unresolved_of_matched": 0.00456963249516441,
+     "coverage": 0.2337645067698259,
+     "bin": [
+      5.0,
+      10.0
+     ]
+    },
+    {
+     "of_all": 128080,
+     "matched": 128080,
+     "finite": 53086,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.2720827309987298,
+     "within_10pct_of_all": 0.2670986883198001,
+     "usable_of_all": 0.02599937539038101,
+     "usable_of_matched": 0.02599937539038101,
+     "outlier_50pct_of_finite": 0.018460611083901592,
+     "unresolved_of_matched": 0.0010149906308557152,
+     "coverage": 0.3707682698313554,
+     "bin": [
+      10.0,
+      20.0
+     ]
+    },
+    {
+     "of_all": 98080,
+     "matched": 98080,
+     "finite": 45061,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.2318154759595641,
+     "within_10pct_of_all": 0.3324836867862969,
+     "usable_of_all": 0.07358278955954323,
+     "usable_of_matched": 0.07358278955954323,
+     "outlier_50pct_of_finite": 0.029826235547369122,
+     "unresolved_of_matched": 0.00042822185970636215,
+     "coverage": 0.4095942088091354,
+     "bin": [
+      20.0,
+      30.0
+     ]
+    },
+    {
+     "of_all": 114720,
+     "matched": 107840,
+     "finite": 32261,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.1698216557536863,
+     "within_10pct_of_all": 0.20711297071129708,
+     "usable_of_all": 0.06627440725244073,
+     "usable_of_matched": 0.07050259643916915,
+     "outlier_50pct_of_finite": 0.033569945134992715,
+     "unresolved_of_matched": 0.00022255192878338278,
+     "coverage": 0.26360348664688427,
+     "bin": [
+      30.0,
+      45.0
+     ]
+    }
+   ],
+   "stride": 1
+  },
+  "stride_5": {
+   "pairs": 5,
+   "B_m": 0.5,
+   "field": {
+    "of_all": 251345,
+    "matched": 243760,
+    "finite": 64676,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.0404040640351041,
+    "within_10pct_of_all": 0.24095565855696355,
+    "usable_of_all": 0.24296882770693667,
+    "usable_of_matched": 0.25052920905808995,
+    "outlier_50pct_of_finite": 0.043478260869565216,
+    "unresolved_of_matched": 4.1023957991467015e-06,
+    "coverage": 0.2390999343616672
+   },
+   "band_5_40": {
+    "of_all": 193960,
+    "matched": 193960,
+    "finite": 57514,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.03992880203121224,
+    "within_10pct_of_all": 0.27884615384615385,
+    "usable_of_all": 0.28444009074035886,
+    "usable_of_matched": 0.28444009074035886,
+    "outlier_50pct_of_finite": 0.042598323886358105,
+    "unresolved_of_matched": 0.0,
+    "coverage": 0.2670138172819138
+   },
+   "fovea_2deg": {
+    "of_all": 12085,
+    "matched": 7940,
+    "finite": 968,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.11691925281498128,
+    "within_10pct_of_all": 0.061729416632188665,
+    "usable_of_all": 0.03160943318163012,
+    "usable_of_matched": 0.048110831234256926,
+    "outlier_50pct_of_finite": 0.022727272727272728,
+    "unresolved_of_matched": 0.0,
+    "coverage": 0.10604534005037783
+   },
+   "by_eccentricity": [
+    {
+     "of_all": 4145,
+     "matched": 0,
+     "finite": 0,
+     "median_rel": null,
+     "p90_rel": null,
+     "median_rel_half": null,
+     "within_10pct_of_all": 0.0,
+     "usable_of_all": 0.0,
+     "usable_of_matched": null,
+     "outlier_50pct_of_finite": null,
+     "unresolved_of_matched": null,
+     "coverage": null,
+     "bin": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "of_all": 7940,
+     "matched": 7940,
+     "finite": 968,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.11691925281498128,
+     "within_10pct_of_all": 0.09395465994962217,
+     "usable_of_all": 0.048110831234256926,
+     "usable_of_matched": 0.048110831234256926,
+     "outlier_50pct_of_finite": 0.022727272727272728,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.10604534005037783,
+     "bin": [
+      1.0,
+      2.0
+     ]
+    },
+    {
+     "of_all": 27460,
+     "matched": 27460,
+     "finite": 5892,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.04157653088997955,
+     "within_10pct_of_all": 0.19941733430444283,
+     "usable_of_all": 0.19089584850691915,
+     "usable_of_matched": 0.19089584850691915,
+     "outlier_50pct_of_finite": 0.05108621860149355,
+     "unresolved_of_matched": 3.641660597232338e-05,
+     "coverage": 0.19712308812818646,
+     "bin": [
+      2.0,
+      5.0
+     ]
+    },
+    {
+     "of_all": 41360,
+     "matched": 41360,
+     "finite": 8741,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.043626536431051695,
+     "within_10pct_of_all": 0.19634912959381046,
+     "usable_of_all": 0.1885154738878143,
+     "usable_of_matched": 0.1885154738878143,
+     "outlier_50pct_of_finite": 0.04587575792243451,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.19086073500967118,
+     "bin": [
+      5.0,
+      10.0
+     ]
+    },
+    {
+     "of_all": 64040,
+     "matched": 64040,
+     "finite": 18718,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.042716507555565726,
+     "within_10pct_of_all": 0.281683322923173,
+     "usable_of_all": 0.2817457838850718,
+     "usable_of_matched": 0.2817457838850718,
+     "outlier_50pct_of_finite": 0.02505609573672401,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.27147095565271706,
+     "bin": [
+      10.0,
+      20.0
+     ]
+    },
+    {
+     "of_all": 49040,
+     "matched": 49040,
+     "finite": 17407,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.0386301454179012,
+     "within_10pct_of_all": 0.3359706362153344,
+     "usable_of_all": 0.34851141924959217,
+     "usable_of_matched": 0.34851141924959217,
+     "outlier_50pct_of_finite": 0.04429252599528925,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.3226141924959217,
+     "bin": [
+      20.0,
+      30.0
+     ]
+    },
+    {
+     "of_all": 57360,
+     "matched": 53920,
+     "finite": 12950,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.03571581317333357,
+     "within_10pct_of_all": 0.20406206415620642,
+     "usable_of_all": 0.21816596931659693,
+     "usable_of_matched": 0.23208456973293767,
+     "outlier_50pct_of_finite": 0.06548262548262548,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.2026706231454006,
+     "bin": [
+      30.0,
+      45.0
+     ]
+    }
+   ],
+   "stride": 5
+  },
+  "stride_10": {
+   "pairs": 6,
+   "B_m": 0.9999999999999998,
+   "field": {
+    "of_all": 301614,
+    "matched": 292512,
+    "finite": 58128,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.02524087518977608,
+    "within_10pct_of_all": 0.17955731497874766,
+    "usable_of_all": 0.1900806991717891,
+    "usable_of_matched": 0.19599537796739963,
+    "outlier_50pct_of_finite": 0.0547756674924305,
+    "unresolved_of_matched": 3.4186631659555845e-06,
+    "coverage": 0.17725084782846515
+   },
+   "band_5_40": {
+    "of_all": 232752,
+    "matched": 232752,
+    "finite": 51159,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.024757056251049743,
+    "within_10pct_of_all": 0.2050336839210834,
+    "usable_of_all": 0.21823657798858873,
+    "usable_of_matched": 0.21823657798858873,
+    "outlier_50pct_of_finite": 0.0543794835708282,
+    "unresolved_of_matched": 4.296418505533787e-06,
+    "coverage": 0.19604127998900117
+   },
+   "fovea_2deg": {
+    "of_all": 14502,
+    "matched": 9528,
+    "finite": 1069,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.06363042662524401,
+    "within_10pct_of_all": 0.06909391808026479,
+    "usable_of_all": 0.059371121224658666,
+    "usable_of_matched": 0.09036523929471033,
+    "outlier_50pct_of_finite": 0.002806361085126286,
+    "unresolved_of_matched": 0.0,
+    "coverage": 0.0998110831234257
+   },
+   "by_eccentricity": [
+    {
+     "of_all": 4974,
+     "matched": 0,
+     "finite": 0,
+     "median_rel": null,
+     "p90_rel": null,
+     "median_rel_half": null,
+     "within_10pct_of_all": 0.0,
+     "usable_of_all": 0.0,
+     "usable_of_matched": null,
+     "outlier_50pct_of_finite": null,
+     "unresolved_of_matched": null,
+     "coverage": null,
+     "bin": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "of_all": 9528,
+     "matched": 9528,
+     "finite": 1069,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.06363042662524401,
+     "within_10pct_of_all": 0.10516372795969774,
+     "usable_of_all": 0.09036523929471033,
+     "usable_of_matched": 0.09036523929471033,
+     "outlier_50pct_of_finite": 0.002806361085126286,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.0998110831234257,
+     "bin": [
+      1.0,
+      2.0
+     ]
+    },
+    {
+     "of_all": 32952,
+     "matched": 32952,
+     "finite": 5726,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.02784498021778577,
+     "within_10pct_of_all": 0.16150764748725419,
+     "usable_of_all": 0.16775916484583636,
+     "usable_of_matched": 0.16775916484583636,
+     "outlier_50pct_of_finite": 0.059727558505064615,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.15677348871085214,
+     "bin": [
+      2.0,
+      5.0
+     ]
+    },
+    {
+     "of_all": 49632,
+     "matched": 49632,
+     "finite": 9061,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.026531551289591032,
+     "within_10pct_of_all": 0.17122018052869117,
+     "usable_of_all": 0.18006528046421663,
+     "usable_of_matched": 0.18006528046421663,
+     "outlier_50pct_of_finite": 0.055402273479748375,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.16501450676982593,
+     "bin": [
+      5.0,
+      10.0
+     ]
+    },
+    {
+     "of_all": 76848,
+     "matched": 76848,
+     "finite": 17567,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.025064321717892434,
+     "within_10pct_of_all": 0.2174422236102436,
+     "usable_of_all": 0.2280085363314595,
+     "usable_of_matched": 0.2280085363314595,
+     "outlier_50pct_of_finite": 0.04548300791256333,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.20964761607328752,
+     "bin": [
+      10.0,
+      20.0
+     ]
+    },
+    {
+     "of_all": 58848,
+     "matched": 58848,
+     "finite": 16420,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.024269347735759148,
+     "within_10pct_of_all": 0.2653786025013594,
+     "usable_of_all": 0.278870989668298,
+     "usable_of_matched": 0.278870989668298,
+     "outlier_50pct_of_finite": 0.03915956151035323,
+     "unresolved_of_matched": 1.6992930940728655e-05,
+     "coverage": 0.2562194127243067,
+     "bin": [
+      20.0,
+      30.0
+     ]
+    },
+    {
+     "of_all": 68832,
+     "matched": 64704,
+     "finite": 8285,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.023836196645859262,
+     "within_10pct_of_all": 0.10181311018131102,
+     "usable_of_all": 0.11727103672710368,
+     "usable_of_matched": 0.12475272007912958,
+     "outlier_50pct_of_finite": 0.108026554013277,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.09817012858555885,
+     "bin": [
+      30.0,
+      45.0
+     ]
+    }
+   ],
+   "stride": 10
+  }
+ },
+ "displacement_error_px_interior": {
+  "n": 202370,
+  "median": 0.03918649508846139,
+  "p90": 0.1373273154909474,
+  "over_1px": 0.008533873597865296
+ },
+ "edge_usable_range_error": {
+  "n": 42146,
+  "median": 0.01409658147385024,
+  "p90": 0.5354832261563641,
+  "over_50pct": 0.12480425188630001
+ },
+ "ladder_same_pairs_field_usable": {
+  "O2 pixel": {
+   "stride_1": 0.0,
+   "stride_5": 0.20371998647277648,
+   "stride_10": 0.5368252136837149
+  },
+  "O3 0.05 px": {
+   "stride_1": 0.26583978197298536,
+   "stride_5": 0.8809843044421015,
+   "stride_10": 0.8429814265916038
+  },
+  "O3 0.10 px": {
+   "stride_1": 0.021760926216952792,
+   "stride_5": 0.8294973045017804,
+   "stride_10": 0.8302764460535651
+  }
+ },
+ "run": "/home/lvelho/rd/foveal-motion/runs/m3-calib-1024",
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "seconds": 5.8
+}

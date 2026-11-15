@@ -1,0 +1,184 @@
+{
+ "schema": "foveal-motion-m3-freeze-v1",
+ "frozen_settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.625204104083527
+ },
+ "sha256": {
+  "config.json": "acd570cd8072340485fd7fc7609814784aaa5080bd4b671ea71041bbbcb87eed",
+  "calibration.json": "a072d7b725e88ce5e6c3c304548f08067d63e13097909c2b35235851f819a667",
+  "pairs/s1/a0000-b0001.npz": "14bf0c54507769db3b29dab96ecb8f2d126dc24d1c3d964ec19dedfb0cc84172",
+  "pairs/s1/a0001-b0002.npz": "3d95257a43bfa394f0674b4c0b7ddbe652f44ddd4dc86c1934c671429854f389",
+  "pairs/s1/a0002-b0003.npz": "ebf76bb28445e86251f86ee3eeb26bf5415b3e0048c8fd41c46b52415cd6f712",
+  "pairs/s1/a0003-b0004.npz": "5b20bf3e5a529e21fab6d02c96ae5f59771c8c572ab7caa64c6b7f377a2e24dd",
+  "pairs/s1/a0004-b0005.npz": "a4f5a0d6f461f64d985b739dd794cba25ef79c52f6c8f689f192dce1d019460a",
+  "pairs/s1/a0005-b0006.npz": "9db663d5e0599a4b14d443754236f04b36746f9216244eba79821e73b9745672",
+  "pairs/s1/a0006-b0007.npz": "6bcb2aabba83871b8533355465609ce3f4e8f23a56de2370a2b0e33260dc4f88",
+  "pairs/s1/a0007-b0008.npz": "222ad63f6912d99ac53c9c33f397271873f0797163698285209a145eccd1fca0",
+  "pairs/s1/a0008-b0009.npz": "aa529bd2eee72624dc93058d3c1b89e3f13f5b4e0803770f4f9f36b1c533376a",
+  "pairs/s1/a0009-b0010.npz": "00c0e2c991d1bbd6f84488a7f6f809672d517a69027a408f47e2638146a4acd0",
+  "pairs/s1/a0010-b0011.npz": "c6d3371aad1c62ecf24dea607cc214ad23bf497e0a28915d7a827880fe3dbf80",
+  "pairs/s1/a0011-b0012.npz": "f9f97cc76e2827680624a772b2d73dec6de715c2f23ea4c26a761ce0e82443f4",
+  "pairs/s1/a0012-b0013.npz": "0dd9199a2da428fe1037826136bbc5a5fee5f68ec741bc7dc21f6b8d187ef7a8",
+  "pairs/s1/a0013-b0014.npz": "a3b0c3386a487cecb7318b0ed074028bcf6f5c0386556f3dd380d1a7cc9410b8",
+  "pairs/s1/a0014-b0015.npz": "54037f6f696a29bdf5ece0ad65f4dcee5ce9599a0ab3ad5ed0faa3243679db54",
+  "pairs/s1/a0015-b0016.npz": "87df42bf032585241823fcbd139f39a709ee7eb172bf9804462d8fd5c28ffd2e",
+  "pairs/s1/a0016-b0017.npz": "885c0657afbd628f9944032d2dd0d3f21db2186454474ba6d401b8f6dc36faa4",
+  "pairs/s1/a0017-b0018.npz": "baf02b44d0feaeaa87e4b2462ba2f1f747335f5a16b9835d41c0802a9136fb62",
+  "pairs/s1/a0018-b0019.npz": "7a1103555d2e787d82a8a4e67d8f78a3a32d0256afa46092a3f11a5135626e7b",
+  "pairs/s1/a0019-b0020.npz": "aac08606e01c1c52042d712f56321a5f7c95356f84313ed23da954fa7eddaa85",
+  "pairs/s1/a0020-b0021.npz": "751ed8d73a6235b45819a79f9049e358dec751a766921b9da46f568e183f337d",
+  "pairs/s10/a0000-b0010.npz": "656a5b8f845168d35df6b44aa1500072969ff5e3559ddac97ad0f25859f42576",
+  "pairs/s10/a0001-b0011.npz": "bfdec5ede5308acd44459477d795ff71b84e709c4ab72f3d125d1dcdbb427290",
+  "pairs/s10/a0002-b0012.npz": "8938f2b76f348423cf8cd225f7158a020ff66fb373d85301f67d6603b259bcec",
+  "pairs/s10/a0003-b0013.npz": "ddb65c96754c62ecc40a1dcae392bca02de678b610c9c8865d3163185ac7e6c1",
+  "pairs/s10/a0004-b0014.npz": "039421ab42d4bb3da49ca0d4696d57dd222bf697ae695859b0aab83bafa336aa",
+  "pairs/s10/a0005-b0015.npz": "fb29932b5daa10e9c66a0e88795667e8080c19e8b4155eb07e1136eeed8472a5",
+  "pairs/s10/a0006-b0016.npz": "788058e5f6be16e64bf4197a3244698af23dd0996487b2e849f29f6d6c6ff0b1",
+  "pairs/s10/a0007-b0017.npz": "79793bed67919ca57288ff42116b51b668c5e4b34380e410765342f965124458",
+  "pairs/s10/a0008-b0018.npz": "6bc4d212e4032723cdb0ead52f7623ef9c027a61d7316a8983feac9b10a26327",
+  "pairs/s10/a0009-b0019.npz": "7e15b870eb39a138d44bf5dc9e7ba55dc439935b6403bdb49392f772f34dda12",
+  "pairs/s10/a0010-b0020.npz": "c235d477795bbbe670517b7d5e2a2b68af8f366e5a26449fc0135de0caf1ad7c",
+  "pairs/s10/a0011-b0021.npz": "8954169f57566fc9456700c4e181fc668c7b9bc2190ff530d4a5143f4dd61b2d",
+  "pairs/s5/a0000-b0005.npz": "a7ee10d50184d3f5125badcdb90b01027382adef6c79eb8912c03f782244b318",
+  "pairs/s5/a0001-b0006.npz": "a1ad3d714342789144758b47f657f672f41e83903904df297f1b0212eced55ce",
+  "pairs/s5/a0002-b0007.npz": "86314d3480448c084b36af9046530e93fe971b502dabe0f1cf1953f41752437d",
+  "pairs/s5/a0003-b0008.npz": "f89e049c12407a81475f0c00db5ae0b42ace11b763ddeae1a25b11ab5ac0cf30",
+  "pairs/s5/a0004-b0009.npz": "2ecb1f6fbe8377bc63bb22df283e559b99623ee6af9b13ef91233761f4e13e12",
+  "pairs/s5/a0005-b0010.npz": "b95932e6ee72848a587c5fe2fad0333de1c0e7efdbd6d9c655682b4d01192d03",
+  "pairs/s5/a0006-b0011.npz": "e9bde2e4e6252d1e614133e4037410555f5a4869975c8b04c6b26f642da4ac14",
+  "pairs/s5/a0007-b0012.npz": "89bee510514a86621a279fdb8d88cd72c628bf55b6f58f41f6bf9a4d8c782592",
+  "pairs/s5/a0008-b0013.npz": "983cb17d58b6636fdd55b8bc8301a3f45db95d1d50ec13205b0cd5314edef15f",
+  "pairs/s5/a0009-b0014.npz": "5d340f4c38b9aad03c543ddd1b8918636b91ddd7136dafdc8cceca2ef7fab1ac",
+  "pairs/s5/a0010-b0015.npz": "8dd940d714c2320e38f42e7246aac0945057cd842ba5b195f43224f3ef0fb629",
+  "pairs/s5/a0011-b0016.npz": "90e27d2c33769028dbe2d64fd6bbc53445af4f2288a110f49d8a7f0f81f300e7",
+  "pairs/s5/a0012-b0017.npz": "d0c97a58a7eb53877fd14b59285ce984d6cc6c9cb61abd86d8aa4c2761d54ac0",
+  "pairs/s5/a0013-b0018.npz": "7598444196a61231f6f24baf80b50e0119045468051f121c6d1e00d04f7018a8",
+  "pairs/s5/a0014-b0019.npz": "fdfb38a1c3da186b3f8ff4d6c1210a16990085399c2faf091315ebaac64a0b6b",
+  "pairs/s5/a0015-b0020.npz": "a1ebbe11025cac1831a85ac83847597692d061e86938a2b5c3487082fae9179d",
+  "pairs/s5/a0016-b0021.npz": "e5fa968d9799e146ff4d984bf102b417be6af12813087d99beceb62022951365"
+ },
+ "held_out_pairs": [
+  [
+   1,
+   2
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   9,
+   10
+  ],
+  [
+   11,
+   12
+  ],
+  [
+   13,
+   14
+  ],
+  [
+   15,
+   16
+  ],
+  [
+   17,
+   18
+  ],
+  [
+   19,
+   20
+  ],
+  [
+   1,
+   11
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   5,
+   15
+  ],
+  [
+   7,
+   17
+  ],
+  [
+   9,
+   19
+  ],
+  [
+   11,
+   21
+  ],
+  [
+   7,
+   12
+  ],
+  [
+   9,
+   14
+  ],
+  [
+   11,
+   16
+  ],
+  [
+   13,
+   18
+  ],
+  [
+   15,
+   20
+  ]
+ ],
+ "note": "estimation outputs and the calibrated scale; evaluation verifies these before opening held-out truth"
+}

@@ -10,6 +10,9 @@ per look (fov-render #20, PLAN D19). One Blender session renders both gaze modes
     python -m motion.dolly visualize --run runs/dolly-1 --vis visuals/dolly-1
     python -m motion.dolly depth     --run runs/dolly-1 [--strides 1 5 10]   M2: range from the head's motion
     python -m motion.dolly sandbox   --run runs/calib-dolly            the calibration room on CPU, end to end
+    python -m motion.dolly flow-depth-selftest --out runs/m3-selftest    M3 geometry known answers (numpy only)
+    python -m motion.dolly flow-depth --run R --mode ahead --strides 1 5 10 --correspondence oracle-exact --out O
+                                                                       M3: range from log-polar flow (#6)
 
 `preflight` writes <run>/preflight.json, `run` refuses a run folder that already holds a run.json,
 records the commit of this repository and of fov-render and whether both trees were clean. Exit
@@ -135,6 +138,8 @@ def run(a) -> int:
               "target_source": "target_ray, found by the preflight" if "target_ray" in spec else "target_w",
               "path_file": str(Path(a.path)), "blend": str(blend), "blend_sha256": _sha256(blend),
               "profile": a.profile, "spp": a.spp, "device_requested": a.device, "modes": modes,
+              "seeds": ("the session's default for every look (noise pattern repeated across looks, #7)"
+                        if a.seed_base is None else f"per look: C seed = {a.seed_base} + k (independent noise, #7)"),
               "sensor": {"type": "foveated", "E2_deg": a.e2, "e_max_deg": a.emax}, "eye": "C",
               "git": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
               "command": sys.argv, "preflight": None if pre_ok is None else
@@ -149,8 +154,9 @@ def run(a) -> int:
             for k, h in enumerate(heads):
                 out = rd / mode / f"k{k:04d}"
                 t1 = time.perf_counter()
+                seeds = None if a.seed_base is None else {"C": int(a.seed_base) + k}
                 look = s.look(sensors.Foveated(E2_deg=a.e2, e_max_deg=a.emax), ("C",), g, head=h, spp=a.spp,
-                              out_dir=out, outputs=("exr", "records"))
+                              seeds=seeds, out_dir=out, outputs=("exr", "records"))
                 record["looks"][mode].append({"k": k, "out_dir": str(out.relative_to(rd)), "head": h.as_dict(),
                                               "head_source": look.response.get("head_source"),
                                               "render_seconds": look.response["eyes"]["C"]["render_seconds"],
@@ -166,11 +172,43 @@ def run(a) -> int:
 
 # ----------------------------------------------------------------------------- checks
 
+def _alignment_check(r: dict) -> dict:
+    """M3.0 (#5, #6): in `ahead` mode every pair of consecutive looks has heading = eye axis and no
+    rotation, from the recorded eye poses (observation fields only)."""
+    from . import flow_depth
+    es = sorted(r["looks"]["ahead"], key=lambda e: e["k"])
+    poses = {}
+    for e in es:
+        o = flow_depth.load_observation(r, e)
+        poses[o.k] = (o.c, o.R)
+    ks = sorted(poses)
+    res = flow_depth.alignment(poses, list(zip(ks[:-1], ks[1:])))
+    # the estimator's loader opens records for observation only: an oracle field must be refused
+    from fov_render.record import AccessError
+    try:
+        _ = o.rec.position_w
+        refused = False
+    except AccessError:
+        refused = True
+    res["detail"]["observation_loader_refuses_oracle"] = refused
+    res["ok"] = res["ok"] and refused
+    res["detail"] = {"ahead": res["detail"]}
+    return res
+
+
 def checks(a) -> int:
     r = analysis.load_run(a.run)
-    res = [analysis.sensor_check(r), analysis.check_heads(r), analysis.fovea_on_target(r)]
+    res = [analysis.sensor_check(r), analysis.check_heads(r)]
+    if "target" in r["looks"]:
+        res.append(analysis.fovea_on_target(r))
+    else:   # an ahead-only run has no fixation to check (#6 Stage 0); M3.0 below holds its invariant
+        res.append({"id": "M1.2", "what": "in target mode the fovea's centre lands on target_w", "applicable": False,
+                    "ok": None, "control_fails": None, "detail": {},
+                    "note": "not applicable: the run has no target mode; M3.0 checks the ahead looks' alignment"})
     rep, flow = analysis.reprojection(r)
     res.append(rep)
+    if "ahead" in r["looks"]:
+        res.append(_alignment_check(r))
     summary = analysis.flow_summary(flow)
     rd = Path(a.run)
     np.savez_compressed(rd / "flow.npz", **{f"{m}__{k}": v for m, F in flow.items() for k, v in F.items()})
@@ -180,6 +218,9 @@ def checks(a) -> int:
     (rd / "checks.json").write_text(json.dumps(out, indent=1))
     allok = True
     for c in res:
+        if c.get("applicable") is False:
+            print(f"{PREFIX} {c['id']:5s} n/a   {c['note']}")
+            continue
         good = c["ok"] and c["control_fails"]
         allok &= good
         print(f"{PREFIX} {c['id']:5s} {'PASS' if c['ok'] else 'FAIL'}  control "
@@ -234,6 +275,130 @@ def depth_cmd(a) -> int:
     return 0 if good else 1
 
 
+# ----------------------------------------------------------------------------- M3: flow depth
+
+def flow_depth_selftest(a) -> int:
+    from . import flow_depth
+    res, num = flow_depth.selftest()
+    for name, ok in res:
+        print(f"{PREFIX} M3 selftest {'PASS' if ok else 'FAIL'} {name}")
+    if a.out:
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "selftest.json").write_text(json.dumps(
+            {"schema": "foveal-motion-m3-selftest-v1", "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
+             "results": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num}, indent=1, default=float))
+    return 0 if all(ok for _, ok in res) else 1
+
+
+def flow_depth_cmd(a) -> int:
+    from . import flow_depth_eval
+    r = analysis.load_run(a.run)
+    if a.mode not in r["looks"]:
+        print(f"{PREFIX} refused: the run has no {a.mode} looks", file=sys.stderr)
+        return 2
+    git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    if a.correspondence == "rgb":
+        from . import flow_depth
+        cfg = flow_depth.estimate(r, a.mode, a.strides, Path(a.out), pairs=flow_depth.parse_pairs(a.pairs), git=git,
+                                  log=lambda m: print(m, flush=True))
+        print(f"{PREFIX} rgb estimate: {len(cfg['pairs'])} pairs in {cfg['seconds']} s -> {a.out}")
+        return 0
+    if a.pairs:
+        print(f"{PREFIX} refused: --pairs is for the RGB matcher", file=sys.stderr)
+        return 2
+    sigmas = a.sigma_px if a.correspondence == "oracle-noise" else [0.0]
+    rc = 0
+    for sg in sigmas:
+        out = Path(a.out) / (f"sigma-{sg:.3f}" if a.correspondence == "oracle-noise" else "")
+        res = flow_depth_eval.run_oracle(r, a.correspondence, a.strides, out, sigma_px=sg, seed=a.seed, mode=a.mode, git=git)
+        print(f"{PREFIX} {a.correspondence}" + (f" sigma {sg:g} px" if a.correspondence == "oracle-noise" else "")
+              + f": {res['seconds']} s -> {out}")
+        for c in res["checks"]:
+            good = c["ok"] and c["control_fails"]
+            rc = rc or (0 if good else 1)
+            print(f"        {c['id']:7s} {'PASS' if c['ok'] else 'FAIL'}  control {'fails' if c['control_fails'] else 'DOES NOT FAIL'}"
+                  f"  {c['what']}: {json.dumps(c['detail'])}")
+        g = lambda v: "-" if v is None else f"{v:.3f}"
+        for key, s in res["summary"].items():
+            f, b = s["field"], s["band_5_40"]
+            print(f"        stride {s['stride']:2d} ({s['B_m']:.3f} m): field usable {g(f['usable_of_all'])} within10% {g(f['within_10pct_of_all'])}"
+                  f" | 5-40deg usable {g(b['usable_of_all'])} median {g(b['median_rel'])} p90 {g(b['p90_rel'])} cov {g(b['coverage'])}"
+                  f" | fovea usable {g(s['fovea_2deg']['usable_of_all'])}")
+    return rc
+
+
+def flow_depth_fixtures(a) -> int:
+    from . import flow_fixtures, matcher
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    t0 = time.perf_counter()
+    res = flow_fixtures.run_fixtures(sensors.Foveated().model("full"), log=lambda m: print(m, flush=True))
+    res.update({"schema": "foveal-motion-m3-fixtures-v1", "settings": matcher.SETTINGS,
+                "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
+                "seconds": round(time.perf_counter() - t0, 1)})
+    (out / "fixtures.json").write_text(json.dumps(res, indent=1, default=float))
+    for g in res["gates"]:
+        print(f"{PREFIX} fixture gate {'PASS' if g['ok'] else 'FAIL'} {g['fixture']}/{g['label']} B {g['B_m']:.3f}: "
+              f"median {g['median_px']} p90 {g['p90_px']} accepted {g['accepted_fraction']}")
+    print(f"{PREFIX} {'ALL PASS' if res['ok'] else 'NOT ALL PASS'}, controls {'all fail' if res['controls_fail'] else 'NOT ALL FAIL'}"
+          f" ({res['seconds']} s) -> {out / 'fixtures.json'}")
+    return 0 if res["ok"] and res["controls_fail"] else 1
+
+
+def flow_depth_calibrate(a) -> int:
+    from . import flow_depth_eval
+    from . import flow_depth
+    if a.from_result:
+        cal = flow_depth_eval.import_freeze(Path(a.result), Path(a.from_result),
+                                            exclude=flow_depth.parse_pairs(a.exclude) or ())
+        print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} imported from {a.from_result}; every pair held out except --exclude")
+        print(f"{PREFIX} frozen -> {Path(a.result) / 'freeze.json'}")
+        return 0
+    cal = flow_depth_eval.calibrate(Path(a.result), a.parity, also=flow_depth.parse_pairs(a.also) or ())
+    print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} from {cal['n']} accepted anchors of {len(cal['pairs'])} pairs "
+          f"({cal['set']}); |z| quantiles {json.dumps(cal['abs_z_quantiles'])}; by stride {json.dumps(cal['by_stride'])}")
+    print(f"{PREFIX} frozen -> {Path(a.result) / 'freeze.json'}")
+    return 0
+
+
+def flow_depth_evaluate(a) -> int:
+    from . import flow_depth_eval
+    res = flow_depth_eval.evaluate(Path(a.result), log=lambda m: print(m, flush=True), gate=a.gate)
+    res["computed_by"] = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}
+    (Path(a.result) / "evaluation.json").write_text(json.dumps(res, indent=1, default=float))
+    rc = 0
+    for c in res["checks"]:
+        rc = rc or (0 if c["ok"] and c["control_fails"] else 1)
+        print(f"{PREFIX} {c['id']:7s} {'PASS' if c['ok'] else 'FAIL'}  control {'fails' if c['control_fails'] else 'DOES NOT FAIL'}"
+              f"  {c['what']}: {json.dumps(c['detail'])}")
+    print(f"{PREFIX} displacement error, accepted held-out interior: {json.dumps(res['displacement_error_px_interior'])}")
+    print(f"{PREFIX} usable edge points, range error: {json.dumps(res['edge_usable_range_error'])}")
+    g = lambda v: "-" if v is None else f"{v:.3f}"
+    for key, s in res["summary"].items():
+        f, b = s["field"], s["band_5_40"]
+        print(f"        stride {s['stride']:2d}: field usable {g(f['usable_of_all'])} within10% {g(f['within_10pct_of_all'])}"
+              f" | 5-40deg usable {g(b['usable_of_all'])} median {g(b['median_rel'])} | fovea usable {g(s['fovea_2deg']['usable_of_all'])}"
+              f" | ladder " + ", ".join(f"{n} {g(v.get(key))}" for n, v in res["ladder_same_pairs_field_usable"].items()))
+    return rc
+
+
+def flow_depth_preview(a) -> int:
+    from . import visuals
+    p = visuals.flow_depth_preview(Path(a.result), Path(a.out), Path(a.reference) if a.reference else None)
+    print(f"{PREFIX} wrote {p}")
+    return 0
+
+
+def flow_depth_figures(a) -> int:
+    from . import flow_depth, flow_figures
+    for pr in flow_depth.parse_pairs(a.pair):
+        for p in flow_figures.figures(Path(a.result), pr, Path(a.out), scale=a.scale, reference=a.reference,
+                                      truth=not a.no_truth):
+            print(f"{PREFIX} wrote {p}")
+    return 0
+
+
 # ----------------------------------------------------------------------------- visualize
 
 def visualize(a) -> int:
@@ -271,7 +436,7 @@ def sandbox(a) -> int:
     ns = argparse.Namespace
     steps = [("preflight", preflight, ns(device="CPU", width=360, spp=2, **common)),
              ("run", run, ns(device="CPU", profile="small", spp=a.spp, modes=a.modes, e2=2.0, emax=45.0,
-                             no_preflight=False, **common)),
+                             no_preflight=False, seed_base=None, **common)),
              ("checks", checks, ns(run=str(rd))),
              ("depth", depth_cmd, ns(run=str(rd), strides=[1, 5, 10])),
              ("visualize", visualize, ns(run=str(rd), vis=str(rd / "visuals"), fps=6))]
@@ -304,6 +469,8 @@ def main(argv=None) -> int:
     r.add_argument("--e2", type=float, default=2.0)
     r.add_argument("--emax", type=float, default=45.0)
     r.add_argument("--no-preflight", action="store_true")
+    r.add_argument("--seed-base", type=int, default=None,
+                   help="per-look render seeds base + k, so noise is independent between looks (#7); default: the session's")
     p = sub.add_parser("checks")
     p.add_argument("--run", required=True)
     p = sub.add_parser("visualize")
@@ -314,6 +481,39 @@ def main(argv=None) -> int:
     p.add_argument("--run", required=True)
     p.add_argument("--strides", type=int, nargs="+", default=[1, 5, 10])
     sub.add_parser("selftest")
+    p = sub.add_parser("flow-depth-selftest")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("flow-depth-calibrate")
+    p.add_argument("--result", required=True)
+    p.add_argument("--parity", default="even", choices=("even", "odd"))
+    p.add_argument("--also", default=None, help="further pairs for the calibration set, e.g. 1:6")
+    p.add_argument("--from-result", default=None, help="import the frozen scale of this result (M3b); opens no truth")
+    p.add_argument("--exclude", default=None, help="with --from-result: pairs left out of the evaluation, e.g. 0:5,20:25")
+    p = sub.add_parser("flow-depth-evaluate")
+    p.add_argument("--result", required=True)
+    p.add_argument("--gate", default="calibration", choices=("calibration", "classroom"))
+    p = sub.add_parser("flow-depth-preview")
+    p.add_argument("--result", required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--reference", default=None, help="an oracle result (e.g. O1) to show beside")
+    p = sub.add_parser("flow-depth-figures")
+    p.add_argument("--result", required=True)
+    p.add_argument("--pair", required=True, help="e.g. 0:5 (or several: 0:5,20:25)")
+    p.add_argument("--out", required=True)
+    p.add_argument("--scale", type=float, default=None, help="interval scale when the result is not frozen (labelled provisional)")
+    p.add_argument("--reference", default=None, help="an oracle result (O1) drawn grey under the cloud")
+    p.add_argument("--no-truth", action="store_true", help="omit the evaluation overlays")
+    p = sub.add_parser("flow-depth-fixtures")
+    p.add_argument("--out", required=True)
+    p = sub.add_parser("flow-depth")
+    p.add_argument("--run", required=True)
+    p.add_argument("--mode", default="ahead")
+    p.add_argument("--strides", type=int, nargs="+", default=[1, 5, 10])
+    p.add_argument("--correspondence", required=True, choices=("oracle-exact", "oracle-pixel", "oracle-noise", "rgb"))
+    p.add_argument("--sigma-px", type=float, nargs="+", default=[0.05, 0.1, 0.25])
+    p.add_argument("--seed", type=int, default=0)
+    p.add_argument("--pairs", default=None)
+    p.add_argument("--out", required=True)
     p = sub.add_parser("sandbox")
     p.add_argument("--run", required=True)
     p.add_argument("--spp", type=int, default=16)
@@ -322,7 +522,10 @@ def main(argv=None) -> int:
     p.add_argument("--modes", nargs="+", default=list(paths.MODES))
     a = ap.parse_args(argv)
     return {"preflight": preflight, "run": run, "checks": checks, "visualize": visualize, "selftest": selftest,
-            "sandbox": sandbox, "depth": depth_cmd}[a.cmd](a)
+            "sandbox": sandbox, "depth": depth_cmd, "flow-depth-selftest": flow_depth_selftest,
+            "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
+            "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
+            "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures}[a.cmd](a)
 
 
 if __name__ == "__main__":

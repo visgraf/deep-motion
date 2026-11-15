@@ -1,0 +1,274 @@
+{
+ "schema": "foveal-motion-m3-eval-v1",
+ "source": "rgb",
+ "freeze_verified": true,
+ "interval_scale": 1.6757629949664625,
+ "held_out_pairs": [
+  [
+   3,
+   8
+  ]
+ ],
+ "checks": [
+  {
+   "id": "M3.PLY",
+   "what": "reconstruction.ply reads back and every point lies on its anchor ray (<= 0.001 deg)",
+   "ok": true,
+   "control_fails": true,
+   "control": "x and y swapped",
+   "detail": {
+    "points": 16094,
+    "max_ray_angle_deg": 1.0463623078823396e-05,
+    "control_median_deg": 78.62472095684399
+   }
+  },
+  {
+   "id": "M3.COV",
+   "what": "held-out coverage of nominal 95 % intervals >= 0.9 (interior anchors)",
+   "ok": true,
+   "control_fails": true,
+   "control": "intervals x 0.5",
+   "detail": {
+    "n": 5000,
+    "coverage": 0.9428,
+    "control_coverage": 0.73,
+    "scale": 1.6757629949664625
+   }
+  },
+  {
+   "id": "M3.CAL",
+   "what": "held-out calibration-room gate at stride 5: textured, jointly visible, interior 5-40 deg hits: median <= 0.05, p90 <= 0.1, accepted >= 0.5",
+   "ok": false,
+   "control_fails": true,
+   "control": "baseline x 1.2",
+   "detail": {
+    "by_stride": {
+     "5": {
+      "subset": 24062,
+      "accepted_usable": 2715,
+      "coverage": 0.11283351342365555,
+      "median_rel": 0.018131391016944703,
+      "p90_rel": 0.05226143520486066
+     }
+    },
+    "control": {
+     "coverage": 0.11283351342365555,
+     "median_rel": 0.1945912345391876,
+     "p90_rel": 0.2427144556382577
+    }
+   }
+  }
+ ],
+ "summary": {
+  "stride_5": {
+   "pairs": 1,
+   "B_m": 0.5,
+   "field": {
+    "of_all": 50269,
+    "matched": 48752,
+    "finite": 7566,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.07246288992564842,
+    "within_10pct_of_all": 0.13491416180946508,
+    "usable_of_all": 0.10813821639579065,
+    "usable_of_matched": 0.11150311782080735,
+    "outlier_50pct_of_finite": 0.04401268834258525,
+    "unresolved_of_matched": 0.0,
+    "coverage": 0.1364456842796193
+   },
+   "band_5_40": {
+    "of_all": 38792,
+    "matched": 38792,
+    "finite": 6525,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.07332929884195863,
+    "within_10pct_of_all": 0.15273767787172612,
+    "usable_of_all": 0.12077232419055475,
+    "usable_of_matched": 0.12077232419055475,
+    "outlier_50pct_of_finite": 0.04,
+    "unresolved_of_matched": 0.0,
+    "coverage": 0.14814910290781605
+   },
+   "fovea_2deg": {
+    "of_all": 2417,
+    "matched": 1588,
+    "finite": 121,
+    "median_rel": Infinity,
+    "p90_rel": Infinity,
+    "median_rel_half": 0.22338809253460368,
+    "within_10pct_of_all": 0.0244104261481175,
+    "usable_of_all": 0.00703351261894911,
+    "usable_of_matched": 0.010705289672544081,
+    "outlier_50pct_of_finite": 0.10743801652892562,
+    "unresolved_of_matched": 0.0,
+    "coverage": 0.058564231738035266
+   },
+   "by_eccentricity": [
+    {
+     "of_all": 829,
+     "matched": 0,
+     "finite": 0,
+     "median_rel": null,
+     "p90_rel": null,
+     "median_rel_half": null,
+     "within_10pct_of_all": 0.0,
+     "usable_of_all": 0.0,
+     "usable_of_matched": null,
+     "outlier_50pct_of_finite": null,
+     "unresolved_of_matched": null,
+     "coverage": null,
+     "bin": [
+      0.0,
+      1.0
+     ]
+    },
+    {
+     "of_all": 1588,
+     "matched": 1588,
+     "finite": 121,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.22338809253460368,
+     "within_10pct_of_all": 0.0371536523929471,
+     "usable_of_all": 0.010705289672544081,
+     "usable_of_matched": 0.010705289672544081,
+     "outlier_50pct_of_finite": 0.10743801652892562,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.058564231738035266,
+     "bin": [
+      1.0,
+      2.0
+     ]
+    },
+    {
+     "of_all": 5492,
+     "matched": 5492,
+     "finite": 882,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.062036786194287936,
+     "within_10pct_of_all": 0.14093226511289147,
+     "usable_of_all": 0.126911871813547,
+     "usable_of_matched": 0.126911871813547,
+     "outlier_50pct_of_finite": 0.06689342403628118,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.14366351056081572,
+     "bin": [
+      2.0,
+      5.0
+     ]
+    },
+    {
+     "of_all": 8272,
+     "matched": 8272,
+     "finite": 934,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.09162764644125401,
+     "within_10pct_of_all": 0.09393133462282398,
+     "usable_of_all": 0.06443423597678917,
+     "usable_of_matched": 0.06443423597678917,
+     "outlier_50pct_of_finite": 0.07066381156316917,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.09381044487427466,
+     "bin": [
+      5.0,
+      10.0
+     ]
+    },
+    {
+     "of_all": 12808,
+     "matched": 12808,
+     "finite": 2370,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.08236163902260323,
+     "within_10pct_of_all": 0.17004996876951906,
+     "usable_of_all": 0.12398500936914429,
+     "usable_of_matched": 0.12398500936914429,
+     "outlier_50pct_of_finite": 0.029957805907172997,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.16536539662710806,
+     "bin": [
+      10.0,
+      20.0
+     ]
+    },
+    {
+     "of_all": 9808,
+     "matched": 9808,
+     "finite": 1925,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.06945589957531154,
+     "within_10pct_of_all": 0.1824021207177814,
+     "usable_of_all": 0.1449836867862969,
+     "usable_of_matched": 0.1449836867862969,
+     "outlier_50pct_of_finite": 0.03012987012987013,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.17750815660685154,
+     "bin": [
+      20.0,
+      30.0
+     ]
+    },
+    {
+     "of_all": 11472,
+     "matched": 10784,
+     "finite": 1334,
+     "median_rel": Infinity,
+     "p90_rel": Infinity,
+     "median_rel_half": 0.05330619335931933,
+     "within_10pct_of_all": 0.10503835425383543,
+     "usable_of_all": 0.10277196652719665,
+     "usable_of_matched": 0.10932863501483679,
+     "outlier_50pct_of_finite": 0.049475262368815595,
+     "unresolved_of_matched": 0.0,
+     "coverage": 0.10524851632047477,
+     "bin": [
+      30.0,
+      45.0
+     ]
+    }
+   ],
+   "stride": 5
+  }
+ },
+ "displacement_error_px_interior": {
+  "n": 5000,
+  "median": 0.07265347851476917,
+  "p90": 0.21512245514549563,
+  "over_1px": 0.0138
+ },
+ "edge_usable_range_error": {
+  "n": 2192,
+  "median": 0.02242099598473551,
+  "p90": 0.48482613546987124,
+  "over_50pct": 0.09124087591240876
+ },
+ "ladder_same_pairs_field_usable": {
+  "O2 pixel": {
+   "stride_5": 0.11398675127812369
+  },
+  "O3 0.05 px": {
+   "stride_5": 0.905607829875271
+  },
+  "O3 0.10 px": {
+   "stride_5": 0.8463267620203306
+  }
+ },
+ "run": "/home/claude/foveal-motion/runs/m3-calib-source",
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "7662c3a076823d620e3d779700017afaae6675b3",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "seconds": 0.6
+}

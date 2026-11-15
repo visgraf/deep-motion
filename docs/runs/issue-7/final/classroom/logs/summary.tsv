@@ -1,0 +1,12 @@
+s2-01-preflight	0	54.1	21:40:21	21:41:15	.venv/bin/python -m motion.dolly preflight --path paths/classroom_dolly.json --run runs/dolly-1024 --device OPTIX
+s2-02-run	0	38.1	21:41:15	21:41:53	.venv/bin/python -m motion.dolly run --path paths/classroom_dolly.json --run runs/dolly-1024 --device OPTIX --profile full --spp 1024 --modes ahead --seed-base 1000
+s2-03-checks	0	5.1	21:41:53	21:41:58	.venv/bin/python -m motion.dolly checks --run runs/dolly-1024
+s2-04-depth	0	4.7	21:41:58	21:42:03	.venv/bin/python -m motion.dolly depth --run runs/dolly-1024
+s2-05-O1	0	18.8	21:42:03	21:42:21	.venv/bin/python -m motion.dolly flow-depth --run runs/dolly-1024 --strides 1 5 10 --correspondence oracle-exact --out runs/m3-classroom-1024-O1
+s2-06-O2	0	15.6	21:42:21	21:42:37	.venv/bin/python -m motion.dolly flow-depth --run runs/dolly-1024 --strides 1 5 10 --correspondence oracle-pixel --out runs/m3-classroom-1024-O2
+s2-07-O3	0	56.6	21:42:37	21:43:34	.venv/bin/python -m motion.dolly flow-depth --run runs/dolly-1024 --strides 1 5 10 --correspondence oracle-noise --sigma-px 0.05 0.1 0.25 --seed 0 --out runs/m3-classroom-1024-O3
+s2-08-rgb	0	1833.6	21:43:34	22:14:07	.venv/bin/python -m motion.dolly flow-depth --run runs/dolly-1024 --strides 1 5 10 --correspondence rgb --out runs/m3-classroom-1024-rgb
+s2-09-calibrate	0	0.5	22:14:07	22:14:08	.venv/bin/python -m motion.dolly flow-depth-calibrate --result runs/m3-classroom-1024-rgb --from-result runs/m3-calib-1024-rgb --exclude 0:5,20:25,40:45
+s2-10-evaluate	1	29.4	22:14:08	22:14:37	.venv/bin/python -m motion.dolly flow-depth-evaluate --result runs/m3-classroom-1024-rgb --gate classroom
+s2-11-preview	0	6.4	22:14:48	22:14:54	.venv/bin/python -m motion.dolly flow-depth-preview --result runs/m3-classroom-1024-rgb --reference runs/m3-classroom-1024-O1 --out visuals/m3-classroom-1024-rgb.png
+s2-12-figures	0	3.6	22:14:54	22:14:58	.venv/bin/python -m motion.dolly flow-depth-figures --result runs/m3-classroom-1024-rgb --pair 10:15,30:35 --reference runs/m3-classroom-1024-O1 --out visuals/m3-classroom-1024-figs

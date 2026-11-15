@@ -1,0 +1,677 @@
+{
+ "schema": "foveal-motion-m3-freeze-v1",
+ "frozen_settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.625204104083527
+ },
+ "sha256": {
+  "config.json": "0536dcb6471be13ad5fe23c5bd4797992da54df0a6da98b6beae58361e9a5ea2",
+  "calibration.json": "7797684c810f0f6626a79a0053a54bd41e64178bfa14e4dd4e61a3a1f7bfbb5a",
+  "pairs/s1/a0000-b0001.npz": "e9c65958f14b984a005fe21aab3829a3cbdc8e766e563e4dee9d4efaf6d8ad78",
+  "pairs/s1/a0001-b0002.npz": "f4c166deb783fa259a7673c827a7527ff6e29cbb5d96389f62da63716818ca3c",
+  "pairs/s1/a0002-b0003.npz": "5d3a5a024f6bb16c4707adb3c8af06ee60cb646ded20357cc2a7585fe9e1de74",
+  "pairs/s1/a0003-b0004.npz": "9ac4d4b690c7c72c7d8aaf8d414388d074109b8361a4cb4e0b8e9bcf15f7a7d1",
+  "pairs/s1/a0004-b0005.npz": "57f64cd07f31a5e9f36391ffa53743bc5bab0c3c6e6a4a175feb0b02c6555efa",
+  "pairs/s1/a0005-b0006.npz": "2f19ff3faa188f5a3b910ef17a4ac503fe49109198d398de4a5c1d1b2bf2093f",
+  "pairs/s1/a0006-b0007.npz": "ae18984c484f03c590e23f82d915754677ec76d9a4549bf0097111dadb37aa55",
+  "pairs/s1/a0007-b0008.npz": "d616da58b66cf3b05b056c69df9cc84ff0e8761fce58c85c34082e5a292c04ea",
+  "pairs/s1/a0008-b0009.npz": "87e37da8ace26d06323503f81aea121176de175663cbc23e253ab84a6d593f87",
+  "pairs/s1/a0009-b0010.npz": "58ac469d8fef4f698f6be040bedc4dc148498be31ccf023efec2226179beb40f",
+  "pairs/s1/a0010-b0011.npz": "e54749aa5c3350d823f68675de1b521f63d845094bec7e82862780f274891ed6",
+  "pairs/s1/a0011-b0012.npz": "420d9a27b603f735b9b29e5a0ba3147c8709086410e3df9ab1b444f12e212daa",
+  "pairs/s1/a0012-b0013.npz": "197c15235c01edcf41b8307afb3ed452bdfd2b63b13fe3ca93e09916b6d3c57e",
+  "pairs/s1/a0013-b0014.npz": "16f57dd27c94a3f11095ab62e2747a3f1c5b1c6540f8d80220448e8101fac084",
+  "pairs/s1/a0014-b0015.npz": "ac50392b7460360c175fdf6fb5f9af326b26cb66fd108a7f97a3a5a52ad810e4",
+  "pairs/s1/a0015-b0016.npz": "b3d498e92175b4a868131b25cadc796b0365cd256f589a94066ef1c10d03720d",
+  "pairs/s1/a0016-b0017.npz": "8e57001ac44a123312b2916bf45a3e9ae2b5b13a6d944e2b1292b0ee23ffcbb4",
+  "pairs/s1/a0017-b0018.npz": "4fe49093304c91519ef34f74e5c5593e41c16e154edd4868ea4a3d2640dcd0a5",
+  "pairs/s1/a0018-b0019.npz": "dfd8c439cb1f8601944eb0acb369c574e88bc0833d9a0922ac0ef9b1b86f1f50",
+  "pairs/s1/a0019-b0020.npz": "dcd4be5d994fc633dad1ac115764eaff2efa8e628f99df3d347bd9ae4af5c7bc",
+  "pairs/s1/a0020-b0021.npz": "aa65c00987e98473b1dcb0c3f2b5d7eda020608688e8d8c9cf5cfb9e0c573814",
+  "pairs/s1/a0021-b0022.npz": "3d6af9890c9736fe41755d18e56a965961b6c76bd0c4f39eea58de66fa648a20",
+  "pairs/s1/a0022-b0023.npz": "315bca631f96a83a1737d39af1ba9786e2719d1c6f36896a06af71ba16c6ddfc",
+  "pairs/s1/a0023-b0024.npz": "48d5b43de536195c373387599ab58a9d44270a72d5c9dcd4d90a7dcf0ca2e2bc",
+  "pairs/s1/a0024-b0025.npz": "db974baffcfa36c3cfceef835329cf051eb0c014fee99e9929363463bfc345b6",
+  "pairs/s1/a0025-b0026.npz": "ca7b62a7b614d4c9442be987a5d98d02d4cb67d47a1fb51e3d068e1e1e1e1255",
+  "pairs/s1/a0026-b0027.npz": "8f34875d13d4799c4e17654c05a71da7e8f6c978e2b12e83f30ff1eb26d2921e",
+  "pairs/s1/a0027-b0028.npz": "dbcef9f8ff7583ebec5a6d7781d2d6cf0c808792a48c524b8b97aed4224ed6ca",
+  "pairs/s1/a0028-b0029.npz": "95c238bd3105feaca62ed3542f4396d12014db6b33904c433398e98e048eeb95",
+  "pairs/s1/a0029-b0030.npz": "741d0de8cc56d0c35b73d5170971cc1029bc8bf155ef90775f19e77de2553454",
+  "pairs/s1/a0030-b0031.npz": "10fef90526e4b3c5440b18f61aaac3dcaa99ee46a738f150c8079c97d89084a0",
+  "pairs/s1/a0031-b0032.npz": "2aee1d3968248972dbf55d3293ac8157d00f10f068b878c39f33882750025fe7",
+  "pairs/s1/a0032-b0033.npz": "3ddcacb527936bd4ab441befdd6bb1b3813c92d5bc009cd619fb0eaabf4908a2",
+  "pairs/s1/a0033-b0034.npz": "c3c6ea597ae9e0ecf6e804608802706bbd5987ee408962af4b271b083f632f0c",
+  "pairs/s1/a0034-b0035.npz": "23749d36ca2ea7d59810e2c104f9c36d04bb2b032a444b160397b561921aebc3",
+  "pairs/s1/a0035-b0036.npz": "1418b2feae22dda529ce55c434ef2b9ef1c3cfe5e056b2a65bad61596aa79b9b",
+  "pairs/s1/a0036-b0037.npz": "0c27a54eadfc2d905d3d7bdea2095790b3fec0cfa8408f824115843bb9a5fbff",
+  "pairs/s1/a0037-b0038.npz": "93f78a0032a8f5f571bc29050617d88742af9a626e8d0648d31cdbc1fdadd430",
+  "pairs/s1/a0038-b0039.npz": "cabf461c88d3c055820655dafd3033a8a27e09759f83f658694d8ffaf419556b",
+  "pairs/s1/a0039-b0040.npz": "4bca9ca62452ab4dcb24ace65f568e5aecdbd8e3fdb7ff10977c21ac18e94b3b",
+  "pairs/s1/a0040-b0041.npz": "b0764101db6093a0f44771ce86f8e5873ac855f7266fdc378ed3f412aa60a79a",
+  "pairs/s1/a0041-b0042.npz": "c7c2c7c467c6662e32af8a1caf61d3fbd3ceb6041510076a2975da83b00fac93",
+  "pairs/s1/a0042-b0043.npz": "934e255c6b87a8d8d16e8f357d9d84d084988993759d12a546a5f582a74ec53e",
+  "pairs/s1/a0043-b0044.npz": "f564a6e7f44b560b0c3376b6639fe4d5c5daf9eb54cb15f5beb707acec9c1d68",
+  "pairs/s1/a0044-b0045.npz": "d4ce8aed65799c79c9778521fc1cdfd33b1085d09aadd2c803572e949f414873",
+  "pairs/s1/a0045-b0046.npz": "36b49cd26758b61d130ab5ccc28b27d6ce25224eeefb2c027c30adf0918dd877",
+  "pairs/s10/a0000-b0010.npz": "209ee9aec769619ea2808a7cbba63b5febb151bd105e4f37a753e50aa1cc7413",
+  "pairs/s10/a0001-b0011.npz": "71e8a33b9dcbf83edcc2784aad12760a9a0e55a1f2358a30feb5ab5d23cf75c7",
+  "pairs/s10/a0002-b0012.npz": "078dd85396427aace97270de8c593993b1e1dd79ff94405cd6c7c927ee026087",
+  "pairs/s10/a0003-b0013.npz": "976ed834ed72e398f6bc927c0756d1ae6b5968f8914f73aa2fc266074bdf97a9",
+  "pairs/s10/a0004-b0014.npz": "47c081b084d581d2337a6264672150e12768866ff80292c89870171785723c83",
+  "pairs/s10/a0005-b0015.npz": "f5999e87f8557be3804a0d41626867764d872f38523fa00b455f9f180e55371b",
+  "pairs/s10/a0006-b0016.npz": "63aa3deb70205019714b606912eb99c931dae1362e51df7257a2b4792249ec3a",
+  "pairs/s10/a0007-b0017.npz": "2b8c475eaafe83b807f0fa8ed20c6030d53cc43ab27e40b8493e7e6216ecd2c2",
+  "pairs/s10/a0008-b0018.npz": "f127b54c503793761fb4b1fda0442b3c0a8c8a2656eb289ee9e6fefee40d1cb8",
+  "pairs/s10/a0009-b0019.npz": "843372d2b7b99cab4bbab902d71bdb1cbfb0e958ad34b5ac6cac394111bb6c2c",
+  "pairs/s10/a0010-b0020.npz": "010d948d7e89fc1f4e03c3538a5190681d54ce81a7077814af29c84e12b8d93e",
+  "pairs/s10/a0011-b0021.npz": "58561812a350949014784c6928cd4b2df299d5a371c0de9976b89310cdafa94b",
+  "pairs/s10/a0012-b0022.npz": "f97b1cd5376ffa8bd2d697a0b6993636ce49c1ee70da79d58bb384f3538e606c",
+  "pairs/s10/a0013-b0023.npz": "9a7d8b5f43702dceb54c35719bd7cd32ffeb8921d3ec0e28488c845e438724f2",
+  "pairs/s10/a0014-b0024.npz": "0472ebd6843f3ae57eac43a5de5db5c06099c34269b19972fe6cff0dd0dd3a91",
+  "pairs/s10/a0015-b0025.npz": "29b4d73438d973f0c89cb6cb54b7151d7b35c8dcd7ace560cab26164509775aa",
+  "pairs/s10/a0016-b0026.npz": "c83099957c5f84a3fbdb15f9bd32fd1d4f3fa412bc856ca2522e5ae581dc8d20",
+  "pairs/s10/a0017-b0027.npz": "a68876af0f683e45617112f3b3de63a0d7b87ed70aefcc118b5267aa0a00a0ee",
+  "pairs/s10/a0018-b0028.npz": "28ce3d61eae36d194944858b8f8b27181928d6e44c582eb2ffe75f6b1b0d332f",
+  "pairs/s10/a0019-b0029.npz": "40b201bd869facc316073126bfd76507dc1006ccee35e5ac3c533b8a370fa011",
+  "pairs/s10/a0020-b0030.npz": "61d2376083ae3b9928d3624cfa23c497b0a0490afbd2ebb4d39fc10ed2c8502f",
+  "pairs/s10/a0021-b0031.npz": "3a56d6833663dfe669f2749cd0e62f67760ca2becb7cde6994a7eef613a30af5",
+  "pairs/s10/a0022-b0032.npz": "ecaac6c1a4bfdc6ad093025ad8b462dc581648a0858289f417a56fb616771366",
+  "pairs/s10/a0023-b0033.npz": "bfd7c9eeefdaac980bce77838b5f537cc1dca674363a36b2462d775faa903543",
+  "pairs/s10/a0024-b0034.npz": "db512aaa70b3319311e6187dcfc9398c996eb24ce44c3b76874804c47382cd18",
+  "pairs/s10/a0025-b0035.npz": "f90ad1158906ddd8f5dd6acac582f77564e9a120ddd907282b78d9ffc77985e9",
+  "pairs/s10/a0026-b0036.npz": "379a11ae66b677d294ce86951d6291115d3b0010ddaed1cfe45f536d9d48c06a",
+  "pairs/s10/a0027-b0037.npz": "eb91a8ab2f76b6a1d8ca90e5381743820f0a7fff1e15c98be551bb51bd4f2ca4",
+  "pairs/s10/a0028-b0038.npz": "f6171fdfff93182d5b3ebaab5ffe6471323b5866cc250d3a198a90878e134ebe",
+  "pairs/s10/a0029-b0039.npz": "1935438ff30fd7c1e89eeca3f0ed90746d68de96f42b2200fb4fb02c66d49594",
+  "pairs/s10/a0030-b0040.npz": "cd70025f43bdfb0fc34e442453d95e8f11e243db12d3a61d799cb2c19a09d9b5",
+  "pairs/s10/a0031-b0041.npz": "580190344dea79d9106bbb99ad2378848c17cd017d8ff2654738949e55cf1038",
+  "pairs/s10/a0032-b0042.npz": "f5a66bef8e0a3212580de24984821a0768e5b353afe62855b151f89937bca195",
+  "pairs/s10/a0033-b0043.npz": "0c81d062cda001220be1d57085bee6c50420cbd5edac8abb1b00d66da7b0be80",
+  "pairs/s10/a0034-b0044.npz": "27893b90020bc4dbf06d055e2ce717bada4ee75632d92eb4801c2dfcfe5bd04b",
+  "pairs/s10/a0035-b0045.npz": "d00e5a1b269d8a79c03d7a62e754cb6098b734cece27d7462e51ac7a5156afac",
+  "pairs/s10/a0036-b0046.npz": "1fe83b06f4a9c610ce764ab8b431c1cbce50a1363fbd4ec001fc695b8419f32c",
+  "pairs/s5/a0000-b0005.npz": "c27528d91b33cc2a49d43d8ab2ff5afabee78de402fdc62888b9173d8728c2da",
+  "pairs/s5/a0001-b0006.npz": "a11efd465bed5ea544f7024918e910239c648e39fd92b09f7302a54f526e27de",
+  "pairs/s5/a0002-b0007.npz": "a41e9f7b6e481e88c32cefbd72302ff3adb6d0eb44a318b9b4733056f8c37368",
+  "pairs/s5/a0003-b0008.npz": "49f341c467a00881a8c4c937d02026483c66602c7f2a8534b1e7f87bfe5f9dc3",
+  "pairs/s5/a0004-b0009.npz": "16f70c70852942d030c9a2c289effe0421b301e0091d9633eafeaa74326e9ff8",
+  "pairs/s5/a0005-b0010.npz": "70dc7a73703bcf3e67fa7738f7c8d1bd8f62dea826ca854c36322e19c652d47b",
+  "pairs/s5/a0006-b0011.npz": "3d576a2b2076fcebe229ea46616aabc5ea2b65dabb324e34fef1032e5de6b477",
+  "pairs/s5/a0007-b0012.npz": "e83a42c88bbc0d29aaaf724f6fab995c8b38abf8fac4e79d141569762b9f21d8",
+  "pairs/s5/a0008-b0013.npz": "ca38d027c9efc95002b3967f8c124d3ae9897830d23a145b5d1511122163f393",
+  "pairs/s5/a0009-b0014.npz": "c0d0f77c697698a43a38e3cc5c0eaae8e21c96f8aef35f7fca2de0d54e2e7686",
+  "pairs/s5/a0010-b0015.npz": "f770cab1f4c96c1e5917c663026b25d11aa9fcea5f74d4f3aac8f7f7f2b09acc",
+  "pairs/s5/a0011-b0016.npz": "f350c69cffccba573755c095a872dc400e6d26398dec5487f41cefc0c0638df5",
+  "pairs/s5/a0012-b0017.npz": "91eadc158b2dcdcca2a65bc7331e5287da6b14957abb533c2733bde87f494999",
+  "pairs/s5/a0013-b0018.npz": "cedfb411605f8273b0dff59517da8576a2fb932b9709eecb819f073e9de2cdf9",
+  "pairs/s5/a0014-b0019.npz": "ad67a3d0bba9dd4cc99cb2cf8877f21b939663b6ab5d7cfcf1b06e8abaa3a115",
+  "pairs/s5/a0015-b0020.npz": "31550d074953c03ec90113e39c4f165bfe8e711ea3a89f62d42af931b442f415",
+  "pairs/s5/a0016-b0021.npz": "33b50a79e2a7105b53e08741ef54daee1eafcbb734e0a369b54fef011d79f57f",
+  "pairs/s5/a0017-b0022.npz": "7f7be161b161fd41bdcac4708a84636c0e3a08bf165e3088763a455e4e9813b4",
+  "pairs/s5/a0018-b0023.npz": "16a4c6d9ba509b3ab5704e8fea540cbdcc2f7c6282997ad33924578c84d2c53d",
+  "pairs/s5/a0019-b0024.npz": "bd66af104846a0d1def6ef857d61af6f9728c90a3efe61ace4fa96300c76a8c1",
+  "pairs/s5/a0020-b0025.npz": "3a813756191a3ec9bbe6cb0d6e261e956741992919cef6bc19485e0cdc146b05",
+  "pairs/s5/a0021-b0026.npz": "0218b7b2922b8585e0c37487f680a454e378a8e325ca0dd00c203708c73e1d0d",
+  "pairs/s5/a0022-b0027.npz": "cd3001bdb3639cf5a03a208628d7a04d961f92c0e85ead7d5a28c82aaba94f37",
+  "pairs/s5/a0023-b0028.npz": "806e059af7f3edf9b5e86a43d63b4ae1218488faf12b55e91e67b5c621e169b3",
+  "pairs/s5/a0024-b0029.npz": "1485db6621da4077e72ad53848b3dd32c0685b673bbe1185b557448fd659ce3a",
+  "pairs/s5/a0025-b0030.npz": "cf07f0cb98c632e862fcc07803a638f0861af1120d1c4eea0667bf2c512e3bb0",
+  "pairs/s5/a0026-b0031.npz": "ccbccc45e1d34718bac315890c2c5db7737350dd2a6c894290d5777aec9938cd",
+  "pairs/s5/a0027-b0032.npz": "080873edb1a7cb6574cfd4edf6773d414a800ef0847d1d8d3f6ccdf1ff1336f9",
+  "pairs/s5/a0028-b0033.npz": "b1d1e1dff36ee84a0c7f13db384bb0a5ebf3dc137449fe7c8c2aa1d606c1b432",
+  "pairs/s5/a0029-b0034.npz": "ed765e3aaeb2a6c72d8c8da8786de9ff2c1475ea510ea2d45e02d7103291fd3b",
+  "pairs/s5/a0030-b0035.npz": "c9793648ac4947a121cface87cb2d010d58373466bdc181663fc292d72ecb056",
+  "pairs/s5/a0031-b0036.npz": "66c3f9d9d75141debbf7f2bd8fb23431f4f0286f019570b1222aedb6d8498b35",
+  "pairs/s5/a0032-b0037.npz": "18d00212c8f14472b344a408f03b09f507751dbd8d9d8d2fb396af55514909bc",
+  "pairs/s5/a0033-b0038.npz": "a6df66d8596d7131a6f0d0a6c3683a8fc90199880b92f06ec4c89baa7c6edea7",
+  "pairs/s5/a0034-b0039.npz": "3afa5356b0b94c38e8b43e34cd739c6fa4c6546ea6dd9454c0ea1383d5464b4e",
+  "pairs/s5/a0035-b0040.npz": "b84d748f0e28aafd1d3febf898cfce04489fefbbc2461ea90012d9745fc941cb",
+  "pairs/s5/a0036-b0041.npz": "b8243f3ff5167cc173151263a51c57d6972d3965d0a0e111a70717cf57b25e71",
+  "pairs/s5/a0037-b0042.npz": "8bdd51661c3afa92c5212f640a308456f08517adc822a0a279592542429a8749",
+  "pairs/s5/a0038-b0043.npz": "95cc51122b86d7eb6b46390e0513b21bef690affb41c1a2827373996a4d35d34",
+  "pairs/s5/a0039-b0044.npz": "314e60c1b4e38859e16255c5f8b0cf3c2571858c3bb62607f0a22159dd8dad57",
+  "pairs/s5/a0040-b0045.npz": "682087e6dd39b7fc961db9b75b5fa278d1dd5ba7ea52a030dd999170709ac5f4",
+  "pairs/s5/a0041-b0046.npz": "b2d653475c0f45fcd71eaa12cd304d699e2fdbfae3640fc72188f71cc6110f95"
+ },
+ "held_out_pairs": [
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   7
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   8,
+   9
+  ],
+  [
+   9,
+   10
+  ],
+  [
+   10,
+   11
+  ],
+  [
+   11,
+   12
+  ],
+  [
+   12,
+   13
+  ],
+  [
+   13,
+   14
+  ],
+  [
+   14,
+   15
+  ],
+  [
+   15,
+   16
+  ],
+  [
+   16,
+   17
+  ],
+  [
+   17,
+   18
+  ],
+  [
+   18,
+   19
+  ],
+  [
+   19,
+   20
+  ],
+  [
+   20,
+   21
+  ],
+  [
+   21,
+   22
+  ],
+  [
+   22,
+   23
+  ],
+  [
+   23,
+   24
+  ],
+  [
+   24,
+   25
+  ],
+  [
+   25,
+   26
+  ],
+  [
+   26,
+   27
+  ],
+  [
+   27,
+   28
+  ],
+  [
+   28,
+   29
+  ],
+  [
+   29,
+   30
+  ],
+  [
+   30,
+   31
+  ],
+  [
+   31,
+   32
+  ],
+  [
+   32,
+   33
+  ],
+  [
+   33,
+   34
+  ],
+  [
+   34,
+   35
+  ],
+  [
+   35,
+   36
+  ],
+  [
+   36,
+   37
+  ],
+  [
+   37,
+   38
+  ],
+  [
+   38,
+   39
+  ],
+  [
+   39,
+   40
+  ],
+  [
+   40,
+   41
+  ],
+  [
+   41,
+   42
+  ],
+  [
+   42,
+   43
+  ],
+  [
+   43,
+   44
+  ],
+  [
+   44,
+   45
+  ],
+  [
+   45,
+   46
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   1,
+   11
+  ],
+  [
+   2,
+   12
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   4,
+   14
+  ],
+  [
+   5,
+   15
+  ],
+  [
+   6,
+   16
+  ],
+  [
+   7,
+   17
+  ],
+  [
+   8,
+   18
+  ],
+  [
+   9,
+   19
+  ],
+  [
+   10,
+   20
+  ],
+  [
+   11,
+   21
+  ],
+  [
+   12,
+   22
+  ],
+  [
+   13,
+   23
+  ],
+  [
+   14,
+   24
+  ],
+  [
+   15,
+   25
+  ],
+  [
+   16,
+   26
+  ],
+  [
+   17,
+   27
+  ],
+  [
+   18,
+   28
+  ],
+  [
+   19,
+   29
+  ],
+  [
+   20,
+   30
+  ],
+  [
+   21,
+   31
+  ],
+  [
+   22,
+   32
+  ],
+  [
+   23,
+   33
+  ],
+  [
+   24,
+   34
+  ],
+  [
+   25,
+   35
+  ],
+  [
+   26,
+   36
+  ],
+  [
+   27,
+   37
+  ],
+  [
+   28,
+   38
+  ],
+  [
+   29,
+   39
+  ],
+  [
+   30,
+   40
+  ],
+  [
+   31,
+   41
+  ],
+  [
+   32,
+   42
+  ],
+  [
+   33,
+   43
+  ],
+  [
+   34,
+   44
+  ],
+  [
+   35,
+   45
+  ],
+  [
+   36,
+   46
+  ],
+  [
+   1,
+   6
+  ],
+  [
+   2,
+   7
+  ],
+  [
+   3,
+   8
+  ],
+  [
+   4,
+   9
+  ],
+  [
+   5,
+   10
+  ],
+  [
+   6,
+   11
+  ],
+  [
+   7,
+   12
+  ],
+  [
+   8,
+   13
+  ],
+  [
+   9,
+   14
+  ],
+  [
+   10,
+   15
+  ],
+  [
+   11,
+   16
+  ],
+  [
+   12,
+   17
+  ],
+  [
+   13,
+   18
+  ],
+  [
+   14,
+   19
+  ],
+  [
+   15,
+   20
+  ],
+  [
+   16,
+   21
+  ],
+  [
+   17,
+   22
+  ],
+  [
+   18,
+   23
+  ],
+  [
+   19,
+   24
+  ],
+  [
+   21,
+   26
+  ],
+  [
+   22,
+   27
+  ],
+  [
+   23,
+   28
+  ],
+  [
+   24,
+   29
+  ],
+  [
+   25,
+   30
+  ],
+  [
+   26,
+   31
+  ],
+  [
+   27,
+   32
+  ],
+  [
+   28,
+   33
+  ],
+  [
+   29,
+   34
+  ],
+  [
+   30,
+   35
+  ],
+  [
+   31,
+   36
+  ],
+  [
+   32,
+   37
+  ],
+  [
+   33,
+   38
+  ],
+  [
+   34,
+   39
+  ],
+  [
+   35,
+   40
+  ],
+  [
+   36,
+   41
+  ],
+  [
+   37,
+   42
+  ],
+  [
+   38,
+   43
+  ],
+  [
+   39,
+   44
+  ],
+  [
+   41,
+   46
+  ]
+ ],
+ "excluded_pairs": [
+  [
+   0,
+   5
+  ],
+  [
+   20,
+   25
+  ],
+  [
+   40,
+   45
+  ]
+ ],
+ "note": "scale imported from runs/m3-calib-1024-rgb; no truth of this result was opened; excluded pairs are not evaluated"
+}

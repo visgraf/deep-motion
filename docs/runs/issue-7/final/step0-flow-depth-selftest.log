@@ -1,0 +1,18 @@
+[dolly] M3 selftest PASS foveated small: pixel -> (q, phi) -> pixel round trip < 1e-6 px, all quadrants
+[dolly] M3 selftest PASS foveated full: pixel -> (q, phi) -> pixel round trip < 1e-6 px, all quadrants
+[dolly] M3 selftest PASS control: wrong row sign breaks the round trip by >= 1 px
+[dolly] M3 selftest PASS pinhole 90deg: pixel -> (q, phi) -> pixel round trip < 1e-6 px, all quadrants
+[dolly] M3 selftest PASS dq/dw through pixel_of equals (2K/N)(E2+e)/(sin e cos e) within 1e-5
+[dolly] M3 selftest PASS control: a sensor with E2 = 2.2 deg fails that check (max rel >= 1e-3)
+[dolly] M3 selftest PASS pinhole: native px per unit q = f tan e within 1e-6
+[dolly] M3 selftest PASS #5's known answer (z_a 5 m, e_a 20 deg, stride 1) reproduced within 1e-9
+[dolly] M3 selftest PASS #5's native radial shifts on the 5 m plane reproduced within 1e-6 px
+[dolly] M3 selftest PASS analytic static points: range and world point within 1e-6 relative (parallax >= 0.01 deg)
+[dolly] M3 selftest PASS analytic static points keep their azimuth (|dphi| <= 1e-9 rad)
+[dolly] M3 selftest PASS control: native radius as pinhole radius at 20-45 deg gives median error >= 1 %
+[dolly] M3 selftest PASS interval: d_lo > 0 finite; d_lo <= 0 unbounded far; d_hi <= 0 no range
+[dolly] M3 selftest PASS grid: every supported node's bilinear footprint is on valid pixels
+
+real	0m0.245s
+user	0m2.762s
+sys	0m0.032s

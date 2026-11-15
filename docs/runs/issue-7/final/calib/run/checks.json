@@ -1,0 +1,755 @@
+{
+ "schema": "foveal-motion-checks-v1",
+ "run": "runs/m3-calib-1024",
+ "git": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "device": "OPTIX",
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "step_m": 0.1,
+ "checks": [
+  {
+   "id": "M1.0",
+   "what": "every record agrees with its Position pass (S4's limit)",
+   "ok": true,
+   "control_fails": true,
+   "control": "directions turned by 1.5 coarsest pixels must exceed the limit",
+   "detail": {
+    "ahead": {
+     "max_p999_deg": 0.0008020791419887107,
+     "pixel_deg": 1.172956678213876
+    }
+   }
+  },
+  {
+   "id": "M1.1",
+   "what": "every record sits on its path head",
+   "ok": true,
+   "control_fails": true,
+   "control": "the records against the path shifted by one step: every look must differ",
+   "detail": {
+    "ahead": {
+     "looks": 22,
+     "max_origin_err_m": 0.0,
+     "max_R_err": 0.0,
+     "max_eye_origin_err_m": 0.0,
+     "ks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21
+     ]
+    }
+   }
+  },
+  {
+   "id": "M1.2",
+   "what": "in target mode the fovea's centre lands on target_w",
+   "applicable": false,
+   "ok": null,
+   "control_fails": null,
+   "detail": {},
+   "note": "not applicable: the run has no target mode; M3.0 checks the ahead looks' alignment"
+  },
+  {
+   "id": "M1.3",
+   "what": "look k+1's points reproject onto look k's surface (>= 0.8)",
+   "ok": true,
+   "control_fails": true,
+   "control": "look k's eye centre 0.1 m sideways must lose half of the agreeing points",
+   "detail": {
+    "ahead": {
+     "pairs": 21,
+     "min_fraction": 0.9303745847341304,
+     "median_fraction": 0.9582247508404782,
+     "max_control_fraction": 0.022203211109563695,
+     "control_lost_half": true
+    }
+   },
+   "rows": {
+    "ahead": [
+     {
+      "k": [
+       "000001",
+       "000002"
+      ],
+      "ks": [
+       0,
+       1
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 46769,
+      "fraction": 0.9303745847341304,
+      "control_fraction": 0.022203211109563695
+     },
+     {
+      "k": [
+       "000002",
+       "000003"
+      ],
+      "ks": [
+       1,
+       2
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 46967,
+      "fraction": 0.9343133939405995,
+      "control_fraction": 0.021606780470335443
+     },
+     {
+      "k": [
+       "000003",
+       "000004"
+      ],
+      "ks": [
+       2,
+       3
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 47132,
+      "fraction": 0.9375957349459906,
+      "control_fraction": 0.02122876129083602
+     },
+     {
+      "k": [
+       "000004",
+       "000005"
+      ],
+      "ks": [
+       3,
+       4
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 47331,
+      "fraction": 0.94155443712825,
+      "control_fraction": 0.020332643641572497
+     },
+     {
+      "k": [
+       "000005",
+       "000006"
+      ],
+      "ks": [
+       4,
+       5
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 47516,
+      "fraction": 0.9452346376494459,
+      "control_fraction": 0.020153188103053814
+     },
+     {
+      "k": [
+       "000006",
+       "000007"
+      ],
+      "ks": [
+       5,
+       6
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 47732,
+      "fraction": 0.9495315204201397,
+      "control_fraction": 0.01985595479686443
+     },
+     {
+      "k": [
+       "000007",
+       "000008"
+      ],
+      "ks": [
+       6,
+       7
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 47879,
+      "fraction": 0.9524557878613061,
+      "control_fraction": 0.01953762285623334
+     },
+     {
+      "k": [
+       "000008",
+       "000009"
+      ],
+      "ks": [
+       7,
+       8
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48052,
+      "fraction": 0.9558972726730192,
+      "control_fraction": 0.019099916437865586
+     },
+     {
+      "k": [
+       "000009",
+       "000010"
+      ],
+      "ks": [
+       8,
+       9
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48151,
+      "fraction": 0.9578666772762537,
+      "control_fraction": 0.018164093585866625
+     },
+     {
+      "k": [
+       "000010",
+       "000011"
+      ],
+      "ks": [
+       9,
+       10
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48242,
+      "fraction": 0.9596769380731663,
+      "control_fraction": 0.01752815248099956
+     },
+     {
+      "k": [
+       "000011",
+       "000012"
+      ],
+      "ks": [
+       10,
+       11
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48337,
+      "fraction": 0.9615667707732399,
+      "control_fraction": 0.01685169710715849
+     },
+     {
+      "k": [
+       "000012",
+       "000013"
+      ],
+      "ks": [
+       11,
+       12
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48382,
+      "fraction": 0.9624619546838011,
+      "control_fraction": 0.015936492777844098
+     },
+     {
+      "k": [
+       "000013",
+       "000014"
+      ],
+      "ks": [
+       12,
+       13
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48315,
+      "fraction": 0.9611291253058545,
+      "control_fraction": 0.01524014165771358
+     },
+     {
+      "k": [
+       "000014",
+       "000015"
+      ],
+      "ks": [
+       13,
+       14
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48274,
+      "fraction": 0.9603135132984543,
+      "control_fraction": 0.014862122478214158
+     },
+     {
+      "k": [
+       "000015",
+       "000016"
+      ],
+      "ks": [
+       14,
+       15
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48207,
+      "fraction": 0.9589806839205076,
+      "control_fraction": 0.014742748000477498
+     },
+     {
+      "k": [
+       "000016",
+       "000017"
+      ],
+      "ks": [
+       15,
+       16
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48177,
+      "fraction": 0.9583838946468002,
+      "control_fraction": 0.014603477776451395
+     },
+     {
+      "k": [
+       "000017",
+       "000018"
+      ],
+      "ks": [
+       16,
+       17
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48169,
+      "fraction": 0.9582247508404782,
+      "control_fraction": 0.014464207552425291
+     },
+     {
+      "k": [
+       "000018",
+       "000019"
+      ],
+      "ks": [
+       17,
+       18
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48196,
+      "fraction": 0.958761861186815,
+      "control_fraction": 0.014901913970793044
+     },
+     {
+      "k": [
+       "000019",
+       "000020"
+      ],
+      "ks": [
+       18,
+       19
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48220,
+      "fraction": 0.9592392926057809,
+      "control_fraction": 0.016175885395941107
+     },
+     {
+      "k": [
+       "000020",
+       "000021"
+      ],
+      "ks": [
+       19,
+       20
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48182,
+      "fraction": 0.9584833595257515,
+      "control_fraction": 0.017350126345530154
+     },
+     {
+      "k": [
+       "000021",
+       "000022"
+      ],
+      "ks": [
+       20,
+       21
+      ],
+      "hits_b": 50269,
+      "considered": 50269,
+      "agree": 48079,
+      "fraction": 0.9564343830193559,
+      "control_fraction": 0.018026263430163152
+     }
+    ]
+   }
+  },
+  {
+   "id": "M3.0",
+   "what": "heading = eye axis in both looks, no rotation between them (#5's gate)",
+   "ok": true,
+   "control_fails": true,
+   "control": "0.1 deg yaw of b, and b's centre 0.01 m sideways: every pair must fail",
+   "detail": {
+    "ahead": {
+     "pairs": 21,
+     "tol_rad": 1e-06,
+     "max_axis_rad": 0.0,
+     "max_rotation_rad": 0.0,
+     "min_B_m": 0.09999999999999987,
+     "observation_loader_refuses_oracle": true
+    }
+   },
+   "rows": [
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      0,
+      1
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      1,
+      2
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      2,
+      3
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      3,
+      4
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      4,
+      5
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999998,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      5,
+      6
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999998,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      6,
+      7
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      7,
+      8
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999998,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      8,
+      9
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999998,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      9,
+      10
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      10,
+      11
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      11,
+      12
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      12,
+      13
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      13,
+      14
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      14,
+      15
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000031,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      15,
+      16
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      16,
+      17
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      17,
+      18
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.09999999999999987,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      18,
+      19
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      19,
+      20
+     ],
+     "ok": true
+    },
+    {
+     "B_m": 0.10000000000000009,
+     "axis_a_rad": 0.0,
+     "axis_b_rad": 0.0,
+     "rotation_rad": 0.0,
+     "pair": [
+      20,
+      21
+     ],
+     "ok": true
+    }
+   ]
+  }
+ ],
+ "flow_by_eccentricity": {
+  "ahead": [
+   {
+    "ecc_deg": [
+     0.0,
+     1.0
+    ],
+    "n": 17408,
+    "median_flow_deg": 0.012035025283694267,
+    "p90_flow_deg": 0.017611373215913773,
+    "median_flow_px": 0.18049979209899902,
+    "p90_flow_px": 0.24490199983119965
+   },
+   {
+    "ecc_deg": [
+     1.0,
+     2.0
+    ],
+    "n": 32983,
+    "median_flow_deg": 0.028076013550162315,
+    "p90_flow_deg": 0.03883833438158035,
+    "median_flow_px": 0.3172486126422882,
+    "p90_flow_px": 0.40765056014060974
+   },
+   {
+    "ecc_deg": [
+     2.0,
+     5.0
+    ],
+    "n": 111897,
+    "median_flow_deg": 0.07378163188695908,
+    "p90_flow_deg": 0.17185434699058533,
+    "median_flow_px": 0.5016350150108337,
+    "p90_flow_px": 1.1827318668365479
+   },
+   {
+    "ecc_deg": [
+     5.0,
+     10.0
+    ],
+    "n": 168637,
+    "median_flow_deg": 0.14616434276103973,
+    "p90_flow_deg": 0.31427323818206787,
+    "median_flow_px": 0.598892092704773,
+    "p90_flow_px": 1.405833125114441
+   },
+   {
+    "ecc_deg": [
+     10.0,
+     20.0
+    ],
+    "n": 255551,
+    "median_flow_deg": 0.2859814167022705,
+    "p90_flow_deg": 0.5997830033302307,
+    "median_flow_px": 0.6791888475418091,
+    "p90_flow_px": 1.4655752182006836
+   },
+   {
+    "ecc_deg": [
+     20.0,
+     30.0
+    ],
+    "n": 189348,
+    "median_flow_deg": 0.5145919322967529,
+    "p90_flow_deg": 1.0281786918640137,
+    "median_flow_px": 0.7969107031822205,
+    "p90_flow_px": 1.5318448543548584
+   },
+   {
+    "ecc_deg": [
+     30.0,
+     45.0
+    ],
+    "n": 230485,
+    "median_flow_deg": 0.9703211188316345,
+    "p90_flow_deg": 1.606297492980957,
+    "median_flow_px": 1.0468169450759888,
+    "p90_flow_px": 1.5702767372131348
+   }
+  ]
+ }
+}

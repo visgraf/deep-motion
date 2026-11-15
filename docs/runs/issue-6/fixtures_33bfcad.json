@@ -1,0 +1,1532 @@
+{
+ "gate": {
+  "median_px": 0.1,
+  "p90_px": 0.25,
+  "min_accepted": 100
+ },
+ "noise": 0.005,
+ "baselines": [
+  0.0989565,
+  0.4947826,
+  0.989565
+ ],
+ "gates": [
+  {
+   "fixture": "front",
+   "label": "front",
+   "B_m": 0.0989565,
+   "ok": true,
+   "accepted_fraction": 0.9220955037742041,
+   "median_px": 0.02935963216704055,
+   "p90_px": 0.08522624074362133,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "front",
+   "label": "front",
+   "B_m": 0.4947826,
+   "ok": true,
+   "accepted_fraction": 0.8451755825402035,
+   "median_px": 0.035244477594866194,
+   "p90_px": 0.10464553224178513,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "front",
+   "label": "front",
+   "B_m": 0.989565,
+   "ok": true,
+   "accepted_fraction": 0.7940597308828355,
+   "median_px": 0.03649586421433679,
+   "p90_px": 0.1047379444016488,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "tilted",
+   "label": "tilted",
+   "B_m": 0.0989565,
+   "ok": true,
+   "accepted_fraction": 0.7715654292439196,
+   "median_px": 0.03672571298222971,
+   "p90_px": 0.1129396630387642,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "tilted",
+   "label": "tilted",
+   "B_m": 0.4947826,
+   "ok": true,
+   "accepted_fraction": 0.75124912251724,
+   "median_px": 0.037017662153128676,
+   "p90_px": 0.10606230161395107,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "tilted",
+   "label": "tilted",
+   "B_m": 0.989565,
+   "ok": true,
+   "accepted_fraction": 0.6493578890861791,
+   "median_px": 0.038467096432701076,
+   "p90_px": 0.10374262009579589,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "parallel",
+   "B_m": 0.0989565,
+   "ok": true,
+   "accepted_fraction": 0.6453083605446368,
+   "median_px": 0.04249284881244557,
+   "p90_px": 0.1296634484472936,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "front_far",
+   "B_m": 0.0989565,
+   "ok": true,
+   "accepted_fraction": 0.921792510742787,
+   "median_px": 0.0437008500065566,
+   "p90_px": 0.1126029045259973,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "parallel",
+   "B_m": 0.4947826,
+   "ok": true,
+   "accepted_fraction": 0.5021937438843471,
+   "median_px": 0.04479778003217502,
+   "p90_px": 0.12720796068462065,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "front_far",
+   "B_m": 0.4947826,
+   "ok": true,
+   "accepted_fraction": 0.9367348134262785,
+   "median_px": 0.03536412116233613,
+   "p90_px": 0.09448108570589335,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "parallel",
+   "B_m": 0.989565,
+   "ok": true,
+   "accepted_fraction": 0.1384957343183081,
+   "median_px": 0.05496467662214431,
+   "p90_px": 0.1554633044836774,
+   "over_1px_of_accepted": 0.012744866650932263
+  },
+  {
+   "fixture": "corridor",
+   "label": "front_far",
+   "B_m": 0.989565,
+   "ok": true,
+   "accepted_fraction": 0.9077041687317584,
+   "median_px": 0.03530734773107191,
+   "p90_px": 0.09603472252474908,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "occlusion",
+   "label": "interior",
+   "B_m": 0.4947826,
+   "ok": true,
+   "accepted_fraction": 0.8016197896034156,
+   "median_px": 0.036443138098086206,
+   "p90_px": 0.10773915535214322,
+   "over_1px_of_accepted": 8.2363276960246e-05
+  }
+ ],
+ "controls": [
+  {
+   "control": "scrambled frame b (another texture)",
+   "fails": true,
+   "stats": {
+    "anchors": 48752,
+    "accepted": 650,
+    "accepted_fraction": 0.013332786347226781,
+    "median_px": 10.16682358264228,
+    "p90_px": 22.208178647630465,
+    "over_1px_of_accepted": 0.9246153846153846,
+    "within_0p25px_of_anchors": 0.00028716770594026914
+   }
+  },
+  {
+   "control": "wrong azimuth: a's eye rolled 1 deg",
+   "fails": true,
+   "stats": {
+    "anchors": 48752,
+    "accepted": 5650,
+    "accepted_fraction": 0.11589268132589432,
+    "median_px": 0.12147416948201162,
+    "p90_px": 0.37306884782269994,
+    "over_1px_of_accepted": 0.011858407079646017,
+    "within_0p25px_of_anchors": 0.09029373153921891
+   }
+  },
+  {
+   "control": "shift-only matcher on the corridor's parallel surfaces (stride 5): fewer matches within 0.25 px",
+   "fails": true,
+   "stats": {
+    "anchors": 31681,
+    "accepted": 7827,
+    "accepted_fraction": 0.24705659543575012,
+    "median_px": 0.06890321415324296,
+    "p90_px": 0.18623707988933955,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.23831318455856823
+   },
+   "shift_plus_stretch": {
+    "anchors": 31681,
+    "accepted": 15910,
+    "accepted_fraction": 0.5021937438843471,
+    "median_px": 0.04479778003217502,
+    "p90_px": 0.12720796068462065,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.49850067864019443
+   }
+  }
+ ],
+ "cases": [
+  {
+   "fixture": "front",
+   "B_m": 0.0989565,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 44954,
+    "invalid_support": 2300,
+    "low_texture": 352,
+    "low_ncc": 42,
+    "ambiguous": 318,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 8,
+    "fb_inconsistent": 0,
+    "unsupported": 4,
+    "depth_edge": 503,
+    "half_disagree": 271
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 44954,
+    "accepted_fraction": 0.9220955037742041,
+    "median_px": 0.02935963216704055,
+    "p90_px": 0.08522624074362133,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.9216647522152938
+   },
+   "by_label": {
+    "front": {
+     "anchors": 48752,
+     "accepted": 44954,
+     "accepted_fraction": 0.9220955037742041,
+     "median_px": 0.02935963216704055,
+     "p90_px": 0.08522624074362133,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9216647522152938
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1536,
+     "accepted_fraction": 0.9672544080604534,
+     "median_px": 0.036647942887683006,
+     "p90_px": 0.10040172145985263,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9672544080604534
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5282,
+     "accepted_fraction": 0.9617625637290604,
+     "median_px": 0.03593519976474345,
+     "p90_px": 0.10128362554267302,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9613983976693372
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 8141,
+     "accepted_fraction": 0.9841634429400387,
+     "median_px": 0.025252092994783416,
+     "p90_px": 0.07585035311173143,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9840425531914894
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 12601,
+     "accepted_fraction": 0.9838382261086821,
+     "median_px": 0.02774995443349817,
+     "p90_px": 0.07411026835971522,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9838382261086821
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 9580,
+     "accepted_fraction": 0.9767536704730831,
+     "median_px": 0.02983401889944695,
+     "p90_px": 0.08822294002524295,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9755301794453507
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 7814,
+     "accepted_fraction": 0.7245919881305638,
+     "median_px": 0.03186448875062672,
+     "p90_px": 0.0922188756565678,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7240356083086054
+    }
+   },
+   "median_kappa_accepted": 0.00023551118356986156,
+   "median_sigma_px_accepted": 0.04339994743987581
+  },
+  {
+   "fixture": "front",
+   "B_m": 0.4947826,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 41204,
+    "invalid_support": 2296,
+    "low_texture": 356,
+    "low_ncc": 334,
+    "ambiguous": 2185,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 30,
+    "fb_inconsistent": 36,
+    "unsupported": 55,
+    "depth_edge": 1610,
+    "half_disagree": 646
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 41204,
+    "accepted_fraction": 0.8451755825402035,
+    "median_px": 0.035244477594866194,
+    "p90_px": 0.10464553224178513,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.8431448966196259
+   },
+   "by_label": {
+    "front": {
+     "anchors": 48752,
+     "accepted": 41204,
+     "accepted_fraction": 0.8451755825402035,
+     "median_px": 0.035244477594866194,
+     "p90_px": 0.10464553224178513,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8431448966196259
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1463,
+     "accepted_fraction": 0.9212846347607053,
+     "median_px": 0.029458963965199553,
+     "p90_px": 0.07808672439772563,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9212846347607053
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5085,
+     "accepted_fraction": 0.9258922068463219,
+     "median_px": 0.03440750678813768,
+     "p90_px": 0.0997889855929759,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9249817916970139
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 7566,
+     "accepted_fraction": 0.914651837524178,
+     "median_px": 0.034100716764451616,
+     "p90_px": 0.09665300686078537,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9138056092843327
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 11852,
+     "accepted_fraction": 0.9253591505309182,
+     "median_px": 0.031432546723383234,
+     "p90_px": 0.09704517581711229,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9242660836976889
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 8342,
+     "accepted_fraction": 0.8505301794453507,
+     "median_px": 0.03925692934824103,
+     "p90_px": 0.11820330940559222,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8464518760195758
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 6896,
+     "accepted_fraction": 0.6394658753709199,
+     "median_px": 0.04209275067222513,
+     "p90_px": 0.1159277549556999,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.6364057863501483
+    }
+   },
+   "median_kappa_accepted": 0.001384902820162356,
+   "median_sigma_px_accepted": 0.05018432144220724
+  },
+  {
+   "fixture": "front",
+   "B_m": 0.989565,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 38712,
+    "invalid_support": 2296,
+    "low_texture": 356,
+    "low_ncc": 279,
+    "ambiguous": 4520,
+    "unresolved_far": 3,
+    "near_boundary": 0,
+    "gn_failed": 20,
+    "fb_inconsistent": 34,
+    "unsupported": 120,
+    "depth_edge": 1699,
+    "half_disagree": 713
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 38712,
+    "accepted_fraction": 0.7940597308828355,
+    "median_px": 0.03649586421433679,
+    "p90_px": 0.1047379444016488,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.7924597965211684
+   },
+   "by_label": {
+    "front": {
+     "anchors": 48752,
+     "accepted": 38712,
+     "accepted_fraction": 0.7940597308828355,
+     "median_px": 0.03649586421433679,
+     "p90_px": 0.1047379444016488,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7924597965211684
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1395,
+     "accepted_fraction": 0.878463476070529,
+     "median_px": 0.03553195319790102,
+     "p90_px": 0.09293370530491876,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.878463476070529
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 4858,
+     "accepted_fraction": 0.8845593590677349,
+     "median_px": 0.03740609592969864,
+     "p90_px": 0.10347268431842763,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8836489439184269
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 6957,
+     "accepted_fraction": 0.8410299806576402,
+     "median_px": 0.03507133784150309,
+     "p90_px": 0.09926085408095014,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.840183752417795
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 11065,
+     "accepted_fraction": 0.8639131792629606,
+     "median_px": 0.03287379951992514,
+     "p90_px": 0.09559987405809404,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.862898188632105
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 7736,
+     "accepted_fraction": 0.7887438825448614,
+     "median_px": 0.0373206205586647,
+     "p90_px": 0.11799428689284071,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.785889070146819
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 6701,
+     "accepted_fraction": 0.6213835311572701,
+     "median_px": 0.042983607428660614,
+     "p90_px": 0.11510773212695025,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.6190652818991098
+    }
+   },
+   "median_kappa_accepted": 0.002053840161590503,
+   "median_sigma_px_accepted": 0.052086688974326494
+  },
+  {
+   "fixture": "tilted",
+   "B_m": 0.0989565,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 37370,
+    "invalid_support": 2845,
+    "low_texture": 321,
+    "low_ncc": 3233,
+    "ambiguous": 533,
+    "unresolved_far": 163,
+    "near_boundary": 6,
+    "gn_failed": 180,
+    "fb_inconsistent": 53,
+    "unsupported": 183,
+    "depth_edge": 2594,
+    "half_disagree": 1271
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 37370,
+    "accepted_fraction": 0.7665326550705612,
+    "median_px": 0.03672571298222971,
+    "p90_px": 0.1129396630387642,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.7630661306202823
+   },
+   "by_label": {
+    "none": {
+     "anchors": 318,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "tilted": {
+     "anchors": 48434,
+     "accepted": 37370,
+     "accepted_fraction": 0.7715654292439196,
+     "median_px": 0.03672571298222971,
+     "p90_px": 0.1129396630387642,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7680761448569187
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1501,
+     "accepted_fraction": 0.9452141057934509,
+     "median_px": 0.04157402714111289,
+     "p90_px": 0.11394936738766161,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9395465994962217
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5282,
+     "accepted_fraction": 0.9617625637290604,
+     "median_px": 0.03722109489457956,
+     "p90_px": 0.106901796768473,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9603058994901675
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 7926,
+     "accepted_fraction": 0.9581721470019342,
+     "median_px": 0.033690738287358926,
+     "p90_px": 0.09838691652176909,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9563588007736944
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 10768,
+     "accepted_fraction": 0.8407245471580262,
+     "median_px": 0.03680025526010295,
+     "p90_px": 0.11736249975405813,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.837367270455965
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 7025,
+     "accepted_fraction": 0.7162520391517129,
+     "median_px": 0.03723587250060353,
+     "p90_px": 0.11400877677581071,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7126835236541599
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 4868,
+     "accepted_fraction": 0.4514094955489614,
+     "median_px": 0.03993523096451328,
+     "p90_px": 0.13574579038193757,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.4459384272997033
+    }
+   },
+   "median_kappa_accepted": 0.001514307633359858,
+   "median_sigma_px_accepted": 0.054979529309082106
+  },
+  {
+   "fixture": "tilted",
+   "B_m": 0.4947826,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 36386,
+    "invalid_support": 2806,
+    "low_texture": 337,
+    "low_ncc": 2572,
+    "ambiguous": 3072,
+    "unresolved_far": 1,
+    "near_boundary": 0,
+    "gn_failed": 109,
+    "fb_inconsistent": 174,
+    "unsupported": 235,
+    "depth_edge": 2101,
+    "half_disagree": 959
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 36386,
+    "accepted_fraction": 0.7463488677387594,
+    "median_px": 0.037017662153128676,
+    "p90_px": 0.10606230161395107,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.744072038070233
+   },
+   "by_label": {
+    "none": {
+     "anchors": 318,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "tilted": {
+     "anchors": 48434,
+     "accepted": 36386,
+     "accepted_fraction": 0.75124912251724,
+     "median_px": 0.037017662153128676,
+     "p90_px": 0.10606230161395107,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7489573440145353
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1475,
+     "accepted_fraction": 0.9288413098236776,
+     "median_px": 0.036391631879091536,
+     "p90_px": 0.09297779657981489,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9288413098236776
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5124,
+     "accepted_fraction": 0.932993445010925,
+     "median_px": 0.031946235054603686,
+     "p90_px": 0.09290126600592585,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9315367807720321
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 7291,
+     "accepted_fraction": 0.8814071566731141,
+     "median_px": 0.036605359034661826,
+     "p90_px": 0.10426530196918862,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8797147001934236
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 10597,
+     "accepted_fraction": 0.8273735165521549,
+     "median_px": 0.03636232869238685,
+     "p90_px": 0.10318335534377622,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8260462211118051
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 7111,
+     "accepted_fraction": 0.7250203915171288,
+     "median_px": 0.04069035378995389,
+     "p90_px": 0.11492187616677765,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7213499184339315
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 4788,
+     "accepted_fraction": 0.4439910979228487,
+     "median_px": 0.04045769779792231,
+     "p90_px": 0.11642544086362526,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.4406528189910979
+    }
+   },
+   "median_kappa_accepted": 0.004130422775466506,
+   "median_sigma_px_accepted": 0.05556945999409803
+  },
+  {
+   "fixture": "tilted",
+   "B_m": 0.989565,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 31451,
+    "invalid_support": 2797,
+    "low_texture": 340,
+    "low_ncc": 3257,
+    "ambiguous": 6681,
+    "unresolved_far": 20,
+    "near_boundary": 3,
+    "gn_failed": 136,
+    "fb_inconsistent": 433,
+    "unsupported": 577,
+    "depth_edge": 2167,
+    "half_disagree": 890
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 31451,
+    "accepted_fraction": 0.6451222513948146,
+    "median_px": 0.038467096432701076,
+    "p90_px": 0.10374262009579589,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.6434402691171645
+   },
+   "by_label": {
+    "none": {
+     "anchors": 318,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "tilted": {
+     "anchors": 48434,
+     "accepted": 31451,
+     "accepted_fraction": 0.6493578890861791,
+     "median_px": 0.038467096432701076,
+     "p90_px": 0.10374262009579589,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.6476648635256225
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1346,
+     "accepted_fraction": 0.8476070528967254,
+     "median_px": 0.04142766841723956,
+     "p90_px": 0.11025990364349184,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8469773299748111
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 4770,
+     "accepted_fraction": 0.8685360524399126,
+     "median_px": 0.03640204471881483,
+     "p90_px": 0.0988903640602951,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8678077203204662
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 6880,
+     "accepted_fraction": 0.8317214700193424,
+     "median_px": 0.03972960616922009,
+     "p90_px": 0.10550443470026051,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8302707930367504
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 9783,
+     "accepted_fraction": 0.7638194878201124,
+     "median_px": 0.03712443450717881,
+     "p90_px": 0.10225633434486091,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.761945658963148
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 5583,
+     "accepted_fraction": 0.5692292006525286,
+     "median_px": 0.03859464311156819,
+     "p90_px": 0.1041152323995359,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.5663743882544862
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 3089,
+     "accepted_fraction": 0.2864428783382789,
+     "median_px": 0.042053560256842815,
+     "p90_px": 0.10699527375891005,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.2852373887240356
+    }
+   },
+   "median_kappa_accepted": 0.011637110935910135,
+   "median_sigma_px_accepted": 0.0569378602992968
+  },
+  {
+   "fixture": "corridor",
+   "B_m": 0.0989565,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 35964,
+    "invalid_support": 2297,
+    "low_texture": 356,
+    "low_ncc": 4628,
+    "ambiguous": 505,
+    "unresolved_far": 460,
+    "near_boundary": 3,
+    "gn_failed": 296,
+    "fb_inconsistent": 116,
+    "unsupported": 222,
+    "depth_edge": 2540,
+    "half_disagree": 1365
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 35964,
+    "accepted_fraction": 0.7376928126025599,
+    "median_px": 0.0429958270396639,
+    "p90_px": 0.12198102096638357,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.7338160485723663
+   },
+   "by_label": {
+    "front_far": {
+     "anchors": 16290,
+     "accepted": 15016,
+     "accepted_fraction": 0.921792510742787,
+     "median_px": 0.0437008500065566,
+     "p90_px": 0.1126029045259973,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9213627992633517
+    },
+    "parallel": {
+     "anchors": 32462,
+     "accepted": 20948,
+     "accepted_fraction": 0.6453083605446368,
+     "median_px": 0.04249284881244557,
+     "p90_px": 0.1296634484472936,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.639701805187604
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1530,
+     "accepted_fraction": 0.9634760705289672,
+     "median_px": 0.03442465928645799,
+     "p90_px": 0.08638871866548369,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9634760705289672
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5355,
+     "accepted_fraction": 0.9750546249089584,
+     "median_px": 0.03896745870345729,
+     "p90_px": 0.10171959573815922,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9750546249089584
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 7210,
+     "accepted_fraction": 0.871615087040619,
+     "median_px": 0.049882899107012574,
+     "p90_px": 0.12408138756642886,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.870889748549323
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 6525,
+     "accepted_fraction": 0.5094472204871955,
+     "median_px": 0.05390339253283335,
+     "p90_px": 0.15969754028196564,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.4989850093691443
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 8179,
+     "accepted_fraction": 0.8339110929853181,
+     "median_px": 0.04008074482894285,
+     "p90_px": 0.11918905788232463,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8313621533442088
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 7165,
+     "accepted_fraction": 0.6644102373887241,
+     "median_px": 0.037693997478821774,
+     "p90_px": 0.11148191227906123,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.6621847181008902
+    }
+   },
+   "median_kappa_accepted": 0.018811796975355195,
+   "median_sigma_px_accepted": 0.054780090803760124
+  },
+  {
+   "fixture": "corridor",
+   "B_m": 0.4947826,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 31901,
+    "invalid_support": 2298,
+    "low_texture": 356,
+    "low_ncc": 5967,
+    "ambiguous": 3589,
+    "unresolved_far": 43,
+    "near_boundary": 4,
+    "gn_failed": 235,
+    "fb_inconsistent": 676,
+    "unsupported": 602,
+    "depth_edge": 1940,
+    "half_disagree": 1141
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 31901,
+    "accepted_fraction": 0.6543526419428947,
+    "median_px": 0.03967058297603901,
+    "p90_px": 0.11136277061863338,
+    "over_1px_of_accepted": 0.0,
+    "within_0p25px_of_anchors": 0.6517271086314408
+   },
+   "by_label": {
+    "front_far": {
+     "anchors": 17071,
+     "accepted": 15991,
+     "accepted_fraction": 0.9367348134262785,
+     "median_px": 0.03536412116233613,
+     "p90_px": 0.09448108570589335,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9360904457852498
+    },
+    "parallel": {
+     "anchors": 31681,
+     "accepted": 15910,
+     "accepted_fraction": 0.5021937438843471,
+     "median_px": 0.04479778003217502,
+     "p90_px": 0.12720796068462065,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.49850067864019443
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1526,
+     "accepted_fraction": 0.9609571788413098,
+     "median_px": 0.030180724187045243,
+     "p90_px": 0.08492727212197428,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9596977329974811
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5147,
+     "accepted_fraction": 0.9371813546977422,
+     "median_px": 0.034303491622779146,
+     "p90_px": 0.09534957488433744,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9366351056081573
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 7595,
+     "accepted_fraction": 0.9181576402321083,
+     "median_px": 0.036270153422219634,
+     "p90_px": 0.09497460374309524,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9177949709864603
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 7780,
+     "accepted_fraction": 0.6074328544659587,
+     "median_px": 0.04702826263408042,
+     "p90_px": 0.132095534544705,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.6025140537164272
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 5422,
+     "accepted_fraction": 0.5528140293637847,
+     "median_px": 0.044005161930106326,
+     "p90_px": 0.12191001326573661,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.5488376835236541
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 4431,
+     "accepted_fraction": 0.4108864985163205,
+     "median_px": 0.04011828213796163,
+     "p90_px": 0.1162868079059519,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.4092173590504451
+    }
+   },
+   "median_kappa_accepted": 0.03986073663956228,
+   "median_sigma_px_accepted": 0.0553827153426911
+  },
+  {
+   "fixture": "corridor",
+   "B_m": 0.989565,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 20720,
+    "invalid_support": 2299,
+    "low_texture": 355,
+    "low_ncc": 11021,
+    "ambiguous": 7730,
+    "unresolved_far": 85,
+    "near_boundary": 35,
+    "gn_failed": 583,
+    "fb_inconsistent": 2171,
+    "unsupported": 2110,
+    "depth_edge": 1037,
+    "half_disagree": 606
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 20720,
+    "accepted_fraction": 0.4250082047915983,
+    "median_px": 0.03795056785788839,
+    "p90_px": 0.10771466923398945,
+    "over_1px_of_accepted": 0.0026061776061776063,
+    "within_0p25px_of_anchors": 0.42193140794223827
+   },
+   "by_label": {
+    "front_far": {
+     "anchors": 18159,
+     "accepted": 16483,
+     "accepted_fraction": 0.9077041687317584,
+     "median_px": 0.03530734773107191,
+     "p90_px": 0.09603472252474908,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9064926482735833
+    },
+    "parallel": {
+     "anchors": 30593,
+     "accepted": 4237,
+     "accepted_fraction": 0.1384957343183081,
+     "median_px": 0.05496467662214431,
+     "p90_px": 0.1554633044836774,
+     "over_1px_of_accepted": 0.012744866650932263,
+     "within_0p25px_of_anchors": 0.13431177066649233
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1454,
+     "accepted_fraction": 0.9156171284634761,
+     "median_px": 0.03791554223161746,
+     "p90_px": 0.09974179797438895,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9156171284634761
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 5037,
+     "accepted_fraction": 0.9171522214129643,
+     "median_px": 0.033012211638024314,
+     "p90_px": 0.09104862836637313,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.9166059723233795
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 7417,
+     "accepted_fraction": 0.8966392649903289,
+     "median_px": 0.03439708509928377,
+     "p90_px": 0.09378440370452762,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8961557059961315
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 5111,
+     "accepted_fraction": 0.3990474703310431,
+     "median_px": 0.047645432065546216,
+     "p90_px": 0.1337445137823226,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.3944409743910056
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 1130,
+     "accepted_fraction": 0.11521207177814029,
+     "median_px": 0.051452194062193715,
+     "p90_px": 0.14812265706829325,
+     "over_1px_of_accepted": 0.019469026548672566,
+     "within_0p25px_of_anchors": 0.1108278955954323
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 571,
+     "accepted_fraction": 0.05294881305637982,
+     "median_px": 0.052305148852612886,
+     "p90_px": 0.17887635960327264,
+     "over_1px_of_accepted": 0.05604203152364273,
+     "within_0p25px_of_anchors": 0.04914688427299703
+    }
+   },
+   "median_kappa_accepted": 0.009593541339407749,
+   "median_sigma_px_accepted": 0.052719484401181016
+  },
+  {
+   "fixture": "radial",
+   "B_m": 0.4947826,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 0,
+    "invalid_support": 2469,
+    "low_texture": 17356,
+    "low_ncc": 0,
+    "ambiguous": 26297,
+    "unresolved_far": 2630,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "fb_inconsistent": 0,
+    "unsupported": 0,
+    "depth_edge": 0,
+    "half_disagree": 0
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 0,
+    "accepted_fraction": 0.0,
+    "median_px": null,
+    "p90_px": null,
+    "over_1px_of_accepted": null,
+    "within_0p25px_of_anchors": 0.0
+   },
+   "by_label": {
+    "radial": {
+     "anchors": 48752,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    }
+   },
+   "median_kappa_accepted": null,
+   "median_sigma_px_accepted": null
+  },
+  {
+   "fixture": "periodic",
+   "B_m": 0.4947826,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 0,
+    "invalid_support": 2548,
+    "low_texture": 104,
+    "low_ncc": 0,
+    "ambiguous": 35816,
+    "unresolved_far": 10284,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "fb_inconsistent": 0,
+    "unsupported": 0,
+    "depth_edge": 0,
+    "half_disagree": 0
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 0,
+    "accepted_fraction": 0.0,
+    "median_px": null,
+    "p90_px": null,
+    "over_1px_of_accepted": null,
+    "within_0p25px_of_anchors": 0.0
+   },
+   "by_label": {
+    "periodic": {
+     "anchors": 48752,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null,
+     "within_0p25px_of_anchors": 0.0
+    }
+   },
+   "median_kappa_accepted": null,
+   "median_sigma_px_accepted": null
+  },
+  {
+   "fixture": "occlusion",
+   "B_m": 0.4947826,
+   "noise": 0.005,
+   "scramble": false,
+   "roll_deg": 0.0,
+   "stretch": true,
+   "reasons": {
+    "accepted": 37138,
+    "invalid_support": 2296,
+    "low_texture": 356,
+    "low_ncc": 1691,
+    "ambiguous": 3189,
+    "unresolved_far": 17,
+    "near_boundary": 10,
+    "gn_failed": 163,
+    "fb_inconsistent": 467,
+    "unsupported": 218,
+    "depth_edge": 2149,
+    "half_disagree": 1058
+   },
+   "all": {
+    "anchors": 48752,
+    "accepted": 37138,
+    "accepted_fraction": 0.7617738759435511,
+    "median_px": 0.03666711934953905,
+    "p90_px": 0.10872200280441835,
+    "over_1px_of_accepted": 0.0002961925790295654,
+    "within_0p25px_of_anchors": 0.7589021988841483
+   },
+   "by_label": {
+    "board": {
+     "anchors": 9152,
+     "accepted": 7165,
+     "accepted_fraction": 0.782888986013986,
+     "median_px": 0.031525021424905104,
+     "p90_px": 0.09489897930578706,
+     "over_1px_of_accepted": 0.00013956734124214934,
+     "within_0p25px_of_anchors": 0.7803758741258742
+    },
+    "far": {
+     "anchors": 39600,
+     "accepted": 29973,
+     "accepted_fraction": 0.7568939393939393,
+     "median_px": 0.038148825367807046,
+     "p90_px": 0.11142385694663437,
+     "over_1px_of_accepted": 0.00033363360357655225,
+     "within_0p25px_of_anchors": 0.7539393939393939
+    }
+   },
+   "by_eccentricity": {
+    "1-2": {
+     "anchors": 1588,
+     "accepted": 1392,
+     "accepted_fraction": 0.8765743073047859,
+     "median_px": 0.043851257539718365,
+     "p90_px": 0.11633663999472521,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.8727959697732998
+    },
+    "2-5": {
+     "anchors": 5492,
+     "accepted": 4678,
+     "accepted_fraction": 0.8517844136926438,
+     "median_px": 0.03373503952192336,
+     "p90_px": 0.09910992351634605,
+     "over_1px_of_accepted": 0.00021376656690893543,
+     "within_0p25px_of_anchors": 0.8503277494537509
+    },
+    "5-10": {
+     "anchors": 8272,
+     "accepted": 6406,
+     "accepted_fraction": 0.7744197292069632,
+     "median_px": 0.03149361677031767,
+     "p90_px": 0.08957941366212754,
+     "over_1px_of_accepted": 0.0010927255697783327,
+     "within_0p25px_of_anchors": 0.7726063829787234
+    },
+    "10-20": {
+     "anchors": 12808,
+     "accepted": 10311,
+     "accepted_fraction": 0.8050437226733291,
+     "median_px": 0.036465046963225736,
+     "p90_px": 0.11508867669769943,
+     "over_1px_of_accepted": 0.0002909514111143439,
+     "within_0p25px_of_anchors": 0.8002810743285447
+    },
+    "20-30": {
+     "anchors": 9808,
+     "accepted": 7745,
+     "accepted_fraction": 0.7896615008156607,
+     "median_px": 0.03839677775486141,
+     "p90_px": 0.10959507628799817,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.7882340946166395
+    },
+    "30-44": {
+     "anchors": 10784,
+     "accepted": 6606,
+     "accepted_fraction": 0.6125741839762612,
+     "median_px": 0.042118074763805115,
+     "p90_px": 0.11991988009768548,
+     "over_1px_of_accepted": 0.0,
+     "within_0p25px_of_anchors": 0.6092359050445104
+    }
+   },
+   "median_kappa_accepted": 0.0012285672483356093,
+   "median_sigma_px_accepted": 0.05223251543172862,
+   "edge": {
+    "anchors": 3314,
+    "accepted": 714,
+    "accepted_fraction": 0.21544960772480387,
+    "median_px": 0.050777690187367386,
+    "p90_px": 0.17691356356336835,
+    "over_1px_of_accepted": 0.011204481792717087,
+    "within_0p25px_of_anchors": 0.20579360289680146
+   },
+   "interior": {
+    "anchors": 45438,
+    "accepted": 36424,
+    "accepted_fraction": 0.8016197896034156,
+    "median_px": 0.036443138098086206,
+    "p90_px": 0.10773915535214322,
+    "over_1px_of_accepted": 8.2363276960246e-05,
+    "within_0p25px_of_anchors": 0.7992429244244905
+   }
+  }
+ ],
+ "ok": true,
+ "controls_fail": true,
+ "schema": "foveal-motion-m3-fixtures-v1",
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.0
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "33bfcad3844d8dd13d96353940ce6f6a4fff2bc5",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "seconds": 687.2
+}

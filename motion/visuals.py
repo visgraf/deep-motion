@@ -236,3 +236,56 @@ def main(run_dir: Path, vis: Path, fps: int = 6) -> int:
     for m in made:
         print(f"[dolly] wrote {m}")
     return 0
+
+
+def flow_depth_preview(result: Path, out: Path, reference: Path | None = None) -> Path:
+    """M3: top and side views of a result's stride-5 cloud (colours as observed), next to an oracle reference
+    cloud if given, and the relative range error of every point (evaluation view: it reads b's Position)."""
+    import json as _json
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from . import pointcloud as pc
+    result = Path(result)
+    cfg = _json.loads((result / "config.json").read_text())
+    run = analysis.load_run(cfg["run"])
+    es = {e["k"]: e for e in run["looks"][cfg["mode"]]}
+    Z = np.load(result / "reconstruction.npz")
+    xyz, rgb, _ = pc.read_ply(result / "reconstruction.ply")
+    err = np.full(len(xyz), np.nan)
+    stride = int(Z["stride"])
+    for ka in np.unique(Z["pair_a"]):
+        s = Z["pair_a"] == ka
+        rec, _, cb, _ = analysis.load_look(run, es[int(ka) + stride])
+        r_true = np.linalg.norm(rec.position_w[Z["sample_b"][s]] - cb, axis=-1)
+        err[s] = np.abs(np.linalg.norm(Z["P"][s] - cb, axis=-1) - r_true) / r_true
+    ref = pc.read_ply(Path(reference) / "reconstruction.ply") if reference else None
+    cols = 3 if ref else 2
+    fig, ax = plt.subplots(2, cols, figsize=(5.8 * cols, 10))
+    for row, (X, Y, lab) in enumerate([(0, 1, "top view (x, y)"), (1, 2, "side view (y, z)")]):
+        c = 0
+        if ref:
+            O, orgb, _ = ref
+            i = np.random.default_rng(0).choice(len(O), min(len(O), 150000), replace=False)
+            ax[row, 0].scatter(O[i, X], O[i, Y], c=orgb[i] / 255, s=0.2)
+            ax[row, 0].set_title(f"oracle reference, {lab}")
+            c = 1
+        j = np.random.default_rng(1).choice(len(xyz), min(len(xyz), 150000), replace=False)
+        ax[row, c].scatter(xyz[j, X], xyz[j, Y], c=rgb[j] / 255, s=0.5)
+        ax[row, c].set_title(f"RGB, usable points ({len(xyz):,}), {lab}")
+        sc = ax[row, c + 1].scatter(xyz[j, X], xyz[j, Y], c=np.clip(err[j], 0, 0.2), cmap="magma_r", s=0.5, vmin=0, vmax=0.2)
+        ax[row, c + 1].set_title("evaluation: relative range error (clipped at 20 %)")
+        fig.colorbar(sc, ax=ax[row, c + 1], fraction=0.046)
+        lim = (ax[row, 0].get_xlim(), ax[row, 0].get_ylim())
+        for a in ax[row]:
+            a.set_aspect("equal")
+            a.set_xlim(lim[0])
+            a.set_ylim(lim[1])
+    fig.suptitle(f"M3 {Path(cfg['run']).name}, stride {stride}: median error {np.nanmedian(err):.3f}, "
+                 f"p90 {np.nanquantile(err, 0.9):.3f}, > 50 % {np.nanmean(err > 0.5):.3f}")
+    fig.tight_layout()
+    out = Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=80)
+    plt.close(fig)
+    return out

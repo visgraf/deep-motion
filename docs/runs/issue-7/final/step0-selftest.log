@@ -1,0 +1,20 @@
+[dolly] selftest PASS accepted spec
+[dolly] selftest PASS facing +Y gives the playground's H0 axes
+[dolly] selftest PASS first and last heads are start_w and end_w
+[dolly] selftest PASS equal steps
+[dolly] selftest PASS every head faces facing_w
+[dolly] selftest PASS refused: tilted facing
+[dolly] selftest PASS refused: n_looks 1
+[dolly] selftest PASS refused: no control head
+[dolly] selftest PASS refused: no motion
+[dolly] selftest PASS modes differ
+[dolly] selftest PASS refused: both target_w and target_ray
+[dolly] selftest PASS refused: target_ray from a head not on the path
+[dolly] selftest PASS accepted: target_ray alone
+[dolly] selftest PASS resolved() takes the preflight's target
+[dolly] selftest PASS pixel_of inverts the warp (max 1e-6 px)
+[dolly] selftest PASS control: a central ray turned by one foveal pixel moves >= 0.5 px
+
+real	0m0.120s
+user	0m2.083s
+sys	0m0.024s

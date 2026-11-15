@@ -19,6 +19,11 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D6 | The dolly's hole limit (Luiz, 2026-11-12, issue #1) | 0.046 in `paths/classroom_dolly.json`: the scene's 0.025 failed at heads 6–46 (0.0250–0.0383), every hole on the right-hand window band; the measured maximum plus about a fifth, as D18 |
 | M-D7 | The next step after M1 (Luiz, 2026-11-12, in Chat) | M2: range from the head's motion on the foveated raster, with M1's path run again fixating a target far off the path's line |
 | M-D8 | The side target (Luiz, 2026-11-12, issue #3, option A) | accept what `target_ray` finds, `worldMap` at (−2.116, 3.540, 1.323): a hanging map 3.3 cm proud of the front wall, visible from every head, 22°→47° off the heading; the target sits 6.5 cm above the map's lower edge, so the fovea holds a small depth step. The spec is unchanged |
+| M-D9 | M3, depth from RGB log-polar flow (Luiz, 2026-11-14, in Chat; #5 reviewed there) | #5's plan amended (A1–A8 of #6: shift + radial-stretch matcher, radial-gradient texture score, patch sizes in native pixels, ray-based sensor-agnostic code, M2's bracket as the reference, interval calibration on the calibration room, static figures first, the oracle ladder O1–O3 before any RGB matching) and split: M3a (#6, Chat, calibration room) builds and freezes the estimator; M3b (#7, Code, Classroom `dolly-1`) runs it unchanged |
+| M-D10 | Freeze M3a's estimator (Luiz, 2026-11-14, in Chat; #6) | option A: freeze the estimator as it stands (matcher settings, calibration procedure), run the full calibration room as declared and report its result, coverage failure included; then the Classroom with the frozen estimator and scale. Both runs on the workstation (#7): the calibration room first, because it provides the interval scale the Classroom reuses unchanged. Calibration set: even ka plus (1, 6), (3, 8), (5, 10), whose truth Chat's smoke tests opened |
+| M-D11 | Visuals before calibration (Luiz, 2026-11-14, in Chat; #7) | the full calibration-room and Classroom runs (M-D10) move to the end, overnight. First a quick look at the Classroom: the frozen estimator on three stride-5 pairs, with the process figures and the provisional scale (1.68, from the smoke calibration), labelled provisional. The three pairs' truth is opened for the error overlays, so they are excluded from the final Classroom gate |
+| M-D12 | M3's acquisition (Luiz, 2026-11-14, in Chat; #7) | the final M3 runs re-render the calibration room and the Classroom `ahead` path at 1024 spp with an independent seed per look (`run --seed-base 1000`): 64 spp is far noisier than a camera at a normal exposure (σ 20–30 % of the signal), 1024 spp about 5–7 %. The estimator stays frozen at `7bb5e70`; the interval scale is recalibrated on the new calibration-room renders; M1–M2 keep their 64-spp results; the quick-look pairs (0, 5), (20, 25), (40, 45) stay out of the Classroom gate (`--exclude`); runs of about 45 min in total are OK'd |
+| M-D13 | M3 closed; M4 next (Luiz, 2026-11-14, in Chat; #7) | M3 closes with its result: depth from the image's own forward motion is accurate and its intervals honest where the matcher accepts (held-out median 0.9 % / 1.8 %, p90 2.8 % / 5.1 %, coverage of the 95 % intervals 0.95 / 0.93, calibration room / Classroom), and it fails both gates on coverage alone (0.33 / 0.12 against 0.50 / 0.25); the thresholds stay as declared. Next: temporal integration over the sequence (M4). M3's branch merges into `main` |
 
 ## Experiment M1, the dolly
 
@@ -286,3 +291,236 @@ corrected one).
    supports about 9 % from one 10 cm step, not 1–3 %, and about 2 % from 0.5 m. Looking ahead, the fovea supports
    nothing usable at any stride. The Classroom's brackets are for Code to measure (`depth` again on both runs, no
    rendering).
+
+## Experiment M3, depth from RGB log-polar flow (M3a #6, M3b #7)
+
+**Question.** M2 got its correspondences from the renderer. M3 asks whether the image texture can supply them,
+under the motion the Foveated sensor is matched to: a forward step along the eye's axis (`ahead`), where a static
+point keeps its azimuth and moves only along q = ln tan e. Plan: #5, amended and split by M-D9 into M3a (#6, Chat,
+calibration room: build, validate, freeze) and M3b (#7, Code, Classroom `dolly-1`: run unchanged).
+
+**Geometry** ([`motion/logpolar.py`](../motion/logpolar.py), ray-based: a sensor enters only through `rays()` /
+`pixel_of()`). For a step B along the axis, d = q_b − q_a, z_b = B / expm1(d), r_b = z_b / cos e_b,
+P = c_b + r_b R_b d_B(e_b, φ). A displacement interval [d_lo, d_hi] gives a range interval; reaching d ≤ 0 leaves the
+far bound unbounded. A range is **usable** when its interval's relative half-width is ≤ 10 % (the analogue of M2's
+bracket); **within 10 %** is error-based (M2's "usable").
+
+**Checks fixed before measuring** (each with a control that must fail):
+
+| id | what | passes when | control (must fail) |
+|---|---|---|---|
+| M3.0 | `ahead` looks are aligned (#5's gate) | heading = eye axis in both looks and no rotation, ≤ 1e-6 rad; B > 0; the estimator's loader refuses oracle fields | 0.1° yaw of b; b's centre 1 cm sideways |
+| M3 selftest | Stage 1 geometry (14 known answers, numpy only) | round trips < 1e-6 px (Foveated `small`/`full`, 90° pinhole); Jacobian = #5's closed form within 1e-5; #5's known answer within 1e-9; analytic points within 1e-6 | wrong row sign; a sensor with E2 = 2.2°; native radius used as pinhole radius |
+| M3.O1a | O1 keeps azimuth | \|φ_a − φ_b\| ≤ 1e-6 rad at e_b ≥ 1° | b yawed 0.1° |
+| M3.O1b | O1 depth | relative range error ≤ 1e-6 at parallax ≥ 0.01° | baseline × 1.01 (median ≥ 1e-3) |
+| M3.O3 | O3 interval propagation | nominal 95 % intervals cover the truth within ± 0.01 | intervals × 0.5 (coverage ≤ 0.80) |
+| M3.PLY | the cloud | reads back identical, finite; every point on its anchor ray (≤ 1e-3°) | x and y swapped |
+
+**The oracle ladder** ([`motion/flow_depth_oracle.py`](../motion/flow_depth_oracle.py), evaluation side; the
+estimator never imports it). O1: b's Position seen from both eye centres, exact. O2: b at its pixel centre, P's
+projection into a rounded to a's pixel centre, interval half a's pixel along the radial line. O3: O1 with a's location
+moved radially by Gaussian noise of σ native pixels (seed 0), interval ± 1.96 σ. All are labelled oracle.
+
+### Chat sandbox, calibration room (M3a Stages 0–2)
+
+Source `runs/m3-calib-source`: `paths/calib_dolly.json`, `ahead` only, profile `full` (253 × 253, as the Classroom),
+64 spp, CPU, rendered at `9cf234b` (clean), fov-render `0f6fa7d`, bpy 5.2.1 wheel, Python 3.13, numpy 2.2.6;
+22 looks in 248 s. Everything below computed at `2f4e4e8` (clean). Records: [`docs/runs/issue-6/`](runs/issue-6/)
+([table](runs/issue-6/ladder.txt), [script](runs/issue-6/ladder_table.py)). Chat sandbox numbers:
+
+- Baseline: `selftest` passes; the two-mode sandbox (`small`, 16 spp) reproduces the recorded M1/M2 numbers exactly.
+  On the M3 source, M1.0, M1.1, M1.3 PASS (M1.3 0.930–0.962), M1.2 not applicable (no `target`), M3.0 PASS with
+  axis and rotation errors exactly 0, every control fails; M2.1 PASS (max 2.1e-8).
+- M3 selftest: 14/14 PASS, every control fails. (One control was corrected before any measurement: a wrong E2 moves
+  the Jacobian in opposite directions through K and E2 + e, so its error crosses zero near one eccentricity; the
+  control is now that the wrong sensor fails the 1e-5 check, max 0.036.)
+- O1: M3.O1a max 4.4e-16 rad (control 0.099); M3.O1b max 8.2e-14 (control median 0.010); M3.PLY 771,333 points at
+  stride 5, on their rays within 1.2e-13° (control 89°). O3: coverage 0.9501 at every σ (control 0.673); identical
+  across σ because the same draws are scaled, which is what an exact propagation must give.
+
+Usable range (interval ≤ 10 %) as a fraction of **all** of look b's hits, whole field:
+
+| stride (B) | O1 exact | O2 pixel | O3 0.05 px | O3 0.10 px | O3 0.25 px | M2 bracket | M2 within 10 % |
+|---|---|---|---|---|---|---|---|
+| 1 (0.10 m) | 0.953 | 0.000 | 0.265 | 0.025 | 0.000 | 0.000 | 0.117 |
+| 5 (0.50 m) | 0.903 | 0.169 | 0.890 | 0.835 | 0.227 | 0.170 | 0.661 |
+| 10 (1.00 m) | 0.849 | 0.529 | 0.845 | 0.832 | 0.682 | 0.530 | 0.796 |
+
+O1's row is the ceiling: the jointly visible share. A first reading, to be checked by the RGB matcher (Stage 5):
+
+1. **M3 ties to M2.** O2, through M3's own pipeline, gives M2's bracket fraction to within 0.001 at strides 5 and 10,
+   and its error-based fraction (0.661, 0.795 against 0.661, 0.796). Its interval covers the truth for 98–99 % of
+   matches. The geometry, the depth formula and the interval are consistent with M2's triangulation.
+2. **Sub-pixel matching is where the gain is, and the requirement is about 0.1 px.** At stride 5, 0.1 px
+   correspondences make 0.835 of the field usable (5× M2's bracket, 92 % of the ceiling); 0.25 px only 0.227. The
+   5–40° band at stride 5 is at its ceiling for σ ≤ 0.1 px. This turns #5's synthetic gate (median ≤ 0.1 px,
+   p90 ≤ 0.25 px) from a guess into the measured requirement.
+3. **The fovea still gives nothing at short baselines.** Below 2°, stride 5 needs σ ≈ 0.05 px (0.716); at 0.1 px it is
+   0.025, at pixel rounding 0. Looking ahead, the fovea's depth is a long-baseline matter, as M2 found.
+
+### The matcher and its synthetic fixtures (M3a Stage 3, Chat sandbox)
+
+**Matcher** ([`motion/matcher.py`](../motion/matcher.py), observation only: two luminance rasters, the sensor model, B).
+*Coarse* on the log-polar grid (q step 0.01, 800 azimuths): a fronto-parallel patch moves by one q shift
+everywhere, so every node is searched at once by shifting the whole grid; zero-mean NCC over ± 3 native px radially and
+± 1 native px in azimuth (window sizes per grid row, A3); d = 0 included. *Fine* on the native raster through
+`pixel_of`, at b's own pixels between 1° and 44°: Gauss–Newton on I_b(q + u, φ + v) = α I_a(q + u − d − κu, φ + v) + β,
+with κ the radial stretch (A1; about B / z_a on a surface parallel to the heading), started at κ = 0 and, where that fit's
+NCC is under 0.97, also at 0.25 and 0.5; σ_d from the Gauss–Newton covariance. *Rejections*, each recorded: invalid
+support, radial texture under 0.02 (A2: rms radial gradient per native px over the patch mean), NCC under 0.8, a second
+peak within 0.05 outside ± 1.5 px, beyond the 20 m envelope (unresolved), near boundary (0.25 m), Gauss–Newton moved
+> 1.5 px or κ outside [−0.5, 1.5], forward–backward disagreement > 1 px, and fewer than 3 of the 8 neighbouring pixels
+holding a candidate within 0.5 px (a test, not a filter: nothing is smoothed or replaced).
+
+*Added after the first fixture run* (at the uncommitted state before `afe3c58`; the gates were already fixed): that run
+passed every gate but one, the corridor's parallel surfaces at B ≈ 1 m (p90 0.85 px, 24 % accepted). Diagnosis: wrong
+peaks of the long one-dimensional search (median error 4 px, NCC 0.90) and Gauss–Newton stuck at κ ≈ 0 where the true
+stretch was 0.25–0.4. Hence the neighbour-support test and the κ restarts. No threshold of the gates moved.
+
+**Fixtures** ([`motion/flow_fixtures.py`](../motion/flow_fixtures.py)): analytic planes ray-cast through the Foveated warp
+(`full`, 4 × 4 rays a pixel: the box filter), band-limited multi-scale texture, Gaussian noise 0.005 (about 1 % of the
+mean), the dolly's axes, B of strides 1, 5, 10. Truth: the point on each pixel's centre ray, its exact d. Gates of #6
+(median ≤ 0.1 px, p90 ≤ 0.25 px of a's native pixels over accepted matches, at least 100 accepted), by surface.
+
+`python -m motion.dolly flow-depth-fixtures --out runs/m3-fixtures` at `afe3c58` (clean), 637 s, Chat sandbox
+([`fixtures.json`](runs/issue-6/fixtures.json)). Accepted fraction | median | p90 (native px):
+
+| fixture / surface | B 0.10 m | B 0.49 m | B 0.99 m |
+|---|---|---|---|
+| front (3 m) | 0.938 \| 0.030 \| 0.088 | 0.891 \| 0.037 \| 0.115 | 0.844 \| 0.038 \| 0.117 |
+| tilted 50° | 0.851 \| 0.040 \| 0.134 | 0.814 \| 0.040 \| 0.122 | 0.712 \| 0.041 \| 0.119 |
+| corridor, parallel surfaces | 0.745 \| 0.048 \| 0.159 | 0.582 \| 0.050 \| 0.153 | 0.173 \| 0.062 \| 0.210 |
+| corridor, end wall (8 m) | 0.963 \| 0.045 \| 0.119 | 0.969 \| 0.037 \| 0.100 | 0.940 \| 0.036 \| 0.102 |
+
+All 13 gates PASS (with the occlusion fixture's interior: 0.859 | 0.039 | 0.121). Controls, each fails:
+scrambled frame b (median 9.6 px); a's eye rolled 1° (median 0.159, p90 0.49 px); shift-only matcher on the
+parallel surfaces at B 0.49 m (median 0.096, p90 0.257 px; 0.492 of anchors within 0.25 px against 0.568 with stretch).
+Not gated, reported: the radial-edge wall and the log-periodic wall give **no** accepted match (rejected as low texture,
+ambiguous or unresolved); the occlusion fixture's edges (within 3 px of the board's outline) keep 0.40 accepted with
+6.5 % of them over 1 px (interior 0.1 %).
+
+A first reading: the matcher reaches 0.03–0.06 px median on textured synthetic surfaces, below the 0.1 px the oracle
+ladder asks for; long baselines on surfaces parallel to the heading are where it runs out (17 % accepted at 1 m), as
+the A1 amendment expected. Whether the renders' noise and texture allow the same is the calibration room's question
+(Stages 4–5).
+
+### Real renders: first calibration-room pairs (M3a Stages 4–5 under way, Chat sandbox)
+
+**Protocol** (`33bfcad`). `flow-depth --correspondence rgb` runs the matcher on observation fields only and hashes its
+inputs; `flow-depth-calibrate` opens truth for the declared calibration set only (pairs with even ka), sets the interval
+scale to the 95th percentile of |d − d_true| / σ_d over accepted **interior** anchors / 1.96, and writes `freeze.json`
+(settings, scale, hashes of every estimation output); `flow-depth-evaluate` verifies the freeze, writes the PLYs without
+truth, then opens the held-out pairs (odd ka) for M3.COV (≥ 0.90 coverage of nominal 95 % intervals; control: intervals
+× 0.5), M3.CAL (#5's calibration gate at stride 5; control: baseline × 1.2) and M3.PLY. Anchors within 2 px of an
+object boundary in b are **edge** and evaluated apart: Position averages a pixel's samples, so its truth is not a
+surface point there (#5's failure-mode table). The first evaluation code omitted that; it is now in.
+
+**What the first pairs showed** (pair (0, 5), calibration set):
+
+1. **Foreground fattening at the cards' edges.** 14 % of accepted matches were > 1 px off, in bands just outside the
+   Siemens-star cards: a patch straddling a card edge is dragged to the card's motion. Two tests followed, both checked
+   on this pair before being kept: *half windows* (the inner and outer radial halves, fitted alone with κ held, must be
+   informative, σ ≤ 0.25 px, and agree within 0.5 px) and *depth edge* (no candidate within ± 3 px may deviate from the
+   anchor's d + κ u by more than 0.5 px). With both, the interval scale is 1.66 (2.46 without), usable interior range
+   is about the same (0.066 against 0.062 of all hits), and usable edge points over 50 % wrong fall from 11 % to 7 %.
+2. **91 % of the remaining > 1 px errors lie within 2 px of an object boundary**, where the truth itself is unreliable.
+   Interior accepted matches: median 0.069 px, p90 0.20 px, 0.9 % over 1 px.
+
+Fixtures rerun with the two tests (`33bfcad`, clean, 687 s, [`fixtures_33bfcad.json`](runs/issue-6/fixtures_33bfcad.json)):
+all 13 gates PASS, every control fails; acceptance 3–8 points lower; occlusion edges now 1.1 % over 1 px of accepted
+(was 6.5 %).
+
+**Smoke evaluation** (pairs (0, 5), (1, 6) calibrating, (3, 8) held out; [`smoke_evaluation.json`](runs/issue-6/smoke_evaluation.json)).
+Both smoke runs opened truth of a pair meant for the held-out set, (1, 6) and then (3, 8); both are therefore moved to
+the calibration set for the full run. Scale 1.68. M3.COV PASS (0.943, control 0.730); M3.PLY PASS; **M3.CAL FAIL on
+coverage**: of the textured, jointly visible, interior 5–40° hits only 0.113 are usable (gate ≥ 0.50), with median range
+error 1.8 % and p90 5.2 % (gate ≤ 5 %, ≤ 10 %). Field usable 0.108, against 0.114 for pixel-rounded oracle matches (O2)
+and 0.846 for 0.1 px oracle matches (O3) on the same pair: **the matcher is precise where it accepts, but it accepts
+about a quarter to a third of the anchors**, mainly rejected as low NCC (plain checker walls under 64 spp noise) and
+ambiguous (the Siemens stars' spokes look periodic along a radial search line).
+
+**Frozen (M-D10).** The estimator is frozen at the commit that adds this paragraph: `motion/matcher.py` (its
+`SETTINGS`), `motion/logpolar.py`, `motion/flow_depth.py` unchanged since `33bfcad`, whose fixture gates hold. Added for
+the hand-off: `flow-depth-calibrate --from-result` (imports a frozen scale; opens no truth of the new result),
+`flow-depth-evaluate --gate classroom` (#5's Classroom thresholds: median ≤ 10 %, p90 ≤ 25 %, > 50 % errors ≤ 5 % of
+accepted, ≥ 25 % coverage), `flow-depth-preview` (cloud views). The smoke evaluation of (5, 10) in testing them is the
+third opened held-out pair; it too moves to the calibration set. The full runs are #7's.
+
+**Process figures** (`flow-depth-figures`, [`motion/flow_figures.py`](../motion/flow_figures.py)), per pair:
+`overview` (native looks with the focus of expansion and eccentricity rings, the decision per anchor, the displacement,
+range and interval width on b's raster, the evaluation error map, the cloud over the oracle reference), `matching` (the
+unwrapped (q, φ) images, |J_b − J_a| before and after moving J_a by the estimated d, matching curves of a few anchors with
+estimate, interval and the evaluation truth) and `slit_scan` (one azimuth over the whole sequence, with the traces the
+pair's two-frame depths predict for every frame, and the multi-frame relation cot e = (z_b − s) / L). Truth overlays are
+drawn dashed and marked EVALUATION; `--no-truth` omits them. An unfrozen result needs `--scale`, shown as provisional.
+
+**Flat-patch guard (#7, `7bb5e70`; Luiz's OK on #7, freeze moved there).** The frozen matcher raised `LinAlgError` on
+Classroom pair (20, 25): an anchor whose look-a patch lay on the ceiling lamps' glass (constant luminance 2.00018) gave
+a gain of 5e14 and a rank-1 system that stopped the whole batch (Code's diagnosis). A look-a patch flatter than 1e-9 is
+now rejected (`gn_failed`), and a singular batch is solved row by row. Against `1a1ffc9` the outputs are bit for bit
+identical on calibration-room pair (0, 5) and the front and corridor fixtures (Chat sandbox,
+[`identity_check.txt`](runs/issue-7/fix/identity_check.txt)). On the Classroom, which has flat emitters, they are not
+quite: at pair (0, 5) 3 of 48,752 anchors move from accepted to `half_disagree` through the guard in `_half`, every
+other array identical (Code, workstation, `fix_effect.txt` on `experiment/m3b-flow-depth-classroom`).
+
+**Render noise limits the Classroom (#7, Code, workstation, OPTIX; `docs/runs/issue-7/noise/` on
+`experiment/m3b-flow-depth-classroom`).** At 64 spp the per-pixel noise of a Classroom look is σ ≈ 0.04 RMS, about 20–30 %
+of the pixel's luminance at every contrast; median local contrast over noise is 0.97, and only a quarter of the pixels
+reach the c / σ ≥ 2 that NCC ≥ 0.8 needs (estimated). At 1024 spp σ falls by 3.97 (1/√spp: 4). The frozen matcher on pair
+(20, 25) with 1024-spp looks: accepted 0.26 (0.08 at 64 spp), usable 0.21 of anchors (0.04), interior median | p90 range
+error 0.019 | 0.057 (0.038 | 0.119); `low_ncc` 13 % (48 %), `ambiguous` 25 % (11 %): once the noise is gone, the board's
+weak or repetitive texture is the limit. `dolly-1` used one seed for every look, so its noise repeats across frames
+(residual correlation 0.158 between looks 20 and 25; 0.006 with different seeds). `run --seed-base N` now gives each look
+its own seed (N + k), recorded in `run.json`; without it, runs are as before.
+
+### M3 final results (M-D12: 1024 spp, a seed per look; estimator frozen at `7bb5e70`; #7)
+
+Code, workstation: renders on OPTIX, everything else on the CPU; every record computed at `3938239` (clean), fov-render
+`0f6fa7d`. Records: [`docs/runs/issue-7/final/`](runs/issue-7/final/) (`b73c860`). The interval scale, calibrated on
+the calibration room's declared set (29 pairs, 280,293 accepted interior anchors), is **1.625** (1.67 / 1.58 / 1.64 at
+strides 1 / 5 / 10 alone); the Classroom imports it unchanged and opens no truth before its freeze.
+
+**Gates** (held-out pairs; the Classroom without the three quick-look pairs):
+
+| gate, stride 5 | calibration room (21 pairs) | Classroom (122 pairs) |
+|---|---|---|
+| M3.COV, 95 % intervals cover the truth (≥ 0.90) | **PASS** 0.949 (control 0.787) | **PASS** 0.926 (control 0.712) |
+| M3.PLY | **PASS** (205,614 points) | **PASS** (424,490 points) |
+| median range error | 0.9 % (≤ 5 %) | 1.8 % (≤ 10 %) |
+| p90 range error | 2.8 % (≤ 10 %) | 5.1 % (≤ 25 %) |
+| > 50 % errors, of accepted | 0.3 % | 0.04 % (≤ 5 %) |
+| **coverage** of textured, jointly visible, interior 5–40° hits | **0.332** (≥ 0.50) | **0.116** (≥ 0.25) |
+| verdict | M3.CAL **FAIL**, on coverage only | M3.ROOM **FAIL**, on coverage only |
+
+Accepted held-out interior displacement error: median 0.039 / 0.076 px, p90 0.137 / 0.218 px (calibration room / Classroom).
+
+**Field usable** (interval ≤ 10 %, of all hits) against the oracle ladder on the same pairs:
+
+| stride | room: RGB | O2 | O3 0.1 px | Classroom: RGB | O2 | O3 0.1 px |
+|---|---|---|---|---|---|---|
+| 1 | 0.048 | 0.000 | 0.022 | 0.017 | 0.000 | 0.007 |
+| 5 | 0.243 | 0.204 | 0.829 | 0.203 | 0.097 | 0.874 |
+| 10 | 0.190 | 0.537 | 0.830 | 0.205 | 0.608 | 0.910 |
+
+**Reading.**
+
+1. **Depth from the image's own forward motion works on the foveated sensor where the matcher accepts.** At 0.5 m the
+   held-out range error is about 1–2 % median and 3–5 % p90, the intervals are honest (0.93–0.95 coverage, with the
+   scale transferred from one scene to the other), and the slit scans show one pair's depths predicting the image streaks
+   over all 47 frames.
+2. **It fails on coverage, in both scenes**: a fifth to a quarter of the field gets a usable range, against 0.83–0.91
+   for oracle matches of 0.1 px. The losses are ambiguity (periodic or sparse texture: the Siemens stars' spokes, the
+   checkers, the board's chalk), weak texture (walls, ceiling, the board's interior) and the conservative edge tests.
+   At stride 5 the matcher beats pixel rounding (0.24 / 0.20 against O2's 0.20 / 0.10); at stride 10 it stays far below
+   it (0.19 / 0.21 against 0.54 / 0.61): two-frame matching over a long baseline is the weak path (stretch, occlusion,
+   a long and ambiguous search), as the A1 fixtures predicted.
+3. **Rendering noise mattered more than any matcher setting.** 64 spp with one seed (σ 20–30 % of the signal, repeated
+   across frames) left 0.04 of Classroom pair (20, 25)'s anchors usable (0.08 accepted); 1024 spp gave 0.21 usable
+   (0.26 accepted), and with a seed per look the stride-5 pairs accept 0.22–0.29.
+4. **Failure modes seen where #5 listed them**: the +X wall's window panes (transparency and reflections) hold most of
+   the Classroom's large errors; card edges in the calibration room (foreground fattening, now limited by the edge tests,
+   and Position truth that is not a surface point within 2 px of a boundary).
+
+The natural next step is temporal integration (M4): chaining stride-1 matches and fitting cot e = a + b s over many
+frames, which averages noise, keeps stretch small and lets consistency over the sequence resolve the ambiguous matches
+that two frames cannot.

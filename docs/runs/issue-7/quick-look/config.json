@@ -1,0 +1,125 @@
+{
+ "schema": "foveal-motion-m3-estimate-v1",
+ "source": "rgb",
+ "run": "/home/lvelho/rd/foveal-motion/runs/dolly-1",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "8c1856a80949781fb20cb1c21a992677a5ddace4",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "mode": "ahead",
+ "strides": [
+  5
+ ],
+ "pairs": [
+  [
+   0,
+   5
+  ],
+  [
+   20,
+   25
+  ],
+  [
+   40,
+   45
+  ]
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.0
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "3927982ac53ba3ba010520b19ccaca281c1119e1",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "inputs_sha256": {
+  "0": {
+   "record": "731faae3449b0c4dc81116f97c4f7cbcd7bad50d9433e3337079d99b589ce119",
+   "meta": "75adc32d636995550fc2dfc2e9af9578764439ca822feae7ddb554f94a8cb7c1"
+  },
+  "5": {
+   "record": "9ad85640d47d15c0056f454bd86a8cb9594187a0fa2cba8b1138b1a5b5c5a362",
+   "meta": "e4fc97c5f43004efe3da59848fc2d2ff20f54c20d7ac2d29ac0f5846a2c44abc"
+  },
+  "20": {
+   "record": "3c409148efb880fae6dc1c1d29e9ef7c5773fc4b6e79b53092afeabb888c86ab",
+   "meta": "d619194f973171102a9b68423272e5bbd6d1015d42dd5ccda788d04541a6cf16"
+  },
+  "25": {
+   "record": "ea841f1af4c1c535397dcc81dc9223792f28a87c0511e365f3daf1a433f42192",
+   "meta": "816fb1aa9395df4c4fe227764996c693488aa23e277a873218daa66628a57b50"
+  },
+  "40": {
+   "record": "8cca663280dd8b27db033ddb3deca1c8d3286af57d3ca4aa34be71b6958eb0d7",
+   "meta": "849fde7c713a1b6d69a0f7b60e5248796ae5243fb075eddb8207a69bcdd6ba2b"
+  },
+  "45": {
+   "record": "c6d8fc6b94218e8ecc188d46cb4f8716c4c7a67642204629e476937d3deba4d0",
+   "meta": "5ffc09eec9a31a20ce8f72cc027e9771bc18ec74f1a9bc3182e1e83db5c510f6"
+  }
+ },
+ "alignment": {
+  "id": "M3.0",
+  "what": "heading = eye axis in both looks, no rotation between them (#5's gate)",
+  "ok": true,
+  "control_fails": true,
+  "control": "0.1 deg yaw of b, and b's centre 0.01 m sideways: every pair must fail",
+  "detail": {
+   "pairs": 3,
+   "tol_rad": 1e-06,
+   "max_axis_rad": 0.0,
+   "max_rotation_rad": 0.0,
+   "min_B_m": 0.49478260869565216
+  }
+ },
+ "note": "observation fields only; interval_scale is calibrated afterwards and frozen",
+ "seconds": 50.4
+}

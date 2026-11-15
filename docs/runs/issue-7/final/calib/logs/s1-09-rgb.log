@@ -1,0 +1,56 @@
+21:28:32 $ .venv/bin/python -m motion.dolly flow-depth --run runs/m3-calib-1024 --strides 1 5 10 --correspondence rgb --out runs/m3-calib-1024-rgb
+21:28:33 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+21:28:33   den = cm - 2 * c1 + cp
+21:28:36 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+21:28:36   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+21:28:43 [flow-depth] rgb pair (0, 1) B 0.100 m: accepted 0.396, 11.2 s
+21:28:54 [flow-depth] rgb pair (1, 2) B 0.100 m: accepted 0.398, 11.0 s
+21:29:05 [flow-depth] rgb pair (2, 3) B 0.100 m: accepted 0.394, 11.0 s
+21:29:16 [flow-depth] rgb pair (3, 4) B 0.100 m: accepted 0.395, 11.0 s
+21:29:27 [flow-depth] rgb pair (4, 5) B 0.100 m: accepted 0.387, 10.9 s
+21:29:38 [flow-depth] rgb pair (5, 6) B 0.100 m: accepted 0.386, 11.0 s
+21:29:49 [flow-depth] rgb pair (6, 7) B 0.100 m: accepted 0.380, 11.1 s
+21:30:00 [flow-depth] rgb pair (7, 8) B 0.100 m: accepted 0.373, 11.0 s
+21:30:11 [flow-depth] rgb pair (8, 9) B 0.100 m: accepted 0.362, 11.1 s
+21:30:23 [flow-depth] rgb pair (9, 10) B 0.100 m: accepted 0.360, 11.2 s
+21:30:34 [flow-depth] rgb pair (10, 11) B 0.100 m: accepted 0.350, 11.2 s
+21:30:45 [flow-depth] rgb pair (11, 12) B 0.100 m: accepted 0.336, 11.1 s
+21:30:56 [flow-depth] rgb pair (12, 13) B 0.100 m: accepted 0.322, 11.1 s
+21:31:07 [flow-depth] rgb pair (13, 14) B 0.100 m: accepted 0.313, 11.2 s
+21:31:18 [flow-depth] rgb pair (14, 15) B 0.100 m: accepted 0.312, 11.0 s
+21:31:29 [flow-depth] rgb pair (15, 16) B 0.100 m: accepted 0.315, 11.0 s
+21:31:40 [flow-depth] rgb pair (16, 17) B 0.100 m: accepted 0.319, 10.9 s
+21:31:51 [flow-depth] rgb pair (17, 18) B 0.100 m: accepted 0.317, 10.8 s
+21:32:01 [flow-depth] rgb pair (18, 19) B 0.100 m: accepted 0.321, 10.7 s
+21:32:12 [flow-depth] rgb pair (19, 20) B 0.100 m: accepted 0.319, 10.6 s
+21:32:23 [flow-depth] rgb pair (20, 21) B 0.100 m: accepted 0.305, 10.6 s
+21:32:37 [flow-depth] rgb pair (0, 5) B 0.500 m: accepted 0.275, 14.5 s
+21:32:52 [flow-depth] rgb pair (1, 6) B 0.500 m: accepted 0.281, 14.5 s
+21:33:07 [flow-depth] rgb pair (2, 7) B 0.500 m: accepted 0.268, 14.8 s
+21:33:21 [flow-depth] rgb pair (3, 8) B 0.500 m: accepted 0.273, 14.6 s
+21:33:36 [flow-depth] rgb pair (4, 9) B 0.500 m: accepted 0.277, 14.7 s
+21:33:50 [flow-depth] rgb pair (5, 10) B 0.500 m: accepted 0.275, 14.6 s
+21:34:05 [flow-depth] rgb pair (6, 11) B 0.500 m: accepted 0.272, 14.6 s
+21:34:20 [flow-depth] rgb pair (7, 12) B 0.500 m: accepted 0.272, 14.6 s
+21:34:34 [flow-depth] rgb pair (8, 13) B 0.500 m: accepted 0.281, 14.5 s
+21:34:49 [flow-depth] rgb pair (9, 14) B 0.500 m: accepted 0.271, 14.6 s
+21:35:03 [flow-depth] rgb pair (10, 15) B 0.500 m: accepted 0.261, 14.5 s
+21:35:18 [flow-depth] rgb pair (11, 16) B 0.500 m: accepted 0.271, 14.5 s
+21:35:32 [flow-depth] rgb pair (12, 17) B 0.500 m: accepted 0.265, 14.6 s
+21:35:47 [flow-depth] rgb pair (13, 18) B 0.500 m: accepted 0.261, 14.4 s
+21:36:01 [flow-depth] rgb pair (14, 19) B 0.500 m: accepted 0.254, 14.5 s
+21:36:16 [flow-depth] rgb pair (15, 20) B 0.500 m: accepted 0.252, 14.4 s
+21:36:30 [flow-depth] rgb pair (16, 21) B 0.500 m: accepted 0.241, 14.3 s
+21:36:47 [flow-depth] rgb pair (0, 10) B 1.000 m: accepted 0.198, 16.8 s
+21:37:04 [flow-depth] rgb pair (1, 11) B 1.000 m: accepted 0.207, 16.9 s
+21:37:21 [flow-depth] rgb pair (2, 12) B 1.000 m: accepted 0.195, 17.2 s
+21:37:38 [flow-depth] rgb pair (3, 13) B 1.000 m: accepted 0.203, 17.1 s
+21:37:55 [flow-depth] rgb pair (4, 14) B 1.000 m: accepted 0.197, 17.1 s
+21:38:12 [flow-depth] rgb pair (5, 15) B 1.000 m: accepted 0.201, 17.0 s
+21:38:29 [flow-depth] rgb pair (6, 16) B 1.000 m: accepted 0.196, 16.9 s
+21:38:46 [flow-depth] rgb pair (7, 17) B 1.000 m: accepted 0.199, 17.0 s
+21:39:03 [flow-depth] rgb pair (8, 18) B 1.000 m: accepted 0.196, 16.8 s
+21:39:20 [flow-depth] rgb pair (9, 19) B 1.000 m: accepted 0.195, 17.1 s
+21:39:37 [flow-depth] rgb pair (10, 20) B 1.000 m: accepted 0.194, 16.9 s
+21:39:53 [flow-depth] rgb pair (11, 21) B 1.000 m: accepted 0.189, 16.9 s
+21:39:53 [dolly] rgb estimate: 50 pairs in 681.3 s -> runs/m3-calib-1024-rgb

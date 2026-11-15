@@ -1,0 +1,213 @@
+{
+ "schema": "foveal-motion-run-v1",
+ "experiment": "M1 dolly (subset: issue #7 noise)",
+ "path": {
+  "schema": "foveal-motion-path-v1",
+  "name": "classroom_dolly",
+  "scene": "scenes/classroom/classroom_eye.blend",
+  "start_w": [
+   0.897,
+   -3.793,
+   1.6
+  ],
+  "end_w": [
+   0.897,
+   0.759,
+   1.6
+  ],
+  "n_looks": 47,
+  "facing_w": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "target_w": [
+   0.897,
+   3.259,
+   1.334
+  ],
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.046,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    0.897,
+    3.159,
+    1.6
+   ]
+  },
+  "source": {
+   "scene": "the Classroom demo (CC0, Christophe Seux) with the playground's EYE, built by scripts/setup_scene.sh; the EYE is the session's head only, every look carries its own",
+   "start_w, end_w": "yarbus-agent REPORT.md, MEASURED placements: back_of_room (0.897, -3.793, 1.600) and near_board (0.897, 0.759, 1.600), 7.06 m and 2.51 m from the board centre; standing height 1.6 m (Luiz, 2026-11-12)",
+   "n_looks": "46 equal steps of 0.0990 m (Chat's choice: about 10 cm)",
+   "facing_w": "+Y, toward the board (its normal points to -Y, yarbus-agent REPORT.md); the same axes as the playground's H0",
+   "target_w": "the board 'blackBoard' centre, yarbus-agent REPORT.md (MEASURED)",
+   "limits": "clearance 0.25 m from fov-render docs/scenes/classroom.json; hole limit 0.046 for this path (Luiz, 2026-11-12, issue #1, decision A, M-D6): the scene's 0.025 (D18, the window panes, measured from the EYE) failed at heads 6-46 with 0.0250-0.0383, every hole ray on the +X wall's window band (Code, workstation, OPTIX, 5a5956f; docs/runs/issue-1/preflight_holes.py); 0.046 is that maximum plus about a fifth, as D18 did",
+   "control_head_w": "0.10 m in front of the board plane at eye height (the board spans z 0.764..1.904): must fail the clearance"
+  }
+ },
+ "target_source": "target_w",
+ "path_file": "paths/classroom_dolly.json",
+ "blend": "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend",
+ "blend_sha256": "0c6634c005ca6a411d0b431fdcf8813699c37541ad5de7b5eeaacdafc8e6f6f3",
+ "profile": "full",
+ "spp": 1024,
+ "seed": {
+  "C": 2
+ },
+ "device_requested": "OPTIX",
+ "modes": [
+  "ahead"
+ ],
+ "sensor": {
+  "type": "foveated",
+  "E2_deg": 2.0,
+  "e_max_deg": 45.0
+ },
+ "eye": "C",
+ "git": {
+  "foveal-motion": {
+   "commit": "2f8278f99f6a864d2436bd845fa406fbf0383a46",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "command": [
+  "docs/runs/issue-7/noise/render_looks.py",
+  "--path",
+  "paths/classroom_dolly.json",
+  "--run",
+  "runs/noise/spp1024-seed2",
+  "--looks",
+  "20",
+  "25",
+  "--spp",
+  "1024",
+  "--seed",
+  "2"
+ ],
+ "preflight": {
+  "ok": true,
+  "control_fails": true,
+  "summary": {
+   "max_hole_fraction": 0.03830429777176565,
+   "min_nearest_surface_m": 0.7930725664472149,
+   "max_backface_closed_fraction": 5.832624818571049e-06,
+   "failing_heads": []
+  }
+ },
+ "preflight_from": "/home/lvelho/rd/foveal-motion/runs/dolly-1/preflight.json",
+ "subset": {
+  "looks": [
+   20,
+   25
+  ],
+  "of": 47
+ },
+ "looks": {
+  "ahead": [
+   {
+    "k": 20,
+    "out_dir": "ahead/k0020",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.8138695652173913,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "seed": 2,
+    "render_seconds": 1.1679954330029432,
+    "wall_seconds": 1.312
+   },
+   {
+    "k": 25,
+    "out_dir": "ahead/k0025",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.3190869565217391,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "seed": 2,
+    "render_seconds": 0.5365094219887396,
+    "wall_seconds": 0.674
+   }
+  ]
+ },
+ "session": {
+  "start_seconds": 0.5,
+  "launcher": {
+   "kind": "blender",
+   "executable": "/usr/local/bin/blender"
+  },
+  "device": "OPTIX",
+  "session_head": {
+   "head_R_wh": [
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     3.422854177870249e-08,
+     -0.9999999403953552
+    ],
+    [
+     0.0,
+     0.9999999403953552,
+     3.422854177870249e-08
+    ]
+   ],
+   "head_origin_w_m": [
+    -0.6000000238418579,
+    -1.0,
+    1.2000000476837158
+   ]
+  }
+ },
+ "device": "OPTIX",
+ "seconds": 2.65
+}

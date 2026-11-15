@@ -1,0 +1,7 @@
+21:27:54 $ .venv/bin/python -m motion.dolly depth --run runs/m3-calib-1024
+21:27:56 [dolly] M2.1 PASS  control fails  exact triangulation along the path returns the true range: {"samples": 1000000, "max_rel": 2.2243167253696982e-08, "control_samples": 237597, "control_median_rel": 0.10000000000004808}
+21:27:56 [dolly] range from motion, pixel-limited: median relative error | usable (<= 10%) by eccentricity; fovea: error, bracket (what the pixel supports), same-pixel share; model: median error / (range sqrt(omega_a/12) / (|T| sin psi)), 0.87 for rounding alone
+21:27:56         ahead  0.10 m  0-1: inf|0.000  1-2: inf|0.000  2-5: inf|0.076  5-10: 0.413|0.077  10-20: 0.309|0.089  20-30: 0.215|0.216  30-45: 0.247|0.137   fovea<2deg inf|0.000 bracket inf|0.000 same px 0.984   field usable 0.117 bracket 0.000   no range 0.23   measured/model 1.174
+21:27:56         ahead  0.50 m  0-1: 0.278|0.182  1-2: 0.173|0.267  2-5: 0.077|0.574  5-10: 0.075|0.580  10-20: 0.056|0.665  20-30: 0.053|0.694  30-45: 0.044|0.816   fovea<2deg 0.198|0.238 bracket 0.506|0.000 same px 0.065   field usable 0.661 bracket 0.170   no range 0.00   measured/model 1.454
+21:27:56         ahead  1.00 m  0-1: 0.157|0.334  1-2: 0.089|0.538  2-5: 0.047|0.738  5-10: 0.037|0.840  10-20: 0.033|0.807  20-30: 0.028|0.774  30-45: 0.025|0.865   fovea<2deg 0.104|0.468 bracket 0.269|0.000 same px 0.017   field usable 0.796 bracket 0.530   no range 0.00   measured/model 1.837
+21:27:56 [dolly] PASS -> runs/m3-calib-1024/depth.json

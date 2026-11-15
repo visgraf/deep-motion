@@ -1,0 +1,162 @@
+{
+ "schema": "foveal-motion-m3-selftest-v1",
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "2f4e4e8a63fc1aaefb6e7de2963aea649d28af89",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "results": [
+  {
+   "name": "foveated small: pixel -> (q, phi) -> pixel round trip < 1e-6 px, all quadrants",
+   "ok": true
+  },
+  {
+   "name": "foveated full: pixel -> (q, phi) -> pixel round trip < 1e-6 px, all quadrants",
+   "ok": true
+  },
+  {
+   "name": "control: wrong row sign breaks the round trip by >= 1 px",
+   "ok": true
+  },
+  {
+   "name": "pinhole 90deg: pixel -> (q, phi) -> pixel round trip < 1e-6 px, all quadrants",
+   "ok": true
+  },
+  {
+   "name": "dq/dw through pixel_of equals (2K/N)(E2+e)/(sin e cos e) within 1e-5",
+   "ok": true
+  },
+  {
+   "name": "control: a sensor with E2 = 2.2 deg fails that check (max rel >= 1e-3)",
+   "ok": true
+  },
+  {
+   "name": "pinhole: native px per unit q = f tan e within 1e-6",
+   "ok": true
+  },
+  {
+   "name": "#5's known answer (z_a 5 m, e_a 20 deg, stride 1) reproduced within 1e-9",
+   "ok": true
+  },
+  {
+   "name": "#5's native radial shifts on the 5 m plane reproduced within 1e-6 px",
+   "ok": true
+  },
+  {
+   "name": "analytic static points: range and world point within 1e-6 relative (parallax >= 0.01 deg)",
+   "ok": true
+  },
+  {
+   "name": "analytic static points keep their azimuth (|dphi| <= 1e-9 rad)",
+   "ok": true
+  },
+  {
+   "name": "control: native radius as pinhole radius at 20-45 deg gives median error >= 1 %",
+   "ok": true
+  },
+  {
+   "name": "interval: d_lo > 0 finite; d_lo <= 0 unbounded far; d_hi <= 0 no range",
+   "ok": true
+  },
+  {
+   "name": "grid: every supported node's bilinear footprint is on valid pixels",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "roundtrip_foveated small": {
+   "max_px": 7.069900220812997e-12,
+   "samples": 12492,
+   "quadrants": {
+    "-1-1": 3123,
+    "-11": 3123,
+    "1-1": 3123,
+    "11": 3123
+   },
+   "max_e_deg": 44.9906545137098
+  },
+  "roundtrip_foveated full": {
+   "max_px": 3.483080490696011e-11,
+   "samples": 50268,
+   "quadrants": {
+    "-1-1": 12441,
+    "-11": 12567,
+    "1-1": 12567,
+    "11": 12567
+   },
+   "max_e_deg": 44.994205003602694
+  },
+  "roundtrip_pinhole 90deg": {
+   "max_px": 7.105427357601002e-14,
+   "samples": 64008,
+   "quadrants": {
+    "-1-1": 15876,
+    "-11": 15876,
+    "1-1": 15876,
+    "11": 15876
+   },
+   "max_e_deg": 54.735610317245346
+  },
+  "jacobian": {
+   "max_rel": 5.890198329083773e-09,
+   "wrong_E2_max_rel": 0.03589860112848231
+  },
+  "known_answer": {
+   "d": 0.01998977524202017,
+   "e_b_deg": 20.37092438677237,
+   "z_b": 4.901043478260989,
+   "z_a": 4.999999999999989,
+   "r_a": 5.320888862379561,
+   "r_b": 5.228009703663471,
+   "max_rel_vs_issue": 1.3563594691845537e-12
+  },
+  "native_shifts_px": {
+   "1": 0.26872157021966814,
+   "5": 0.5707851119011877,
+   "10": 0.6548100955423308,
+   "20": 0.6699507985811124,
+   "30": 0.6192799971967986,
+   "40": 0.5353527293184186
+  },
+  "analytic_points": {
+   "n": 798,
+   "max_rel_range_or_point": 2.9387603461827894e-13,
+   "max_dphi_rad": 8.43769498715119e-15,
+   "control_native_radius_median_rel": 2.8271594346326134
+  },
+  "grid": {
+   "shape": [
+    160,
+    800
+   ],
+   "supported_fraction": 0.9903125,
+   "by_ecc_deg": {
+    "1": {
+     "native_px_per_q_step": 0.3399877458381828,
+     "native_px_per_phi_step": 0.12760252092499955,
+     "supported": 1.0
+    },
+    "5": {
+     "native_px_per_q_step": 0.7234246726390705,
+     "native_px_per_phi_step": 0.3924866247091375,
+     "supported": 1.0
+    },
+    "20": {
+     "native_px_per_q_step": 0.8543648591692892,
+     "native_px_per_phi_step": 0.7526010031403908,
+     "supported": 1.0
+    },
+    "45": {
+     "native_px_per_q_step": 0.621824027720667,
+     "native_px_per_phi_step": 0.9935286766859567,
+     "supported": 0.0
+    }
+   }
+  }
+ }
+}

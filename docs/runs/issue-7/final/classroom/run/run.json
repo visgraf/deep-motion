@@ -1,0 +1,1606 @@
+{
+ "schema": "foveal-motion-run-v1",
+ "experiment": "M1 dolly",
+ "path": {
+  "schema": "foveal-motion-path-v1",
+  "name": "classroom_dolly",
+  "scene": "scenes/classroom/classroom_eye.blend",
+  "start_w": [
+   0.897,
+   -3.793,
+   1.6
+  ],
+  "end_w": [
+   0.897,
+   0.759,
+   1.6
+  ],
+  "n_looks": 47,
+  "facing_w": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "target_w": [
+   0.897,
+   3.259,
+   1.334
+  ],
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.046,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    0.897,
+    3.159,
+    1.6
+   ]
+  },
+  "source": {
+   "scene": "the Classroom demo (CC0, Christophe Seux) with the playground's EYE, built by scripts/setup_scene.sh; the EYE is the session's head only, every look carries its own",
+   "start_w, end_w": "yarbus-agent REPORT.md, MEASURED placements: back_of_room (0.897, -3.793, 1.600) and near_board (0.897, 0.759, 1.600), 7.06 m and 2.51 m from the board centre; standing height 1.6 m (Luiz, 2026-11-12)",
+   "n_looks": "46 equal steps of 0.0990 m (Chat's choice: about 10 cm)",
+   "facing_w": "+Y, toward the board (its normal points to -Y, yarbus-agent REPORT.md); the same axes as the playground's H0",
+   "target_w": "the board 'blackBoard' centre, yarbus-agent REPORT.md (MEASURED)",
+   "limits": "clearance 0.25 m from fov-render docs/scenes/classroom.json; hole limit 0.046 for this path (Luiz, 2026-11-12, issue #1, decision A, M-D6): the scene's 0.025 (D18, the window panes, measured from the EYE) failed at heads 6-46 with 0.0250-0.0383, every hole ray on the +X wall's window band (Code, workstation, OPTIX, 5a5956f; docs/runs/issue-1/preflight_holes.py); 0.046 is that maximum plus about a fifth, as D18 did",
+   "control_head_w": "0.10 m in front of the board plane at eye height (the board spans z 0.764..1.904): must fail the clearance"
+  }
+ },
+ "target_source": "target_w",
+ "path_file": "paths/classroom_dolly.json",
+ "blend": "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend",
+ "blend_sha256": "0c6634c005ca6a411d0b431fdcf8813699c37541ad5de7b5eeaacdafc8e6f6f3",
+ "profile": "full",
+ "spp": 1024,
+ "device_requested": "OPTIX",
+ "modes": [
+  "ahead"
+ ],
+ "seeds": "per look: C seed = 1000 + k (independent noise, #7)",
+ "sensor": {
+  "type": "foveated",
+  "E2_deg": 2.0,
+  "e_max_deg": 45.0
+ },
+ "eye": "C",
+ "git": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "command": [
+  "/home/lvelho/rd/foveal-motion/motion/dolly.py",
+  "run",
+  "--path",
+  "paths/classroom_dolly.json",
+  "--run",
+  "runs/dolly-1024",
+  "--device",
+  "OPTIX",
+  "--profile",
+  "full",
+  "--spp",
+  "1024",
+  "--modes",
+  "ahead",
+  "--seed-base",
+  "1000"
+ ],
+ "preflight": {
+  "ok": true,
+  "control_fails": true,
+  "summary": {
+   "max_hole_fraction": 0.03830429777176565,
+   "min_nearest_surface_m": 0.7930725664472149,
+   "max_backface_closed_fraction": 5.832624818571049e-06,
+   "failing_heads": [],
+   "target_occluded_heads": [],
+   "target_w": [
+    0.897,
+    3.259,
+    1.334
+   ]
+  }
+ },
+ "looks": {
+  "ahead": [
+   {
+    "k": 0,
+    "out_dir": "ahead/k0000",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.793,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 1.2235042190004606,
+    "wall_seconds": 1.361
+   },
+   {
+    "k": 1,
+    "out_dir": "ahead/k0001",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.6940434782608698,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6679404220049037,
+    "wall_seconds": 0.802
+   },
+   {
+    "k": 2,
+    "out_dir": "ahead/k0002",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.5950869565217394,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6503932619962143,
+    "wall_seconds": 0.787
+   },
+   {
+    "k": 3,
+    "out_dir": "ahead/k0003",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.496130434782609,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6942642030044226,
+    "wall_seconds": 0.829
+   },
+   {
+    "k": 4,
+    "out_dir": "ahead/k0004",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.3971739130434786,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6509056179929757,
+    "wall_seconds": 0.782
+   },
+   {
+    "k": 5,
+    "out_dir": "ahead/k0005",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.2982173913043478,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6177638160006609,
+    "wall_seconds": 0.754
+   },
+   {
+    "k": 6,
+    "out_dir": "ahead/k0006",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.1992608695652174,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6740062690078048,
+    "wall_seconds": 0.807
+   },
+   {
+    "k": 7,
+    "out_dir": "ahead/k0007",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.100304347826087,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6469044719997328,
+    "wall_seconds": 0.778
+   },
+   {
+    "k": 8,
+    "out_dir": "ahead/k0008",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.0013478260869566,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6702780030027498,
+    "wall_seconds": 0.802
+   },
+   {
+    "k": 9,
+    "out_dir": "ahead/k0009",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.902391304347826,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6583566269982839,
+    "wall_seconds": 0.79
+   },
+   {
+    "k": 10,
+    "out_dir": "ahead/k0010",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.803434782608696,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6313113640062511,
+    "wall_seconds": 0.765
+   },
+   {
+    "k": 11,
+    "out_dir": "ahead/k0011",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.704478260869565,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6366796859947499,
+    "wall_seconds": 0.768
+   },
+   {
+    "k": 12,
+    "out_dir": "ahead/k0012",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.6055217391304346,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6439856039942242,
+    "wall_seconds": 0.773
+   },
+   {
+    "k": 13,
+    "out_dir": "ahead/k0013",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.5065652173913042,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6669538900023326,
+    "wall_seconds": 0.8
+   },
+   {
+    "k": 14,
+    "out_dir": "ahead/k0014",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.407608695652174,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6363650650018826,
+    "wall_seconds": 0.773
+   },
+   {
+    "k": 15,
+    "out_dir": "ahead/k0015",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.3086521739130434,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6972008400043705,
+    "wall_seconds": 0.828
+   },
+   {
+    "k": 16,
+    "out_dir": "ahead/k0016",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.209695652173913,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6677795489958953,
+    "wall_seconds": 0.796
+   },
+   {
+    "k": 17,
+    "out_dir": "ahead/k0017",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.1107391304347827,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6337827279930934,
+    "wall_seconds": 0.772
+   },
+   {
+    "k": 18,
+    "out_dir": "ahead/k0018",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.0117826086956523,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6487402819911949,
+    "wall_seconds": 0.781
+   },
+   {
+    "k": 19,
+    "out_dir": "ahead/k0019",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.9128260869565217,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6581511000113096,
+    "wall_seconds": 0.791
+   },
+   {
+    "k": 20,
+    "out_dir": "ahead/k0020",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.8138695652173913,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6383863660012139,
+    "wall_seconds": 0.768
+   },
+   {
+    "k": 21,
+    "out_dir": "ahead/k0021",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.7149130434782611,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.651019055992947,
+    "wall_seconds": 0.778
+   },
+   {
+    "k": 22,
+    "out_dir": "ahead/k0022",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.6159565217391303,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6603837580041727,
+    "wall_seconds": 0.792
+   },
+   {
+    "k": 23,
+    "out_dir": "ahead/k0023",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.517,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6644271580007626,
+    "wall_seconds": 0.794
+   },
+   {
+    "k": 24,
+    "out_dir": "ahead/k0024",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.4180434782608695,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6629424869897775,
+    "wall_seconds": 0.791
+   },
+   {
+    "k": 25,
+    "out_dir": "ahead/k0025",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.3190869565217391,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6692396459984593,
+    "wall_seconds": 0.795
+   },
+   {
+    "k": 26,
+    "out_dir": "ahead/k0026",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.2201304347826087,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6323744889959926,
+    "wall_seconds": 0.773
+   },
+   {
+    "k": 27,
+    "out_dir": "ahead/k0027",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.1211739130434784,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6426897439960157,
+    "wall_seconds": 0.77
+   },
+   {
+    "k": 28,
+    "out_dir": "ahead/k0028",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.0222173913043475,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6175379829946905,
+    "wall_seconds": 0.745
+   },
+   {
+    "k": 29,
+    "out_dir": "ahead/k0029",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.9232608695652171,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6224229910003487,
+    "wall_seconds": 0.747
+   },
+   {
+    "k": 30,
+    "out_dir": "ahead/k0030",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.8243043478260867,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.642344462001347,
+    "wall_seconds": 0.767
+   },
+   {
+    "k": 31,
+    "out_dir": "ahead/k0031",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.7253478260869564,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6442791890003718,
+    "wall_seconds": 0.772
+   },
+   {
+    "k": 32,
+    "out_dir": "ahead/k0032",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.626391304347826,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6506816589972004,
+    "wall_seconds": 0.775
+   },
+   {
+    "k": 33,
+    "out_dir": "ahead/k0033",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.5274347826086956,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6532454190019052,
+    "wall_seconds": 0.778
+   },
+   {
+    "k": 34,
+    "out_dir": "ahead/k0034",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.4284782608695652,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.640098643998499,
+    "wall_seconds": 0.765
+   },
+   {
+    "k": 35,
+    "out_dir": "ahead/k0035",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.3295217391304348,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6808051589905517,
+    "wall_seconds": 0.805
+   },
+   {
+    "k": 36,
+    "out_dir": "ahead/k0036",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.23056521739130442,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6844474359968444,
+    "wall_seconds": 0.807
+   },
+   {
+    "k": 37,
+    "out_dir": "ahead/k0037",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.1316086956521736,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6158900919981534,
+    "wall_seconds": 0.744
+   },
+   {
+    "k": 38,
+    "out_dir": "ahead/k0038",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.0326521739130432,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6325662010058295,
+    "wall_seconds": 0.758
+   },
+   {
+    "k": 39,
+    "out_dir": "ahead/k0039",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.06630434782608718,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6588515600014944,
+    "wall_seconds": 0.783
+   },
+   {
+    "k": 40,
+    "out_dir": "ahead/k0040",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.16526086956521757,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.649056020003627,
+    "wall_seconds": 0.769
+   },
+   {
+    "k": 41,
+    "out_dir": "ahead/k0041",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.2642173913043475,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6705614290112862,
+    "wall_seconds": 0.795
+   },
+   {
+    "k": 42,
+    "out_dir": "ahead/k0042",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.3631739130434779,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6241684849956073,
+    "wall_seconds": 0.75
+   },
+   {
+    "k": 43,
+    "out_dir": "ahead/k0043",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.4621304347826083,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6787652990024071,
+    "wall_seconds": 0.802
+   },
+   {
+    "k": 44,
+    "out_dir": "ahead/k0044",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.5610869565217396,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6404588840086944,
+    "wall_seconds": 0.762
+   },
+   {
+    "k": 45,
+    "out_dir": "ahead/k0045",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.66004347826087,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6427685620001284,
+    "wall_seconds": 0.766
+   },
+   {
+    "k": 46,
+    "out_dir": "ahead/k0046",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.7590000000000003,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6254614229983417,
+    "wall_seconds": 0.75
+   }
+  ]
+ },
+ "session": {
+  "start_seconds": 0.5,
+  "launcher": {
+   "kind": "blender",
+   "executable": "/usr/local/bin/blender"
+  },
+  "device": "OPTIX",
+  "session_head": {
+   "head_R_wh": [
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     3.422854177870249e-08,
+     -0.9999999403953552
+    ],
+    [
+     0.0,
+     0.9999999403953552,
+     3.422854177870249e-08
+    ]
+   ],
+   "head_origin_w_m": [
+    -0.6000000238418579,
+    -1.0,
+    1.2000000476837158
+   ]
+  }
+ },
+ "device": "OPTIX",
+ "seconds": 37.91
+}

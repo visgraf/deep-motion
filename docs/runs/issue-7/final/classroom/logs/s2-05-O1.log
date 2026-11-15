@@ -1,0 +1,9 @@
+21:42:03 $ .venv/bin/python -m motion.dolly flow-depth --run runs/dolly-1024 --strides 1 5 10 --correspondence oracle-exact --out runs/m3-classroom-1024-O1
+21:42:21 [dolly] oracle-exact: 18.6 s -> runs/m3-classroom-1024-O1
+21:42:21         M3.0    PASS  control fails  heading = eye axis in both looks, no rotation between them (#5's gate): {"pairs": 125, "tol_rad": 1e-06, "max_axis_rad": 0.0, "max_rotation_rad": 0.0, "min_B_m": 0.09895652173912994}
+21:42:21         M3.O1a  PASS  control fails  O1 keeps azimuth: |phi_a - phi_b| <= 1e-06 rad at e_b >= 1.0 deg: {"n": 5762017, "max_rad": 4.440892098500626e-16, "median_rad": 0.0, "control_max_rad": 0.0985779704896379}
+21:42:21         M3.O1b  PASS  control fails  O1 depth: relative range error <= 1e-06 at parallax >= 0.01 deg: {"n": 5853409, "max_rel": 8.476365450422942e-14, "control_median_rel": 0.010000000000000066}
+21:42:21         M3.PLY  PASS  control fails  reconstruction.ply reads back (finite, same xyz and colours) and every point lies on its anchor ray (<= 0.001 deg): {"points": 1972077, "readback_identical": true, "max_ray_angle_deg": 1.8557382569990753e-13, "control_median_deg": 44.278659923800014}
+21:42:21         stride  1 (0.099 m): field usable 0.955 within10% 0.955 | 5-40deg usable 0.948 median 0.000 p90 0.000 cov - | fovea usable 1.000
+21:42:21         stride  5 (0.495 m): field usable 0.942 within10% 0.942 | 5-40deg usable 0.936 median 0.000 p90 0.000 cov - | fovea usable 1.000
+21:42:21         stride 10 (0.990 m): field usable 0.924 within10% 0.924 | 5-40deg usable 0.917 median 0.000 p90 0.000 cov - | fovea usable 1.000

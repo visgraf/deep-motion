@@ -1,0 +1,5 @@
+1. calibration pair (0, 5), new vs stored frozen estimate, identical: True
+2. fixture front, new vs frozen matcher, identical: True
+2. fixture corridor, new vs frozen matcher, identical: True
+3. frozen matcher on the flat-disc case raises LinAlgError: Singular matrix
+   guarded matcher: completes; gn_failed 49 accepted 40890 of 48752

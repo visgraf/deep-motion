@@ -1,0 +1,15 @@
+19:22:36 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+19:22:36   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+19:22:36 [dolly] wrote visuals/m3-classroom-look/overview_a0000-b0005.png
+19:22:36 [dolly] wrote visuals/m3-classroom-look/matching_a0000-b0005.png
+19:22:36 [dolly] wrote visuals/m3-classroom-look/slit_scan_a0000-b0005.png
+19:22:37 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+19:22:37   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+19:22:38 [dolly] wrote visuals/m3-classroom-look/overview_a0020-b0025.png
+19:22:38 [dolly] wrote visuals/m3-classroom-look/matching_a0020-b0025.png
+19:22:38 [dolly] wrote visuals/m3-classroom-look/slit_scan_a0020-b0025.png
+19:22:39 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+19:22:39   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+19:22:39 [dolly] wrote visuals/m3-classroom-look/overview_a0040-b0045.png
+19:22:39 [dolly] wrote visuals/m3-classroom-look/matching_a0040-b0045.png
+19:22:39 [dolly] wrote visuals/m3-classroom-look/slit_scan_a0040-b0045.png

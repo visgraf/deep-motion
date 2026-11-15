@@ -1,0 +1,3 @@
+22:14:07 $ .venv/bin/python -m motion.dolly flow-depth-calibrate --result runs/m3-classroom-1024-rgb --from-result runs/m3-calib-1024-rgb --exclude 0:5,20:25,40:45
+22:14:08 [dolly] interval scale 1.625 imported from runs/m3-calib-1024-rgb; every pair held out except --exclude
+22:14:08 [dolly] frozen -> runs/m3-classroom-1024-rgb/freeze.json
