@@ -27,10 +27,10 @@ M3_CORRIDOR_1M = 0.173            # M3's accepted fraction on the parallel surfa
 
 
 class Scene:
-    def __init__(self, model, name, seed=0, foreign=False):
+    def __init__(self, model, name, seed=0):
         self.m, self.name, self.seed = model, name, seed
         self.planes = fx.scene(name, seed)
-        self.alt = fx.scene(name, seed + 100) if foreign else None
+        self.alt = fx.scene(name, seed + 100)            # the same geometry, another texture (the foreign frames)
         self.cache = {}
 
     def frame(self, k, foreign=False):
