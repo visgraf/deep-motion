@@ -1,0 +1,44 @@
+[m4] before5: interval scale 1.650 from 117381 anchors, |z| quantiles {'0.5': 0.9629449741379847, '0.68': 1.446445307839022, '0.9': 2.565447335452589, '0.95': 3.2334145337591553, '0.99': 5.2133013245866024}
+[m4] refused: settings differ from the frozen ones
+[m4] held-out r 12: M4 usable 0.238, M3 usable 0.251
+[m4] held-out r 14: M4 usable 0.237, M3 usable 0.255
+[m4] held-out r 16: M4 usable 0.230, M3 usable 0.258
+[m4] held-out r 18: M4 usable 0.225, M3 usable 0.248
+[m4] held-out r 20: M4 usable 0.214, M3 usable 0.240
+[m4] before5 EVALUATION {"M4": {"field_usable_of_all_hits": 0.22194990948696017, "accepted_fraction": 0.23463242533639644, "interval_coverage_interior": 0.9523788690801707, "usable_interior_median_rel": 0.008523434372054661, "usable_interior_p90_rel": 0.025417981295751197, "fovea_usable": 0.031612090680100756, "gate": {"coverage_of_subset": 0.35148514851485146, "median_rel": 0.00866180013442086, "p90_rel": 0.0252893816511293, "over_50pct": 0.00027085590465872155, "gate_pass": false}}, "M3": {"field_usable_of_all_hits": 0.24296882770693667, "accepted_fraction": 0.26532655070561206, "interval_coverage_interior": 0.9545257028635988, "usable_interior_median_rel": 0.009085280498509743, "usable_interior_p90_rel": 0.029099471010361547, "fovea_usable": 0.048110831234256926, "gate": {"coverage_of_subset": 0.3321937963027072, "median_rel": 0.00907187871321398, "p90_rel": 0.027956327997775872, "over_50pct": 0.002761639267383998, "gate_pass": false}}}
+[m4] both5 r 5: accepted 0.402 (65 s)
+[m4] both5 r 6: accepted 0.395 (68 s)
+[m4] both5 r 7: accepted 0.394 (62 s)
+[m4] both5 r 8: accepted 0.392 (61 s)
+[m4] both5 r 9: accepted 0.387 (66 s)
+[m4] both5 r 10: accepted 0.394 (67 s)
+[m4] both5 r 11: accepted 0.395 (67 s)
+[m4] both5 r 13: accepted 0.384 (67 s)
+[m4] both5 r 15: accepted 0.385 (65 s)
+[m4] both5: interval scale 1.487 from 130603 anchors, |z| quantiles {'0.5': 0.5842424465943395, '0.68': 0.927630785623565, '0.9': 2.03041387905646, '0.95': 2.915354909123862, '0.99': 8.498294872440956}
+[m4] both5 r 12: accepted 0.393 (66 s)
+[m4] both5 r 14: accepted 0.387 (66 s)
+[m4] both5 r 16: accepted 0.387 (66 s)
+[m4] held-out r 12: M4 usable 0.380, M3 usable 0.251
+[m4] held-out r 14: M4 usable 0.375, M3 usable 0.255
+[m4] held-out r 16: M4 usable 0.375, M3 usable 0.258
+[m4] both5 EVALUATION {"M4": {"field_usable_of_all_hits": 0.3651952495573813, "accepted_fraction": 0.38906438026474127, "interval_coverage_interior": 0.9469424879891786, "usable_interior_median_rel": 0.004295911962529829, "usable_interior_p90_rel": 0.020660490662052798, "fovea_usable": 0.2180940386230059, "gate": {"coverage_of_subset": 0.5031418569952943, "median_rel": 0.004154156848639888, "p90_rel": 0.01813594110508682, "over_50pct": 0.0032220352998203645, "gate_pass": true}}, "M3": {"field_usable_of_all_hits": 0.24703097336330543, "accepted_fraction": 0.27133245815556284, "interval_coverage_interior": 0.953517408675799, "usable_interior_median_rel": 0.009707555373951082, "usable_interior_p90_rel": 0.030564217007525166, "fovea_usable": 0.06821998320738874, "gate": {"coverage_of_subset": 0.32926374383105705, "median_rel": 0.009770065631104313, "p90_rel": 0.029521285005051395, "over_50pct": 0.0019171277939959044, "gate_pass": false}}}
+[m4] before10 r 10: accepted 0.210 (111 s)
+[m4] before10 r 11: accepted 0.211 (105 s)
+[m4] before10 r 13: accepted 0.201 (106 s)
+[m4] before10 r 15: accepted 0.189 (103 s)
+[m4] before10 r 17: accepted 0.181 (106 s)
+[m4] before10 r 19: accepted 0.175 (103 s)
+[m4] before10 r 21: accepted 0.163 (103 s)
+[m4] before10: interval scale 2.094 from 53077 anchors, |z| quantiles {'0.5': 1.2591770274545238, '0.68': 1.882110579814046, '0.9': 3.2993444589304843, '0.95': 4.103278110779254, '0.99': 6.458858970265268}
+[m4] before10 r 12: accepted 0.196 (104 s)
+[m4] before10 r 14: accepted 0.195 (107 s)
+[m4] before10 r 16: accepted 0.187 (106 s)
+[m4] before10 r 18: accepted 0.175 (105 s)
+[m4] before10 r 20: accepted 0.172 (105 s)
+[m4] held-out r 12: M4 usable 0.195, M3 usable 0.251
+[m4] held-out r 14: M4 usable 0.194, M3 usable 0.255
+[m4] held-out r 16: M4 usable 0.187, M3 usable 0.258
+[m4] held-out r 18: M4 usable 0.174, M3 usable 0.248
+[m4] held-out r 20: M4 usable 0.172, M3 usable 0.240
+[m4] before10 EVALUATION {"M4": {"field_usable_of_all_hits": 0.17867472995285363, "accepted_fraction": 0.18500984574991794, "interval_coverage_interior": 0.9516172361917042, "usable_interior_median_rel": 0.004883868593328514, "usable_interior_p90_rel": 0.014382292919796544, "fovea_usable": 0.038790931989924435, "gate": {"coverage_of_subset": 0.2917157100325417, "median_rel": 0.004985280787273446, "p90_rel": 0.01399461628689097, "over_50pct": 0.00035601969975671986, "gate_pass": false}}, "M3": {"field_usable_of_all_hits": 0.24296882770693667, "accepted_fraction": 0.26532655070561206, "interval_coverage_interior": 0.9545257028635988, "usable_interior_median_rel": 0.009085280498509743, "usable_interior_p90_rel": 0.029099471010361547, "fovea_usable": 0.048110831234256926, "gate": {"coverage_of_subset": 0.3321937963027072, "median_rel": 0.00907187871321398, "p90_rel": 0.027956327997775872, "over_50pct": 0.002761639267383998, "gate_pass": false}}}

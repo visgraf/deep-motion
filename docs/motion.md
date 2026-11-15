@@ -611,3 +611,61 @@ outline): 0.28 accepted, 7.5 % of them over 1 px.
 A first reading: the multi-baseline sum resolves what defeated M3, repeated texture (0 % → 85 % accepted, and M3's
 accepted 5 % there were mostly wrong), and roughly triples the parallel surfaces at 1 m (0.149 → 0.456), with equal or
 better precision everywhere (median 0.007–0.05 px). Run time on the sandbox's 2 cores: 35–105 s per reference frame.
+
+### Held-out results in the calibration room (M4a Stage 5, Chat sandbox)
+
+**Protocol** ([`m4_pipeline.py`](../motion/m4_pipeline.py), driver and records in [`stage5/`](runs/issue-10/stage5/)).
+Run `runs/m3-calib-1024` (M-D12's 1024 spp, a seed per look). The matcher is unchanged from the fixtures (`564c6eb`
+settings). Per window:
+1. Estimate the calibration references truth-free: every reference whose offset from M3's pair start is even, plus
+   r = 6, 8, 10 (the declared split).
+2. Set the interval scale to the 95th percentile of |error| / σ over 1.96 on their interior anchors.
+3. Freeze: settings, scale and estimates, under sha256.
+4. Estimate the held-out references (r = 12, 14, 16, 18, 20 where the window fits) truth-free.
+5. Evaluate once against M3's frozen matcher (`7bb5e70`, scale 1.625) on its pair (r − 5, r), on the same anchors.
+
+#5's calibration gate applies to M3's subset of the reference: hit, visible in r − 5, interior, textured, 5–40°.
+Held-out truth was opened only by step 5.
+
+Three fixes, each before any held-out truth was opened:
+- Held-out estimation appended to `config.json` after the freeze, so the freeze now hashes a `config_frozen.json` copy.
+  before5's freeze was re-made with an identical scale, 1.650. Its held-out estimates, already made, are therefore
+  hashed in the freeze rather than at evaluation.
+- The settings comparison now leaves `interval_scale` out on both sides.
+- #5's alignment gate now receives each pair earlier → later. A frame after the reference had read as a 180° heading
+  error; the gate's yaw and lateral controls still fail every pair.
+
+| window | calib. refs (anchors) | scale | held-out | accepted | field usable | fovea usable | gate subset coverage | median | p90 | > 50 % | interval coverage | gate |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M3 pair (−5, 0) | (#7) | 1.625 | 12–20 | 0.265 | 0.243 | 0.048 | 0.332 | 0.91 % | 2.80 % | 0.28 % | 0.955 | fail (coverage) |
+| M4 5 steps back | 12 (117,381) | 1.650 | 12–20 | 0.235 | 0.222 | 0.032 | 0.351 | 0.87 % | 2.53 % | 0.03 % | 0.952 | fail (coverage) |
+| **M4 5 each side** | 9 (130,603) | 1.487 | 12, 14, 16 | **0.389** | **0.365** | **0.218** | **0.503** | **0.42 %** | **1.81 %** | 0.32 % | 0.947 | **PASS** |
+| M4 10 steps back | 7 (53,077) | 2.094 | 12–20 | 0.185 | 0.179 | 0.039 | 0.292 | 0.50 % | 1.40 % | 0.04 % | 0.952 | fail (coverage) |
+
+Source for every number above: Chat sandbox, `foveal-motion` at `b8fce84`, torch 2.15.0+cpu, 2 cores, 65–110 s per
+reference frame. Each number is held out, from `stage5/<window>/evaluation.json`. On both5's three references M3
+scores 0.247 field usable, 0.068 fovea and 0.329 gate coverage. Gate thresholds: median ≤ 5 %, p90 ≤ 10 %,
+coverage ≥ 0.50.
+
+Why the windows differ: rejection shares on the held-out anchors, truth-free:
+
+| window | accepted | depth edge | low NCC | ambiguous | unsupported | frames used (median) |
+|---|---|---|---|---|---|---|
+| 5 steps back | 0.235 | 0.397 | 0.155 | 0.045 | 0.055 | 5 |
+| 5 each side | 0.389 | 0.273 | 0.190 | 0.028 | 0.025 | 10 |
+| 10 steps back | 0.185 | 0.382 | 0.204 | 0.055 | 0.062 | 10 |
+
+A reading:
+- **Five frames on each side of the reference are the first estimator of the project to pass #5's calibration gate on
+  held-out frames.** The window gives the fovea 22 % against 5–7 % for M3, and precision about twice M3's on the same
+  pixels.
+- The pass is narrow: 0.503 against 0.50, on three held-out references. It is also non-causal: the depth of frame r is
+  ready only when frame r + 5 has been seen, about 0.5 m later.
+- A window behind the reference only is not enough. With five steps (the same longest baseline as M3's pair), M4
+  rejects slightly more than M3. The depth-edge test removes 40 % of the anchors, and on calibration frames those
+  anchors are truly less accurate (Stage 5 diagnosis, #10).
+- One-sided 1 m windows, the oracle's best row (0.90 at 0.25 px a frame), fall furthest from their ceiling: accepted
+  0.185, interval scale 2.09. The far frames see the room much larger, so their windows' appearance and visibility
+  change more than the slope model and frame consistency absorb.
+- The two-sided window places every frame within 0.5 m. Its errors on each side pull in opposite directions in ζ,
+  which halves the ambiguous and unsupported rejections and a third of the depth-edge ones.

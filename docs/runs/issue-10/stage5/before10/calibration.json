@@ -1,0 +1,23 @@
+{
+ "schema": "foveal-motion-m4-calibration-v1",
+ "window": "before10",
+ "refs": [
+  10,
+  11,
+  13,
+  15,
+  17,
+  19,
+  21
+ ],
+ "n": 53077,
+ "interval_scale": 2.0935477096239463,
+ "abs_z_quantiles": {
+  "0.5": 1.2591770274545238,
+  "0.68": 1.882110579814046,
+  "0.9": 3.2993444589304843,
+  "0.95": 4.103278110779254,
+  "0.99": 6.458858970265268
+ },
+ "method": "95th percentile of |zeta - zeta_true| / sigma_zeta over accepted interior anchors with a hit, / 1.96"
+}

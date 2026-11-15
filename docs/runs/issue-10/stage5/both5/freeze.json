@@ -1,0 +1,59 @@
+{
+ "schema": "foveal-motion-m4-freeze-v1",
+ "frozen_settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 1.4874533063463462,
+  "chunk": 6000
+ },
+ "sha256": {
+  "config_frozen.json": "0c94188b7b07305c083b9b40a19d93002023d5bd4691121d204c5c96f9f5ff46",
+  "calibration.json": "77ed7f67328c3c2bab276869177d30b9108b9b7b7fee5b7a9b490ba6b9175210",
+  "r0005.npz": "0a3116bdb36642065dcc57159ec8dd400ff46ba76357e6fd2c528cb0ec94c4fe",
+  "r0006.npz": "e963cfca360466882500e3653265ea2224f58f99304a42fa6465bd2cc2f10294",
+  "r0007.npz": "2b14ceedce28b2d9aaac1566daf0439e3e93e489bd00b57dfd9c37ad0f747010",
+  "r0008.npz": "b79fc6e7cb20025524e25aa812c401fa442ab1aaef2f65d358d9bb9dc43c98d9",
+  "r0009.npz": "575bcb382d5a42c6217e47505e5596af8bbb9694120c83ced611709796c38a55",
+  "r0010.npz": "8ffdccff0ac98be1bb21e823a93ee9f58578af175064aaa7da0710482ee73678",
+  "r0011.npz": "ce6cfa48776e0a301faaa9e7a164f1c34c3aab415988772153c8a095c019f0f8",
+  "r0013.npz": "1444dde5dd9544f78f455c9849432365aaa90837a92ba50ca39c49b60a284310",
+  "r0015.npz": "d1e4fb8ed00be88114ef2c49182d4af3ac5a027af672bb92d73d930a1b2edc30"
+ },
+ "calibration_refs": [
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  13,
+  15
+ ],
+ "held_out_refs": []
+}
