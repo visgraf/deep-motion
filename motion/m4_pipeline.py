@@ -160,8 +160,8 @@ def evaluate(out: Path, window: str, m3_scale: float, log=print) -> dict:
     fr = _verify(d)
     cfg = json.loads((d / "config.json").read_text())
     frozen_cfg = json.loads((d / "config_frozen.json").read_text())
-    if not (json.loads(json.dumps({k: v for k, v in fr["frozen_settings"].items() if k != "interval_scale"})) == cfg["settings"]
-            == frozen_cfg["settings"]):
+    nos = lambda st: json.loads(json.dumps({k: v for k, v in st.items() if k != "interval_scale"}))
+    if not (nos(fr["frozen_settings"]) == nos(cfg["settings"]) == nos(frozen_cfg["settings"])):
         raise SystemExit("[m4] refused: settings differ from the frozen ones")
     scale = fr["frozen_settings"]["interval_scale"]
     run = analysis.load_run(cfg["run"])
