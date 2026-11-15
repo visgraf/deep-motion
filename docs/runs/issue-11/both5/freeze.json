@@ -1,0 +1,52 @@
+{
+ "schema": "foveal-motion-m4-freeze-v1",
+ "frozen_settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 1.4874533063463462,
+  "chunk": 6000
+ },
+ "sha256": {
+  "config_frozen.json": "af6a5aa9d199786c02a49019e626c383275a4f8e00dfb0b13488c576753118c6"
+ },
+ "calibration_refs": [],
+ "held_out_refs": null,
+ "estimator_sha256": {
+  "motion/multibaseline.py": "5f5d8907387ee64ab034077d6f427af4cef7290f48d6a05012bad15242160a4c",
+  "motion/m4_pipeline.py": "7aba8b8e1e6264d4f1f1dca8d1318e0c7b0e54d0291b1fb713a3da11305a5b79",
+  "motion/matcher.py": "f4ed8013beddf2f9c5c92dd97fa12359f123aadc06c9515b7da515b52527e0f4",
+  "motion/logpolar.py": "a629cb10808353a1b0c1dc4437546fd7f8573db57405de7ba14244967c3b123e",
+  "motion/flow_depth.py": "e4376202ce815d425820ae8e8575c8c178a5353adc440c21de740da1b24098d4"
+ },
+ "imported_from": {
+  "frozen": "docs/runs/issue-10/frozen.json",
+  "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+  "source": "docs/runs/issue-10/stage5/both5",
+  "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+ }
+}

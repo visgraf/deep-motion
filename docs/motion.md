@@ -24,6 +24,9 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D11 | Visuals before calibration (Luiz, 2026-11-14, in Chat; #7) | the full calibration-room and Classroom runs (M-D10) move to the end, overnight. First a quick look at the Classroom: the frozen estimator on three stride-5 pairs, with the process figures and the provisional scale (1.68, from the smoke calibration), labelled provisional. The three pairs' truth is opened for the error overlays, so they are excluded from the final Classroom gate |
 | M-D12 | M3's acquisition (Luiz, 2026-11-14, in Chat; #7) | the final M3 runs re-render the calibration room and the Classroom `ahead` path at 1024 spp with an independent seed per look (`run --seed-base 1000`): 64 spp is far noisier than a camera at a normal exposure (σ 20–30 % of the signal), 1024 spp about 5–7 %. The estimator stays frozen at `7bb5e70`; the interval scale is recalibrated on the new calibration-room renders; M1–M2 keep their 64-spp results; the quick-look pairs (0, 5), (20, 25), (40, 45) stay out of the Classroom gate (`--exclude`); runs of about 45 min in total are OK'd |
 | M-D13 | M3 closed; M4 next (Luiz, 2026-11-14, in Chat; #7) | M3 closes with its result: depth from the image's own forward motion is accurate and its intervals honest where the matcher accepts (held-out median 0.9 % / 1.8 %, p90 2.8 % / 5.1 %, coverage of the 95 % intervals 0.95 / 0.93, calibration room / Classroom), and it fails both gates on coverage alone (0.33 / 0.12 against 0.50 / 0.25); the thresholds stay as declared. Next: temporal integration over the sequence (M4). M3's branch merges into `main` |
+| M-D14 | M4's plan (Luiz, 2026-11-14, in Chat; #9) | multi-baseline matching in inverse axial depth ζ over a window of frames (Okutomi & Kanade 1993, in the log-polar coordinate), on M3's 1024-spp renders; the matcher in PyTorch, device-agnostic (CPU in Chat's sandbox, CUDA on the workstation; Chat's recommendation on #9's question 2, which the issue had left without one); Code publishes the 1024-spp calibration-room records as a release asset for Chat; split as M3: M4a (Chat) builds and freezes, M4b (Code) runs |
+| M-D15 | M4's window (Luiz, 2026-11-15, in Chat; #10) | Chat's recommendation after Stage 5. The Classroom run (#11) carries **5 frames each side** of the reference as M4's main window: the only window that passed #5's calibration gate on held-out frames (coverage 0.503, median 0.42 %, p90 1.81 %). **5 steps back** comes along as the causal baseline. A five-frame delay (about 0.5 m of travel) before a frame's depth is ready is accepted. 10 steps back is dropped. Stage 6 (figures, the foreign-geometry control) comes first, then freezing the estimator |
+| M-D16 | M4 accepted; the merge; torch; the device record; next, depth edges (Luiz, 2026-11-15, in Chat; #11) | M4 is accepted and #11 closed: 5 frames each side passes #5's Classroom gate, held out. `experiment/m4a-multibaseline` merges into `main` by PR. `requirements.txt` lists `torch==2.15.0`; each machine picks the CPU or CUDA build. The M4 commands write `env_<command>.json` beside each result (device, torch and CUDA build), in `dolly.py`, leaving the frozen estimator's files untouched. The next milestone (M5) is depth edges: about 27 % of the anchors with both5 are rejected as depth edges |
 
 ## Experiment M1, the dolly
 
@@ -524,3 +527,276 @@ Accepted held-out interior displacement error: median 0.039 / 0.076 px, p90 0.13
 The natural next step is temporal integration (M4): chaining stride-1 matches and fitting cot e = a + b s over many
 frames, which averages noise, keeps stretch small and lets consistency over the sequence resolve the ambiguous matches
 that two frames cannot.
+
+## Experiment M4, multi-baseline log-polar matching (M4a #10, M4b #11)
+
+**Geometry** ([`motion/multiframe.py`](../motion/multiframe.py)). An anchor of reference frame r at axial inverse depth
+ζ = 1 / z_r is seen by frame k, a signed step t_k along the heading, at d_k(ζ) = q_k − q_r = −ln(1 − t_k ζ) (t_k ζ < 1),
+azimuth unchanged: one unknown shared by every frame. With the anchor's ray exact, ζ is a one-parameter weighted
+least-squares fit (each frame inverts alone, ζ_k = −expm1(−d_k) / t_k; their weighted median starts Gauss–Newton);
+σ_ζ is the Fisher bound. `m4-selftest` (Chat sandbox): d_k reproduces M3's two-frame displacement (#5's known answer)
+within 5e-17; ζ recovered within 2e-16 over 200 analytic windows on both sides; σ_ζ matches the empirical spread
+(ratio 0.998); controls (wrong sign of t_k, steps 5 % too long) fail. One fix before any measurement: Gauss–Newton
+started at a fixed ζ did not converge for near points (35 % off); the per-frame inversion start fixed it.
+
+**The multi-frame oracle ladder O-M** ([`oracle_multiframe.txt`](runs/issue-10/oracle_multiframe.txt), Chat sandbox,
+calibration room, the geometry of `runs/m3-calib-source`, reference frames r = 10, 15). Each window frame's
+correspondence is b's Position projected into it (visible frames only), exact, with Gaussian noise of σ native px along
+the radial line, or rounded to the frame's pixel (fitted with σ = 0.5 px: a conservative convention, not M3's O2
+bracket). Field usable (interval ≤ 10 %), all hits of r:
+
+| window | exact | 0.05 px | 0.1 px | 0.25 px | 0.5 px |
+|---|---|---|---|---|---|
+| one frame 0.5 m back (M3's pair) | 0.908 | 0.895 | 0.838 | 0.229 | 0.000 |
+| 5 short steps back (0.5 m) | 0.985 | 0.964 | 0.931 | 0.416 | 0.084 |
+| 10 frames, 5 each side (± 0.5 m) | 1.000 | 0.998 | 0.991 | **0.856** | 0.279 |
+| 10 short steps back (1 m) | 0.989 | 0.975 | 0.962 | **0.903** | **0.689** |
+
+The pair row reproduces M3's O3 (0.229 against 0.227 at 0.25 px; fovea 0.712 against 0.716 at 0.05 px). A window
+tolerates a much sloppier matcher: at 0.25 px a frame, what M3's accepted matches roughly achieved, the two-sided and the
+1 m windows make 0.86–0.90 of the field usable, against 0.23 for the pair; the fovea (< 2°) reaches 0.84 at 0.1 px with
+the two-sided window, against 0.02. Intervals cover 0.95 throughout. This is M4's ceiling; the RGB matcher has yet to
+show how much of it a real multi-frame cost recovers.
+
+### The multi-baseline matcher and its fixtures (M4a Stages 3–4, Chat sandbox)
+
+**Matcher** ([`motion/multibaseline.py`](../motion/multibaseline.py), PyTorch, CPU here, CUDA on the workstation).
+*Coarse* on M3's log-polar grid: for a given ζ the shift d_k(ζ) does not depend on the eccentricity, so each frame's
+whole grid moves by one fractional row shift; zero-mean NCC over M3's native-pixel windows, averaged over the frames whose
+window is valid, on a ζ grid of 0.5 native px of the longest step (134 values for ± 0.5 m, 268 for 1 m), ζ = 0 included.
+*Fine*: one joint Gauss–Newton per anchor on the native raster for ζ, its radial slope dζ/dq (which predicts every frame's
+stretch consistently, unlike M3's free κ) and a gain and offset per frame; σ_ζ from the joint covariance; then **frame
+consistency**: frames whose own NCC under the fit is below 0.5 are dropped and the fit repeated. *Rejections* as M3's
+(support, radial texture, NCC, ambiguity on the averaged curve, far envelope, near boundary, Gauss–Newton, neighbour
+support, depth edge), plus too few frames (< 3); M3's forward–backward and half-window tests are not carried over, the
+frames' mutual consistency taking their place. `m4-selftest`: 11 checks (5 geometry, 6 torch against numpy: the
+Foveated mapping equals fov-render's `pixel_of` within 1e-9 px, sampling and window sums equal M3's numpy), controls fail.
+(The commit `262e602` says 16 checks; it is 11.) One label fixed before the gated run: rim anchors whose patch leaves the
+disk were reported as `gn_failed` instead of `invalid_support`.
+
+**Plan correction.** #9 and #10 said the radial-edge wall would become a positive test. It cannot: under forward motion
+every point moves along its radial line, and that texture is constant along radial lines, so no number of frames gives it
+a displacement (the aperture problem is geometric). It stays a rejection test; only the periodic wall becomes positive.
+
+**Fixtures as sequences** ([`motion/multibaseline_fixtures.py`](../motion/multibaseline_fixtures.py)): M3's scenes, the
+reference frame at the origin, frames at the dolly's 0.0989565 m steps, noise 0.005. Error in *equivalent native px*:
+|ζ − ζ_true| × native px per q × the longest |t_k|, comparable with M3's px. Gates: #6's (median ≤ 0.1 px, p90 ≤ 0.25 px,
+≥ 100 accepted), #10's corridor bar (> M3's 0.173 at 1 m); set after the first M4 trials, and so stated: the periodic wall
+must also keep ≤ 1 % of accepted over 1 px, the radial wall must accept ≤ 1 %.
+
+`python -m motion.dolly m4-fixtures --out runs/m4-fixtures` at `564c6eb` (clean), torch 2.15.0+cpu, 1331 s, Chat
+sandbox ([`fixtures.json`](runs/issue-10/fixtures.json)). All 11 gates PASS, every control fails. Accepted | median | p90
+(equivalent px), against M3's matcher (frozen `7bb5e70`) on the same anchors and the pair over the same total baseline:
+
+| fixture / surface | M4 window | M4 | M3 pair | M3 |
+|---|---|---|---|---|
+| front (3 m) | 5 steps back | 0.872 \| 0.040 \| 0.113 | (−5, 0) | 0.834 \| 0.034 \| 0.103 |
+| front | 5 each side | **0.938** \| 0.017 \| 0.056 | | |
+| tilted 50° | 5 each side | 0.872 \| 0.017 \| 0.053 | (−5, 0) | 0.739 \| 0.039 \| 0.111 |
+| corridor, parallel | 5 steps back | 0.656 \| 0.050 \| 0.131 | (−5, 0) | 0.510 \| 0.047 \| 0.131 |
+| corridor, parallel | 10 steps back (1 m) | **0.456** \| 0.052 \| 0.139 | (−10, 0) | 0.149 \| 0.055 \| 0.165 |
+| corridor, end wall | 10 steps back | 0.952 \| 0.040 \| 0.107 | (−10, 0) | 0.883 \| 0.036 \| 0.105 |
+| **periodic wall** | 5 steps back | **0.851** \| 0.019 \| 0.058, none > 1 px | (−5, 0) | 0.052 \| **1.683** \| 2.838, **61 % > 1 px** |
+| periodic wall | 5 each side | 0.860 \| 0.007 \| 0.030 | | |
+| radial-edge wall | 5 each side | 0 accepted (rejected, as it must be) | | |
+| occlusion, interior | 5 each side | 0.896 \| 0.012 \| 0.039 | (−5, 0) | board 0.749, far 0.778 |
+
+Controls (front, 5 each side), each failing the gate: frame steps shuffled (0.08 % accepted, median 1.7 px); steps 20 %
+too long (median 0.87 px); every window frame from another texture on the same geometry (1.05 % accepted, but median
+0.074 px: failed on p90 only, 0.295). That last control is weak by design, and instructive: the foreign texture moves
+consistently with the geometry, so where it happens to resemble the reference texture the resemblance is the same in
+every frame and survives the average at the true ζ only. A foreign-*geometry* control replaces it from now on.
+Robustness, not gated: one foreign frame in the window keeps 0.851 accepted at median 0.018 px, with the median accepted
+anchor using 9 of 10 frames (frame consistency dropped the foreign one). Occlusion edges (within 3 px of the board's
+outline): 0.28 accepted, 7.5 % of them over 1 px.
+
+A first reading: the multi-baseline sum resolves what defeated M3, repeated texture (0 % → 85 % accepted, and M3's
+accepted 5 % there were mostly wrong), and roughly triples the parallel surfaces at 1 m (0.149 → 0.456), with equal or
+better precision everywhere (median 0.007–0.05 px). Run time on the sandbox's 2 cores: 35–105 s per reference frame.
+
+### Held-out results in the calibration room (M4a Stage 5, Chat sandbox)
+
+**Protocol** ([`m4_pipeline.py`](../motion/m4_pipeline.py), driver and records in [`stage5/`](runs/issue-10/stage5/)).
+Run `runs/m3-calib-1024` (M-D12's 1024 spp, a seed per look). The matcher is unchanged from the fixtures (`564c6eb`
+settings). Per window:
+1. Estimate the calibration references truth-free: every reference whose offset from M3's pair start is even, plus
+   r = 6, 8, 10 (the declared split).
+2. Set the interval scale to the 95th percentile of |error| / σ over 1.96 on their interior anchors.
+3. Freeze: settings, scale and estimates, under sha256.
+4. Estimate the held-out references (r = 12, 14, 16, 18, 20 where the window fits) truth-free.
+5. Evaluate once against M3's frozen matcher (`7bb5e70`, scale 1.625) on its pair (r − 5, r), on the same anchors.
+
+#5's calibration gate applies to M3's subset of the reference: hit, visible in r − 5, interior, textured, 5–40°.
+Held-out truth was opened only by step 5.
+
+Three fixes, each before any held-out truth was opened:
+- Held-out estimation appended to `config.json` after the freeze, so the freeze now hashes a `config_frozen.json` copy.
+  before5's freeze was re-made with an identical scale, 1.650. Its held-out estimates, already made, are therefore
+  hashed in the freeze rather than at evaluation.
+- The settings comparison now leaves `interval_scale` out on both sides.
+- #5's alignment gate now receives each pair earlier → later. A frame after the reference had read as a 180° heading
+  error; the gate's yaw and lateral controls still fail every pair.
+
+| window | calib. refs (anchors) | scale | held-out | accepted | field usable | fovea usable | gate subset coverage | median | p90 | > 50 % | interval coverage | gate |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| M3 pair (−5, 0) | (#7) | 1.625 | 12–20 | 0.265 | 0.243 | 0.048 | 0.332 | 0.91 % | 2.80 % | 0.28 % | 0.955 | fail (coverage) |
+| M4 5 steps back | 12 (117,381) | 1.650 | 12–20 | 0.235 | 0.222 | 0.032 | 0.351 | 0.87 % | 2.53 % | 0.03 % | 0.952 | fail (coverage) |
+| **M4 5 each side** | 9 (130,603) | 1.487 | 12, 14, 16 | **0.389** | **0.365** | **0.218** | **0.503** | **0.42 %** | **1.81 %** | 0.32 % | 0.947 | **PASS** |
+| M4 10 steps back | 7 (53,077) | 2.094 | 12–20 | 0.185 | 0.179 | 0.039 | 0.292 | 0.50 % | 1.40 % | 0.04 % | 0.952 | fail (coverage) |
+
+Source for every number above: Chat sandbox, `foveal-motion` at `b8fce84`, torch 2.15.0+cpu, 2 cores, 65–110 s per
+reference frame. Each number is held out, from `stage5/<window>/evaluation.json`. On both5's three references M3
+scores 0.247 field usable, 0.068 fovea and 0.329 gate coverage. Gate thresholds: median ≤ 5 %, p90 ≤ 10 %,
+coverage ≥ 0.50.
+
+Why the windows differ: rejection shares on the held-out anchors, truth-free:
+
+| window | accepted | depth edge | low NCC | ambiguous | unsupported | frames used (median) |
+|---|---|---|---|---|---|---|
+| 5 steps back | 0.235 | 0.397 | 0.155 | 0.045 | 0.055 | 5 |
+| 5 each side | 0.389 | 0.273 | 0.190 | 0.028 | 0.025 | 10 |
+| 10 steps back | 0.185 | 0.382 | 0.204 | 0.055 | 0.062 | 10 |
+
+A reading:
+- **Five frames on each side of the reference are the first estimator of the project to pass #5's calibration gate on
+  held-out frames.** The window gives the fovea 22 % against 5–7 % for M3, and precision about twice M3's on the same
+  pixels.
+- The pass is narrow: 0.503 against 0.50, on three held-out references. It is also non-causal: the depth of frame r is
+  ready only when frame r + 5 has been seen, about 0.5 m later.
+- A window behind the reference only is not enough. With five steps (the same longest baseline as M3's pair), M4
+  rejects slightly more than M3. The depth-edge test removes 40 % of the anchors, and on calibration frames those
+  anchors are truly less accurate (Stage 5 diagnosis, #10).
+- One-sided 1 m windows, the oracle's best row (0.90 at 0.25 px a frame), fall furthest from their ceiling: accepted
+  0.185, interval scale 2.09. The far frames see the room much larger, so their windows' appearance and visibility
+  change more than the slope model and frame consistency absorb.
+- The two-sided window places every frame within 0.5 m. Its errors on each side pull in opposite directions in ζ,
+  which halves the ambiguous and unsupported rejections and a third of the depth-edge ones.
+
+### Figures and the foreign-geometry control (M4a Stage 6, Chat sandbox)
+
+**Foreign-geometry control** ([`multibaseline_fixtures.py`](../motion/multibaseline_fixtures.py), `0c344ec`). This
+control replaces the foreign-texture control of Stage 4. Every window frame is rendered from the scene scaled 1.5×
+about r's eye centre, with the textures scaled with it:
+- r's image is unchanged (max difference 9e-15), and the frames see the front wall at 4.5 m instead of 3 m;
+- the sequence is consistent, and wrong in a way no image test can detect, so only the gate's truth can catch it.
+
+The matcher accepts 93 % of anchors, about as many as on the true scene (0.938). The median error is 1.75 px and 98 %
+of accepted anchors are over 1 px, so the gate fails, as it must. The foreign-texture frames stay for the
+one-foreign-frame robustness case.
+
+`python -m motion.dolly m4-fixtures --out runs/m4-fixtures-s6` ran on code at `0c344ec` (clean), torch 2.15.0+cpu,
+1386 s, Chat sandbox ([`fixtures.json`](runs/issue-10/fixtures.json), [`fixtures.log`](runs/issue-10/fixtures.log),
+replacing Stage 4's). Results:
+- all 11 gates pass, and all three controls fail;
+- every gate, the M3 comparisons, the robustness case and the two unchanged controls are identical to Stage 4's
+  record, bit for bit.
+
+The record's `computed_by` says `54e5b11`. The harness read git at the end of the run, after the figure module had been
+committed; `54e5b11` differs from `0c344ec` only in `m4_figures.py` and the `m4-figures` command. The harness now reads
+git when the run starts.
+
+**Figures** ([`m4_figures.py`](../motion/m4_figures.py); `python -m motion.dolly m4-figures --result runs/m4-calib --ref
+12 --out visuals/m4` at `54e5b11`, Chat sandbox, 39 s). For held-out reference r = 12, windows before5 and both5:
+- an overview: decisions, range, interval width, frames kept, usable pixels against M3's pair, and the EVALUATION error;
+- the cloud from above;
+- each window frame's NCC along ζ with their mean;
+- slit scans with the traces the estimates predict.
+
+[`curves_r0012.png`](runs/issue-10/figures/curves_r0012.png) shows why the two-sided window wins. Where the five frames
+behind leave a plateau (the anchor is rejected as ambiguous):
+- the frames behind r lose correlation at too-large ζ (too near), because their displacement grows with ζ;
+- the frames ahead lose it at too-small ζ (too far);
+- the mean is closed from both sides only when both are in the window.
+
+On r = 12, 19.4 % of anchors are usable with both5 only, 18.5 % with both5 and M3, and 6.6 % with M3's pair only. With
+both5, the largest errors are still along object outlines (the dark streaks in the overview's error panel).
+
+### Frozen (M4a, #10)
+
+**The record** is [`frozen.json`](runs/issue-10/frozen.json), written by `python -m motion.dolly m4-freeze` at `2d09c9b`
+(clean). It holds:
+- the sha256 of the estimator's files: `multibaseline.py`, `m4_pipeline.py`, `matcher.py`, `logpolar.py`, `flow_depth.py`;
+- the settings: those of the fixtures (`564c6eb`), unchanged since;
+- per window (M-D15), the interval scale with the hash of the calibration-room freeze it comes from: both5
+  **1.4875**, before5 **1.6497** (`stage5/<window>/`, Chat sandbox, CPU).
+
+**Import.** A run judged with the frozen estimator starts from `import_freeze` (`m4-classroom`), which:
+- copies the scale into a fresh result whose every reference is held out;
+- refuses if a file of the estimator, the settings or the source freeze differs from the record (`estimate` and
+  `evaluate` check again).
+
+**Evaluation** (`evaluate`) now takes:
+- the gate: #5's calibration gate or its Classroom gate (median ≤ 10 %, p90 ≤ 25 %, coverage ≥ 0.25, > 50 % errors
+  ≤ 5 %, band 5–40°);
+- reference frames to exclude (truth already opened);
+- two controls, each of which must fail, as M3's:
+  - every step 1.2× too long must fail the gate;
+  - intervals halved must cover less than 0.90 of interior anchors (the check itself asks ≥ 0.90).
+
+**Tests** ([`freeze/freeze_tests.py`](runs/issue-10/freeze/freeze_tests.py) and its log, Chat sandbox, code as
+committed in `2d09c9b`). The controls never weaken a check; they are the extra half of each check.
+- Re-evaluating Stage 5's results reproduces every held-out number for before5 and both5.
+  - The gate's control gives median errors of 19.9 % in both windows, so the gate fails.
+  - The interval control covers 0.74 (before5) and 0.82 (both5), so the check fails.
+  - The Stage 5 `evaluation.json` files are replaced by these re-runs, which add the checks.
+- The import path, on the calibration room at r = 12, reproduces Stage 5's both5 estimate bit for bit.
+- Three tampered records are each refused: an estimator file's hash, the settings, the source freeze.
+- Excluding r = 12 removes it.
+- `m4-selftest` passes (11 checks, every control fails).
+
+### The Classroom with the frozen M4 estimator (M4b, #11, Code)
+
+Source: everything here was measured by Code on the workstation (RTX 4090, torch 2.15.0+cu132; M3, truth and evaluation
+on the CPU) at `0a95528` (clean). Records are in [`runs/issue-11/`](runs/issue-11/) (`ea6154d`). Chat checked them
+against `frozen.json` and the reported numbers.
+
+Steps 1–5 took 1594 s, of which 1214 s were the Classroom. M4's matcher took a median of 2–3 s per reference on CUDA;
+evaluation took about 15 s per reference, mostly M3's matcher.
+
+**CUDA reproduces Chat's CPU calibration room exactly**
+([`compare_step2.txt`](runs/issue-11/calib-cuda/compare_step2.txt)). Both scales and every count are identical, and
+rates agree to 1e-11, so the stop rule said go.
+
+**Classroom** (`runs/dolly-1024`: 47 `ahead` looks, 1024 spp, seeds 1000–1046). The protocol:
+- every reference frame whose window fits;
+- the quick-look frames 0, 5, 20, 25, 40, 45 excluded (M-D12);
+- the scales imported, every reference held out;
+- #5's Classroom gate on M3's subset.
+
+| | M4 both5 | M3 pair (same anchors) | M4 before5 | M3 pair (same anchors) |
+|---|---|---|---|---|
+| held-out references | 33 (6–41) | | 37 (6–46) | |
+| gate subset coverage (≥ 0.25) | **0.368** | 0.110 | 0.109 | 0.115 |
+| median / p90 relative error | 1.09 % / 3.51 % | 1.83 % / 5.24 % | 1.66 % / 4.65 % | 1.76 % / 5.09 % |
+| > 50 % errors | 0 of 223,610 | 0.05 % | 0 of 76,197 | 0.04 % |
+| **gate** | **PASS** | fail | fail | fail |
+| field usable / fovea usable | 0.455 / 0.255 | 0.196 / 0.050 | 0.212 / 0.038 | 0.202 / 0.064 |
+| interval coverage, interior | 0.939 | 0.920 | 0.917 | 0.921 |
+
+Controls (each must fail, and does):
+- every step × 1.2: median errors 0.199 (both5) and 0.198 (before5);
+- intervals × 0.5: coverage 0.748 (both5) and 0.663 (before5).
+
+**Oracle ladder O-M** at the same references ([`oracle.json`](runs/issue-11/oracle.json)): field usable, of all hits.
+- both5: 0.999 exact, 0.885 at 0.25 px, 0.251 at 0.5 px.
+- before5: 0.994 exact, 0.540 at 0.25 px, 0.046 at 0.5 px.
+- M3's pair: 0.942 exact, 0.174 at 0.25 px.
+
+Against the RGB results (0.455, 0.212), the real matcher behaves like a 0.25–0.5 px correspondence error, in both
+windows. O-M's `pixel` rung is not #7's O2: O-M uses half a pixel as σ, O2 used it as the interval.
+
+**Reading:**
+- **both5 is the first estimator of the project to pass #5's Classroom gate.** It covers 3.3× M3's share of the gate
+  subset with lower errors and no gross errors, and covers 5× M3's share of the fovea.
+- From the calibration room to the Classroom, both5's coverage falls from 0.503 to 0.368 and M3's from 0.33 to 0.11:
+  the two-sided window holds up far better.
+- The causal window before5 stays at M3's level, as in the calibration room. Frames ahead are what make the difference.
+- **What both5 still leaves:**
+  - the board's dark lower interior (low NCC in both windows);
+  - depth edges;
+  - the window band of the +X wall (diagonal streaks in the cloud, as M3 in #7).
+- The largest usable errors (about 5 %) lie along the board's top edge.
+
+**Gaps:**
+- The M4 records do not name the device or torch build that ran the matcher (Code's step-1 log does).
+- torch is not in `requirements.txt`.

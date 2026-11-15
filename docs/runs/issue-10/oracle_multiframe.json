@@ -1,0 +1,202 @@
+{
+ "M3-like: one frame 0.5 m back": {
+  "exact": {
+   "hits": 100538,
+   "field_usable": 0.9077363782848277,
+   "band_5_40_usable": 0.8930965147453083,
+   "fovea_2deg_usable": 0.984484898634671,
+   "median_rel_usable": 1.170828808743201e-15,
+   "coverage_finite": 1.0
+  },
+  "pixel": {
+   "hits": 100538,
+   "field_usable": 3.978595158049693e-05,
+   "band_5_40_usable": 0.0,
+   "fovea_2deg_usable": 0.0,
+   "median_rel_usable": 0.0036521434765923646,
+   "coverage_finite": 1.0
+  },
+  "0.05 px": {
+   "hits": 100538,
+   "field_usable": 0.8946567467027393,
+   "band_5_40_usable": 0.8930965147453083,
+   "fovea_2deg_usable": 0.712453454695904,
+   "median_rel_usable": 0.009122911455972556,
+   "coverage_finite": 0.9491683285485745
+  },
+  "0.1 px": {
+   "hits": 100538,
+   "field_usable": 0.8384193041437069,
+   "band_5_40_usable": 0.8930836254897917,
+   "fovea_2deg_usable": 0.021100537856847332,
+   "median_rel_usable": 0.017434310560408568,
+   "coverage_finite": 0.9492012009379588
+  },
+  "0.25 px": {
+   "hits": 100538,
+   "field_usable": 0.22864986373311583,
+   "band_5_40_usable": 0.23604093627552072,
+   "fovea_2deg_usable": 0.0,
+   "median_rel_usable": 0.02700221806520544,
+   "coverage_finite": 0.9494532225899059
+  },
+  "0.5 px": {
+   "hits": 100538,
+   "field_usable": 3.978595158049693e-05,
+   "band_5_40_usable": 0.0,
+   "fovea_2deg_usable": 0.0,
+   "median_rel_usable": 0.0349366750218585,
+   "coverage_finite": 0.9499463084306722
+  }
+ },
+ "5 short steps back (0.5 m)": {
+  "exact": {
+   "hits": 100538,
+   "field_usable": 0.9853289303546917,
+   "band_5_40_usable": 0.9842622190142297,
+   "fovea_2deg_usable": 0.9960695076541167,
+   "median_rel_usable": 1.3495981021021524e-15,
+   "coverage_finite": 1.0
+  },
+  "pixel": {
+   "hits": 100538,
+   "field_usable": 0.08239670572320913,
+   "band_5_40_usable": 0.08954165807382966,
+   "fovea_2deg_usable": 0.0,
+   "median_rel_usable": 0.01455652867226663,
+   "coverage_finite": 0.9996870678255252
+  },
+  "0.05 px": {
+   "hits": 100538,
+   "field_usable": 0.9643318944080845,
+   "band_5_40_usable": 0.9655727985151578,
+   "fovea_2deg_usable": 0.8895324782788581,
+   "median_rel_usable": 0.006342860558922175,
+   "coverage_finite": 0.9500317979467612
+  },
+  "0.1 px": {
+   "hits": 100538,
+   "field_usable": 0.9305138355646622,
+   "band_5_40_usable": 0.9512528356362137,
+   "fovea_2deg_usable": 0.45531650806785273,
+   "median_rel_usable": 0.01227798748957164,
+   "coverage_finite": 0.9500620817055813
+  },
+  "0.25 px": {
+   "hits": 100538,
+   "field_usable": 0.4158029799677734,
+   "band_5_40_usable": 0.41026500309342134,
+   "fovea_2deg_usable": 0.003930492345883326,
+   "median_rel_usable": 0.021710246743615776,
+   "coverage_finite": 0.9499914196016677
+  },
+  "0.5 px": {
+   "hits": 100538,
+   "field_usable": 0.08426664544749249,
+   "band_5_40_usable": 0.0919519488554341,
+   "fovea_2deg_usable": 0.0,
+   "median_rel_usable": 0.030991983827287073,
+   "coverage_finite": 0.9504658651565165
+  }
+ },
+ "10 frames, 5 each side (+/-0.5 m)": {
+  "exact": {
+   "hits": 100538,
+   "field_usable": 0.999681712387356,
+   "band_5_40_usable": 0.9998582181893174,
+   "fovea_2deg_usable": 0.9995862639635912,
+   "median_rel_usable": 4.227630572425312e-16,
+   "coverage_finite": 1.0
+  },
+  "pixel": {
+   "hits": 100538,
+   "field_usable": 0.27724840358869285,
+   "band_5_40_usable": 0.29230253660548566,
+   "fovea_2deg_usable": 0.003930492345883326,
+   "median_rel_usable": 0.012455410883338,
+   "coverage_finite": 0.9995224165721449
+  },
+  "0.05 px": {
+   "hits": 100538,
+   "field_usable": 0.9979709164693946,
+   "band_5_40_usable": 0.9997293256341514,
+   "fovea_2deg_usable": 0.9664873810508895,
+   "median_rel_usable": 0.004205302642814691,
+   "coverage_finite": 0.9501323304081348
+  },
+  "0.1 px": {
+   "hits": 100538,
+   "field_usable": 0.9912271976765005,
+   "band_5_40_usable": 0.9990590843472881,
+   "fovea_2deg_usable": 0.8386429458005792,
+   "median_rel_usable": 0.008348506939865507,
+   "coverage_finite": 0.9500328338606651
+  },
+  "0.25 px": {
+   "hits": 100538,
+   "field_usable": 0.8558157114722791,
+   "band_5_40_usable": 0.928026397195298,
+   "fovea_2deg_usable": 0.021100537856847332,
+   "median_rel_usable": 0.018912914436476268,
+   "coverage_finite": 0.9499631862774361
+  },
+  "0.5 px": {
+   "hits": 100538,
+   "field_usable": 0.27856133999084925,
+   "band_5_40_usable": 0.2933078985357806,
+   "fovea_2deg_usable": 0.004964832436905255,
+   "median_rel_usable": 0.02344562394666027,
+   "coverage_finite": 0.9498835890394604
+  }
+ },
+ "10 short steps back (1 m)": {
+  "exact": {
+   "hits": 100538,
+   "field_usable": 0.9894666693190635,
+   "band_5_40_usable": 0.9890441328108889,
+   "fovea_2deg_usable": 0.9960695076541167,
+   "median_rel_usable": 7.717984360954719e-16,
+   "coverage_finite": 1.0
+  },
+  "pixel": {
+   "hits": 100538,
+   "field_usable": 0.6947721259623227,
+   "band_5_40_usable": 0.7608140853784285,
+   "fovea_2deg_usable": 0.010136532892014894,
+   "median_rel_usable": 0.010596303481874927,
+   "coverage_finite": 0.9975070115300717
+  },
+  "0.05 px": {
+   "hits": 100538,
+   "field_usable": 0.9753526029958821,
+   "band_5_40_usable": 0.9735383584244174,
+   "fovea_2deg_usable": 0.9770376499793132,
+   "median_rel_usable": 0.002729145394632708,
+   "coverage_finite": 0.9500095497542195
+  },
+  "0.1 px": {
+   "hits": 100538,
+   "field_usable": 0.9623425968290596,
+   "band_5_40_usable": 0.9625953804908228,
+   "fovea_2deg_usable": 0.9124948282995449,
+   "median_rel_usable": 0.0053742342269747865,
+   "coverage_finite": 0.9500397068728074
+  },
+  "0.25 px": {
+   "hits": 100538,
+   "field_usable": 0.9026537229704191,
+   "band_5_40_usable": 0.9233089296762219,
+   "fovea_2deg_usable": 0.3839470417873397,
+   "median_rel_usable": 0.012681499732658722,
+   "coverage_finite": 0.9500698639913951
+  },
+  "0.5 px": {
+   "hits": 100538,
+   "field_usable": 0.6886251964431359,
+   "band_5_40_usable": 0.7524102907816045,
+   "fovea_2deg_usable": 0.00992966487381051,
+   "median_rel_usable": 0.021979498845297932,
+   "coverage_finite": 0.9505021160244875
+  }
+ }
+}

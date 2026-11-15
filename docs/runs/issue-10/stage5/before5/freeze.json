@@ -1,0 +1,76 @@
+{
+ "schema": "foveal-motion-m4-freeze-v1",
+ "frozen_settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 1.6497316069396768,
+  "chunk": 6000
+ },
+ "sha256": {
+  "config_frozen.json": "e8fd99066951614cc32c3bf1a403532b7ac06a1c3b4d678d799c22a208e0b21c",
+  "calibration.json": "94e95a4d4d6eed23fd83f85a455dab143d7f7fe3dc81068b60bc6b158a6258b8",
+  "r0005.npz": "822230a560b7e6e0c4b0a42a64a47b081997da7024f1dc17133dd9f3aa56d482",
+  "r0006.npz": "35c0947af9f2092f29e19b4a73fc10d79be30ff4a545d538346a9e977d51b9db",
+  "r0007.npz": "cb1c3f4f810e24ac32a9f927b6f806926f1432fe376d2d6e229873fb331a5e81",
+  "r0008.npz": "df08b14692393dc5fcc03dd4e6bf5158d11872b39cef97ffe800ba649e4f2706",
+  "r0009.npz": "4f5ce10e64c846f9c7f4a9535b1c05b66d46b0ab7613344126e1e9eca168881f",
+  "r0010.npz": "a85b727823233ce93d85c7359e2ded91727c3893354002e58fc2a13468be9e85",
+  "r0011.npz": "e6ff7fe7018c54d9c7c8587b21a373b7caa83abca083f0c86d3e4aab573898c1",
+  "r0012.npz": "8c1e161378df21be7fd05570a86393fe66d887c664afa7e94c796fe737c7a443",
+  "r0013.npz": "751d3440d540e6cd641422605497ff908b115a59f1207adf18036dcf008c1004",
+  "r0014.npz": "8c547676edd3289b13cc0a390b622f24ecfa48b68b53fc7b096b9068c69b0a30",
+  "r0015.npz": "74bef2010b1a14bafa8af2bca749399c9d298dfd1938ded66229d77b7422b59a",
+  "r0016.npz": "715c2062aaeea4b8a48f8c4b74cf44758fc513049d06f14c7e553ff630d4916b",
+  "r0017.npz": "4f954543b4316565516d0dbbdfd0b4f63ddc3e3a8aca57373bfe95d89f9d977c",
+  "r0018.npz": "f3e3708a49e9f07731ae627aaa5dfa27cb45e7f9f60635a3e270934c96b4f531",
+  "r0019.npz": "14571726a940e3dcc6a8c53921c55c34c03b54c865308c7dc472861c6331cda4",
+  "r0020.npz": "0bfa064ef039240c45e9ef457af17a202036854e633a65cfc0fc2170c407c170",
+  "r0021.npz": "1afc77afab22f01a32dd46bc193c8ee3ee5b00be298831b82e5209fabcf6164c"
+ },
+ "calibration_refs": [
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  13,
+  15,
+  17,
+  19,
+  21
+ ],
+ "held_out_refs": [
+  12,
+  14,
+  16,
+  18,
+  20
+ ]
+}

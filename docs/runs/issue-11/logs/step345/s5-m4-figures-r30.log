@@ -1,0 +1,18 @@
+15:03:46 $ .venv/bin/python -m motion.dolly m4-figures --result runs/m4-classroom --ref 30 --out visuals/m4-classroom
+15:03:50 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+15:03:50   den = cm - 2 * c1 + cp
+15:03:54 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+15:03:54   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+15:04:01 /home/lvelho/rd/foveal-motion/motion/matcher.py:248: RuntimeWarning: invalid value encountered in subtract
+15:04:01   r = Ib - alpha[:, None] * Ia - beta[:, None]
+15:04:01 /home/lvelho/rd/foveal-motion/motion/matcher.py:249: RuntimeWarning: invalid value encountered in multiply
+15:04:01   J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
+15:04:04 /home/lvelho/rd/foveal-motion/motion/m4_figures.py:264: RuntimeWarning: Mean of empty slice
+15:04:04   S = np.stack([np.nanmean(m3.sample(m3.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0) for k in ks])
+15:04:04 /home/lvelho/rd/foveal-motion/motion/m4_figures.py:264: RuntimeWarning: Mean of empty slice
+15:04:04   S = np.stack([np.nanmean(m3.sample(m3.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0) for k in ks])
+15:04:04 visuals/m4-classroom/overview_r0030.png
+15:04:04 visuals/m4-classroom/cloud_r0030.png
+15:04:04 visuals/m4-classroom/curves_r0030.png
+15:04:04 visuals/m4-classroom/slit_before5_r0030.png
+15:04:04 visuals/m4-classroom/slit_both5_r0030.png

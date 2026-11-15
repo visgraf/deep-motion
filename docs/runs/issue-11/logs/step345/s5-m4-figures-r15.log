@@ -1,0 +1,14 @@
+15:03:27 $ .venv/bin/python -m motion.dolly m4-figures --result runs/m4-classroom --ref 15 --out visuals/m4-classroom
+15:03:31 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+15:03:31   den = cm - 2 * c1 + cp
+15:03:33 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+15:03:33   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+15:03:45 /home/lvelho/rd/foveal-motion/motion/m4_figures.py:264: RuntimeWarning: Mean of empty slice
+15:03:45   S = np.stack([np.nanmean(m3.sample(m3.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0) for k in ks])
+15:03:46 /home/lvelho/rd/foveal-motion/motion/m4_figures.py:264: RuntimeWarning: Mean of empty slice
+15:03:46   S = np.stack([np.nanmean(m3.sample(m3.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0) for k in ks])
+15:03:46 visuals/m4-classroom/overview_r0015.png
+15:03:46 visuals/m4-classroom/cloud_r0015.png
+15:03:46 visuals/m4-classroom/curves_r0015.png
+15:03:46 visuals/m4-classroom/slit_before5_r0015.png
+15:03:46 visuals/m4-classroom/slit_both5_r0015.png

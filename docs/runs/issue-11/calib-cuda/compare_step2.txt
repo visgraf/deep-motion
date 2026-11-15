@@ -1,0 +1,59 @@
+== both5: scale CUDA 1.487453  frozen 1.487453  (+0.000%);  calibration anchors CUDA 130603  CPU 130603;  refs CUDA [5, 6, 7, 8, 9, 10, 11, 13, 15]  CPU [5, 6, 7, 8, 9, 10, 11, 13, 15]
+   M4 field_usable_of_all_hits     CUDA 0.365195  CPU 0.365195  diff +0.00e+00
+   M4 accepted_fraction            CUDA 0.389064  CPU 0.389064  diff +0.00e+00
+   M4 interval_coverage_interior   CUDA 0.946942  CPU 0.946942  diff +0.00e+00
+   M4 usable_interior_median_rel   CUDA 0.004296  CPU 0.004296  diff +6.14e-16
+   M4 usable_interior_p90_rel      CUDA 0.020660  CPU 0.020660  diff +1.40e-15
+   M4 fovea_usable                 CUDA 0.218094  CPU 0.218094  diff +0.00e+00
+   M4 gate.subset                  CUDA 69704  CPU 69704
+   M4 gate.accepted_usable         CUDA 35071  CPU 35071
+   M4 gate.coverage_of_subset      CUDA 0.5031418569952943  CPU 0.5031418569952943  diff +0.00e+00
+   M4 gate.median_rel              CUDA 0.004154156848639278  CPU 0.004154156848639888  diff -6.11e-16
+   M4 gate.p90_rel                 CUDA 0.018135941105092295  CPU 0.01813594110508682  diff +5.47e-15
+   M4 gate.over_50pct              CUDA 0.0032220352998203645  CPU 0.0032220352998203645  diff +0.00e+00
+   M4 gate.gate_pass               CUDA True  CPU True
+   M3 field_usable_of_all_hits     CUDA 0.247031  CPU 0.247031  diff +0.00e+00
+   M3 accepted_fraction            CUDA 0.271332  CPU 0.271332  diff +0.00e+00
+   M3 interval_coverage_interior   CUDA 0.953517  CPU 0.953517  diff +0.00e+00
+   M3 usable_interior_median_rel   CUDA 0.009708  CPU 0.009708  diff +2.53e-15
+   M3 usable_interior_p90_rel      CUDA 0.030564  CPU 0.030564  diff -9.66e-12
+   M3 fovea_usable                 CUDA 0.068220  CPU 0.068220  diff +0.00e+00
+   M3 gate.subset                  CUDA 69704  CPU 69704
+   M3 gate.accepted_usable         CUDA 22951  CPU 22951
+   M3 gate.coverage_of_subset      CUDA 0.32926374383105705  CPU 0.32926374383105705  diff +0.00e+00
+   M3 gate.median_rel              CUDA 0.009770065631100609  CPU 0.009770065631104313  diff -3.70e-15
+   M3 gate.p90_rel                 CUDA 0.02952128500502875  CPU 0.029521285005051395  diff -2.26e-14
+   M3 gate.over_50pct              CUDA 0.0019171277939959044  CPU 0.0019171277939959044  diff +0.00e+00
+   M3 gate.gate_pass               CUDA False  CPU False
+   M4.GATE: ok CUDA True CPU True; control fails CUDA True CPU True
+   M4.COVER: ok CUDA True CPU True; control fails CUDA True CPU True
+== before5: scale CUDA 1.649732  frozen 1.649732  (+0.000%);  calibration anchors CUDA 117381  CPU 117381;  refs CUDA [5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 21]  CPU [5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 21]
+   M4 field_usable_of_all_hits     CUDA 0.221950  CPU 0.221950  diff +0.00e+00
+   M4 accepted_fraction            CUDA 0.234632  CPU 0.234632  diff +0.00e+00
+   M4 interval_coverage_interior   CUDA 0.952379  CPU 0.952379  diff +0.00e+00
+   M4 usable_interior_median_rel   CUDA 0.008523  CPU 0.008523  diff +4.64e-15
+   M4 usable_interior_p90_rel      CUDA 0.025418  CPU 0.025418  diff +3.24e-15
+   M4 fovea_usable                 CUDA 0.031612  CPU 0.031612  diff +0.00e+00
+   M4 gate.subset                  CUDA 115544  CPU 115544
+   M4 gate.accepted_usable         CUDA 40612  CPU 40612
+   M4 gate.coverage_of_subset      CUDA 0.35148514851485146  CPU 0.35148514851485146  diff +0.00e+00
+   M4 gate.median_rel              CUDA 0.008661800132527441  CPU 0.00866180013442086  diff -1.89e-12
+   M4 gate.p90_rel                 CUDA 0.02528938165112985  CPU 0.0252893816511293  diff +5.52e-16
+   M4 gate.over_50pct              CUDA 0.00027085590465872155  CPU 0.00027085590465872155  diff +0.00e+00
+   M4 gate.gate_pass               CUDA False  CPU False
+   M3 field_usable_of_all_hits     CUDA 0.242969  CPU 0.242969  diff +0.00e+00
+   M3 accepted_fraction            CUDA 0.265327  CPU 0.265327  diff +0.00e+00
+   M3 interval_coverage_interior   CUDA 0.954526  CPU 0.954526  diff +0.00e+00
+   M3 usable_interior_median_rel   CUDA 0.009085  CPU 0.009085  diff -3.04e-12
+   M3 usable_interior_p90_rel      CUDA 0.029099  CPU 0.029099  diff -1.50e-15
+   M3 fovea_usable                 CUDA 0.048111  CPU 0.048111  diff +0.00e+00
+   M3 gate.subset                  CUDA 115544  CPU 115544
+   M3 gate.accepted_usable         CUDA 38383  CPU 38383
+   M3 gate.coverage_of_subset      CUDA 0.3321937963027072  CPU 0.3321937963027072  diff +0.00e+00
+   M3 gate.median_rel              CUDA 0.009071878713217331  CPU 0.00907187871321398  diff +3.35e-15
+   M3 gate.p90_rel                 CUDA 0.027956327997774418  CPU 0.027956327997775872  diff -1.45e-15
+   M3 gate.over_50pct              CUDA 0.002761639267383998  CPU 0.002761639267383998  diff +0.00e+00
+   M3 gate.gate_pass               CUDA False  CPU False
+   M4.GATE: ok CUDA False CPU False; control fails CUDA True CPU True
+   M4.COVER: ok CUDA True CPU True; control fails CUDA True CPU True
+GO: every scale within 5 % of the frozen one; every gate verdict and check as on the CPU

@@ -1,0 +1,12 @@
+14:36:44 $ .venv/bin/python -m motion.dolly m4-selftest
+14:36:46 [dolly] M4 selftest PASS d_k(zeta) reproduces M3's two-frame displacement (#5's known answer) within 1e-12
+14:36:46 [dolly] M4 selftest PASS analytic windows (both sides, 2-6 frames): zeta recovered within 1e-9
+14:36:46 [dolly] M4 selftest PASS control: steps with the wrong sign give no correct zeta (every case off by >= 1 %)
+14:36:46 [dolly] M4 selftest PASS control: steps 5 % too long give zeta off by >= 4 % (median)
+14:36:46 [dolly] M4 selftest PASS sigma_zeta (Fisher) matches the empirical spread within 5 %
+14:36:46 [dolly] M4 selftest PASS torch Foveated mapping equals fov-render's pixel_of (raster 126) within 1e-9 px
+14:36:46 [dolly] M4 selftest PASS torch Foveated mapping equals fov-render's pixel_of (raster 253) within 1e-9 px
+14:36:46 [dolly] M4 selftest PASS control: the mapping with E2 = 2.2 deg misses by >= 1 px
+14:36:46 [dolly] M4 selftest PASS torch bilinear equals logpolar.bilinear within 1e-12, same nan pattern
+14:36:46 [dolly] M4 selftest PASS torch window sums equal M3's numpy _box within 1e-9
+14:36:46 [dolly] M4 selftest PASS control: windows one row wider differ by >= 0.1

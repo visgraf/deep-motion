@@ -1,0 +1,55 @@
+{
+ "schema": "foveal-motion-m4-freeze-v1",
+ "frozen_settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 2.0935477096239463,
+  "chunk": 6000
+ },
+ "sha256": {
+  "config_frozen.json": "3953d86659b3e92fbc3f7759d008ccab900a7f6f91f31c724dd8804966a531e4",
+  "calibration.json": "04000b7f2723df4465793a4a612df97d24bfdbd42fc37720585f5d17c6d5b607",
+  "r0010.npz": "034de7d1433a19a03072060c9484f2ce5f1f7a822f0526e5772026b4a37d2581",
+  "r0011.npz": "862c011d774f1da1018043b1493f97c2d69b733d6dd31414b2fc1c35857bf5b8",
+  "r0013.npz": "c9ee948dd70f5ce42a81e17c53e6e8fa40c58d898734f1f089ee171b3bfab243",
+  "r0015.npz": "96fd42d7bd87167ec76d5e81de1fedf4bae4f281abca73fd51552f78e606faa9",
+  "r0017.npz": "ca6028af516efc9f617323c5f93c73d3613fe1dd019bcc4cddee625c8385bef5",
+  "r0019.npz": "bc15db9f140dbb14a00645ba395b3eef0f18311ddc8a7b6eeb6b27e11276450c",
+  "r0021.npz": "d26dca1fed13d2d5a511b54a87d9f315c9830c983a733eedea8c28f41cc93a2a"
+ },
+ "calibration_refs": [
+  10,
+  11,
+  13,
+  15,
+  17,
+  19,
+  21
+ ],
+ "held_out_refs": []
+}

@@ -1,0 +1,21 @@
+15:00:46 $ .venv/bin/python -m motion.dolly m4-oracle --run runs/dolly-1024 --refs $(seq 6 46) --exclude 0 5 20 25 40 45 --out runs/m4-classroom/oracle.json
+15:00:46 /home/lvelho/rd/foveal-motion/motion/multiframe.py:125: RuntimeWarning: invalid value encountered in subtract
+15:00:46   d[:, j] = np.where(ok, qk - q_r, np.nan)
+15:00:48 [dolly] O-M M3 pair (r - 5, r) exact: field usable 0.942
+15:00:51 [dolly] O-M M3 pair (r - 5, r) pixel: field usable 0.001
+15:00:53 [dolly] O-M M3 pair (r - 5, r) 0.05 px: field usable 0.931
+15:00:55 [dolly] O-M M3 pair (r - 5, r) 0.1 px: field usable 0.873
+15:00:57 [dolly] O-M M3 pair (r - 5, r) 0.25 px: field usable 0.174
+15:00:59 [dolly] O-M M3 pair (r - 5, r) 0.5 px: field usable 0.001
+15:01:08 [dolly] O-M before5 exact: field usable 0.994
+15:01:20 [dolly] O-M before5 pixel: field usable 0.046
+15:01:28 [dolly] O-M before5 0.05 px: field usable 0.987
+15:01:37 [dolly] O-M before5 0.1 px: field usable 0.964
+15:01:46 [dolly] O-M before5 0.25 px: field usable 0.540
+15:01:54 [dolly] O-M before5 0.5 px: field usable 0.046
+15:02:09 [dolly] O-M both5 exact: field usable 0.999
+15:02:29 [dolly] O-M both5 pixel: field usable 0.260
+15:02:43 [dolly] O-M both5 0.05 px: field usable 0.997
+15:02:58 [dolly] O-M both5 0.1 px: field usable 0.990
+15:03:13 [dolly] O-M both5 0.25 px: field usable 0.885
+15:03:27 [dolly] O-M both5 0.5 px: field usable 0.251

@@ -1,0 +1,95 @@
+{
+ "schema": "foveal-motion-m4-eval-v2",
+ "window": "before5",
+ "gate_name": "calibration",
+ "gate_thresholds": {
+  "median": 0.05,
+  "p90": 0.1,
+  "coverage": 0.5,
+  "outlier50": null,
+  "band_deg": [
+   5.0,
+   40.0
+  ]
+ },
+ "interval_scale": 1.6497316069397217,
+ "m3_scale": 1.625204104083527,
+ "held_out_refs": [
+  12,
+  14,
+  16,
+  18,
+  20
+ ],
+ "excluded_refs": [],
+ "imported_from": null,
+ "late_estimates_hashed_now": {
+  "r0012.npz": "3e4d3dceef53b1f424f544b23f9ac470ed79716bfb3a0a6706d0128bb8473515",
+  "r0014.npz": "76bd7aca156c9edf05234dd566bca4af7e70bc4f5df2097b8271e5a1b4986db1",
+  "r0016.npz": "a7a8203532c3f673c3fb01854764377a7c2f703f2955fdc5d79e38b9b4656654",
+  "r0018.npz": "8b616029efe0e2c89a80e1b12610a528461b937ddd5ab80ed1ee69d7a05cd3dc",
+  "r0020.npz": "7da719cac50fcb0a4b0fd56361f3ae478338bd2343472a1b7f4c144607d4afc3"
+ },
+ "M4": {
+  "field_usable_of_all_hits": 0.22194990948696017,
+  "accepted_fraction": 0.23463242533639644,
+  "interval_coverage_interior": 0.9523788690801707,
+  "usable_interior_median_rel": 0.008523434372059296,
+  "usable_interior_p90_rel": 0.02541798129575444,
+  "fovea_usable": 0.031612090680100756,
+  "gate": {
+   "subset": 115544,
+   "accepted_usable": 40612,
+   "coverage_of_subset": 0.35148514851485146,
+   "median_rel": 0.008661800132527441,
+   "p90_rel": 0.02528938165112985,
+   "over_50pct": 0.00027085590465872155,
+   "gate_pass": false
+  }
+ },
+ "M3": {
+  "field_usable_of_all_hits": 0.24296882770693667,
+  "accepted_fraction": 0.26532655070561206,
+  "interval_coverage_interior": 0.9545257028635988,
+  "usable_interior_median_rel": 0.00908528049547441,
+  "usable_interior_p90_rel": 0.029099471010360048,
+  "fovea_usable": 0.048110831234256926,
+  "gate": {
+   "subset": 115544,
+   "accepted_usable": 38383,
+   "coverage_of_subset": 0.3321937963027072,
+   "median_rel": 0.009071878713217331,
+   "p90_rel": 0.027956327997774418,
+   "over_50pct": 0.002761639267383998,
+   "gate_pass": false
+  }
+ },
+ "checks": [
+  {
+   "id": "M4.GATE",
+   "what": "#5's calibration gate on M3's subset (5-40 deg): median <= 0.05, p90 <= 0.1, coverage >= 0.5",
+   "ok": false,
+   "control": "every step x 1.2",
+   "control_fails": true,
+   "control_detail": {
+    "subset": 115544,
+    "accepted_usable": 40612,
+    "coverage_of_subset": 0.35148514851485146,
+    "median_rel": 0.1987029608926888,
+    "p90_rel": 0.2207501385336626,
+    "over_50pct": 0.0002462326405988378,
+    "gate_pass": false
+   }
+  },
+  {
+   "id": "M4.COVER",
+   "what": "interior coverage of the 95 % intervals >= 0.9",
+   "ok": true,
+   "control": "intervals x 0.5",
+   "control_fails": true,
+   "control_detail": {
+    "coverage": 0.7393196981297168
+   }
+  }
+ ]
+}

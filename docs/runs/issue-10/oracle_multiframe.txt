@@ -1,0 +1,24 @@
+field usable (interval <= 10 %), calibration room, reference frames r = 10, 15 (Chat sandbox, 64-spp CPU source's geometry)
+                                        exact    pixel  0.05 px   0.1 px  0.25 px   0.5 px
+M3-like: one frame 0.5 m back           0.908    0.000    0.895    0.838    0.229    0.000
+5 short steps back (0.5 m)              0.985    0.082    0.964    0.931    0.416    0.084
+10 frames, 5 each side (+/-0.5 m)       1.000    0.277    0.998    0.991    0.856    0.279
+10 short steps back (1 m)               0.989    0.695    0.975    0.962    0.903    0.689
+
+5-40 deg band usable
+M3-like: one frame 0.5 m back           0.893    0.000    0.893    0.893    0.236    0.000
+5 short steps back (0.5 m)              0.984    0.090    0.966    0.951    0.410    0.092
+10 frames, 5 each side (+/-0.5 m)       1.000    0.292    1.000    0.999    0.928    0.293
+10 short steps back (1 m)               0.989    0.761    0.974    0.963    0.923    0.752
+
+fovea (< 2 deg) usable
+M3-like: one frame 0.5 m back           0.984    0.000    0.712    0.021    0.000    0.000
+5 short steps back (0.5 m)              0.996    0.000    0.890    0.455    0.004    0.000
+10 frames, 5 each side (+/-0.5 m)       1.000    0.004    0.966    0.839    0.021    0.005
+10 short steps back (1 m)               0.996    0.010    0.977    0.912    0.384    0.010
+
+coverage of the 95 % intervals (finite estimates)
+M3-like: one frame 0.5 m back           1.000    1.000    0.949    0.949    0.949    0.950
+5 short steps back (0.5 m)              1.000    1.000    0.950    0.950    0.950    0.950
+10 frames, 5 each side (+/-0.5 m)       1.000    1.000    0.950    0.950    0.950    0.950
+10 short steps back (1 m)               1.000    0.998    0.950    0.950    0.950    0.951

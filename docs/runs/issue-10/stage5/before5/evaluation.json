@@ -1,0 +1,89 @@
+{
+ "schema": "foveal-motion-m4-eval-v2",
+ "window": "before5",
+ "gate_name": "calibration",
+ "gate_thresholds": {
+  "median": 0.05,
+  "p90": 0.1,
+  "coverage": 0.5,
+  "outlier50": null,
+  "band_deg": [
+   5.0,
+   40.0
+  ]
+ },
+ "interval_scale": 1.6497316069396768,
+ "m3_scale": 1.625204104083527,
+ "held_out_refs": [
+  12,
+  14,
+  16,
+  18,
+  20
+ ],
+ "excluded_refs": [],
+ "imported_from": null,
+ "late_estimates_hashed_now": {},
+ "M4": {
+  "field_usable_of_all_hits": 0.22194990948696017,
+  "accepted_fraction": 0.23463242533639644,
+  "interval_coverage_interior": 0.9523788690801707,
+  "usable_interior_median_rel": 0.008523434372054661,
+  "usable_interior_p90_rel": 0.025417981295751197,
+  "fovea_usable": 0.031612090680100756,
+  "gate": {
+   "subset": 115544,
+   "accepted_usable": 40612,
+   "coverage_of_subset": 0.35148514851485146,
+   "median_rel": 0.00866180013442086,
+   "p90_rel": 0.0252893816511293,
+   "over_50pct": 0.00027085590465872155,
+   "gate_pass": false
+  }
+ },
+ "M3": {
+  "field_usable_of_all_hits": 0.24296882770693667,
+  "accepted_fraction": 0.26532655070561206,
+  "interval_coverage_interior": 0.9545257028635988,
+  "usable_interior_median_rel": 0.009085280498509743,
+  "usable_interior_p90_rel": 0.029099471010361547,
+  "fovea_usable": 0.048110831234256926,
+  "gate": {
+   "subset": 115544,
+   "accepted_usable": 38383,
+   "coverage_of_subset": 0.3321937963027072,
+   "median_rel": 0.00907187871321398,
+   "p90_rel": 0.027956327997775872,
+   "over_50pct": 0.002761639267383998,
+   "gate_pass": false
+  }
+ },
+ "checks": [
+  {
+   "id": "M4.GATE",
+   "what": "#5's calibration gate on M3's subset (5-40 deg): median <= 0.05, p90 <= 0.1, coverage >= 0.5",
+   "ok": false,
+   "control": "every step x 1.2",
+   "control_fails": true,
+   "control_detail": {
+    "subset": 115544,
+    "accepted_usable": 40612,
+    "coverage_of_subset": 0.35148514851485146,
+    "median_rel": 0.1987029608927905,
+    "p90_rel": 0.22075013853366085,
+    "over_50pct": 0.0002462326405988378,
+    "gate_pass": false
+   }
+  },
+  {
+   "id": "M4.COVER",
+   "what": "interior coverage of the 95 % intervals >= 0.9",
+   "ok": true,
+   "control": "intervals x 0.5",
+   "control_fails": true,
+   "control_detail": {
+    "coverage": 0.7393196981297168
+   }
+  }
+ ]
+}

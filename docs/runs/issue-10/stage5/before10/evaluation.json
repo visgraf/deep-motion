@@ -1,0 +1,49 @@
+{
+ "window": "before10",
+ "interval_scale": 2.0935477096239463,
+ "m3_scale": 1.625204104083527,
+ "held_out_refs": [
+  12,
+  14,
+  16,
+  18,
+  20
+ ],
+ "late_estimates_hashed_now": {
+  "r0012.npz": "baf3959819d361f8ae00927daddc88aa9d139e2337161e71cb5a38c2f33cb3c1",
+  "r0014.npz": "9088a2ae6c13c8522fdfd3ac20846367e24fa70bea66243c9c4d9bb096923ea2",
+  "r0016.npz": "7c500628ee60bb6f4c25c348f44416a7b9654d81681fdd266df4d0cfdb03fe8b",
+  "r0018.npz": "05f3524e6221e3f57be622af25fd6d63cf64e52888bc52b8954fd37cb9cadf2a",
+  "r0020.npz": "cdd2fbf17221fdb271bdf7e3f4618561ed4ad3d68a39e78dc46b6a1f352abb1d"
+ },
+ "M4": {
+  "field_usable_of_all_hits": 0.17867472995285363,
+  "accepted_fraction": 0.18500984574991794,
+  "interval_coverage_interior": 0.9516172361917042,
+  "usable_interior_median_rel": 0.004883868593328514,
+  "usable_interior_p90_rel": 0.014382292919796544,
+  "fovea_usable": 0.038790931989924435,
+  "gate": {
+   "coverage_of_subset": 0.2917157100325417,
+   "median_rel": 0.004985280787273446,
+   "p90_rel": 0.01399461628689097,
+   "over_50pct": 0.00035601969975671986,
+   "gate_pass": false
+  }
+ },
+ "M3": {
+  "field_usable_of_all_hits": 0.24296882770693667,
+  "accepted_fraction": 0.26532655070561206,
+  "interval_coverage_interior": 0.9545257028635988,
+  "usable_interior_median_rel": 0.009085280498509743,
+  "usable_interior_p90_rel": 0.029099471010361547,
+  "fovea_usable": 0.048110831234256926,
+  "gate": {
+   "coverage_of_subset": 0.3321937963027072,
+   "median_rel": 0.00907187871321398,
+   "p90_rel": 0.027956327997775872,
+   "over_50pct": 0.002761639267383998,
+   "gate_pass": false
+  }
+ }
+}
