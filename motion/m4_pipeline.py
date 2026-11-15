@@ -131,7 +131,8 @@ def calibrate(out: Path, window: str) -> dict:
            "interval_scale": scale, "abs_z_quantiles": {p: float(np.quantile(allz, float(p))) for p in ("0.5", "0.68", "0.9", "0.95", "0.99")},
            "method": "95th percentile of |zeta - zeta_true| / sigma_zeta over accepted interior anchors with a hit, / 1.96"}
     (d / "calibration.json").write_text(json.dumps(cal, indent=1))
-    files = {p.name: flow_depth._sha(p) for p in [d / "config.json", d / "calibration.json", *sorted(d.glob("r*.npz"))]}
+    (d / "config_frozen.json").write_text((d / "config.json").read_text())   # config.json may gain held-out refs later
+    files = {p.name: flow_depth._sha(p) for p in [d / "config_frozen.json", d / "calibration.json", *sorted(d.glob("r*.npz"))]}
     fr = {"schema": "foveal-motion-m4-freeze-v1", "frozen_settings": dict(cfg["settings"], interval_scale=scale), "sha256": files,
           "calibration_refs": used, "held_out_refs": [r for r in cfg["refs"] if not is_calibration(r)]}
     (d / "freeze.json").write_text(json.dumps(fr, indent=1, default=float))
@@ -158,7 +159,9 @@ def evaluate(out: Path, window: str, m3_scale: float, log=print) -> dict:
     d = Path(out) / window
     fr = _verify(d)
     cfg = json.loads((d / "config.json").read_text())
-    if json.loads(json.dumps({k: v for k, v in fr["frozen_settings"].items() if k != "interval_scale"})) != cfg["settings"]:
+    frozen_cfg = json.loads((d / "config_frozen.json").read_text())
+    if not (json.loads(json.dumps({k: v for k, v in fr["frozen_settings"].items() if k != "interval_scale"})) == cfg["settings"]
+            == frozen_cfg["settings"]):
         raise SystemExit("[m4] refused: settings differ from the frozen ones")
     scale = fr["frozen_settings"]["interval_scale"]
     run = analysis.load_run(cfg["run"])
