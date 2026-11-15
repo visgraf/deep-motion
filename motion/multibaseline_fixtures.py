@@ -24,19 +24,33 @@ NOISE = fx.NOISE
 WINDOWS = {"before5": list(range(-5, 0)), "both5": [k for k in range(-5, 6) if k], "before10": list(range(-10, 0))}
 GATE = dict(fx.GATE)
 M3_CORRIDOR_1M = 0.173            # M3's accepted fraction on the parallel surfaces at B = 0.99 m (#6, afe3c58)
+FOREIGN_GEOMETRY = 1.5            # the foreign-geometry control's scale about r's eye centre
+
+
+def scaled(planes, f):
+    """The scene scaled by f about the origin (r's eye centre), textures scaled with it: from the origin every ray
+    sees the same texture value, so r's image is unchanged, while every other frame sees a scene f times farther."""
+    out = []
+    for p in planes:
+        q = dict(p, p0=p["p0"] * f, tex=(lambda tex: lambda s, t: tex(s / f, t / f))(p["tex"]))
+        if p["bounds"] is not None:
+            q["bounds"] = tuple(b * f for b in p["bounds"])
+        out.append(q)
+    return out
 
 
 class Scene:
     def __init__(self, model, name, seed=0):
         self.m, self.name, self.seed = model, name, seed
         self.planes = fx.scene(name, seed)
-        self.alt = fx.scene(name, seed + 100)            # the same geometry, another texture (the foreign frames)
+        self.alt = fx.scene(name, seed + 100)            # the same geometry, another texture (a foreign frame)
+        self.far = scaled(self.planes, FOREIGN_GEOMETRY)  # another geometry that r cannot tell from this one
         self.cache = {}
 
-    def frame(self, k, foreign=False):
-        key = (k, foreign)
+    def frame(self, k, foreign=False, geometry=False):
+        key = (k, foreign, geometry)
         if key not in self.cache:
-            pl = self.alt if foreign else self.planes
+            pl = self.far if geometry else (self.alt if foreign else self.planes)
             self.cache[key] = fx.render(self.m, pl, np.array([0.0, k * STEP, 0.0]), noise=NOISE, seed=self.seed + 500 + k)
         return self.cache[key]
 
@@ -62,9 +76,10 @@ def gate_ok(st, max_over_1px=None):
     return bool(ok and (max_over_1px is None or st["over_1px_of_accepted"] <= max_over_1px))
 
 
-def run_m4(sc: Scene, window, *, ts_scale=1.0, shuffle=False, foreign_frames=(), all_foreign=False, settings=None):
+def run_m4(sc: Scene, window, *, ts_scale=1.0, shuffle=False, foreign_frames=(), all_foreign=False, foreign_geometry=False,
+           settings=None):
     ks = WINDOWS[window]
-    imgs = [sc.frame(k, foreign=all_foreign or (k in foreign_frames)) for k in ks]
+    imgs = [sc.frame(k, foreign=all_foreign or (k in foreign_frames), geometry=foreign_geometry) for k in ks]
     ts = np.array(ks, float) * STEP * ts_scale
     if shuffle:
         ts = np.random.default_rng(1).permutation(ts)
@@ -76,7 +91,7 @@ def run_m4(sc: Scene, window, *, ts_scale=1.0, shuffle=False, foreign_frames=(),
     err = (r["zeta"] - z_true) * r["px_per_zeta"] / ts_scale          # equivalent px on the true steps
     acc = r["reason"] == 0
     out = {"fixture": sc.name, "window": window, "frames": ks, "ts_scale": ts_scale, "shuffle": shuffle,
-           "foreign_frames": list(foreign_frames), "all_foreign": all_foreign, "seconds": round(time.perf_counter() - t0, 1),
+           "foreign_frames": list(foreign_frames), "all_foreign": all_foreign, "foreign_geometry": foreign_geometry, "seconds": round(time.perf_counter() - t0, 1),
            "reasons": {mb.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(mb.REASONS))},
            "all": _stats(err, acc, np.ones_like(acc)), "by_label": {},
            "median_frames_accepted": float(np.median(r["n_frames"][acc])) if acc.any() else None,
@@ -144,7 +159,8 @@ def run_all(model, log=print) -> dict:
             f"{L} acc {v['accepted_fraction']:.3f}" for L, v in o["by_label"].items()))
     # controls: each must fail the gate on the front wall, both5
     for lab, kw in (("frame steps shuffled", {"shuffle": True}), ("steps 20 % too long", {"ts_scale": 1.2}),
-                    ("every window frame from another scene", {"all_foreign": True})):
+                    (f"every window frame from the scene scaled {FOREIGN_GEOMETRY}x about r (r's image unchanged)",
+                     {"foreign_geometry": True})):
         c, _, _ = run_m4(scenes["front"], "both5", **kw)
         ctrl.append({"control": lab, "fails": not gate_ok(c["by_label"]["front"]), "stats": c["by_label"]["front"]})
         log(f"[m4-fixtures] control {'fails' if ctrl[-1]['fails'] else 'DOES NOT FAIL'}: {lab}: {c['by_label']['front']}")
