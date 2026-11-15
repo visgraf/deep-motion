@@ -471,3 +471,54 @@ error 0.019 | 0.057 (0.038 | 0.119); `low_ncc` 13 % (48 %), `ambiguous` 25 % (11
 weak or repetitive texture is the limit. `dolly-1` used one seed for every look, so its noise repeats across frames
 (residual correlation 0.158 between looks 20 and 25; 0.006 with different seeds). `run --seed-base N` now gives each look
 its own seed (N + k), recorded in `run.json`; without it, runs are as before.
+
+### M3 final results (M-D12: 1024 spp, a seed per look; estimator frozen at `7bb5e70`; #7)
+
+Code, workstation: renders on OPTIX, everything else on the CPU; every record computed at `3938239` (clean), fov-render
+`0f6fa7d`. Records: [`docs/runs/issue-7/final/`](runs/issue-7/final/) (`b73c860`). The interval scale, calibrated on
+the calibration room's declared set (29 pairs, 280,293 accepted interior anchors), is **1.625** (1.67 / 1.58 / 1.64 at
+strides 1 / 5 / 10 alone); the Classroom imports it unchanged and opens no truth before its freeze.
+
+**Gates** (held-out pairs; the Classroom without the three quick-look pairs):
+
+| gate, stride 5 | calibration room (21 pairs) | Classroom (122 pairs) |
+|---|---|---|
+| M3.COV, 95 % intervals cover the truth (≥ 0.90) | **PASS** 0.949 (control 0.787) | **PASS** 0.926 (control 0.712) |
+| M3.PLY | **PASS** (205,614 points) | **PASS** (424,490 points) |
+| median range error | 0.9 % (≤ 5 %) | 1.8 % (≤ 10 %) |
+| p90 range error | 2.8 % (≤ 10 %) | 5.1 % (≤ 25 %) |
+| > 50 % errors, of accepted | 0.3 % | 0.04 % (≤ 5 %) |
+| **coverage** of textured, jointly visible, interior 5–40° hits | **0.332** (≥ 0.50) | **0.116** (≥ 0.25) |
+| verdict | M3.CAL **FAIL**, on coverage only | M3.ROOM **FAIL**, on coverage only |
+
+Accepted held-out interior displacement error: median 0.039 / 0.076 px, p90 0.137 / 0.218 px (calibration room / Classroom).
+
+**Field usable** (interval ≤ 10 %, of all hits) against the oracle ladder on the same pairs:
+
+| stride | room: RGB | O2 | O3 0.1 px | Classroom: RGB | O2 | O3 0.1 px |
+|---|---|---|---|---|---|---|
+| 1 | 0.048 | 0.000 | 0.022 | 0.017 | 0.000 | 0.007 |
+| 5 | 0.243 | 0.204 | 0.829 | 0.203 | 0.097 | 0.874 |
+| 10 | 0.190 | 0.537 | 0.830 | 0.205 | 0.608 | 0.910 |
+
+**Reading.**
+
+1. **Depth from the image's own forward motion works on the foveated sensor where the matcher accepts.** At 0.5 m the
+   held-out range error is about 1–2 % median and 3–5 % p90, the intervals are honest (0.93–0.95 coverage, with the
+   scale transferred from one scene to the other), and the slit scans show one pair's depths predicting the image streaks
+   over all 47 frames.
+2. **It fails on coverage, in both scenes**: a fifth to a quarter of the field gets a usable range, against 0.83–0.91
+   for oracle matches of 0.1 px. The losses are ambiguity (periodic or sparse texture: the Siemens stars' spokes, the
+   checkers, the board's chalk), weak texture (walls, ceiling, the board's interior) and the conservative edge tests.
+   At stride 5 the matcher beats pixel rounding (0.24 / 0.20 against O2's 0.20 / 0.10); at stride 10 it stays far below
+   it (0.19 / 0.21 against 0.54 / 0.61): two-frame matching over a long baseline is the weak path (stretch, occlusion,
+   a long and ambiguous search), as the A1 fixtures predicted.
+3. **Rendering noise mattered more than any matcher setting.** 64 spp with one seed (σ 20–30 % of the signal, repeated
+   across frames) left 0.04 usable at Classroom pair (20, 25); 1024 spp with a seed per look 0.21–0.26.
+4. **Failure modes seen where #5 listed them**: the +X wall's window panes (transparency and reflections) hold most of
+   the Classroom's large errors; card edges in the calibration room (foreground fattening, now limited by the edge tests,
+   and Position truth that is not a surface point within 2 px of a boundary).
+
+The natural next step is temporal integration (M4): chaining stride-1 matches and fitting cot e = a + b s over many
+frames, which averages noise, keeps stretch small and lets consistency over the sequence resolve the ambiguous matches
+that two frames cannot.
