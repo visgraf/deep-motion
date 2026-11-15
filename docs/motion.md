@@ -670,3 +670,42 @@ A reading:
   change more than the slope model and frame consistency absorb.
 - The two-sided window places every frame within 0.5 m. Its errors on each side pull in opposite directions in ζ,
   which halves the ambiguous and unsupported rejections and a third of the depth-edge ones.
+
+### Figures and the foreign-geometry control (M4a Stage 6, Chat sandbox)
+
+**Foreign-geometry control** ([`multibaseline_fixtures.py`](../motion/multibaseline_fixtures.py), `0c344ec`). This
+control replaces the foreign-texture control of Stage 4. Every window frame is rendered from the scene scaled 1.5×
+about r's eye centre, with the textures scaled with it:
+- r's image is unchanged (max difference 9e-15), and the frames see the front wall at 4.5 m instead of 3 m;
+- the sequence is consistent, and wrong in a way no image test can detect, so only the gate's truth can catch it.
+
+The matcher accepts 93 % of anchors, about as many as on the true scene (0.938). The median error is 1.75 px and 98 %
+of accepted anchors are over 1 px, so the gate fails, as it must. The foreign-texture frames stay for the
+one-foreign-frame robustness case.
+
+`python -m motion.dolly m4-fixtures --out runs/m4-fixtures-s6` ran on code at `0c344ec` (clean), torch 2.15.0+cpu,
+1386 s, Chat sandbox ([`fixtures.json`](runs/issue-10/fixtures.json), [`fixtures.log`](runs/issue-10/fixtures.log),
+replacing Stage 4's). Results:
+- all 11 gates pass, and all three controls fail;
+- every gate, the M3 comparisons, the robustness case and the two unchanged controls are identical to Stage 4's
+  record, bit for bit.
+
+The record's `computed_by` says `54e5b11`. The harness read git at the end of the run, after the figure module had been
+committed; `54e5b11` differs from `0c344ec` only in `m4_figures.py` and the `m4-figures` command. The harness now reads
+git when the run starts.
+
+**Figures** ([`m4_figures.py`](../motion/m4_figures.py); `python -m motion.dolly m4-figures --result runs/m4-calib --ref
+12 --out visuals/m4` at `54e5b11`, Chat sandbox, 39 s). For held-out reference r = 12, windows before5 and both5:
+- an overview: decisions, range, interval width, frames kept, usable pixels against M3's pair, and the EVALUATION error;
+- the cloud from above;
+- each window frame's NCC along ζ with their mean;
+- slit scans with the traces the estimates predict.
+
+[`curves_r0012.png`](runs/issue-10/figures/curves_r0012.png) shows why the two-sided window wins. Where the five frames
+behind leave a plateau (the anchor is rejected as ambiguous):
+- the frames behind r lose correlation at too-large ζ (too near), because their displacement grows with ζ;
+- the frames ahead lose it at too-small ζ (too far);
+- the mean is closed from both sides only when both are in the window.
+
+On r = 12, 19.4 % of anchors are usable with both5 only, 18.5 % with both5 and M3, and 6.6 % with M3's pair only. With
+both5, depth edges still carry the largest errors, mostly where the board's outline meets the floor.

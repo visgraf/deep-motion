@@ -137,15 +137,15 @@
    }
   },
   {
-   "control": "every window frame from another scene",
+   "control": "every window frame from the scene scaled 1.5x about r (r's image unchanged)",
    "fails": true,
    "stats": {
     "anchors": 48752,
-    "accepted": 514,
-    "accepted_fraction": 0.010543157203807023,
-    "median_px": 0.07364211128022592,
-    "p90_px": 0.29491809642951006,
-    "over_1px_of_accepted": 0.0019455252918287938
+    "accepted": 45464,
+    "accepted_fraction": 0.9325566130620282,
+    "median_px": 1.7488537072010994,
+    "p90_px": 1.8528401715599743,
+    "over_1px_of_accepted": 0.9778726024986802
    }
   }
  ],
@@ -365,7 +365,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 35.3,
+   "foreign_geometry": false,
+   "seconds": 36.7,
    "reasons": {
     "accepted": 42489,
     "invalid_support": 2296,
@@ -419,7 +420,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 60.6,
+   "foreign_geometry": false,
+   "seconds": 140.2,
    "reasons": {
     "accepted": 45705,
     "invalid_support": 2296,
@@ -473,7 +475,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 66.6,
+   "foreign_geometry": false,
+   "seconds": 111.2,
    "reasons": {
     "accepted": 42211,
     "invalid_support": 2793,
@@ -530,7 +533,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 51.4,
+   "foreign_geometry": false,
+   "seconds": 49.3,
    "reasons": {
     "accepted": 36928,
     "invalid_support": 2296,
@@ -592,7 +596,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 104.6,
+   "foreign_geometry": false,
+   "seconds": 105.8,
    "reasons": {
     "accepted": 30197,
     "invalid_support": 2296,
@@ -649,7 +654,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 35.4,
+   "foreign_geometry": false,
+   "seconds": 33.3,
    "reasons": {
     "accepted": 41504,
     "invalid_support": 2296,
@@ -703,7 +709,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 67.9,
+   "foreign_geometry": false,
+   "seconds": 62.0,
    "reasons": {
     "accepted": 41947,
     "invalid_support": 2296,
@@ -757,7 +764,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 65.2,
+   "foreign_geometry": false,
+   "seconds": 63.2,
    "reasons": {
     "accepted": 0,
     "invalid_support": 2296,
@@ -811,7 +819,8 @@
    "shuffle": false,
    "foreign_frames": [],
    "all_foreign": false,
-   "seconds": 69.4,
+   "foreign_geometry": false,
+   "seconds": 67.7,
    "reasons": {
     "accepted": 41922,
     "invalid_support": 2296,
@@ -909,7 +918,7 @@
  "device": "cpu",
  "computed_by": {
   "foveal-motion": {
-   "commit": "564c6ebb2816ff60b43657995426941e9a997264",
+   "commit": "54e5b1119cca13c6b3a18d9745d7e935e8535fee",
    "clean": true
   },
   "fov-render": {
@@ -917,5 +926,5 @@
    "clean": true
   }
  },
- "seconds": 1331.3
+ "seconds": 1385.7
 }

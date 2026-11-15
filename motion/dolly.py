@@ -420,13 +420,13 @@ def m4_fixtures(a) -> int:
     from . import multibaseline, multibaseline_fixtures
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
+    git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}      # when the code is loaded, not at the end
     t0 = time.perf_counter()
     res = multibaseline_fixtures.run_all(sensors.Foveated().model("full"), log=lambda m: print(m, flush=True))
     import torch
     res.update({"schema": "foveal-motion-m4-fixtures-v1", "settings": multibaseline.SETTINGS,
                 "torch": torch.__version__, "device": str(multibaseline.device()),
-                "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
-                "seconds": round(time.perf_counter() - t0, 1)})
+                "computed_by": git, "seconds": round(time.perf_counter() - t0, 1)})
     (out / "fixtures.json").write_text(json.dumps(res, indent=1, default=float))
     for g in res["gates"]:
         print(f"{PREFIX} M4 fixture gate {'PASS' if g['ok'] else 'FAIL'} {g['fixture']}/{g['label']} {g['window']}: "
