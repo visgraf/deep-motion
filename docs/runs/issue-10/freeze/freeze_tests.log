@@ -1,0 +1,21 @@
+[m4] held-out r 12: M4 usable 0.238, M3 usable 0.251
+[m4] held-out r 14: M4 usable 0.237, M3 usable 0.255
+[m4] held-out r 16: M4 usable 0.230, M3 usable 0.258
+[m4] held-out r 18: M4 usable 0.225, M3 usable 0.248
+[m4] held-out r 20: M4 usable 0.214, M3 usable 0.240
+[A] before5: Stage 5 numbers reproduced True; checks [["M4.GATE", false, true], ["M4.COVER", true, true]] control detail [{"subset": 115544, "accepted_usable": 40612, "coverage_of_subset": 0.35148514851485146, "median_rel": 0.1987029608927905, "p90_rel": 0.22075013853366085, "over_50pct": 0.0002462326405988378, "gate_pass": false}, {"coverage": 0.7393196981297168}]
+[m4] held-out r 12: M4 usable 0.380, M3 usable 0.251
+[m4] held-out r 14: M4 usable 0.375, M3 usable 0.255
+[m4] held-out r 16: M4 usable 0.375, M3 usable 0.258
+[A] both5: Stage 5 numbers reproduced True; checks [["M4.GATE", true, true], ["M4.COVER", true, true]] control detail [{"subset": 69704, "accepted_usable": 35071, "coverage_of_subset": 0.5031418569952943, "median_rel": 0.19913433023686147, "p90_rel": 0.21135748959639797, "over_50pct": 0.0010835162955148128, "gate_pass": false}, {"coverage": 0.8229161807920146}]
+[B] frozen test record: {"both5": 1.4874533063463462, "before5": 1.6497316069396768}
+[B] control fails (estimator file hash changed): [m4] refused: the frozen estimator's files changed: ['motion/multibaseline.py']
+[B] control fails (settings changed): [m4] refused: the code's settings differ from the frozen record
+[B] control fails (source freeze changed): [m4] refused: /home/claude/foveal-motion/docs/runs/issue-10/stage5/both5/freeze.json differs from the frozen record
+[m4] both5: 1 reference frames to estimate: [12]
+[m4] both5 r 12: accepted 0.393 (65 s)
+[m4] held-out r 12: M4 usable 0.380, M3 usable 0.251
+[B] r 12 estimate identical to Stage 5's: True
+[B] {"held_out_refs": [12], "interval_scale": 1.4874533063463462, "imported_from": {"frozen": "/tmp/s7/frozen.json", "frozen_sha256": "64fe11784b4e35b94b11bfa8bb894c26ee24a00bfcc8ae11b683fe408cc3e7fb", "source": "docs/runs/issue-10/stage5/both5", "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"}}
+[B] M4 {"field_usable_of_all_hits": 0.3681394099743381, "accepted_fraction": 0.3926197899573351, "interval_coverage_interior": 0.948180815876516, "usable_interior_median_rel": 0.004441094315751695, "usable_interior_p90_rel": 0.02020907784090509, "fovea_usable": 0.21536523929471033, "gate": {"subset": 23551, "accepted_usable": 11905, "coverage_of_subset": 0.5054987049382191, "median_rel": 0.004307861030353241, "p90_rel": 0.018001074730027197, "over_50pct": 0.002267954640907182, "gate_pass": true}}
+[B] exclusion removes r 12: [m4] refused: no held-out reference frames to evaluate

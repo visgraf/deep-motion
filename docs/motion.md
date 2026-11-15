@@ -709,3 +709,36 @@ behind leave a plateau (the anchor is rejected as ambiguous):
 
 On r = 12, 19.4 % of anchors are usable with both5 only, 18.5 % with both5 and M3, and 6.6 % with M3's pair only. With
 both5, the largest errors are still along object outlines (the dark streaks in the overview's error panel).
+
+### Frozen (M4a, #10)
+
+**The record** is [`frozen.json`](runs/issue-10/frozen.json), written by `python -m motion.dolly m4-freeze` at `2d09c9b`
+(clean). It holds:
+- the sha256 of the estimator's files: `multibaseline.py`, `m4_pipeline.py`, `matcher.py`, `logpolar.py`, `flow_depth.py`;
+- the settings: those of the fixtures (`564c6eb`), unchanged since;
+- per window (M-D15), the interval scale with the hash of the calibration-room freeze it comes from: both5
+  **1.4875**, before5 **1.6497** (`stage5/<window>/`, Chat sandbox, CPU).
+
+**Import.** A run judged with the frozen estimator starts from `import_freeze` (`m4-classroom`), which:
+- copies the scale into a fresh result whose every reference is held out;
+- refuses if a file of the estimator, the settings or the source freeze differs from the record (`estimate` and
+  `evaluate` check again).
+
+**Evaluation** (`evaluate`) now takes:
+- the gate: #5's calibration gate or its Classroom gate (median ≤ 10 %, p90 ≤ 25 %, coverage ≥ 0.25, > 50 % errors
+  ≤ 5 %, band 5–40°);
+- reference frames to exclude (truth already opened);
+- two controls, each of which must fail, as M3's:
+  - every step 1.2× too long must fail the gate;
+  - intervals halved must cover less than 0.90 of interior anchors (the check itself asks ≥ 0.90).
+
+**Tests** ([`freeze/freeze_tests.py`](runs/issue-10/freeze/freeze_tests.py) and its log, Chat sandbox, code as
+committed in `2d09c9b`). The controls never weaken a check; they are the extra half of each check.
+- Re-evaluating Stage 5's results reproduces every held-out number for before5 and both5.
+  - The gate's control gives median errors of 19.9 % in both windows, so the gate fails.
+  - The interval control covers 0.74 (before5) and 0.82 (both5), so the check fails.
+  - The Stage 5 `evaluation.json` files are replaced by these re-runs, which add the checks.
+- The import path, on the calibration room at r = 12, reproduces Stage 5's both5 estimate bit for bit.
+- Three tampered records are each refused: an estimator file's hash, the settings, the source freeze.
+- Excluding r = 12 removes it.
+- `m4-selftest` passes (11 checks, every control fails).
