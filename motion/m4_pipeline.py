@@ -47,7 +47,7 @@ def estimate(run: dict, window: str, refs, out: Path, settings=None, git=None, l
     cfg = json.loads(cfg_p.read_text()) if cfg_p.exists() else {
         "schema": "foveal-motion-m4-estimate-v1", "run": run["_dir"], "run_git": run["git"], "window": window,
         "offsets": WINDOWS[window], "settings": s, "computed_by": git, "refs": [], "inputs_sha256": {}}
-    if cfg["settings"] != json.loads(json.dumps(s)):
+    if json.loads(json.dumps(cfg["settings"])) != json.loads(json.dumps(s)):
         raise SystemExit("[m4] refused: settings differ from this result's earlier estimates")
     obs = {}
     get = lambda k: obs.setdefault(k, flow_depth.load_observation(run, es[k]))
