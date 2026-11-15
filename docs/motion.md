@@ -708,4 +708,4 @@ behind leave a plateau (the anchor is rejected as ambiguous):
 - the mean is closed from both sides only when both are in the window.
 
 On r = 12, 19.4 % of anchors are usable with both5 only, 18.5 % with both5 and M3, and 6.6 % with M3's pair only. With
-both5, depth edges still carry the largest errors, mostly where the board's outline meets the floor.
+both5, the largest errors are still along object outlines (the dark streaks in the overview's error panel).
