@@ -525,3 +525,33 @@ Accepted held-out interior displacement error: median 0.039 / 0.076 px, p90 0.13
 The natural next step is temporal integration (M4): chaining stride-1 matches and fitting cot e = a + b s over many
 frames, which averages noise, keeps stretch small and lets consistency over the sequence resolve the ambiguous matches
 that two frames cannot.
+
+## Experiment M4, multi-baseline log-polar matching (M4a #10, M4b #11)
+
+**Geometry** ([`motion/multiframe.py`](../motion/multiframe.py)). An anchor of reference frame r at axial inverse depth
+ζ = 1 / z_r is seen by frame k, a signed step t_k along the heading, at d_k(ζ) = q_k − q_r = −ln(1 − t_k ζ) (t_k ζ < 1),
+azimuth unchanged: one unknown shared by every frame. With the anchor's ray exact, ζ is a one-parameter weighted
+least-squares fit (each frame inverts alone, ζ_k = −expm1(−d_k) / t_k; their weighted median starts Gauss–Newton);
+σ_ζ is the Fisher bound. `m4-selftest` (Chat sandbox): d_k reproduces M3's two-frame displacement (#5's known answer)
+within 5e-17; ζ recovered within 2e-16 over 200 analytic windows on both sides; σ_ζ matches the empirical spread
+(ratio 0.998); controls (wrong sign of t_k, steps 5 % too long) fail. One fix before any measurement: Gauss–Newton
+started at a fixed ζ did not converge for near points (35 % off); the per-frame inversion start fixed it.
+
+**The multi-frame oracle ladder O-M** ([`oracle_multiframe.txt`](runs/issue-10/oracle_multiframe.txt), Chat sandbox,
+calibration room, the geometry of `runs/m3-calib-source`, reference frames r = 10, 15). Each window frame's
+correspondence is b's Position projected into it (visible frames only), exact, with Gaussian noise of σ native px along
+the radial line, or rounded to the frame's pixel (fitted with σ = 0.5 px: a conservative convention, not M3's O2
+bracket). Field usable (interval ≤ 10 %), all hits of r:
+
+| window | exact | 0.05 px | 0.1 px | 0.25 px | 0.5 px |
+|---|---|---|---|---|---|
+| one frame 0.5 m back (M3's pair) | 0.908 | 0.895 | 0.838 | 0.229 | 0.000 |
+| 5 short steps back (0.5 m) | 0.985 | 0.964 | 0.931 | 0.416 | 0.084 |
+| 10 frames, 5 each side (± 0.5 m) | 1.000 | 0.998 | 0.991 | **0.856** | 0.279 |
+| 10 short steps back (1 m) | 0.989 | 0.975 | 0.962 | **0.903** | **0.689** |
+
+The pair row reproduces M3's O3 (0.229 against 0.227 at 0.25 px; fovea 0.712 against 0.716 at 0.05 px). A window
+tolerates a much sloppier matcher: at 0.25 px a frame, what M3's accepted matches roughly achieved, the two-sided and the
+1 m windows make 0.86–0.90 of the field usable, against 0.23 for the pair; the fovea (< 2°) reaches 0.84 at 0.1 px with
+the two-sided window, against 0.02. Intervals cover 0.95 throughout. This is M4's ceiling; the RGB matcher has yet to
+show how much of it a real multi-frame cost recovers.
