@@ -409,6 +409,13 @@ def m4_selftest(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def m4_figures(a) -> int:
+    from . import m4_figures as mf
+    for p in mf.figures(Path(a.result), a.windows, a.ref, Path(a.out), a.m3_scale, truth=not a.no_truth):
+        print(p)
+    return 0
+
+
 def m4_fixtures(a) -> int:
     from . import multibaseline, multibaseline_fixtures
     out = Path(a.out)
@@ -536,6 +543,13 @@ def main(argv=None) -> int:
     sub.add_parser("m4-selftest")
     p = sub.add_parser("m4-fixtures")
     p.add_argument("--out", required=True)
+    p = sub.add_parser("m4-figures", help="M4 process figures for one reference of a frozen m4_pipeline result")
+    p.add_argument("--result", required=True, help="the m4_pipeline output directory (holding one folder per window)")
+    p.add_argument("--windows", nargs="+", default=["before5", "both5"])
+    p.add_argument("--ref", type=int, required=True)
+    p.add_argument("--out", required=True)
+    p.add_argument("--m3-scale", type=float, default=1.625204104083527, help="M3's frozen scale (#7)")
+    p.add_argument("--no-truth", action="store_true")
     p = sub.add_parser("flow-depth-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth")
@@ -559,7 +573,7 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest, "m4-fixtures": m4_fixtures}[a.cmd](a)
+            "m4-selftest": m4_selftest, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures}[a.cmd](a)
 
 
 if __name__ == "__main__":
