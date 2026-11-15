@@ -514,7 +514,8 @@ Accepted held-out interior displacement error: median 0.039 / 0.076 px, p90 0.13
    it (0.19 / 0.21 against 0.54 / 0.61): two-frame matching over a long baseline is the weak path (stretch, occlusion,
    a long and ambiguous search), as the A1 fixtures predicted.
 3. **Rendering noise mattered more than any matcher setting.** 64 spp with one seed (σ 20–30 % of the signal, repeated
-   across frames) left 0.04 usable at Classroom pair (20, 25); 1024 spp with a seed per look 0.21–0.26.
+   across frames) left 0.04 of Classroom pair (20, 25)'s anchors usable (0.08 accepted); 1024 spp gave 0.21 usable
+   (0.26 accepted), and with a seed per look the stride-5 pairs accept 0.22–0.29.
 4. **Failure modes seen where #5 listed them**: the +X wall's window panes (transparency and reflections) hold most of
    the Classroom's large errors; card edges in the calibration room (foreground fattening, now limited by the edge tests,
    and Position truth that is not a surface point within 2 px of a boundary).
