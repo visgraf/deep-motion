@@ -22,6 +22,7 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D9 | M3, depth from RGB log-polar flow (Luiz, 2026-11-14, in Chat; #5 reviewed there) | #5's plan amended (A1–A8 of #6: shift + radial-stretch matcher, radial-gradient texture score, patch sizes in native pixels, ray-based sensor-agnostic code, M2's bracket as the reference, interval calibration on the calibration room, static figures first, the oracle ladder O1–O3 before any RGB matching) and split: M3a (#6, Chat, calibration room) builds and freezes the estimator; M3b (#7, Code, Classroom `dolly-1`) runs it unchanged |
 | M-D10 | Freeze M3a's estimator (Luiz, 2026-11-14, in Chat; #6) | option A: freeze the estimator as it stands (matcher settings, calibration procedure), run the full calibration room as declared and report its result, coverage failure included; then the Classroom with the frozen estimator and scale. Both runs on the workstation (#7): the calibration room first, because it provides the interval scale the Classroom reuses unchanged. Calibration set: even ka plus (1, 6), (3, 8), (5, 10), whose truth Chat's smoke tests opened |
 | M-D11 | Visuals before calibration (Luiz, 2026-11-14, in Chat; #7) | the full calibration-room and Classroom runs (M-D10) move to the end, overnight. First a quick look at the Classroom: the frozen estimator on three stride-5 pairs, with the process figures and the provisional scale (1.68, from the smoke calibration), labelled provisional. The three pairs' truth is opened for the error overlays, so they are excluded from the final Classroom gate |
+| M-D12 | M3's acquisition (Luiz, 2026-11-14, in Chat; #7) | the final M3 runs re-render the calibration room and the Classroom `ahead` path at 1024 spp with an independent seed per look (`run --seed-base 1000`): 64 spp is far noisier than a camera at a normal exposure (σ 20–30 % of the signal), 1024 spp about 5–7 %. The estimator stays frozen at `7bb5e70`; the interval scale is recalibrated on the new calibration-room renders; M1–M2 keep their 64-spp results; the quick-look pairs (0, 5), (20, 25), (40, 45) stay out of the Classroom gate (`--exclude`); runs of about 45 min in total are OK'd |
 
 ## Experiment M1, the dolly
 
@@ -451,3 +452,22 @@ unwrapped (q, φ) images, |J_b − J_a| before and after moving J_a by the estim
 estimate, interval and the evaluation truth) and `slit_scan` (one azimuth over the whole sequence, with the traces the
 pair's two-frame depths predict for every frame, and the multi-frame relation cot e = (z_b − s) / L). Truth overlays are
 drawn dashed and marked EVALUATION; `--no-truth` omits them. An unfrozen result needs `--scale`, shown as provisional.
+
+**Flat-patch guard (#7, `7bb5e70`; Luiz's OK on #7, freeze moved there).** The frozen matcher raised `LinAlgError` on
+Classroom pair (20, 25): an anchor whose look-a patch lay on the ceiling lamps' glass (constant luminance 2.00018) gave
+a gain of 5e14 and a rank-1 system that stopped the whole batch (Code's diagnosis). A look-a patch flatter than 1e-9 is
+now rejected (`gn_failed`), and a singular batch is solved row by row. Against `1a1ffc9` the outputs are bit for bit
+identical on calibration-room pair (0, 5) and the front and corridor fixtures (Chat sandbox,
+[`identity_check.txt`](runs/issue-7/fix/identity_check.txt)). On the Classroom, which has flat emitters, they are not
+quite: at pair (0, 5) 3 of 48,752 anchors move from accepted to `half_disagree` through the guard in `_half`, every
+other array identical (Code, workstation, `fix_effect.txt` on `experiment/m3b-flow-depth-classroom`).
+
+**Render noise limits the Classroom (#7, Code, workstation, OPTIX; `docs/runs/issue-7/noise/` on
+`experiment/m3b-flow-depth-classroom`).** At 64 spp the per-pixel noise of a Classroom look is σ ≈ 0.04 RMS, about 20–30 %
+of the pixel's luminance at every contrast; median local contrast over noise is 0.97, and only a quarter of the pixels
+reach the c / σ ≥ 2 that NCC ≥ 0.8 needs (estimated). At 1024 spp σ falls by 3.97 (1/√spp: 4). The frozen matcher on pair
+(20, 25) with 1024-spp looks: accepted 0.26 (0.08 at 64 spp), usable 0.21 of anchors (0.04), interior median | p90 range
+error 0.019 | 0.057 (0.038 | 0.119); `low_ncc` 13 % (48 %), `ambiguous` 25 % (11 %): once the noise is gone, the board's
+weak or repetitive texture is the limit. `dolly-1` used one seed for every look, so its noise repeats across frames
+(residual correlation 0.158 between looks 20 and 25; 0.006 with different seeds). `run --seed-base N` now gives each look
+its own seed (N + k), recorded in `run.json`; without it, runs are as before.

@@ -138,6 +138,8 @@ def run(a) -> int:
               "target_source": "target_ray, found by the preflight" if "target_ray" in spec else "target_w",
               "path_file": str(Path(a.path)), "blend": str(blend), "blend_sha256": _sha256(blend),
               "profile": a.profile, "spp": a.spp, "device_requested": a.device, "modes": modes,
+              "seeds": ("the session's default for every look (noise pattern repeated across looks, #7)"
+                        if a.seed_base is None else f"per look: C seed = {a.seed_base} + k (independent noise, #7)"),
               "sensor": {"type": "foveated", "E2_deg": a.e2, "e_max_deg": a.emax}, "eye": "C",
               "git": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
               "command": sys.argv, "preflight": None if pre_ok is None else
@@ -152,8 +154,9 @@ def run(a) -> int:
             for k, h in enumerate(heads):
                 out = rd / mode / f"k{k:04d}"
                 t1 = time.perf_counter()
+                seeds = None if a.seed_base is None else {"C": int(a.seed_base) + k}
                 look = s.look(sensors.Foveated(E2_deg=a.e2, e_max_deg=a.emax), ("C",), g, head=h, spp=a.spp,
-                              out_dir=out, outputs=("exr", "records"))
+                              seeds=seeds, out_dir=out, outputs=("exr", "records"))
                 record["looks"][mode].append({"k": k, "out_dir": str(out.relative_to(rd)), "head": h.as_dict(),
                                               "head_source": look.response.get("head_source"),
                                               "render_seconds": look.response["eyes"]["C"]["render_seconds"],
@@ -347,8 +350,9 @@ def flow_depth_calibrate(a) -> int:
     from . import flow_depth_eval
     from . import flow_depth
     if a.from_result:
-        cal = flow_depth_eval.import_freeze(Path(a.result), Path(a.from_result))
-        print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} imported from {a.from_result}; every pair held out")
+        cal = flow_depth_eval.import_freeze(Path(a.result), Path(a.from_result),
+                                            exclude=flow_depth.parse_pairs(a.exclude) or ())
+        print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} imported from {a.from_result}; every pair held out except --exclude")
         print(f"{PREFIX} frozen -> {Path(a.result) / 'freeze.json'}")
         return 0
     cal = flow_depth_eval.calibrate(Path(a.result), a.parity, also=flow_depth.parse_pairs(a.also) or ())
@@ -432,7 +436,7 @@ def sandbox(a) -> int:
     ns = argparse.Namespace
     steps = [("preflight", preflight, ns(device="CPU", width=360, spp=2, **common)),
              ("run", run, ns(device="CPU", profile="small", spp=a.spp, modes=a.modes, e2=2.0, emax=45.0,
-                             no_preflight=False, **common)),
+                             no_preflight=False, seed_base=None, **common)),
              ("checks", checks, ns(run=str(rd))),
              ("depth", depth_cmd, ns(run=str(rd), strides=[1, 5, 10])),
              ("visualize", visualize, ns(run=str(rd), vis=str(rd / "visuals"), fps=6))]
@@ -465,6 +469,8 @@ def main(argv=None) -> int:
     r.add_argument("--e2", type=float, default=2.0)
     r.add_argument("--emax", type=float, default=45.0)
     r.add_argument("--no-preflight", action="store_true")
+    r.add_argument("--seed-base", type=int, default=None,
+                   help="per-look render seeds base + k, so noise is independent between looks (#7); default: the session's")
     p = sub.add_parser("checks")
     p.add_argument("--run", required=True)
     p = sub.add_parser("visualize")
@@ -482,6 +488,7 @@ def main(argv=None) -> int:
     p.add_argument("--parity", default="even", choices=("even", "odd"))
     p.add_argument("--also", default=None, help="further pairs for the calibration set, e.g. 1:6")
     p.add_argument("--from-result", default=None, help="import the frozen scale of this result (M3b); opens no truth")
+    p.add_argument("--exclude", default=None, help="with --from-result: pairs left out of the evaluation, e.g. 0:5,20:25")
     p = sub.add_parser("flow-depth-evaluate")
     p.add_argument("--result", required=True)
     p.add_argument("--gate", default="calibration", choices=("calibration", "classroom"))
