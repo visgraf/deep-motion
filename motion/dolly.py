@@ -350,8 +350,9 @@ def flow_depth_calibrate(a) -> int:
     from . import flow_depth_eval
     from . import flow_depth
     if a.from_result:
-        cal = flow_depth_eval.import_freeze(Path(a.result), Path(a.from_result))
-        print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} imported from {a.from_result}; every pair held out")
+        cal = flow_depth_eval.import_freeze(Path(a.result), Path(a.from_result),
+                                            exclude=flow_depth.parse_pairs(a.exclude) or ())
+        print(f"{PREFIX} interval scale {cal['interval_scale']:.3f} imported from {a.from_result}; every pair held out except --exclude")
         print(f"{PREFIX} frozen -> {Path(a.result) / 'freeze.json'}")
         return 0
     cal = flow_depth_eval.calibrate(Path(a.result), a.parity, also=flow_depth.parse_pairs(a.also) or ())
@@ -487,6 +488,7 @@ def main(argv=None) -> int:
     p.add_argument("--parity", default="even", choices=("even", "odd"))
     p.add_argument("--also", default=None, help="further pairs for the calibration set, e.g. 1:6")
     p.add_argument("--from-result", default=None, help="import the frozen scale of this result (M3b); opens no truth")
+    p.add_argument("--exclude", default=None, help="with --from-result: pairs left out of the evaluation, e.g. 0:5,20:25")
     p = sub.add_parser("flow-depth-evaluate")
     p.add_argument("--result", required=True)
     p.add_argument("--gate", default="calibration", choices=("calibration", "classroom"))

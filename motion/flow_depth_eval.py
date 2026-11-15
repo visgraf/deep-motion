@@ -280,7 +280,7 @@ def calibrate(result: Path, parity: str = "even", also=()) -> dict:
     return cal
 
 
-def import_freeze(result: Path, source: Path) -> dict:
+def import_freeze(result: Path, source: Path, exclude=()) -> dict:
     """M3b: freeze a new estimate (e.g. the Classroom) with the interval scale frozen on the calibration room,
     without opening any of its truth. The matcher settings must be identical; every pair is held out."""
     result, source = Path(result), Path(source)
@@ -297,9 +297,12 @@ def import_freeze(result: Path, source: Path) -> dict:
            "source_calibration": json.loads((source / "calibration.json").read_text())}
     (result / "calibration.json").write_text(json.dumps(cal, indent=1, default=float))
     files = {str(p.relative_to(result)): _sha(p) for p in [result / "config.json", result / "calibration.json", *_pairs(result)]}
+    ex = {tuple(p) for p in exclude}
     held = [[int(np.load(p)["ka"]), int(np.load(p)["kb"])] for p in _pairs(result)]
+    held = [p for p in held if tuple(p) not in ex]
     fr = {"schema": "foveal-motion-m3-freeze-v1", "frozen_settings": dict(src["frozen_settings"]), "sha256": files,
-          "held_out_pairs": held, "note": f"scale imported from {source}; no truth of this result was opened"}
+          "held_out_pairs": held, "excluded_pairs": sorted(list(p) for p in ex),
+          "note": f"scale imported from {source}; no truth of this result was opened; excluded pairs are not evaluated"}
     (result / "freeze.json").write_text(json.dumps(fr, indent=1, default=float))
     return cal
 
