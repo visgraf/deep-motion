@@ -58,7 +58,7 @@ def estimate(run: dict, window: str, refs, out: Path, settings=None, git=None, l
         t0 = time.perf_counter()
         ks = [r + o for o in WINDOWS[window]]
         ob = get(r)
-        al = flow_depth.alignment({k: (get(k).c, get(k).R) for k in [r] + ks}, [(k, r) for k in ks])
+        al = flow_depth.alignment({k: (get(k).c, get(k).R) for k in [r] + ks}, [(min(k, r), max(k, r)) for k in ks])  # #5's gate is earlier -> later
         if not al["ok"]:
             raise SystemExit(f"[m4] refused: alignment gate failed at r = {r}: {al['detail']}")
         h = ob.R @ [0, 0, -1.0]
