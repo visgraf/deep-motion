@@ -400,11 +400,33 @@ def flow_depth_figures(a) -> int:
 
 
 def m4_selftest(a) -> int:
-    from . import multiframe
+    from . import multibaseline, multiframe
     res, num = multiframe.selftest()
+    r2, _ = multibaseline.selftest()
+    res = res + r2
     for name, ok in res:
         print(f"{PREFIX} M4 selftest {'PASS' if ok else 'FAIL'} {name}")
     return 0 if all(ok for _, ok in res) else 1
+
+
+def m4_fixtures(a) -> int:
+    from . import multibaseline, multibaseline_fixtures
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    t0 = time.perf_counter()
+    res = multibaseline_fixtures.run_all(sensors.Foveated().model("full"), log=lambda m: print(m, flush=True))
+    import torch
+    res.update({"schema": "foveal-motion-m4-fixtures-v1", "settings": multibaseline.SETTINGS,
+                "torch": torch.__version__, "device": str(multibaseline.device()),
+                "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)},
+                "seconds": round(time.perf_counter() - t0, 1)})
+    (out / "fixtures.json").write_text(json.dumps(res, indent=1, default=float))
+    for g in res["gates"]:
+        print(f"{PREFIX} M4 fixture gate {'PASS' if g['ok'] else 'FAIL'} {g['fixture']}/{g['label']} {g['window']}: "
+              f"accepted {g['accepted_fraction']} median {g['median_px']} p90 {g['p90_px']}")
+    print(f"{PREFIX} {'ALL PASS' if res['ok'] else 'NOT ALL PASS'}, controls {'all fail' if res['controls_fail'] else 'NOT ALL FAIL'}"
+          f" ({res['seconds']} s) -> {out / 'fixtures.json'}")
+    return 0 if res["ok"] and res["controls_fail"] else 1
 
 
 # ----------------------------------------------------------------------------- visualize
@@ -512,6 +534,8 @@ def main(argv=None) -> int:
     p.add_argument("--reference", default=None, help="an oracle result (O1) drawn grey under the cloud")
     p.add_argument("--no-truth", action="store_true", help="omit the evaluation overlays")
     sub.add_parser("m4-selftest")
+    p = sub.add_parser("m4-fixtures")
+    p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("flow-depth")
@@ -535,7 +559,7 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest}[a.cmd](a)
+            "m4-selftest": m4_selftest, "m4-fixtures": m4_fixtures}[a.cmd](a)
 
 
 if __name__ == "__main__":
