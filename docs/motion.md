@@ -555,3 +555,59 @@ tolerates a much sloppier matcher: at 0.25 px a frame, what M3's accepted matche
 1 m windows make 0.86–0.90 of the field usable, against 0.23 for the pair; the fovea (< 2°) reaches 0.84 at 0.1 px with
 the two-sided window, against 0.02. Intervals cover 0.95 throughout. This is M4's ceiling; the RGB matcher has yet to
 show how much of it a real multi-frame cost recovers.
+
+### The multi-baseline matcher and its fixtures (M4a Stages 3–4, Chat sandbox)
+
+**Matcher** ([`motion/multibaseline.py`](../motion/multibaseline.py), PyTorch, CPU here, CUDA on the workstation).
+*Coarse* on M3's log-polar grid: for a given ζ the shift d_k(ζ) does not depend on the eccentricity, so each frame's
+whole grid moves by one fractional row shift; zero-mean NCC over M3's native-pixel windows, averaged over the frames whose
+window is valid, on a ζ grid of 0.5 native px of the longest step (134 values for ± 0.5 m, 268 for 1 m), ζ = 0 included.
+*Fine*: one joint Gauss–Newton per anchor on the native raster for ζ, its radial slope dζ/dq (which predicts every frame's
+stretch consistently, unlike M3's free κ) and a gain and offset per frame; σ_ζ from the joint covariance; then **frame
+consistency**: frames whose own NCC under the fit is below 0.5 are dropped and the fit repeated. *Rejections* as M3's
+(support, radial texture, NCC, ambiguity on the averaged curve, far envelope, near boundary, Gauss–Newton, neighbour
+support, depth edge), plus too few frames (< 3); M3's forward–backward and half-window tests are not carried over, the
+frames' mutual consistency taking their place. `m4-selftest`: 11 checks (5 geometry, 6 torch against numpy: the
+Foveated mapping equals fov-render's `pixel_of` within 1e-9 px, sampling and window sums equal M3's numpy), controls fail.
+(The commit `262e602` says 16 checks; it is 11.) One label fixed before the gated run: rim anchors whose patch leaves the
+disk were reported as `gn_failed` instead of `invalid_support`.
+
+**Plan correction.** #9 and #10 said the radial-edge wall would become a positive test. It cannot: under forward motion
+every point moves along its radial line, and that texture is constant along radial lines, so no number of frames gives it
+a displacement (the aperture problem is geometric). It stays a rejection test; only the periodic wall becomes positive.
+
+**Fixtures as sequences** ([`motion/multibaseline_fixtures.py`](../motion/multibaseline_fixtures.py)): M3's scenes, the
+reference frame at the origin, frames at the dolly's 0.0989565 m steps, noise 0.005. Error in *equivalent native px*:
+|ζ − ζ_true| × native px per q × the longest |t_k|, comparable with M3's px. Gates: #6's (median ≤ 0.1 px, p90 ≤ 0.25 px,
+≥ 100 accepted), #10's corridor bar (> M3's 0.173 at 1 m); set after the first M4 trials, and so stated: the periodic wall
+must also keep ≤ 1 % of accepted over 1 px, the radial wall must accept ≤ 1 %.
+
+`python -m motion.dolly m4-fixtures --out runs/m4-fixtures` at `564c6eb` (clean), torch 2.15.0+cpu, 1331 s, Chat
+sandbox ([`fixtures.json`](runs/issue-10/fixtures.json)). All 11 gates PASS, every control fails. Accepted | median | p90
+(equivalent px), against M3's matcher (frozen `7bb5e70`) on the same anchors and the pair over the same total baseline:
+
+| fixture / surface | M4 window | M4 | M3 pair | M3 |
+|---|---|---|---|---|
+| front (3 m) | 5 steps back | 0.872 \| 0.040 \| 0.113 | (−5, 0) | 0.834 \| 0.034 \| 0.103 |
+| front | 5 each side | **0.938** \| 0.017 \| 0.056 | | |
+| tilted 50° | 5 each side | 0.872 \| 0.017 \| 0.053 | (−5, 0) | 0.739 \| 0.039 \| 0.111 |
+| corridor, parallel | 5 steps back | 0.656 \| 0.050 \| 0.131 | (−5, 0) | 0.510 \| 0.047 \| 0.131 |
+| corridor, parallel | 10 steps back (1 m) | **0.456** \| 0.052 \| 0.139 | (−10, 0) | 0.149 \| 0.055 \| 0.165 |
+| corridor, end wall | 10 steps back | 0.952 \| 0.040 \| 0.107 | (−10, 0) | 0.883 \| 0.036 \| 0.105 |
+| **periodic wall** | 5 steps back | **0.851** \| 0.019 \| 0.058, none > 1 px | (−5, 0) | 0.052 \| **1.683** \| 2.838, **61 % > 1 px** |
+| periodic wall | 5 each side | 0.860 \| 0.007 \| 0.030 | | |
+| radial-edge wall | 5 each side | 0 accepted (rejected, as it must be) | | |
+| occlusion, interior | 5 each side | 0.896 \| 0.012 \| 0.039 | (−5, 0) | board 0.749, far 0.778 |
+
+Controls (front, 5 each side), each failing the gate: frame steps shuffled (0.08 % accepted, median 1.7 px); steps 20 %
+too long (median 0.87 px); every window frame from another texture on the same geometry (1.05 % accepted, but median
+0.074 px: failed on p90 only, 0.295). That last control is weak by design, and instructive: the foreign texture moves
+consistently with the geometry, so where it happens to resemble the reference texture the resemblance is the same in
+every frame and survives the average at the true ζ only. A foreign-*geometry* control replaces it from now on.
+Robustness, not gated: one foreign frame in the window keeps 0.851 accepted at median 0.018 px, with the median accepted
+anchor using 9 of 10 frames (frame consistency dropped the foreign one). Occlusion edges (within 3 px of the board's
+outline): 0.28 accepted, 7.5 % of them over 1 px.
+
+A first reading: the multi-baseline sum resolves what defeated M3, repeated texture (0 % → 85 % accepted, and M3's
+accepted 5 % there were mostly wrong), and roughly triples the parallel surfaces at 1 m (0.149 → 0.456), with equal or
+better precision everywhere (median 0.007–0.05 px). Run time on the sandbox's 2 cores: 35–105 s per reference frame.

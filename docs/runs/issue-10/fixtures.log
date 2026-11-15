@@ -1,0 +1,31 @@
+[m4-fixtures] front before5 (35.3 s): front acc 0.872 med 0.04 p90 0.113
+[m4-fixtures] front both5 (60.6 s): front acc 0.938 med 0.017 p90 0.056
+[m4-fixtures] tilted both5 (66.6 s): none acc 0.000 med None p90 None; tilted acc 0.872 med 0.017 p90 0.053
+[m4-fixtures] corridor before5 (51.4 s): front_far acc 0.963 med 0.039 p90 0.105; parallel acc 0.656 med 0.05 p90 0.131
+[m4-fixtures] corridor before10 (104.6 s): front_far acc 0.952 med 0.04 p90 0.107; parallel acc 0.456 med 0.052 p90 0.139
+[m4-fixtures] periodic before5 (35.4 s): periodic acc 0.851 med 0.019 p90 0.058
+[m4-fixtures] periodic both5 (67.9 s): periodic acc 0.860 med 0.007 p90 0.03
+[m4-fixtures] radial both5 (65.2 s): radial acc 0.000 med None p90 None
+[m4-fixtures] occlusion both5 (69.4 s): board acc 0.898 med 0.014 p90 0.043; far acc 0.853 med 0.012 p90 0.04
+[m4-fixtures] M3 pair (-5, 0) on front: front acc 0.834
+[m4-fixtures] M3 pair (-5, 0) on tilted: none acc 0.000; tilted acc 0.739
+[m4-fixtures] M3 pair (-5, 0) on corridor: front_far acc 0.932; parallel acc 0.510
+[m4-fixtures] M3 pair (-10, 0) on corridor: front_far acc 0.883; parallel acc 0.149
+[m4-fixtures] M3 pair (-5, 0) on periodic: periodic acc 0.052
+[m4-fixtures] M3 pair (-5, 0) on occlusion: board acc 0.749; far acc 0.778
+[m4-fixtures] control fails: frame steps shuffled: {'anchors': 48752, 'accepted': 37, 'accepted_fraction': 0.0007589432228421398, 'median_px': 1.7195291477066919, 'p90_px': 9.52026076655181, 'over_1px_of_accepted': 1.0}
+[m4-fixtures] control fails: steps 20 % too long: {'anchors': 48752, 'accepted': 45705, 'accepted_fraction': 0.9375, 'median_px': 0.8687783697899358, 'p90_px': 0.9334307910686703, 'over_1px_of_accepted': 0.0031068810852204354}
+[m4-fixtures] control fails: every window frame from another scene: {'anchors': 48752, 'accepted': 514, 'accepted_fraction': 0.010543157203807023, 'median_px': 0.07364211128022592, 'p90_px': 0.29491809642951006, 'over_1px_of_accepted': 0.0019455252918287938}
+[m4-fixtures] robustness, one foreign frame: {'one foreign frame (k = 3) in both5': {'anchors': 48752, 'accepted': 41475, 'accepted_fraction': 0.8507343288480472, 'median_px': 0.018125515392524418, 'p90_px': 0.06131584094441625, 'over_1px_of_accepted': 0.0}, 'median_frames_accepted': 9.0}
+[dolly] M4 fixture gate PASS front/front before5: accepted 0.871533475549721 median 0.04026755455959913 p90 0.11250940645876431
+[dolly] M4 fixture gate PASS front/front both5: accepted 0.9375 median 0.017197711284825157 p90 0.05609070503241932
+[dolly] M4 fixture gate PASS tilted/tilted both5: accepted 0.8715158772762935 median 0.016895530611249786 p90 0.05335547087386908
+[dolly] M4 fixture gate PASS corridor/parallel before5: accepted 0.6560844941068422 median 0.04967153966796304 p90 0.13147119235156807
+[dolly] M4 fixture gate PASS corridor/front_far before5: accepted 0.9633244234475042 median 0.039267902385443046 p90 0.10452728880834937
+[dolly] M4 fixture gate PASS corridor/parallel before10: accepted 0.4556865146180928 median 0.051549662518492 p90 0.13867669186756892
+[dolly] M4 fixture gate PASS corridor/front_far before10: accepted 0.9518244545285013 median 0.039725737337546294 p90 0.1067726233169561
+[dolly] M4 fixture gate PASS periodic/periodic before5: accepted 0.8513291762389236 median 0.018741672415019027 p90 0.05797046700484603
+[dolly] M4 fixture gate PASS periodic/periodic both5: accepted 0.8604159829340334 median 0.00720785073365853 p90 0.03007434302810281
+[dolly] M4 fixture gate PASS radial/radial both5: accepted 0.0 median None p90 None
+[dolly] M4 fixture gate PASS occlusion/interior both5: accepted 0.8964870581565233 median 0.0124814874395958 p90 0.03905656415100338
+[dolly] ALL PASS, controls all fail (1331.3 s) -> runs/m4-fixtures/fixtures.json
