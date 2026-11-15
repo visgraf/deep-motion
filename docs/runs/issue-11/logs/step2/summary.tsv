@@ -1,0 +1,1 @@
+s2-m4-calibration	0	178.6	14:36:58	14:39:57	.venv/bin/python -m motion.dolly m4-calibration --run runs/m3-calib-1024 --out runs/m4-calib-cuda --windows both5 before5

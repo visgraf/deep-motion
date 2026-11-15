@@ -1,0 +1,48 @@
+14:36:58 $ .venv/bin/python -m motion.dolly m4-calibration --run runs/m3-calib-1024 --out runs/m4-calib-cuda --windows both5 before5
+14:37:02 [m4] both5 r 5: accepted 0.402 (3 s)
+14:37:05 [m4] both5 r 6: accepted 0.395 (3 s)
+14:37:08 [m4] both5 r 7: accepted 0.394 (3 s)
+14:37:10 [m4] both5 r 8: accepted 0.392 (3 s)
+14:37:13 [m4] both5 r 9: accepted 0.387 (3 s)
+14:37:16 [m4] both5 r 10: accepted 0.394 (3 s)
+14:37:19 [m4] both5 r 11: accepted 0.395 (3 s)
+14:37:22 [m4] both5 r 13: accepted 0.384 (3 s)
+14:37:25 [m4] both5 r 15: accepted 0.385 (3 s)
+14:37:25 [m4] both5: interval scale 1.487 from 130603 anchors
+14:37:28 [m4] both5 r 12: accepted 0.393 (3 s)
+14:37:31 [m4] both5 r 14: accepted 0.387 (3 s)
+14:37:33 [m4] both5 r 16: accepted 0.387 (3 s)
+14:37:36 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+14:37:36   den = cm - 2 * c1 + cp
+14:37:38 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+14:37:38   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+14:37:48 [m4] held-out r 12: M4 usable 0.380, M3 usable 0.251
+14:38:02 [m4] held-out r 14: M4 usable 0.375, M3 usable 0.255
+14:38:16 [m4] held-out r 16: M4 usable 0.375, M3 usable 0.258
+14:38:18 [m4] before5 r 5: accepted 0.279 (2 s)
+14:38:20 [m4] before5 r 6: accepted 0.279 (2 s)
+14:38:21 [m4] before5 r 7: accepted 0.274 (2 s)
+14:38:23 [m4] before5 r 8: accepted 0.264 (2 s)
+14:38:24 [m4] before5 r 9: accepted 0.264 (2 s)
+14:38:26 [m4] before5 r 10: accepted 0.266 (2 s)
+14:38:27 [m4] before5 r 11: accepted 0.258 (2 s)
+14:38:29 [m4] before5 r 13: accepted 0.247 (2 s)
+14:38:31 [m4] before5 r 15: accepted 0.237 (2 s)
+14:38:32 [m4] before5 r 17: accepted 0.235 (2 s)
+14:38:34 [m4] before5 r 19: accepted 0.218 (2 s)
+14:38:35 [m4] before5 r 21: accepted 0.207 (2 s)
+14:38:36 [m4] before5: interval scale 1.650 from 117381 anchors
+14:38:37 [m4] before5 r 12: accepted 0.244 (2 s)
+14:38:39 [m4] before5 r 14: accepted 0.243 (2 s)
+14:38:40 [m4] before5 r 16: accepted 0.236 (2 s)
+14:38:42 [m4] before5 r 18: accepted 0.230 (2 s)
+14:38:44 [m4] before5 r 20: accepted 0.220 (2 s)
+14:38:58 [m4] held-out r 12: M4 usable 0.238, M3 usable 0.251
+14:39:13 [m4] held-out r 14: M4 usable 0.237, M3 usable 0.255
+14:39:27 [m4] held-out r 16: M4 usable 0.230, M3 usable 0.258
+14:39:42 [m4] held-out r 18: M4 usable 0.225, M3 usable 0.248
+14:39:56 [m4] held-out r 20: M4 usable 0.214, M3 usable 0.240
+14:39:56 [dolly] M4 both5 (calibration gate, held-out [12, 14, 16]): {"M4": {"field_usable_of_all_hits": 0.3651952495573813, "accepted_fraction": 0.38906438026474127, "interval_coverage_interior": 0.9469424879891786, "usable_interior_median_rel": 0.004295911962530443, "usable_interior_p90_rel": 0.0206604906620542, "fovea_usable": 0.2180940386230059, "gate": {"subset": 69704, "accepted_usable": 35071, "coverage_of_subset": 0.5031418569952943, "median_rel": 0.004154156848639278, "p90_rel": 0.018135941105092295, "over_50pct": 0.0032220352998203645, "gate_pass": true}}, "M3": {"field_usable_of_all_hits": 0.24703097336330543, "accepted_fraction": 0.27133245815556284, "interval_coverage_interior": 0.953517408675799, "usable_interior_median_rel": 0.009707555373953614, "usable_interior_p90_rel": 0.03056421699786161, "fovea_usable": 0.06821998320738874, "gate": {"subset": 69704, "accepted_usable": 22951, "coverage_of_subset": 0.32926374383105705, "median_rel": 0.009770065631100609, "p90_rel": 0.02952128500502875, "over_50pct": 0.0019171277939959044, "gate_pass": false}}}
+14:39:56 [dolly] M4 both5: gate PASS (control fails), interval coverage PASS (control fails)
+14:39:56 [dolly] M4 before5 (calibration gate, held-out [12, 14, 16, 18, 20]): {"M4": {"field_usable_of_all_hits": 0.22194990948696017, "accepted_fraction": 0.23463242533639644, "interval_coverage_interior": 0.9523788690801707, "usable_interior_median_rel": 0.008523434372059296, "usable_interior_p90_rel": 0.02541798129575444, "fovea_usable": 0.031612090680100756, "gate": {"subset": 115544, "accepted_usable": 40612, "coverage_of_subset": 0.35148514851485146, "median_rel": 0.008661800132527441, "p90_rel": 0.02528938165112985, "over_50pct": 0.00027085590465872155, "gate_pass": false}}, "M3": {"field_usable_of_all_hits": 0.24296882770693667, "accepted_fraction": 0.26532655070561206, "interval_coverage_interior": 0.9545257028635988, "usable_interior_median_rel": 0.00908528049547441, "usable_interior_p90_rel": 0.029099471010360048, "fovea_usable": 0.048110831234256926, "gate": {"subset": 115544, "accepted_usable": 38383, "coverage_of_subset": 0.3321937963027072, "median_rel": 0.009071878713217331, "p90_rel": 0.027956327997774418, "over_50pct": 0.002761639267383998, "gate_pass": false}}}
+14:39:56 [dolly] M4 before5: gate FAIL (control fails), interval coverage PASS (control fails)

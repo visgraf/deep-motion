@@ -1,0 +1,171 @@
+{
+ "schema": "foveal-motion-m4-eval-v2",
+ "window": "before5",
+ "gate_name": "classroom",
+ "gate_thresholds": {
+  "median": 0.1,
+  "p90": 0.25,
+  "coverage": 0.25,
+  "outlier50": 0.05,
+  "band_deg": [
+   5.0,
+   40.0
+  ]
+ },
+ "interval_scale": 1.6497316069396768,
+ "m3_scale": 1.625204104083527,
+ "held_out_refs": [
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  21,
+  22,
+  23,
+  24,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  41,
+  42,
+  43,
+  44,
+  46
+ ],
+ "excluded_refs": [
+  0,
+  5,
+  20,
+  25,
+  40,
+  45
+ ],
+ "imported_from": {
+  "frozen": "docs/runs/issue-10/frozen.json",
+  "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+  "source": "docs/runs/issue-10/stage5/before5",
+  "source_freeze_sha256": "e7cf4e6adef6a60119245a28e03597643d694c6d2f22f57870e81e101233615b"
+ },
+ "late_estimates_hashed_now": {
+  "r0006.npz": "87fe5f284a86be7680cff46548af06fa757b0762f90c8c84b7fa161ea7b21ea0",
+  "r0007.npz": "b0232390fc760b2d2faab9abf1de53ccf6e4f4d669547bd1ef50a45063000270",
+  "r0008.npz": "dbb4f2fcfada13d56793955ecc3257fbad2dfb88e7af50fcb7507681684595fb",
+  "r0009.npz": "c66a52d543af9633f9f1420b1ed607b6887a31b97784a3d1a1f57bfa2b6bd95d",
+  "r0010.npz": "41695011b5dbc1b8966c71dec4d1355dbf44c23e01de5bb28d337fa724e06e79",
+  "r0011.npz": "ad4b718da785bb1ce53523630ceb9015bd688583501bcb1e3806b63f7d431bc8",
+  "r0012.npz": "e16ac2b08dad327acd5e0d43b55350805154bc57c5bc5cd1360fa514684eda65",
+  "r0013.npz": "bfb5c837bfb2c1448d4f948b71c6a1485a636604a7c8c1f68de0dc662156a8e3",
+  "r0014.npz": "e68c4f32f5962e692435c6c80cb5e03570a34c71f270687dffa44d92b6499e3b",
+  "r0015.npz": "a3e22c51a2b246e87c7331b5d3a25a68a18174b590b0b7525c171ca6e83fbedc",
+  "r0016.npz": "73f33b4fe99e5389ce90fb73a248b2e1ec76fd17ceac2ea4c44a0efd09b55769",
+  "r0017.npz": "f036cb0571a8f5f9af62dad0395fdb8b067a251bca8ed768cac1c970ebdbe727",
+  "r0018.npz": "4c81ae4f524f573e8bec46e99308962ac5ec2ec41676039a5bd326788f9a9595",
+  "r0019.npz": "bfc34936305261d55c1c5c5504edc3282087b7e883d03d4df464d70f6db25e92",
+  "r0021.npz": "31ea28b502c15ccafdfa8bb4b244e4b16767a65d54e72fb77b3785f1cde8cd96",
+  "r0022.npz": "7983659959a05ca2315f77a39d59a8441df454fe09a096d195eca91f168c1c68",
+  "r0023.npz": "a9c4f62e76ee64abafb63a09c368d1b20eed0f6c21a0cccfd34c1e7ffc7a3aa3",
+  "r0024.npz": "f0fa7a80950631cee9a942e19abcc085045937e0e694207b6f14abe3df6fc4fa",
+  "r0026.npz": "8d5de225fcd08ac821e183d84756804e499ba675824c1f8015868284b6dcf26a",
+  "r0027.npz": "82db31888414b96eb3f4b8be16ef8de69f4acff59283ac30f1773e06e368f03a",
+  "r0028.npz": "c2f0291c66c9f2bd2c9e14b2a2de15fd9effb52c4fa0c48a1036d1f93ae5e6bd",
+  "r0029.npz": "db9ec771a7795e7e2d2b51c90bb76777f9c8e263fd22a30c335c9307e05ec1e8",
+  "r0030.npz": "32cd0fb0b6565d3d531cfe6194b7af910d7a75e0fa7d9a5b38a7e829b46f4548",
+  "r0031.npz": "0232dcc0dac0a3a24d5513967478bbbe820d17cb82023ebcebe6d1d22cd40b91",
+  "r0032.npz": "9ccf35746cc81978acef34ab4b0ec0e34e7072a17d960d6f7a2f9c36ac9461df",
+  "r0033.npz": "4212cdd8e833cdf2e3bbcc62e23d1d63cd5273a075c085b752afe3ff0ecd1375",
+  "r0034.npz": "6b3f924f3c185cfe611583379fdbf542677699dccc8ce405a9591406d3f88564",
+  "r0035.npz": "05521ae3a3c526f97e23cfaa28fb456b91677829e5fb977736d1a2c503c5a2bc",
+  "r0036.npz": "f71092abc3bed436b575b38ce320b3ff2526625b9b6761e21bb02a19655306c4",
+  "r0037.npz": "ff81174bdfda8f19749003160ab691688c4b85237977f0ccc7e0f967589aa23b",
+  "r0038.npz": "69be1c6132d0514a3a1b2ea9cdce91148686f1a483a841c9ba293920fcd8252e",
+  "r0039.npz": "9346a916e312c99728fa3d269ae68dead840c873a38a53299f35f25a2bc0e623",
+  "r0041.npz": "1eb2c2abecfc4715fdce523dec13ea4c1febdfa77f78f75053c13940116ed665",
+  "r0042.npz": "2d55ae01c32ac553283f7e3a7ac52b04536be7425204bf127728ff83eb46bed0",
+  "r0043.npz": "facdb0e204088dc9416840017d7787da7bdad16cce9fb029dd6a24915ab66e71",
+  "r0044.npz": "c6d631a1d54bc1937cb8133122b074745d97a92addbbc9473a59c8a286731798",
+  "r0046.npz": "600f3b7e9415a10cc5c5cf058c461d47473151d8e1ec8306eddcf46c7b45a9bb"
+ },
+ "M4": {
+  "field_usable_of_all_hits": 0.21189430609498047,
+  "accepted_fraction": 0.23030517389723165,
+  "interval_coverage_interior": 0.9172694221201684,
+  "usable_interior_median_rel": 0.017065651433874618,
+  "usable_interior_p90_rel": 0.04847227069623441,
+  "fovea_usable": 0.03807270746817346,
+  "gate": {
+   "subset": 696027,
+   "accepted_usable": 76197,
+   "coverage_of_subset": 0.109474201431841,
+   "median_rel": 0.016624058280302053,
+   "p90_rel": 0.046468399205844245,
+   "over_50pct": 0.0,
+   "gate_pass": false
+  }
+ },
+ "M3": {
+  "field_usable_of_all_hits": 0.2020832497307545,
+  "accepted_fraction": 0.2539992815263573,
+  "interval_coverage_interior": 0.9209292090170135,
+  "usable_interior_median_rel": 0.01871688664358788,
+  "usable_interior_p90_rel": 0.05595368713655357,
+  "fovea_usable": 0.06349989788276941,
+  "gate": {
+   "subset": 696027,
+   "accepted_usable": 79842,
+   "coverage_of_subset": 0.11471106724308108,
+   "median_rel": 0.017604763841277297,
+   "p90_rel": 0.0508997711344945,
+   "over_50pct": 0.00040079156333759175,
+   "gate_pass": false
+  }
+ },
+ "checks": [
+  {
+   "id": "M4.GATE",
+   "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+   "ok": false,
+   "control": "every step x 1.2",
+   "control_fails": true,
+   "control_detail": {
+    "subset": 696027,
+    "accepted_usable": 76197,
+    "coverage_of_subset": 0.109474201431841,
+    "median_rel": 0.19815281951350788,
+    "p90_rel": 0.23994167004916808,
+    "over_50pct": 2.624775253618909e-05,
+    "gate_pass": false
+   }
+  },
+  {
+   "id": "M4.COVER",
+   "what": "interior coverage of the 95 % intervals >= 0.9",
+   "ok": true,
+   "control": "intervals x 0.5",
+   "control_fails": true,
+   "control_detail": {
+    "coverage": 0.6627248373517031
+   }
+  }
+ ]
+}

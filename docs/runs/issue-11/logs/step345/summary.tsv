@@ -1,0 +1,4 @@
+s3-m4-classroom	0	1214.0	14:40:32	15:00:46	.venv/bin/python -m motion.dolly m4-classroom --run runs/dolly-1024 --out runs/m4-classroom --windows both5 before5 --every 1 --exclude 0 5 20 25 40 45 --gate classroom
+s4-m4-oracle	0	161.2	15:00:46	15:03:27	.venv/bin/python -m motion.dolly m4-oracle --run runs/dolly-1024 --refs $(seq 6 46) --exclude 0 5 20 25 40 45 --out runs/m4-classroom/oracle.json
+s5-m4-figures-r15	0	18.7	15:03:27	15:03:46	.venv/bin/python -m motion.dolly m4-figures --result runs/m4-classroom --ref 15 --out visuals/m4-classroom
+s5-m4-figures-r30	0	18.7	15:03:46	15:04:05	.venv/bin/python -m motion.dolly m4-figures --result runs/m4-classroom --ref 30 --out visuals/m4-classroom

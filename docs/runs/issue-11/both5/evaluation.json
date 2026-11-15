@@ -1,0 +1,163 @@
+{
+ "schema": "foveal-motion-m4-eval-v2",
+ "window": "both5",
+ "gate_name": "classroom",
+ "gate_thresholds": {
+  "median": 0.1,
+  "p90": 0.25,
+  "coverage": 0.25,
+  "outlier50": 0.05,
+  "band_deg": [
+   5.0,
+   40.0
+  ]
+ },
+ "interval_scale": 1.4874533063463462,
+ "m3_scale": 1.625204104083527,
+ "held_out_refs": [
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  21,
+  22,
+  23,
+  24,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34,
+  35,
+  36,
+  37,
+  38,
+  39,
+  41
+ ],
+ "excluded_refs": [
+  0,
+  5,
+  20,
+  25,
+  40,
+  45
+ ],
+ "imported_from": {
+  "frozen": "docs/runs/issue-10/frozen.json",
+  "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+  "source": "docs/runs/issue-10/stage5/both5",
+  "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+ },
+ "late_estimates_hashed_now": {
+  "r0006.npz": "499dfdfd1999388b77e550b82f6ef8413bba90e5d06037e6913cf9fcf0e8812b",
+  "r0007.npz": "9514d123f15a33968c8f6205a5dec9fd5a505af9c5c8efc0186622cd3da64a4b",
+  "r0008.npz": "20af1a206009785460a42e6c571c9af84d55c64ef857f02d0dbedc5405a1ce99",
+  "r0009.npz": "8dd992e779564a35c11c5e77a091f6629741faead2cb450a10bd4106ad7d4ee9",
+  "r0010.npz": "a4b0aab1e6219e6dcedfaab1835879bd01e4ba62d27b80e41636c4a65ec218c8",
+  "r0011.npz": "033888e79cac9a29af09cb5c5799afe28105d0b0baf391cc4e2ac18dbaf944c1",
+  "r0012.npz": "924f710c4a4995314b8241b738031cc5ce85ba46508f5560bb9200950a1e324a",
+  "r0013.npz": "0e191dbfb2e250d0ddfe003ea45963d73c52ac417b7c29622e2e2378550ebe8d",
+  "r0014.npz": "9899f11b6e8108049d89d7a2525c98b4e0b8de4c53a00b42a56e773c29196178",
+  "r0015.npz": "573922a047102208dcbe639c5c8d2186f1a6aa98a661feaf3baba2273768aecb",
+  "r0016.npz": "7e6ae8c9668d759fefb7470513ac28452368afbf8fe7610d41a009f9c0159f94",
+  "r0017.npz": "7e90ea2eea7fe4415e3955fe9124cb5661520112b6c06722cc67eae1451fd4a4",
+  "r0018.npz": "3e2c2f9e536e7183f931ae64add8384b8ff129c2ae35082fca1052c57adfade4",
+  "r0019.npz": "b23a6b37ad5bbe1c4ba08651818d562b62b4dd1f993210d87f43405ff1ffb9dc",
+  "r0021.npz": "b5d652fcb260490ab2b230f1a024de0ddd0c9b2f4f271b80d612e71aecbbdc06",
+  "r0022.npz": "1d95bfe38911e38cfa2433d176455e1afd3f323787bbc9ee63aa6c1f45d95894",
+  "r0023.npz": "3dc2052ef10a2ac831a6778c97c6e4a9d0fa19ab081b843c5f6e1ccc4b4bd8c8",
+  "r0024.npz": "5a4fc0e7413f2430547ce78b93997f5cabbc46428e0d973812bb7e05de32ec79",
+  "r0026.npz": "7905444e71f9b8c20f7a95732e657ed4e60b945e025ec2f4d5b73b6526753c01",
+  "r0027.npz": "fc478a6502fffd4fff723b7860d88870280f39758fd44865ca3673f81c18c61d",
+  "r0028.npz": "786d8257b21e22a1b1b0ae194782e15f7f2ba698775a835c316720c15148667c",
+  "r0029.npz": "b02355d90b87995a8e1ec7adfe27b4334457ce7b9641fae63fd494b2c61818ad",
+  "r0030.npz": "561da6d2ef4e4b3161c5d5f73d857625c1c2f8d0bc258b63851456a52caa37fb",
+  "r0031.npz": "28cfe8cff66a3425f1cd3f8825ab57d93cfba32951ef058b965fbd16e6bb9cdb",
+  "r0032.npz": "279211f8480919fc957f8fc32f949d90701e0e6eb57204015a4eed2bab8cdc3c",
+  "r0033.npz": "42ae132356340bf4be85d311b517d32bc7c8d6a6b6b969375660a52c43b9e018",
+  "r0034.npz": "e0c9d9aab3bf04f437668ae05184da853428817b43d6bd8cff19d21290db43a2",
+  "r0035.npz": "19ade53ea2782c60fadb1588ada073a47046cd0e934fcbf5b57258d38b503911",
+  "r0036.npz": "5bab22372b0783252014b789fe763741dbc51e6dc752aac1f0af5d3b4c486e9d",
+  "r0037.npz": "72ff9b934cc04a33a4b896cd781a66985e76866d64f26f2f06e4d9cbc30b69f6",
+  "r0038.npz": "f99c5f343864e7e1655459272fc09081dbb88dc0b84bc65b7e4bfd9080f180e6",
+  "r0039.npz": "9d14f41df3af51fdfc94d7b894287f643164872d4509c1572837ba0b8b60adbb",
+  "r0041.npz": "5b2a86ea754f1c671ee4a1bfa398b7554f4aa2611e8c69dd46ecc068d51d8a9f"
+ },
+ "M4": {
+  "field_usable_of_all_hits": 0.4546659671256289,
+  "accepted_fraction": 0.49171005261011824,
+  "interval_coverage_interior": 0.9385845929260059,
+  "usable_interior_median_rel": 0.01146352322462628,
+  "usable_interior_p90_rel": 0.03771305958411376,
+  "fovea_usable": 0.2553621860926647,
+  "gate": {
+   "subset": 608225,
+   "accepted_usable": 223610,
+   "coverage_of_subset": 0.3676435529614863,
+   "median_rel": 0.010907702410997505,
+   "p90_rel": 0.03513471864967326,
+   "over_50pct": 0.0,
+   "gate_pass": true
+  }
+ },
+ "M3": {
+  "field_usable_of_all_hits": 0.19640202996746162,
+  "accepted_fraction": 0.25193123390120437,
+  "interval_coverage_interior": 0.9195992257409406,
+  "usable_interior_median_rel": 0.019557037185501502,
+  "usable_interior_p90_rel": 0.058363461912537544,
+  "fovea_usable": 0.05012976108693993,
+  "gate": {
+   "subset": 608225,
+   "accepted_usable": 66856,
+   "coverage_of_subset": 0.10991984874018661,
+   "median_rel": 0.018280174495779206,
+   "p90_rel": 0.05244884356238251,
+   "over_50pct": 0.00046368313988273305,
+   "gate_pass": false
+  }
+ },
+ "checks": [
+  {
+   "id": "M4.GATE",
+   "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+   "ok": true,
+   "control": "every step x 1.2",
+   "control_fails": true,
+   "control_detail": {
+    "subset": 608225,
+    "accepted_usable": 223610,
+    "coverage_of_subset": 0.3676435529614863,
+    "median_rel": 0.1986985224199566,
+    "p90_rel": 0.22866405961643207,
+    "over_50pct": 2.2360359554581637e-05,
+    "gate_pass": false
+   }
+  },
+  {
+   "id": "M4.COVER",
+   "what": "interior coverage of the 95 % intervals >= 0.9",
+   "ok": true,
+   "control": "intervals x 0.5",
+   "control_fails": true,
+   "control_detail": {
+    "coverage": 0.748240625285119
+   }
+  }
+ ]
+}
