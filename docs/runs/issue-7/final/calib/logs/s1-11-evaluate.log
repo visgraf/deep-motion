@@ -1,0 +1,31 @@
+21:39:55 $ .venv/bin/python -m motion.dolly flow-depth-evaluate --result runs/m3-calib-1024-rgb --gate calibration
+21:39:57 [flow-depth] reconstruction written (1.4 s); opening held-out truth
+21:39:57 [flow-depth] held-out (1, 2) evaluated
+21:39:57 [flow-depth] held-out (3, 4) evaluated
+21:39:57 [flow-depth] held-out (5, 6) evaluated
+21:39:57 [flow-depth] held-out (7, 8) evaluated
+21:39:58 [flow-depth] held-out (9, 10) evaluated
+21:39:58 [flow-depth] held-out (11, 12) evaluated
+21:39:58 [flow-depth] held-out (13, 14) evaluated
+21:39:58 [flow-depth] held-out (15, 16) evaluated
+21:39:58 [flow-depth] held-out (17, 18) evaluated
+21:39:59 [flow-depth] held-out (19, 20) evaluated
+21:39:59 [flow-depth] held-out (1, 11) evaluated
+21:39:59 [flow-depth] held-out (3, 13) evaluated
+21:39:59 [flow-depth] held-out (5, 15) evaluated
+21:39:59 [flow-depth] held-out (7, 17) evaluated
+21:40:00 [flow-depth] held-out (9, 19) evaluated
+21:40:00 [flow-depth] held-out (11, 21) evaluated
+21:40:00 [flow-depth] held-out (7, 12) evaluated
+21:40:00 [flow-depth] held-out (9, 14) evaluated
+21:40:00 [flow-depth] held-out (11, 16) evaluated
+21:40:00 [flow-depth] held-out (13, 18) evaluated
+21:40:01 [flow-depth] held-out (15, 20) evaluated
+21:40:01 [dolly] M3.PLY  PASS  control fails  reconstruction.ply reads back and every point lies on its anchor ray (<= 0.001 deg): {"points": 205614, "max_ray_angle_deg": 1.1085439139543844e-05, "control_median_deg": 93.88244201143274}
+21:40:01 [dolly] M3.COV  PASS  control fails  held-out coverage of nominal 95 % intervals >= 0.9 (interior anchors): {"n": 202370, "coverage": 0.9485200375549736, "control_coverage": 0.7871868359934773, "scale": 1.625204104083527}
+21:40:01 [dolly] M3.CAL  FAIL  control fails  held-out calibration gate at stride 5: textured, jointly visible, interior 5-40 deg hits: median <= 0.05, p90 <= 0.1, accepted >= 0.5: {"by_stride": {"1": {"subset": 243078, "accepted_usable": 14591, "coverage": 0.06002599988481064, "median_rel": 0.020837012897442272, "p90_rel": 0.06749971160648952, "over_50pct": 0.017133849633335616}, "5": {"subset": 115544, "accepted_usable": 38383, "coverage": 0.3321937963027072, "median_rel": 0.009071878713217331, "p90_rel": 0.027956327997774418, "over_50pct": 0.002761639267383998}, "10": {"subset": 128759, "accepted_usable": 34782, "coverage": 0.27013257325701506, "median_rel": 0.0056295565411181026, "p90_rel": 0.01774407714267338, "over_50pct": 0.00736012880225404}}, "control": {"coverage": 0.3321937963027072, "median_rel": 0.19786948387434425, "p90_rel": 0.22098350997019278, "over_50pct": 0.0022926816559414322}}
+21:40:01 [dolly] displacement error, accepted held-out interior: {"n": 202370, "median": 0.03918649508846139, "p90": 0.1373273154909474, "over_1px": 0.008533873597865296}
+21:40:01 [dolly] usable edge points, range error: {"n": 42146, "median": 0.01409658147385024, "p90": 0.5354832261563641, "over_50pct": 0.12480425188630001}
+21:40:01         stride  1: field usable 0.048 within10% 0.226 | 5-40deg usable 0.054 median inf | fovea usable 0.000 | ladder O2 pixel 0.000, O3 0.05 px 0.266, O3 0.10 px 0.022
+21:40:01         stride  5: field usable 0.243 within10% 0.241 | 5-40deg usable 0.284 median inf | fovea usable 0.032 | ladder O2 pixel 0.204, O3 0.05 px 0.881, O3 0.10 px 0.829
+21:40:01         stride 10: field usable 0.190 within10% 0.180 | 5-40deg usable 0.218 median inf | fovea usable 0.059 | ladder O2 pixel 0.537, O3 0.05 px 0.843, O3 0.10 px 0.830

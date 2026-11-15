@@ -1,0 +1,13 @@
+s1-01-sandbox	0	15.1	21:27:12	21:27:27	.venv/bin/python -m motion.dolly sandbox --run runs/calib-dolly-ws
+s1-02-preflight	0	8.9	21:27:27	21:27:36	.venv/bin/python -m motion.dolly preflight --path paths/calib_dolly.json --run runs/m3-calib-1024 --blend runs/calib-scene/scenes/calib_room.blend --device OPTIX --width 360 --spp 2
+s1-03-run	0	16.1	21:27:36	21:27:52	.venv/bin/python -m motion.dolly run --path paths/calib_dolly.json --run runs/m3-calib-1024 --blend runs/calib-scene/scenes/calib_room.blend --device OPTIX --profile full --spp 1024 --modes ahead --seed-base 1000
+s1-04-checks	0	2.4	21:27:52	21:27:54	.venv/bin/python -m motion.dolly checks --run runs/m3-calib-1024
+s1-05-depth	0	2.0	21:27:54	21:27:56	.venv/bin/python -m motion.dolly depth --run runs/m3-calib-1024
+s1-06-O1	0	7.4	21:27:56	21:28:04	.venv/bin/python -m motion.dolly flow-depth --run runs/m3-calib-1024 --strides 1 5 10 --correspondence oracle-exact --out runs/m3-calib-1024-O1
+s1-07-O2	0	6.5	21:28:04	21:28:10	.venv/bin/python -m motion.dolly flow-depth --run runs/m3-calib-1024 --strides 1 5 10 --correspondence oracle-pixel --out runs/m3-calib-1024-O2
+s1-08-O3	0	21.4	21:28:10	21:28:32	.venv/bin/python -m motion.dolly flow-depth --run runs/m3-calib-1024 --strides 1 5 10 --correspondence oracle-noise --sigma-px 0.05 0.1 0.25 --seed 0 --out runs/m3-calib-1024-O3
+s1-09-rgb	0	681.7	21:28:32	21:39:53	.venv/bin/python -m motion.dolly flow-depth --run runs/m3-calib-1024 --strides 1 5 10 --correspondence rgb --out runs/m3-calib-1024-rgb
+s1-10-calibrate	0	1.6	21:39:53	21:39:55	.venv/bin/python -m motion.dolly flow-depth-calibrate --result runs/m3-calib-1024-rgb --parity even --also 1:6,3:8,5:10
+s1-11-evaluate	1	6.0	21:39:55	21:40:01	.venv/bin/python -m motion.dolly flow-depth-evaluate --result runs/m3-calib-1024-rgb --gate calibration
+s1-12-preview	0	4.6	21:40:09	21:40:13	.venv/bin/python -m motion.dolly flow-depth-preview --result runs/m3-calib-1024-rgb --reference runs/m3-calib-1024-O1 --out visuals/m3-calib-1024-rgb.png
+s1-13-figures	0	1.8	21:40:13	21:40:15	.venv/bin/python -m motion.dolly flow-depth-figures --result runs/m3-calib-1024-rgb --pair 7:12 --reference runs/m3-calib-1024-O1 --out visuals/m3-calib-1024-figs

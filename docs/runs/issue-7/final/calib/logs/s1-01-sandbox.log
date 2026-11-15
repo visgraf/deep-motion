@@ -1,0 +1,86 @@
+21:27:12 $ .venv/bin/python -m motion.dolly sandbox --run runs/calib-dolly-ws
+21:27:12 [dolly] sandbox: preflight
+21:27:12 [dolly] preflight: 22 heads + 1 control, 360 px, 2 spp, CPU
+21:27:19 [preflight] k= 21 [-0.3, 0.6, 1.5] holes 0.00000 nearest 0.7735984446809432 ok
+21:27:19 [preflight] target target_w [0.0, 2.0, 1.6] (): visible from every head True, occluded []; hidden control hidden True
+21:27:19 [preflight] PASS over 22 heads; control fails as it must: ['clearance']
+21:27:19 [dolly] sandbox: run
+21:27:20 [dolly] target k=  0 head [-0.3, -1.5, 1.5] 0.30 s
+21:27:20 [dolly] target k=  1 head [-0.3, -1.4, 1.5] 0.08 s
+21:27:20 [dolly] target k=  2 head [-0.3, -1.3, 1.5] 0.10 s
+21:27:20 [dolly] target k=  3 head [-0.3, -1.2, 1.5] 0.09 s
+21:27:20 [dolly] target k=  4 head [-0.3, -1.1, 1.5] 0.08 s
+21:27:20 [dolly] target k=  5 head [-0.3, -1.0, 1.5] 0.08 s
+21:27:20 [dolly] target k=  6 head [-0.3, -0.9, 1.5] 0.09 s
+21:27:20 [dolly] target k=  7 head [-0.3, -0.8, 1.5] 0.09 s
+21:27:20 [dolly] target k=  8 head [-0.3, -0.7, 1.5] 0.08 s
+21:27:21 [dolly] target k=  9 head [-0.3, -0.6, 1.5] 0.08 s
+21:27:21 [dolly] target k= 10 head [-0.3, -0.5, 1.5] 0.08 s
+21:27:21 [dolly] target k= 11 head [-0.3, -0.4, 1.5] 0.08 s
+21:27:21 [dolly] target k= 12 head [-0.3, -0.3, 1.5] 0.08 s
+21:27:21 [dolly] target k= 13 head [-0.3, -0.2, 1.5] 0.08 s
+21:27:21 [dolly] target k= 14 head [-0.3, -0.1, 1.5] 0.08 s
+21:27:21 [dolly] target k= 15 head [-0.3, -0.0, 1.5] 0.08 s
+21:27:21 [dolly] target k= 16 head [-0.3, 0.1, 1.5] 0.09 s
+21:27:21 [dolly] target k= 17 head [-0.3, 0.2, 1.5] 0.08 s
+21:27:21 [dolly] target k= 18 head [-0.3, 0.3, 1.5] 0.08 s
+21:27:21 [dolly] target k= 19 head [-0.3, 0.4, 1.5] 0.08 s
+21:27:21 [dolly] target k= 20 head [-0.3, 0.5, 1.5] 0.08 s
+21:27:21 [dolly] target k= 21 head [-0.3, 0.6, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  0 head [-0.3, -1.5, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  1 head [-0.3, -1.4, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  2 head [-0.3, -1.3, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  3 head [-0.3, -1.2, 1.5] 0.09 s
+21:27:22 [dolly] ahead k=  4 head [-0.3, -1.1, 1.5] 0.09 s
+21:27:22 [dolly] ahead k=  5 head [-0.3, -1.0, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  6 head [-0.3, -0.9, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  7 head [-0.3, -0.8, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  8 head [-0.3, -0.7, 1.5] 0.08 s
+21:27:22 [dolly] ahead k=  9 head [-0.3, -0.6, 1.5] 0.08 s
+21:27:22 [dolly] ahead k= 10 head [-0.3, -0.5, 1.5] 0.09 s
+21:27:22 [dolly] ahead k= 11 head [-0.3, -0.4, 1.5] 0.09 s
+21:27:23 [dolly] ahead k= 12 head [-0.3, -0.3, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 13 head [-0.3, -0.2, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 14 head [-0.3, -0.1, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 15 head [-0.3, -0.0, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 16 head [-0.3, 0.1, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 17 head [-0.3, 0.2, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 18 head [-0.3, 0.3, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 19 head [-0.3, 0.4, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 20 head [-0.3, 0.5, 1.5] 0.08 s
+21:27:23 [dolly] ahead k= 21 head [-0.3, 0.6, 1.5] 0.08 s
+21:27:23 [dolly] 44 looks in 4.32 s -> runs/calib-dolly-ws
+21:27:23 [dolly] sandbox: checks
+21:27:25 [dolly] M1.0  PASS  control fails  every record agrees with its Position pass (S4's limit)
+21:27:25         target: {"max_p999_deg": 0.003878571987025509, "pixel_deg": 2.3552225364135766}
+21:27:25         ahead: {"max_p999_deg": 0.004366801527336821, "pixel_deg": 2.3552225364135766}
+21:27:25 [dolly] M1.1  PASS  control fails  every record sits on its path head
+21:27:25         target: {"looks": 22, "max_origin_err_m": 0.0, "max_R_err": 0.0, "max_eye_origin_err_m": 0.0, "ks": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]}
+21:27:25         ahead: {"looks": 22, "max_origin_err_m": 0.0, "max_R_err": 0.0, "max_eye_origin_err_m": 0.0, "ks": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]}
+21:27:25 [dolly] M1.2  PASS  control fails  in target mode the fovea's centre lands on target_w
+21:27:25         target: {"looks": 22, "on_target": 22, "on_shifted_target": 0, "max_err_m": 0.0044337267538766, "max_tol_m": 0.012644873730887303}
+21:27:25         ahead: {"looks": 22, "on_target": 0, "on_shifted_target": 0, "max_err_m": 3.017014610798621, "max_tol_m": 0.012644873730887303}
+21:27:25 [dolly] M1.3  PASS  control fails  look k+1's points reproject onto look k's surface (>= 0.8)
+21:27:25         target: {"pairs": 21, "min_fraction": 0.9219500480307397, "median_fraction": 0.9340377841818764, "max_control_fraction": 0.3411293552262715, "control_lost_half": true}
+21:27:25         ahead: {"pairs": 21, "min_fraction": 0.9368395773294909, "median_fraction": 0.9489273134806276, "max_control_fraction": 0.33461476854076566, "control_lost_half": true}
+21:27:25 [dolly] M3.0  PASS  control fails  heading = eye axis in both looks, no rotation between them (#5's gate)
+21:27:25         ahead: {"pairs": 21, "tol_rad": 1e-06, "max_axis_rad": 0.0, "max_rotation_rad": 0.0, "min_B_m": 0.09999999999999987, "observation_loader_refuses_oracle": true}
+21:27:25 [dolly] flow per step (0.1000 m), median deg | px, by eccentricity:
+21:27:25         target 0-1: 0.095|0.75  1-2: 0.134|0.89  2-5: 0.157|0.65  5-10: 0.234|0.61  10-20: 0.348|0.52  20-30: 0.594|0.49  30-45: 0.998|0.55
+21:27:25         ahead  0-1: 0.012|0.09  1-2: 0.028|0.16  2-5: 0.074|0.25  5-10: 0.146|0.30  10-20: 0.285|0.34  20-30: 0.508|0.39  30-45: 0.962|0.52
+21:27:25 [dolly] ALL PASS -> runs/calib-dolly-ws/checks.json
+21:27:25 [dolly] sandbox: depth
+21:27:26 [dolly] M2.1 PASS  control fails  exact triangulation along the path returns the true range: {"samples": 492372, "max_rel": 2.0876420690406235e-08, "control_samples": 117135, "control_median_rel": 0.10000000000004722}
+21:27:26 [dolly] range from motion, pixel-limited: median relative error | usable (<= 10%) by eccentricity; fovea: error, bracket (what the pixel supports), same-pixel share; model: median error / (range sqrt(omega_a/12) / (|T| sin psi)), 0.87 for rounding alone
+21:27:26         target 0.10 m  0-1: 0.088|0.476  1-2: 0.199|0.226  2-5: 0.306|0.135  5-10: 0.399|0.126  10-20: 0.482|0.101  20-30: 0.548|0.075  30-45: 0.557|0.045   fovea<2deg 0.168|0.312 bracket 0.421|0.021 same px 0.338   field usable 0.101 bracket 0.004   no range 0.15   measured/model 1.000
+21:27:26         target 0.50 m  0-1: 0.031|0.709  1-2: 0.049|0.664  2-5: 0.057|0.582  5-10: 0.082|0.493  10-20: 0.112|0.401  20-30: 0.099|0.432  30-45: 0.090|0.503   fovea<2deg 0.043|0.679 bracket 0.106|0.349 same px 0.066   field usable 0.479 bracket 0.083   no range 0.00   measured/model 1.307
+21:27:26         target 1.00 m  0-1: 0.017|0.781  1-2: 0.029|0.815  2-5: 0.030|0.710  5-10: 0.043|0.661  10-20: 0.060|0.606  20-30: 0.056|0.615  30-45: 0.049|0.734   fovea<2deg 0.025|0.803 bracket 0.069|0.800 same px 0.022   field usable 0.667 bracket 0.305   no range 0.00   measured/model 1.701
+21:27:26         ahead  0.10 m  0-1: inf|0.000  1-2: inf|0.000  2-5: inf|0.004  5-10: inf|0.031  10-20: inf|0.029  20-30: inf|0.034  30-45: inf|0.039   fovea<2deg inf|0.000 bracket inf|0.000 same px 1.000   field usable 0.028 bracket 0.000   no range 0.78   measured/model 1.253
+21:27:26         ahead  0.50 m  0-1: inf|0.000  1-2: 0.293|0.097  2-5: 0.137|0.337  5-10: 0.135|0.353  10-20: 0.135|0.337  20-30: 0.114|0.389  30-45: 0.101|0.452   fovea<2deg 0.391|0.064 bracket 0.594|0.000 same px 0.313   field usable 0.363 bracket 0.001   no range 0.02   measured/model 1.569
+21:27:26         ahead  1.00 m  0-1: 0.312|0.167  1-2: 0.195|0.229  2-5: 0.088|0.482  5-10: 0.080|0.526  10-20: 0.058|0.641  20-30: 0.056|0.623  30-45: 0.047|0.743   fovea<2deg 0.223|0.208 bracket 0.556|0.000 same px 0.066   field usable 0.604 bracket 0.119   no range 0.00   measured/model 1.741
+21:27:26 [dolly] PASS -> runs/calib-dolly-ws/depth.json
+21:27:26 [dolly] sandbox: visualize
+21:27:27 [dolly] wrote runs/calib-dolly-ws/visuals/contact_sheet.png
+21:27:27 [dolly] wrote runs/calib-dolly-ws/visuals/flow.png
+21:27:27 [dolly] wrote runs/calib-dolly-ws/visuals/depth.png
+21:27:27 [dolly] wrote runs/calib-dolly-ws/visuals/dolly.mp4

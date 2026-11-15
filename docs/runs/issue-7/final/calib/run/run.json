@@ -1,0 +1,831 @@
+{
+ "schema": "foveal-motion-run-v1",
+ "experiment": "M1 dolly",
+ "path": {
+  "schema": "foveal-motion-path-v1",
+  "name": "calib_dolly",
+  "scene": "runs/calib-scene/scenes/calib_room.blend",
+  "start_w": [
+   -0.3,
+   -1.5,
+   1.5
+  ],
+  "end_w": [
+   -0.3,
+   0.6,
+   1.5
+  ],
+  "n_looks": 22,
+  "facing_w": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "target_w": [
+   0.0,
+   2.0,
+   1.6
+  ],
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.001,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    -0.3,
+    4.9,
+    1.5
+   ]
+  },
+  "source": {
+   "scene": "fov-render's calibration room (fov_render/checks/fixtures/make_calib_room.py): a closed room x -3..3, y -2.5..5, z 0..3.2 m, EYE at (0, 0, 1.6), the Siemens-star rings centred on (0, 2, 1.6), 2 m ahead of the EYE",
+   "path": "Chat's choice for the sandbox: 2.1 m along +Y in 10 cm steps, 0.3 m left of and 0.1 m below the EYE's line so 'ahead' does not land on the target; ends 1.4 m before the ring plane. The depth ladder is on the right (x > 0), the wire harp at x < -1.2",
+   "target_w": "the centre card of the ring at eccentricity 0, at the EYE's primary gaze 2 m ahead",
+   "limits": "fov-render docs/scenes/calib_room.json (hole fraction 0.001, clearance 0.25 m)",
+   "control_head_w": "0.10 m from the far wall (y = 5): must fail the clearance"
+  }
+ },
+ "target_source": "target_w",
+ "path_file": "paths/calib_dolly.json",
+ "blend": "/home/lvelho/rd/foveal-motion/runs/calib-scene/scenes/calib_room.blend",
+ "blend_sha256": "0c1876229ab0e523c69c57942a418c958d30d618a72663b8dd9d454de9f4dcbd",
+ "profile": "full",
+ "spp": 1024,
+ "device_requested": "OPTIX",
+ "modes": [
+  "ahead"
+ ],
+ "seeds": "per look: C seed = 1000 + k (independent noise, #7)",
+ "sensor": {
+  "type": "foveated",
+  "E2_deg": 2.0,
+  "e_max_deg": 45.0
+ },
+ "eye": "C",
+ "git": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "command": [
+  "/home/lvelho/rd/foveal-motion/motion/dolly.py",
+  "run",
+  "--path",
+  "paths/calib_dolly.json",
+  "--run",
+  "runs/m3-calib-1024",
+  "--blend",
+  "runs/calib-scene/scenes/calib_room.blend",
+  "--device",
+  "OPTIX",
+  "--profile",
+  "full",
+  "--spp",
+  "1024",
+  "--modes",
+  "ahead",
+  "--seed-base",
+  "1000"
+ ],
+ "preflight": {
+  "ok": true,
+  "control_fails": true,
+  "summary": {
+   "max_hole_fraction": 0.0,
+   "min_nearest_surface_m": 0.7107432736039597,
+   "max_backface_closed_fraction": 0.0,
+   "failing_heads": [],
+   "target_occluded_heads": [],
+   "target_w": [
+    0.0,
+    2.0,
+    1.6
+   ]
+  }
+ },
+ "looks": {
+  "ahead": [
+   {
+    "k": 0,
+    "out_dir": "ahead/k0000",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -1.5,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.849482142002671,
+    "wall_seconds": 0.983
+   },
+   {
+    "k": 1,
+    "out_dir": "ahead/k0001",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -1.4,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5604767829936463,
+    "wall_seconds": 0.691
+   },
+   {
+    "k": 2,
+    "out_dir": "ahead/k0002",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -1.3,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5572063330037054,
+    "wall_seconds": 0.683
+   },
+   {
+    "k": 3,
+    "out_dir": "ahead/k0003",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -1.2,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5552456949953921,
+    "wall_seconds": 0.681
+   },
+   {
+    "k": 4,
+    "out_dir": "ahead/k0004",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -1.1,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5589219959947513,
+    "wall_seconds": 0.683
+   },
+   {
+    "k": 5,
+    "out_dir": "ahead/k0005",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5557644140062621,
+    "wall_seconds": 0.683
+   },
+   {
+    "k": 6,
+    "out_dir": "ahead/k0006",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.9,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5658536569972057,
+    "wall_seconds": 0.691
+   },
+   {
+    "k": 7,
+    "out_dir": "ahead/k0007",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.8,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5569008419988677,
+    "wall_seconds": 0.682
+   },
+   {
+    "k": 8,
+    "out_dir": "ahead/k0008",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.7,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5598259319958743,
+    "wall_seconds": 0.685
+   },
+   {
+    "k": 9,
+    "out_dir": "ahead/k0009",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.6,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5577125950076152,
+    "wall_seconds": 0.689
+   },
+   {
+    "k": 10,
+    "out_dir": "ahead/k0010",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.5,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5565067720017396,
+    "wall_seconds": 0.682
+   },
+   {
+    "k": 11,
+    "out_dir": "ahead/k0011",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.40000000000000013,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5581670989922713,
+    "wall_seconds": 0.692
+   },
+   {
+    "k": 12,
+    "out_dir": "ahead/k0012",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.30000000000000004,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5578560889989603,
+    "wall_seconds": 0.686
+   },
+   {
+    "k": 13,
+    "out_dir": "ahead/k0013",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.19999999999999996,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5570399249991169,
+    "wall_seconds": 0.682
+   },
+   {
+    "k": 14,
+    "out_dir": "ahead/k0014",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -0.10000000000000009,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5580792840046342,
+    "wall_seconds": 0.686
+   },
+   {
+    "k": 15,
+    "out_dir": "ahead/k0015",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      -2.220446049250313e-16,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5583040860074107,
+    "wall_seconds": 0.685
+   },
+   {
+    "k": 16,
+    "out_dir": "ahead/k0016",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      0.10000000000000009,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5641697090031812,
+    "wall_seconds": 0.694
+   },
+   {
+    "k": 17,
+    "out_dir": "ahead/k0017",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      0.20000000000000018,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5624959639972076,
+    "wall_seconds": 0.691
+   },
+   {
+    "k": 18,
+    "out_dir": "ahead/k0018",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      0.30000000000000004,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5593125319865067,
+    "wall_seconds": 0.683
+   },
+   {
+    "k": 19,
+    "out_dir": "ahead/k0019",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      0.3999999999999999,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5641551500011701,
+    "wall_seconds": 0.689
+   },
+   {
+    "k": 20,
+    "out_dir": "ahead/k0020",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      0.5,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5577685339958407,
+    "wall_seconds": 0.686
+   },
+   {
+    "k": 21,
+    "out_dir": "ahead/k0021",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      0.6000000000000001,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.5586408379895147,
+    "wall_seconds": 0.685
+   }
+  ]
+ },
+ "session": {
+  "start_seconds": 0.4,
+  "launcher": {
+   "kind": "blender",
+   "executable": "/usr/local/bin/blender"
+  },
+  "device": "OPTIX",
+  "session_head": {
+   "head_R_wh": [
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     3.422854177870249e-08,
+     -0.9999999403953552
+    ],
+    [
+     0.0,
+     0.9999999403953552,
+     3.422854177870249e-08
+    ]
+   ],
+   "head_origin_w_m": [
+    0.0,
+    0.0,
+    1.600000023841858
+   ]
+  }
+ },
+ "device": "OPTIX",
+ "seconds": 15.96
+}

@@ -1,0 +1,2 @@
+21:40:09 $ .venv/bin/python -m motion.dolly flow-depth-preview --result runs/m3-calib-1024-rgb --reference runs/m3-calib-1024-O1 --out visuals/m3-calib-1024-rgb.png
+21:40:13 [dolly] wrote visuals/m3-calib-1024-rgb.png

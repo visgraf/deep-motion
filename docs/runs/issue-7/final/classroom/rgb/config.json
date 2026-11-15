@@ -1,0 +1,779 @@
+{
+ "schema": "foveal-motion-m3-estimate-v1",
+ "source": "rgb",
+ "run": "/home/lvelho/rd/foveal-motion/runs/dolly-1024",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "mode": "ahead",
+ "strides": [
+  1,
+  5,
+  10
+ ],
+ "pairs": [
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   7
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   8,
+   9
+  ],
+  [
+   9,
+   10
+  ],
+  [
+   10,
+   11
+  ],
+  [
+   11,
+   12
+  ],
+  [
+   12,
+   13
+  ],
+  [
+   13,
+   14
+  ],
+  [
+   14,
+   15
+  ],
+  [
+   15,
+   16
+  ],
+  [
+   16,
+   17
+  ],
+  [
+   17,
+   18
+  ],
+  [
+   18,
+   19
+  ],
+  [
+   19,
+   20
+  ],
+  [
+   20,
+   21
+  ],
+  [
+   21,
+   22
+  ],
+  [
+   22,
+   23
+  ],
+  [
+   23,
+   24
+  ],
+  [
+   24,
+   25
+  ],
+  [
+   25,
+   26
+  ],
+  [
+   26,
+   27
+  ],
+  [
+   27,
+   28
+  ],
+  [
+   28,
+   29
+  ],
+  [
+   29,
+   30
+  ],
+  [
+   30,
+   31
+  ],
+  [
+   31,
+   32
+  ],
+  [
+   32,
+   33
+  ],
+  [
+   33,
+   34
+  ],
+  [
+   34,
+   35
+  ],
+  [
+   35,
+   36
+  ],
+  [
+   36,
+   37
+  ],
+  [
+   37,
+   38
+  ],
+  [
+   38,
+   39
+  ],
+  [
+   39,
+   40
+  ],
+  [
+   40,
+   41
+  ],
+  [
+   41,
+   42
+  ],
+  [
+   42,
+   43
+  ],
+  [
+   43,
+   44
+  ],
+  [
+   44,
+   45
+  ],
+  [
+   45,
+   46
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   1,
+   6
+  ],
+  [
+   2,
+   7
+  ],
+  [
+   3,
+   8
+  ],
+  [
+   4,
+   9
+  ],
+  [
+   5,
+   10
+  ],
+  [
+   6,
+   11
+  ],
+  [
+   7,
+   12
+  ],
+  [
+   8,
+   13
+  ],
+  [
+   9,
+   14
+  ],
+  [
+   10,
+   15
+  ],
+  [
+   11,
+   16
+  ],
+  [
+   12,
+   17
+  ],
+  [
+   13,
+   18
+  ],
+  [
+   14,
+   19
+  ],
+  [
+   15,
+   20
+  ],
+  [
+   16,
+   21
+  ],
+  [
+   17,
+   22
+  ],
+  [
+   18,
+   23
+  ],
+  [
+   19,
+   24
+  ],
+  [
+   20,
+   25
+  ],
+  [
+   21,
+   26
+  ],
+  [
+   22,
+   27
+  ],
+  [
+   23,
+   28
+  ],
+  [
+   24,
+   29
+  ],
+  [
+   25,
+   30
+  ],
+  [
+   26,
+   31
+  ],
+  [
+   27,
+   32
+  ],
+  [
+   28,
+   33
+  ],
+  [
+   29,
+   34
+  ],
+  [
+   30,
+   35
+  ],
+  [
+   31,
+   36
+  ],
+  [
+   32,
+   37
+  ],
+  [
+   33,
+   38
+  ],
+  [
+   34,
+   39
+  ],
+  [
+   35,
+   40
+  ],
+  [
+   36,
+   41
+  ],
+  [
+   37,
+   42
+  ],
+  [
+   38,
+   43
+  ],
+  [
+   39,
+   44
+  ],
+  [
+   40,
+   45
+  ],
+  [
+   41,
+   46
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   1,
+   11
+  ],
+  [
+   2,
+   12
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   4,
+   14
+  ],
+  [
+   5,
+   15
+  ],
+  [
+   6,
+   16
+  ],
+  [
+   7,
+   17
+  ],
+  [
+   8,
+   18
+  ],
+  [
+   9,
+   19
+  ],
+  [
+   10,
+   20
+  ],
+  [
+   11,
+   21
+  ],
+  [
+   12,
+   22
+  ],
+  [
+   13,
+   23
+  ],
+  [
+   14,
+   24
+  ],
+  [
+   15,
+   25
+  ],
+  [
+   16,
+   26
+  ],
+  [
+   17,
+   27
+  ],
+  [
+   18,
+   28
+  ],
+  [
+   19,
+   29
+  ],
+  [
+   20,
+   30
+  ],
+  [
+   21,
+   31
+  ],
+  [
+   22,
+   32
+  ],
+  [
+   23,
+   33
+  ],
+  [
+   24,
+   34
+  ],
+  [
+   25,
+   35
+  ],
+  [
+   26,
+   36
+  ],
+  [
+   27,
+   37
+  ],
+  [
+   28,
+   38
+  ],
+  [
+   29,
+   39
+  ],
+  [
+   30,
+   40
+  ],
+  [
+   31,
+   41
+  ],
+  [
+   32,
+   42
+  ],
+  [
+   33,
+   43
+  ],
+  [
+   34,
+   44
+  ],
+  [
+   35,
+   45
+  ],
+  [
+   36,
+   46
+  ]
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.0
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "inputs_sha256": {
+  "0": {
+   "record": "9c927326a3d33f4dc4df652c7101f443ae3464d61087ee754f463504921c27f9",
+   "meta": "7d7805c261092cf9bc73d2c55955e2e78a4406efbb31c50ddad877117139043e"
+  },
+  "1": {
+   "record": "f0b0870708e6dfc86b7d950247f018aa468b9e9ccb81f21753e5033b8140b8dd",
+   "meta": "d0a98072fcb23229b138e2036043ab1ec3e9661d767289a8485e869d78189815"
+  },
+  "2": {
+   "record": "e8c4895298ce04372695ca69f24fb9311613fee40df8a2671f06b9804122a6a6",
+   "meta": "5861bc54ee3c96639967ee818a44659563ec9d73edbaf4fc36e705b237e2a72b"
+  },
+  "3": {
+   "record": "5925c1711183376efd327e9583ba71a0cf4807baf7074593182afebc297ca6fe",
+   "meta": "844e7bb6eaa66df20e19630a412343c238b854a53f1c17e4f05a43fe685d8087"
+  },
+  "4": {
+   "record": "692b69b7edac6c92a4a6e920071c461455912a2d3779f9bb7e9a2bb5e1b80ad5",
+   "meta": "dae0e6b700f89b5bbc76ebfb7cf5c99f813565b13850721ea3ffb1b4e19c0c50"
+  },
+  "5": {
+   "record": "cb18e58486b6460b043e6d1d493a2cc6d2d8abea262eb5b968ad082f269c81c9",
+   "meta": "187dbcbc3fbb0b1bc814ee5973b8f79ffce025f7982a6f98a83ec7247d0b8be6"
+  },
+  "6": {
+   "record": "91eb885f4b8956d130950182a018f10cad0550d31a7400bc20ee021112a381d2",
+   "meta": "777a7520ec860aa588746d948654276bac287f95742f12989e150b187385e46b"
+  },
+  "7": {
+   "record": "a8771f6666d28f4f0fccfc0a9880974ca3996d099fcce4e8f710783840b42216",
+   "meta": "bd6be4862429dda403f3d11197b477beceb2adcebfc086b1e86e6733733f49ef"
+  },
+  "8": {
+   "record": "f9890fff0e58ccd5d6a085898a0e152ccf67be8de5e920b4cd9478f979a028a8",
+   "meta": "dff2f7c4ac78c8959655fc7d617e85da7ef80c529b2a32045f7432d42fa4f5df"
+  },
+  "9": {
+   "record": "565273db8f9d50b64ec2843b9cb0c89702bc085501b8c622b14c48cac8076404",
+   "meta": "faf14c251490efcbae2584a8fedf0564b46355acadb04fbb29785a406d7abff6"
+  },
+  "10": {
+   "record": "e909eff03de125531829cdbe671621f9ad3e0a4bf45eb6b376f8dfe3daf22e19",
+   "meta": "3e539621193e76e659208313ccae1051fbfa22f5114bac89470a1a192e194c9f"
+  },
+  "11": {
+   "record": "8fcfcaeba678b39a0babc1a29a4405156fd1d14b213ee167eebd484a0fddbbb9",
+   "meta": "6c04c993111537c22577d56c8d07ac2967974f3b8a0987d1da6af8dff5afbb2c"
+  },
+  "12": {
+   "record": "a533fd0deff09448c945327e23a59868ba7e693f98a6da4567390d23bac8d02d",
+   "meta": "8685c5d1bbe89eca1aa7d08ebe3f453953e5a59517e34d11712695dec9b0b02e"
+  },
+  "13": {
+   "record": "fcef6ddbf98d92fe429f8d9cdf17c573821339f12424f72cc94f01364ae99bce",
+   "meta": "bada2d91b4f7d7efd6d5fd1b1447836a85132689b984c8338c77a90576d88b3d"
+  },
+  "14": {
+   "record": "3b5a4c35c9f08b4040a03555c4b55b86cac5eea0f337c3e382be13fa5f75723c",
+   "meta": "17aee87e49010e6ada35739e9a2093fcf3d935160f414bc6231fc0264362d190"
+  },
+  "15": {
+   "record": "aea37119bba9f07685aecb503de2813ac83d594b848600166b9e88972e5bd04c",
+   "meta": "266c5b3bc6086c454148adbbb8e0edfc1b3932aab3ebc07cf431454c2076655c"
+  },
+  "16": {
+   "record": "e7a63405732b6b95cbed926536110b95548a772fcfb08e2ff7034a5afbcd0da9",
+   "meta": "21caa285220c1fa48b1f7711dc20fee6b1a7e6ef50cd89e8103915f6f4d271f4"
+  },
+  "17": {
+   "record": "bbcee1a18bbd174363f045f8aff865f96fb13cfe5699491c979638a73eb048d2",
+   "meta": "672a260a88acb09de47b26108ce4c2bc3540b4180b98f99fc5f50e56c693d4ee"
+  },
+  "18": {
+   "record": "a05ccd1d1b6bdc2613e31fb5d0ac1b202dfffc0748a7dbfcb03aca7967a78fb7",
+   "meta": "e39b6a80e2fc25d9a5906701fd53b74c6a898104d00fb49ddd450126673c9ee2"
+  },
+  "19": {
+   "record": "61c48ea5c9f26db8d7f09769efccea1da51f38104f3a48ff30ff5538fef83abb",
+   "meta": "a9fac9e55dd0e7d1799643fee7f9f9711d8e0fce896ac0bc4c9f9ff4dca9cb14"
+  },
+  "20": {
+   "record": "b4921fb35272e32f79612109126ace2fe74344729a3131190df8963cec085159",
+   "meta": "a17b15882c69b070bd7bb3129992aebf0ade6f3ad52f8a628350a0d1795d9239"
+  },
+  "21": {
+   "record": "d45fa3e13dd8ebd71200d18bb7fb8668493cc051869c1bafd47a7fe2a26058d0",
+   "meta": "c08d389e2a8c5bfcf270ee24c7a505c77074b3fd4ffdac22e8131bcfa2300d5f"
+  },
+  "22": {
+   "record": "2f71c0bad9b89373ae513e6b37592d3c63709938454571dde31dd3e2968184a9",
+   "meta": "344e86a4881c07520212773ee4b4f4faffc95197979a458759cd33905b0caa9d"
+  },
+  "23": {
+   "record": "a27e5604d636e4ae4815a7cf8566e063a52110844a23721210295d66d0a6e4f8",
+   "meta": "24020d170d63490c6a629f5bc6e10bedcfcfba4b64e799cb1c76e72b53be95a9"
+  },
+  "24": {
+   "record": "79d69c10b639d69e45084186dded2bde457323c0ea844a73e678711b46d7beae",
+   "meta": "f31e9c8009e686836c2f7e9b8fb8bc838b4dd5be14b86a0769fc1adfa7752090"
+  },
+  "25": {
+   "record": "4cab17d060acbbaa9ec1b6d4de1644ed215578a2ca73a94efd943224cc2213d4",
+   "meta": "e521650e9355f502ab0477427891ee78114d8e93b9fe61ef7a0359f889d4e36d"
+  },
+  "26": {
+   "record": "a8f839bb766277d23ccb57a40446df2b10bac7b192385d8f708d00d39decc21a",
+   "meta": "adcf001d40215f2852140c0eb3db9383b332cc59e46fe265141d1eb872d990d6"
+  },
+  "27": {
+   "record": "80a171c71d7060cc626333e271fe4b432831a9b2b4abf5ce450cf7ef76b6a766",
+   "meta": "2cd2f9e3bb6d60e20141a57e450c9289069c0ce810e3012af4368d03c200bb9d"
+  },
+  "28": {
+   "record": "d9c83391e57fe30a353dbd68a14225b428c356f8e91da674ea6985517e163c05",
+   "meta": "fc4c2a802b04c05fbd95fc651bf46cfc70de202d871e0f27f28a3d4b7395e966"
+  },
+  "29": {
+   "record": "6f13d6ee0300e47cc922628002eaaa34738abc645f64af3f140f415fb1d874f1",
+   "meta": "a26d6c1662dbb98a8cd6c5979d3622b6c9ca2389956c81a9caabe84fbe9ce8e9"
+  },
+  "30": {
+   "record": "d2b6ab6886032586c7a6905ce5883e8da48f65cd8fcb7eea431843bf33d30e42",
+   "meta": "8c1d2d7142aab655655c30445c813c4cdec9e27d399d7094239383f055de193b"
+  },
+  "31": {
+   "record": "73205cbd559c4e1713dcceb9e697e6f5485b9839e485a9c78c27d1331090639e",
+   "meta": "789f853dda10bdb8c58b49f7843775f0ae9589a4ec81a5e302f1f8a0f94cc945"
+  },
+  "32": {
+   "record": "244cb10de2fcbe201e2b9012b498f3d90d9860b4a32aed1da39e379f085bdb70",
+   "meta": "8ee5efd7987f13a51ef02b531cfd7904d892cf14ee365ee504ef5d13f54a0936"
+  },
+  "33": {
+   "record": "9179488797a8dbb983da4c70ea2006f96e4662f4c2e85211ea473f0871d8a384",
+   "meta": "bd4950ab87aefa723280c95fced26fa902d25f2a33096e0407e74b167928a3fe"
+  },
+  "34": {
+   "record": "4a69ab33994e0c81063bffbd4c52084dfc9cad6382e4c511f14d8d5b0d712530",
+   "meta": "bfe8389882e8d85fccfa5564728a8dcf41aca21ba1231cb7099c611ccf42b5de"
+  },
+  "35": {
+   "record": "bd8ea0f8e42a23368f0420f97a9afdf3e17033f3b2fe39638824ef7fe53b8a46",
+   "meta": "eb933726de7cb57e0c41c3aa15237c3eb5be853e950782ff4ea84996d1e650d9"
+  },
+  "36": {
+   "record": "139b5207da78193998f559999de1a169571ea3fc888f5311b800521d1c4c24b7",
+   "meta": "759c63e275c5b51b0cb1b43024f0be529a7f442419e0869d34719583fcd03765"
+  },
+  "37": {
+   "record": "214e7626eec0bcd373b82ce476026b0d19162d92902a39a6c6c99b4629e1a2a4",
+   "meta": "c980bbeb8006e79be35a74ab41f9e9160886494b873c3d82b770758f46404f56"
+  },
+  "38": {
+   "record": "588ae40a99feaadc8096392d22825adc37854e90798025df65e2ed88d5f48ed2",
+   "meta": "0d782bd7150ef7561659d61ddecf26c7c3466eb96cfb4d9e3204663d39408279"
+  },
+  "39": {
+   "record": "df2814b7d6689ed72735d4811953c8e5395afeded789e9bb6f1579c60fa1e329",
+   "meta": "337060478951ea2b409ee62fe348aea97f2eb9c435649c97a05794ea4920cde9"
+  },
+  "40": {
+   "record": "9a2328640bb184d4cb4fc2904aaf7d8f876ef0512f06d2a0664b964172c8dee8",
+   "meta": "44d77538898fd251981ccdbe9a9093da488a2fb8c5c0b4be56180bd4c2fcaafe"
+  },
+  "41": {
+   "record": "a569409ae0b04c55e1bcb792ce76d715eb1268a21d140e3f614c5100714da946",
+   "meta": "8651fcd58e193f148a0f576e2c089ad92aa9152ddef513879b84d59fb27b2f4c"
+  },
+  "42": {
+   "record": "d41022475e8ad76ab4c0bca689187f04ea7b3f88e3b2b026d73534ab67017eef",
+   "meta": "076d03534e0426252d90ffddb00df13782c9f703b625e6f7c8ae0b3164d74329"
+  },
+  "43": {
+   "record": "b0104a0854f859a2e9d70d37c726bb3dd9b0f160d6d07c65fcde422a2fb5a842",
+   "meta": "583459ca4b81492ecee64b11128b5f94c3f47fac3dfd6d0fb4e85317c693a6a3"
+  },
+  "44": {
+   "record": "8896a027ba385d1db4052b896c55712e4db0a4696c129ec20aec1dd12b25de8e",
+   "meta": "abc64987846683f5b5b4ca9fb0bc13ae64d424b56de21e97f6a0900138c58f0c"
+  },
+  "45": {
+   "record": "611f40af2e46db1d7db4d801f5a5d3a60ac9d584dd278f054e5cb66139527d2c",
+   "meta": "1c55fbf9f15453107120429fc031aac7a8d340377441889d339ead00d972ec4a"
+  },
+  "46": {
+   "record": "a42993468907c7a383ada19cdcf8746a5d01c37958a684d1db1586576c2969cc",
+   "meta": "b1c8b3d57a0660153f38c7b6f2812000445ada96a9a0b1e6b7a2d375e748ae8a"
+  }
+ },
+ "alignment": {
+  "id": "M3.0",
+  "what": "heading = eye axis in both looks, no rotation between them (#5's gate)",
+  "ok": true,
+  "control_fails": true,
+  "control": "0.1 deg yaw of b, and b's centre 0.01 m sideways: every pair must fail",
+  "detail": {
+   "pairs": 125,
+   "tol_rad": 1e-06,
+   "max_axis_rad": 0.0,
+   "max_rotation_rad": 0.0,
+   "min_B_m": 0.09895652173912994
+  }
+ },
+ "note": "observation fields only; interval_scale is calibrated afterwards and frozen",
+ "seconds": 1833.0
+}

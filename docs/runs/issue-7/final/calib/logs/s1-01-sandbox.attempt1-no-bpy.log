@@ -1,0 +1,20 @@
+21:25:46 $ .venv/bin/python -m motion.dolly sandbox --run runs/calib-dolly-ws
+21:25:46 Traceback (most recent call last):
+21:25:46   File "<frozen runpy>", line 198, in _run_module_as_main
+21:25:46   File "<frozen runpy>", line 88, in _run_code
+21:25:46   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 532, in <module>
+21:25:46     sys.exit(main())
+21:25:46              ^^^^^^
+21:25:46   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 524, in main
+21:25:46     return {"preflight": preflight, "run": run, "checks": checks, "visualize": visualize, "selftest": selftest,
+21:25:46            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+21:25:46   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 434, in sandbox
+21:25:46     blend = calib_room({"work": str(REPO / "runs" / "calib-scene"), "device": "CPU"})
+21:25:46             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+21:25:46   File "/home/lvelho/rd/foveal-motion/external/fov-render/fov_render/checks/step1.py", line 25, in calib_room
+21:25:46     run_blender_script(str(FIXTURES / "make_calib_room.py"), ["--out", str(out)])
+21:25:46   File "/home/lvelho/rd/foveal-motion/external/fov-render/fov_render/checks/common.py", line 113, in run_blender_script
+21:25:46     fenv.prepare()
+21:25:46   File "/home/lvelho/rd/foveal-motion/external/fov-render/fov_render/bl/env.py", line 19, in prepare
+21:25:46     import bpy
+21:25:46 ModuleNotFoundError: No module named 'bpy'

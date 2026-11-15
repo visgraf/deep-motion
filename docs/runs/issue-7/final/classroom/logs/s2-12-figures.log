@@ -1,0 +1,11 @@
+22:14:54 $ .venv/bin/python -m motion.dolly flow-depth-figures --result runs/m3-classroom-1024-rgb --pair 10:15,30:35 --reference runs/m3-classroom-1024-O1 --out visuals/m3-classroom-1024-figs
+22:14:56 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+22:14:56   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+22:14:57 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+22:14:57   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+22:14:58 [dolly] wrote visuals/m3-classroom-1024-figs/overview_a0010-b0015.png
+22:14:58 [dolly] wrote visuals/m3-classroom-1024-figs/matching_a0010-b0015.png
+22:14:58 [dolly] wrote visuals/m3-classroom-1024-figs/slit_scan_a0010-b0015.png
+22:14:58 [dolly] wrote visuals/m3-classroom-1024-figs/overview_a0030-b0035.png
+22:14:58 [dolly] wrote visuals/m3-classroom-1024-figs/matching_a0030-b0035.png
+22:14:58 [dolly] wrote visuals/m3-classroom-1024-figs/slit_scan_a0030-b0035.png

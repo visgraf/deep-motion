@@ -1,0 +1,7 @@
+21:42:21 $ .venv/bin/python -m motion.dolly flow-depth --run runs/dolly-1024 --strides 1 5 10 --correspondence oracle-pixel --out runs/m3-classroom-1024-O2
+21:42:37 [dolly] oracle-pixel: 15.5 s -> runs/m3-classroom-1024-O2
+21:42:37         M3.0    PASS  control fails  heading = eye axis in both looks, no rotation between them (#5's gate): {"pairs": 125, "tol_rad": 1e-06, "max_axis_rad": 0.0, "max_rotation_rad": 0.0, "min_B_m": 0.09895652173912994}
+21:42:37         M3.PLY  PASS  control fails  reconstruction.ply reads back (finite, same xyz and colours) and every point lies on its anchor ray (<= 0.001 deg): {"points": 211121, "readback_identical": true, "max_ray_angle_deg": 4.9816427388638174e-06, "control_median_deg": 28.003578551379395}
+21:42:37         stride  1 (0.099 m): field usable 0.000 within10% 0.180 | 5-40deg usable 0.000 median 0.236 p90 inf cov 0.996 | fovea usable 0.000
+21:42:37         stride  5 (0.495 m): field usable 0.101 within10% 0.685 | 5-40deg usable 0.092 median 0.059 p90 0.140 cov 0.980 | fovea usable 0.000
+21:42:37         stride 10 (0.990 m): field usable 0.608 within10% 0.870 | 5-40deg usable 0.690 median 0.031 p90 0.072 cov 0.981 | fovea usable 0.000

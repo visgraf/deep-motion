@@ -1,0 +1,379 @@
+{
+ "schema": "foveal-motion-m3-estimate-v1",
+ "source": "rgb",
+ "run": "/home/lvelho/rd/foveal-motion/runs/m3-calib-1024",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "mode": "ahead",
+ "strides": [
+  1,
+  5,
+  10
+ ],
+ "pairs": [
+  [
+   0,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   5,
+   6
+  ],
+  [
+   6,
+   7
+  ],
+  [
+   7,
+   8
+  ],
+  [
+   8,
+   9
+  ],
+  [
+   9,
+   10
+  ],
+  [
+   10,
+   11
+  ],
+  [
+   11,
+   12
+  ],
+  [
+   12,
+   13
+  ],
+  [
+   13,
+   14
+  ],
+  [
+   14,
+   15
+  ],
+  [
+   15,
+   16
+  ],
+  [
+   16,
+   17
+  ],
+  [
+   17,
+   18
+  ],
+  [
+   18,
+   19
+  ],
+  [
+   19,
+   20
+  ],
+  [
+   20,
+   21
+  ],
+  [
+   0,
+   5
+  ],
+  [
+   1,
+   6
+  ],
+  [
+   2,
+   7
+  ],
+  [
+   3,
+   8
+  ],
+  [
+   4,
+   9
+  ],
+  [
+   5,
+   10
+  ],
+  [
+   6,
+   11
+  ],
+  [
+   7,
+   12
+  ],
+  [
+   8,
+   13
+  ],
+  [
+   9,
+   14
+  ],
+  [
+   10,
+   15
+  ],
+  [
+   11,
+   16
+  ],
+  [
+   12,
+   17
+  ],
+  [
+   13,
+   18
+  ],
+  [
+   14,
+   19
+  ],
+  [
+   15,
+   20
+  ],
+  [
+   16,
+   21
+  ],
+  [
+   0,
+   10
+  ],
+  [
+   1,
+   11
+  ],
+  [
+   2,
+   12
+  ],
+  [
+   3,
+   13
+  ],
+  [
+   4,
+   14
+  ],
+  [
+   5,
+   15
+  ],
+  [
+   6,
+   16
+  ],
+  [
+   7,
+   17
+  ],
+  [
+   8,
+   18
+  ],
+  [
+   9,
+   19
+  ],
+  [
+   10,
+   20
+  ],
+  [
+   11,
+   21
+  ]
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "kappa_range": [
+   -0.5,
+   1.5
+  ],
+  "fb_tol_px": 1.0,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "half_tol_px": 0.5,
+  "half_sigma_max_px": 0.25,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "stretch": true,
+  "kappa_starts": [
+   0.0,
+   0.25,
+   0.5
+  ],
+  "restart_below_ncc": 0.97,
+  "interval_scale": 1.0
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "inputs_sha256": {
+  "0": {
+   "record": "e6c96c5251b4556346fff5defff478ddcab48ebd6063ae836403e837edf0dcb4",
+   "meta": "df819666c111c41840af9a3ad7043e43890e301194f7915aa5fc5e2a00996014"
+  },
+  "1": {
+   "record": "4d44802b39e463dd80c3e6b431299a6c66b7aed1cfff347fcf0a2c978eeb7247",
+   "meta": "423afe7cee2a5d7372acdfe2006b3fae3ab58c2cab37bfcd6d132f1dbf3195e3"
+  },
+  "2": {
+   "record": "21f638ba760d34bcdc4a73a1f14dfcbe9cc6367c34bbd84b5bebef5a09f3d51f",
+   "meta": "30beb59ff75068ee7d386dbf0fa55f2edb1d57e177be05b12ecebf0ed63aabd7"
+  },
+  "3": {
+   "record": "e8dadefc4294bd9894a981c3725c581f014f2ff4dfe2edb3cef2e7fd8258929b",
+   "meta": "1a37185cff99cf0b61f44a2220cc04840f21107c5354239c7b160b6af9897cf0"
+  },
+  "4": {
+   "record": "fcc52c1606c5f35904572d46d9e8683a169f622863884980a06d038168acd884",
+   "meta": "34c0e39b61d2d261c0cef37e6ecd81ccbc8d2cd18138894e9c7db82ef43c99bd"
+  },
+  "5": {
+   "record": "15d9dd3a7e3cdec4d0a9d4340f6e1496e6615a50fdd2a3b1ea328c7637a9ca59",
+   "meta": "2d755caf238f81307cd2659bf6e367ff2c40af6f05b49296ad970be423f3e9c7"
+  },
+  "6": {
+   "record": "3ac190be6289ef5327e64dc6bf4383970cb18bd611ee093e1df48f5c056b6dd0",
+   "meta": "1346885e4b59c875eb43e6e94eab66000971a024cc8d27a8594a7bfa61ae701e"
+  },
+  "7": {
+   "record": "c93e3fe5842120ecf95a20d3672c2a8342e3ad9453a87cb41871c06271e78ebe",
+   "meta": "ac85b212bd96271595c9082f3bc8a6d98eb57e027ffb14c4a6f5379dab8ae0d9"
+  },
+  "8": {
+   "record": "ba98c455299309c8fb5a92ce753a4f84c70891391524ccb21b29c2d399046ac8",
+   "meta": "7dcb66b6a000da29b21f59d874d9dc5eb1b0772b9ee6dde264a31079b75a9610"
+  },
+  "9": {
+   "record": "3b4cc71ec6c559afb640260b9f480bddc8d3b2ccc2455bb7476af137ce8ad3b1",
+   "meta": "29c561b9a54070475949526578ca06e574263ab3facf34d77e50c6b5ef2dad7e"
+  },
+  "10": {
+   "record": "1f85cb32fd4a42f5569ad6ccc84ee414a1fefe31e3f0ab3f08f96194a05c30e8",
+   "meta": "d7c9a72603bc615c4a85730cb05320cb6eaff4dfe8db779391382dc8e1f85aa5"
+  },
+  "11": {
+   "record": "2e098348dc6758585fc17d2b7f3c90f5e596df9b01c22fc49c587a67340b082b",
+   "meta": "3097c236a5e26f8f69ddcae73ad6c85c54c99d0ab1c2e7eba473c396bc16a558"
+  },
+  "12": {
+   "record": "ce168c4c6476bb46398283d4d9e753fdd5242d6f251d803f7274a726f615bba8",
+   "meta": "a2021d20b2e74e0d9fd777d2eb06c595748d36f7d6f4ac22a18f7b9dea18658e"
+  },
+  "13": {
+   "record": "a2264ccf4ec6641211f580748429467a4941955eba59c64a1d8f00a31535e86e",
+   "meta": "0d7d485334c6e513ad057f7dbc3d5c41019660a33d2258e847752795ba10825f"
+  },
+  "14": {
+   "record": "aa4fd8532d127aeea7272dba6b8d855d78e5915176b462e442f6c1aeebaa6ceb",
+   "meta": "82aa4b95d6765488f351296e3a09f22826e6945df1a5a765f520af7e5f3d0774"
+  },
+  "15": {
+   "record": "f15d8d8f91496efdba3a99969ec6445d6f0c83f37d594ade88338ce55baba2a1",
+   "meta": "27c86da914508629cdc609448164243dd68ceb58e107649410b19845b9026118"
+  },
+  "16": {
+   "record": "929593a42df288cb7b135e7ccabf4a63ff8d44844e1bb88d9aeb7ad479ab0c7d",
+   "meta": "ade09d9b6788cc35564c31281247963f4cca6d28241286e65adc73d369412ae5"
+  },
+  "17": {
+   "record": "cc1f07aaeb323f3c99276bb329e00c65f038734695e11ca3bebce83fdb2e2fe4",
+   "meta": "ed138a864e05c125e427a965952b9359c8740019baea9183d4c3ff17ff69a931"
+  },
+  "18": {
+   "record": "2ff1a84b1dcf5b7fc1ea7695a44d801d8a2e569006d44869ca6c0f7e2d8eda1a",
+   "meta": "a4b8df2d5200834396ed7e80df7071c9e9fb1aea8e09b31a2fb623b8faf65d25"
+  },
+  "19": {
+   "record": "3162d82e3d80818191f045edce0979571e40d6821c5612a7282b808abdb642c4",
+   "meta": "d162dee0b5076ad41e4340a7d3cada481ca250c7d870afaa0ab8fd63fccc4fa1"
+  },
+  "20": {
+   "record": "6ca11fcf13c32f8149a3e93562dd4b71326a39a615f21375ab2bb1b197599ca2",
+   "meta": "e21ae57ad57571a25d79b0e890a54d2417d07a236fa2591af68e20cbd3b005e6"
+  },
+  "21": {
+   "record": "c7da7c146db436aabd99132ace94028d5ace89d72952eab74fea2076301e0710",
+   "meta": "d8366e3089a89abb1db6c37b7ed463d7ee5a345ac4551982cd685ed6471102bd"
+  }
+ },
+ "alignment": {
+  "id": "M3.0",
+  "what": "heading = eye axis in both looks, no rotation between them (#5's gate)",
+  "ok": true,
+  "control_fails": true,
+  "control": "0.1 deg yaw of b, and b's centre 0.01 m sideways: every pair must fail",
+  "detail": {
+   "pairs": 50,
+   "tol_rad": 1e-06,
+   "max_axis_rad": 0.0,
+   "max_rotation_rad": 0.0,
+   "min_B_m": 0.09999999999999987
+  }
+ },
+ "note": "observation fields only; interval_scale is calibrated afterwards and frozen",
+ "seconds": 681.3
+}

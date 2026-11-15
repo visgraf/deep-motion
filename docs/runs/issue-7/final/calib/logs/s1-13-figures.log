@@ -1,0 +1,6 @@
+21:40:13 $ .venv/bin/python -m motion.dolly flow-depth-figures --result runs/m3-calib-1024-rgb --pair 7:12 --reference runs/m3-calib-1024-O1 --out visuals/m3-calib-1024-figs
+21:40:15 /home/lvelho/rd/foveal-motion/motion/flow_figures.py:259: RuntimeWarning: Mean of empty slice
+21:40:15   S = np.stack([np.nanmean(matcher.sample(matcher.luminance(obs[k].rgb), v.m, q[None, :], phi0 + band[:, None]), 0)
+21:40:15 [dolly] wrote visuals/m3-calib-1024-figs/overview_a0007-b0012.png
+21:40:15 [dolly] wrote visuals/m3-calib-1024-figs/matching_a0007-b0012.png
+21:40:15 [dolly] wrote visuals/m3-calib-1024-figs/slit_scan_a0007-b0012.png

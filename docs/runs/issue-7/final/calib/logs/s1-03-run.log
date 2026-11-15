@@ -1,0 +1,24 @@
+21:27:36 $ .venv/bin/python -m motion.dolly run --path paths/calib_dolly.json --run runs/m3-calib-1024 --blend runs/calib-scene/scenes/calib_room.blend --device OPTIX --profile full --spp 1024 --modes ahead --seed-base 1000
+21:27:37 [dolly] ahead k=  0 head [-0.3, -1.5, 1.5] 0.98 s
+21:27:38 [dolly] ahead k=  1 head [-0.3, -1.4, 1.5] 0.69 s
+21:27:39 [dolly] ahead k=  2 head [-0.3, -1.3, 1.5] 0.68 s
+21:27:39 [dolly] ahead k=  3 head [-0.3, -1.2, 1.5] 0.68 s
+21:27:40 [dolly] ahead k=  4 head [-0.3, -1.1, 1.5] 0.68 s
+21:27:41 [dolly] ahead k=  5 head [-0.3, -1.0, 1.5] 0.68 s
+21:27:42 [dolly] ahead k=  6 head [-0.3, -0.9, 1.5] 0.69 s
+21:27:42 [dolly] ahead k=  7 head [-0.3, -0.8, 1.5] 0.68 s
+21:27:43 [dolly] ahead k=  8 head [-0.3, -0.7, 1.5] 0.69 s
+21:27:44 [dolly] ahead k=  9 head [-0.3, -0.6, 1.5] 0.69 s
+21:27:44 [dolly] ahead k= 10 head [-0.3, -0.5, 1.5] 0.68 s
+21:27:45 [dolly] ahead k= 11 head [-0.3, -0.4, 1.5] 0.69 s
+21:27:46 [dolly] ahead k= 12 head [-0.3, -0.3, 1.5] 0.69 s
+21:27:46 [dolly] ahead k= 13 head [-0.3, -0.2, 1.5] 0.68 s
+21:27:47 [dolly] ahead k= 14 head [-0.3, -0.1, 1.5] 0.69 s
+21:27:48 [dolly] ahead k= 15 head [-0.3, -0.0, 1.5] 0.69 s
+21:27:48 [dolly] ahead k= 16 head [-0.3, 0.1, 1.5] 0.69 s
+21:27:49 [dolly] ahead k= 17 head [-0.3, 0.2, 1.5] 0.69 s
+21:27:50 [dolly] ahead k= 18 head [-0.3, 0.3, 1.5] 0.68 s
+21:27:50 [dolly] ahead k= 19 head [-0.3, 0.4, 1.5] 0.69 s
+21:27:51 [dolly] ahead k= 20 head [-0.3, 0.5, 1.5] 0.69 s
+21:27:52 [dolly] ahead k= 21 head [-0.3, 0.6, 1.5] 0.69 s
+21:27:52 [dolly] 22 looks in 15.96 s -> runs/m3-calib-1024

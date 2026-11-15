@@ -1,0 +1,6 @@
+PYTHONPATH=/home/lvelho/rd/foveal-motion/external/fov-render blender -b --python-exit-code 1 -P external/fov-render/fov_render/checks/fixtures/make_calib_room.py -- --out runs/calib-scene/scenes/calib_room.blend
+Info: Saved as "calib_room.blend"
+saved /home/lvelho/rd/foveal-motion/runs/calib-scene/scenes/calib_room.blend and /home/lvelho/rd/foveal-motion/runs/calib-scene/scenes/calib_room.targets.json (50 targets)
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+
+Blender quit

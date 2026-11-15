@@ -1,0 +1,5 @@
+21:27:27 $ .venv/bin/python -m motion.dolly preflight --path paths/calib_dolly.json --run runs/m3-calib-1024 --blend runs/calib-scene/scenes/calib_room.blend --device OPTIX --width 360 --spp 2
+21:27:27 [dolly] preflight: 22 heads + 1 control, 360 px, 2 spp, OPTIX
+21:27:36 [preflight] k= 21 [-0.3, 0.6, 1.5] holes 0.00000 nearest 0.7735981872928724 ok
+21:27:36 [preflight] target target_w [0.0, 2.0, 1.6] (): visible from every head True, occluded []; hidden control hidden True
+21:27:36 [preflight] PASS over 22 heads; control fails as it must: ['clearance']
