@@ -742,3 +742,60 @@ committed in `2d09c9b`). The controls never weaken a check; they are the extra h
 - Three tampered records are each refused: an estimator file's hash, the settings, the source freeze.
 - Excluding r = 12 removes it.
 - `m4-selftest` passes (11 checks, every control fails).
+
+### The Classroom with the frozen M4 estimator (M4b, #11, Code)
+
+Source: everything here was measured by Code on the workstation (RTX 4090, torch 2.15.0+cu132; M3, truth and evaluation
+on the CPU) at `0a95528` (clean). Records are in [`runs/issue-11/`](runs/issue-11/) (`ea6154d`). Chat checked them
+against `frozen.json` and the reported numbers.
+
+Steps 1–5 took 1594 s, of which 1214 s were the Classroom. M4's matcher took a median of 2–3 s per reference on CUDA;
+evaluation took about 15 s per reference, mostly M3's matcher.
+
+**CUDA reproduces Chat's CPU calibration room exactly**
+([`compare_step2.txt`](runs/issue-11/calib-cuda/compare_step2.txt)). Both scales and every count are identical, and
+rates agree to 1e-11, so the stop rule said go.
+
+**Classroom** (`runs/dolly-1024`: 47 `ahead` looks, 1024 spp, seeds 1000–1046). The protocol:
+- every reference frame whose window fits;
+- the quick-look frames 0, 5, 20, 25, 40, 45 excluded (M-D12);
+- the scales imported, every reference held out;
+- #5's Classroom gate on M3's subset.
+
+| | M4 both5 | M3 pair (same anchors) | M4 before5 | M3 pair (same anchors) |
+|---|---|---|---|---|
+| held-out references | 33 (6–41) | | 37 (6–46) | |
+| gate subset coverage (≥ 0.25) | **0.368** | 0.110 | 0.109 | 0.115 |
+| median / p90 relative error | 1.09 % / 3.51 % | 1.83 % / 5.24 % | 1.66 % / 4.65 % | 1.76 % / 5.09 % |
+| > 50 % errors | 0 of 223,610 | 0.05 % | 0 of 76,197 | 0.04 % |
+| **gate** | **PASS** | fail | fail | fail |
+| field usable / fovea usable | 0.455 / 0.255 | 0.196 / 0.050 | 0.212 / 0.038 | 0.202 / 0.064 |
+| interval coverage, interior | 0.939 | 0.920 | 0.917 | 0.921 |
+
+Controls (each must fail, and does):
+- every step × 1.2: median errors 0.199 (both5) and 0.198 (before5);
+- intervals × 0.5: coverage 0.748 (both5) and 0.663 (before5).
+
+**Oracle ladder O-M** at the same references ([`oracle.json`](runs/issue-11/oracle.json)): field usable, of all hits.
+- both5: 0.999 exact, 0.885 at 0.25 px, 0.251 at 0.5 px.
+- before5: 0.994 exact, 0.540 at 0.25 px, 0.046 at 0.5 px.
+- M3's pair: 0.942 exact, 0.174 at 0.25 px.
+
+Against the RGB results (0.455, 0.212), the real matcher behaves like a 0.25–0.5 px correspondence error, in both
+windows. O-M's `pixel` rung is not #7's O2: O-M uses half a pixel as σ, O2 used it as the interval.
+
+**Reading:**
+- **both5 is the first estimator of the project to pass #5's Classroom gate.** It covers 3.3× M3's share of the gate
+  subset with lower errors and no gross errors, and covers 5× M3's share of the fovea.
+- From the calibration room to the Classroom, both5's coverage falls from 0.503 to 0.368 and M3's from 0.33 to 0.11:
+  the two-sided window holds up far better.
+- The causal window before5 stays at M3's level, as in the calibration room. Frames ahead are what make the difference.
+- **What both5 still leaves:**
+  - the board's dark lower interior (low NCC in both windows);
+  - depth edges;
+  - the window band of the +X wall (diagonal streaks in the cloud, as M3 in #7).
+- The largest usable errors (about 5 %) lie along the board's top edge.
+
+**Gaps:**
+- The M4 records do not name the device or torch build that ran the matcher (Code's step-1 log does).
+- torch is not in `requirements.txt`.
