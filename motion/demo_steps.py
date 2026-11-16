@@ -62,12 +62,15 @@ def anchors(t: dict) -> dict:
     """Every accepted anchor of every estimated reference, in world coordinates, with its truth and its time.
 
     Range along the anchor's ray: 1 / (zeta cos e) (zeta is axial inverse depth, #9); sigma from sigma_zeta times
-    the frozen interval scale; P = c + range d, d the sample's world direction. t_avail: the video frame at which
+    the frozen interval scale; P = c + range d, d the sample's world direction. hit: the anchor's ray has a truth
+    surface (False where it leaves the scene, e.g. through the Classroom's windows: P_true and rel are NaN there,
+    #19); every anchor is an estimate and stays in the cloud, only hits are compared with truth. t_avail: the video frame at which
     the window's last frame (r + 5) has been seen, when both5's estimate for r becomes available (M-D15, M-D17)."""
     from . import m4_pipeline as mp
     out = Path(t["_dir"])
     fo = tour.frame_of(t["timeline"])
-    cols = {k: [] for k in ("P", "P_true", "w", "rgb", "rel", "t_avail", "t_ref", "leg", "phase", "r", "c", "flat", "range")}
+    cols = {k: [] for k in ("P", "P_true", "w", "rgb", "rel", "t_avail", "t_ref", "leg", "phase", "r", "c", "flat", "range",
+                            "hit")}
     for name in phases_of(t):
         dd = out / "m4" / name
         if not (dd / WINDOW / "config.json").exists():
@@ -104,7 +107,40 @@ def anchors(t: dict) -> dict:
             cols["c"].append(np.repeat(c[None], n, 0))
             cols["flat"].append(z["flat"][ok])
             cols["range"].append(rng)
+            cols["hit"].append(tr["hit"][ok] & np.isfinite(rt))
     return {k: np.concatenate(v) if v else np.zeros((0,)) for k, v in cols.items()}
+
+
+def hits(A: dict) -> np.ndarray:
+    """Anchors with a truth hit (as M4's evaluation); anchors.npz from before #19 has no `hit`: derive it."""
+    if "hit" in A:
+        return A["hit"].astype(bool)
+    return np.isfinite(A["P_true"]).all(1) & np.isfinite(A["rel"])
+
+
+def no_truth_counts(A: dict, names) -> dict:
+    h = hits(A)
+    return {"total": int((~h).sum()), "fraction": float((~h).mean()) if len(h) else 0.0,
+            "per_leg": {nm: int((~h & (A["leg"] == l)).sum()) for l, nm in enumerate(names)}}
+
+
+def d13(A: dict, names, yaw_deg: float = 0.0, moved_leg: int = 1) -> dict:
+    """D1.3's measure: per leg, the median over fused voxels of |P_fused - P_true| / range, on the anchors with a
+    truth hit only (#19: anchors whose rays leave the scene have no truth). yaw_deg rotates leg `moved_leg`'s
+    estimates about each head (the control's heading error)."""
+    h = hits(A)
+    B = {k: v[h] for k, v in A.items() if hasattr(v, "__len__") and len(v) == len(h)}
+    P = B["P"].copy()
+    if yaw_deg:
+        lb = B["leg"] == moved_leg
+        ca, sa = math.cos(math.radians(yaw_deg)), math.sin(math.radians(yaw_deg))
+        Rz = np.array([[ca, -sa, 0], [sa, ca, 0], [0, 0, 1.0]])
+        P[lb] = B["c"][lb] + (P[lb] - B["c"][lb]) @ Rz.T
+    rt = np.linalg.norm(B["P_true"] - B["c"], axis=1)
+    F = fuse(P, B["w"], B["rgb"], {"P_true": B["P_true"], "leg": B["leg"].astype(float), "rt": rt})
+    rel = np.linalg.norm(F["P"] - F["P_true"], axis=1) / F["rt"]
+    legv = np.round(F["leg"]).astype(int)              # voxels mixing legs go to the majority
+    return {nm: float(np.median(rel[legv == l])) if np.any(legv == l) else None for l, nm in enumerate(names)}
 
 
 def fuse(P, w, rgb, extra=None, voxel=VOXEL_M):
@@ -137,9 +173,12 @@ def fuse_cmd(a) -> int:
         return 2
     out.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out / "anchors.npz", **A)
-    F = fuse(A["P"], A["w"], A["rgb"], {"P_true": A["P_true"], "rel": A["rel"]})
+    names = [lg["name"] for lg in t["spec"]["legs"]]
+    h = hits(A)
+    F = fuse(A["P"], A["w"], A["rgb"])
+    Fh = fuse(A["P"][h], A["w"][h], A["rgb"][h], {"P_true": A["P_true"][h]})
     ex = exposure_of(A["rgb"])
-    err = np.linalg.norm(F["P"] - F["P_true"], axis=1)
+    err = np.linalg.norm(Fh["P"] - Fh["P_true"], axis=1)
     for legs, nm in ((None, "all"),) + tuple(((l,), t["spec"]["legs"][l]["name"]) for l in range(len(t["spec"]["legs"]))):
         sel = np.ones(len(A["P"]), bool) if legs is None else np.isin(A["leg"], legs)
         G = fuse(A["P"][sel], A["w"][sel], A["rgb"][sel])
@@ -147,12 +186,15 @@ def fuse_cmd(a) -> int:
                   comments=[f"D1 {t['spec']['name']} fused ({nm}), voxel {VOXEL_M} m, frozen M4 {WINDOW}"])
     summ = {"schema": "foveal-motion-d1-fused-v1", "anchors": int(len(A["P"])), "voxels": int(len(F["P"])),
             "voxel_m": VOXEL_M, "exposure": ex,
+            "errors_on": "anchors with a truth hit (as M4's evaluation, #19); the cloud and the PLY keep every anchor",
+            "anchors_no_truth": no_truth_counts(A, names), "voxels_with_truth": int(len(Fh["P"])),
             "median_voxel_error_m": float(np.median(err)), "p90_voxel_error_m": float(np.quantile(err, 0.9)),
-            "median_anchor_rel": float(np.median(A["rel"])), "p90_anchor_rel": float(np.quantile(A["rel"], 0.9)),
+            "median_anchor_rel": float(np.median(A["rel"][h])), "p90_anchor_rel": float(np.quantile(A["rel"][h], 0.9)),
             "references": int(len(np.unique(np.stack([A["leg"], A["phase"], A["r"]], 1), axis=0)))}
     _write(out / "fused.json", summ)
     print(f"{PREFIX} fused {summ['anchors']} anchors from {summ['references']} references into {summ['voxels']} "
-          f"voxels; voxel error median {summ['median_voxel_error_m'] * 100:.2f} cm, p90 {summ['p90_voxel_error_m'] * 100:.2f} cm")
+          f"voxels; {summ['anchors_no_truth']['total']} anchors without truth left out of the errors; voxel error "
+          f"median {summ['median_voxel_error_m'] * 100:.2f} cm, p90 {summ['p90_voxel_error_m'] * 100:.2f} cm")
     return 0
 
 
@@ -228,31 +270,21 @@ def checks(a) -> int:
                  "control": "the same construction inside leg A must pass the gate (the refusal comes from the pivot)",
                  "detail": {"refusal": why, "across_max_rotation_rad": al_across["detail"]["max_rotation_rad"],
                             "straight_max_rotation_rad": al_straight["detail"]["max_rotation_rad"]}})
-    # D1.3: fusion against truth, per leg; control: leg B's poses yawed
+    # D1.3: fusion against truth, per leg, on anchors with a truth hit (#19); control: the last leg's poses yawed
     A = anchors(t)
-    rt = np.linalg.norm(A["P_true"] - A["c"], axis=1)
-    res = {}
-    for yaw in (0.0, CONTROL_YAW_DEG):
-        P = A["P"].copy()
-        if yaw:
-            lb = A["leg"] == 1
-            ca, sa = math.cos(math.radians(yaw)), math.sin(math.radians(yaw))
-            Rz = np.array([[ca, -sa, 0], [sa, ca, 0], [0, 0, 1.0]])
-            P[lb] = A["c"][lb] + (P[lb] - A["c"][lb]) @ Rz.T
-        F = fuse(P, A["w"], A["rgb"], {"P_true": A["P_true"], "leg": A["leg"].astype(float), "rt": rt})
-        rel = np.linalg.norm(F["P"] - F["P_true"], axis=1) / F["rt"]
-        legv = np.round(F["leg"]).astype(int)          # voxels mixing legs go to the majority
-        res[yaw] = {t["spec"]["legs"][l]["name"]: float(np.median(rel[legv == l])) if np.any(legv == l) else None
-                    for l in range(len(t["spec"]["legs"]))}
     names = [lg["name"] for lg in t["spec"]["legs"]]
+    res = {0.0: d13(A, names), CONTROL_YAW_DEG: d13(A, names, CONTROL_YAW_DEG, len(names) - 1)}
     ok3 = all(v is not None and v <= FUSION_TOL_REL for v in res[0.0].values())
-    c3 = res[CONTROL_YAW_DEG].get(names[1]) if len(names) > 1 else None
+    c3 = res[CONTROL_YAW_DEG].get(names[-1]) if len(names) > 1 else None
+    h = hits(A)
     rows.append({"id": "D1.3", "what": f"fused voxels ({VOXEL_M} m) lie on the truth surface: per leg, median "
-                                       f"|P_fused - P_true| / range <= {FUSION_TOL_REL} (#5's calibration-gate median)",
+                                       f"|P_fused - P_true| / range <= {FUSION_TOL_REL} (#5's calibration-gate median), "
+                                       f"over the anchors with a truth hit (as M4's evaluation, #19)",
                  "ok": bool(ok3), "control_fails": bool(c3 is not None and c3 > FUSION_TOL_REL),
                  "control": f"leg {names[-1]}'s poses yawed {CONTROL_YAW_DEG} deg about the head: its median must exceed the tolerance",
                  "detail": {"median_rel": res[0.0], "control_median_rel": res[CONTROL_YAW_DEG], "anchors": int(len(A["P"])),
-                            "median_anchor_rel": float(np.median(A["rel"])) if len(A["rel"]) else None}})
+                            "left_out_no_truth": no_truth_counts(A, names),
+                            "median_anchor_rel": float(np.median(A["rel"][h])) if h.any() else None}})
     for r in rows:
         print(f"{PREFIX} {r['id']} {'PASS' if r['ok'] else 'FAIL'}  control {'fails' if r['control_fails'] else 'DOES NOT FAIL'}"
               f"  {r['what']}" + (f"  {json.dumps(r.get('detail'), default=float)}" if r.get("detail") else ""))
@@ -339,3 +371,36 @@ def dispatch(a):
     from . import demo_video
     return {"demo-estimate": estimate, "demo-fuse": fuse_cmd, "demo-checks": checks, "demo-topview": topview,
             "demo-report": report, "demo-video": demo_video.video}[a.cmd](a)
+
+
+def selftest() -> list[tuple[str, bool]]:
+    """#19: anchors without truth (rays leaving the scene) must not reach D1.3 or the error colours as NaN."""
+    rng = np.random.default_rng(0)
+    n = 4000
+    c = np.zeros((n, 3))
+    leg = (np.arange(n) >= n // 2).astype(int)
+    d = rng.normal(size=(n, 3))
+    d /= np.linalg.norm(d, axis=1, keepdims=True)
+    Pt = c + 3.0 * d
+    P = Pt * (1 + 0.01 * rng.normal(size=(n, 1)))
+    hit = np.ones(n, bool)
+    hit[: n // 10] = False                                    # 10 % of leg A without truth
+    Pt[~hit] = np.nan
+    rel = np.where(hit, np.abs(np.linalg.norm(P - c, axis=1) - 3.0) / 3.0, np.nan)
+    A = {"P": P, "P_true": Pt, "c": c, "w": np.ones(n), "rgb": np.ones((n, 3)), "leg": leg, "rel": rel, "hit": hit}
+    A_old = {k: v for k, v in A.items() if k != "hit"}         # anchors.npz from before #19
+    m0, m5 = d13(A, ["A", "B"]), d13(A, ["A", "B"], 5.0, 1)
+    from .demo_video import NO_TRUTH, error_colours
+    F = fuse(P, A["w"], A["rgb"], {"relh": np.where(hit, rel, 0.0), "h": hit.astype(float)})
+    col = error_colours(F)
+    nohit_vox = F["h"] == 0
+    return [
+        ("D1.3 finite with anchors lacking truth", all(v is not None and np.isfinite(v) for v in m0.values())),
+        ("D1.3 near 1 % on the synthetic cloud", all(v < 0.02 for v in m0.values())),
+        ("D1.3 control (5 deg) exceeds 0.05", m5["B"] > 0.05),
+        ("hits derived for anchors.npz without `hit`", bool(np.array_equal(hits(A_old), hit))),
+        ("no-truth counted per leg", no_truth_counts(A, ["A", "B"])["per_leg"] == {"A": n // 10, "B": 0}),
+        ("error colours: no-truth voxels grey", bool(nohit_vox.any()) and bool(np.all(col[nohit_vox] == NO_TRUTH))),
+        ("error colours: truth voxels on the ramp", bool(np.all(np.any(col[~nohit_vox] != NO_TRUTH, axis=1)))),
+        ("the old median is NaN (the #19 bug, reproduced)", bool(np.isnan(np.median(np.where(hit, rel, np.nan))))),
+    ]

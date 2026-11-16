@@ -26,7 +26,7 @@ from PIL import Image, ImageDraw
 
 from . import analysis, tour
 from .demo import PREFIX, load_tour
-from .demo_steps import fuse
+from .demo_steps import fuse, hits
 from .pointcloud import exposure_of as exposure_rgb, srgb_u8
 from .visuals import _font, raster_image
 
@@ -36,6 +36,7 @@ TOP = (1080, 0, 840, 540)
 CLOUD = (1080, 540, 840, 540)
 BLUE = ["#86b6ef", "#6da7ec", "#5598e7", "#3987e5", "#2a78d6", "#256abf", "#1c5cab", "#184f95", "#104281", "#0d366b"]
 INK, MUTED, RULE, PAPER, NIGHT = (34, 34, 34), (110, 110, 105), (200, 200, 195), (247, 247, 245), (24, 24, 26)
+NO_TRUTH = (165, 165, 160)     # error video: voxels with no truth-hit anchor (rays that leave the scene, #19)
 ERR_MAX = 0.05
 HOLD_START, HOLD_END, ORBIT_S = 1.0, 1.0, 8.0
 
@@ -49,7 +50,7 @@ _STOPS = np.stack([_hex(h) for h in BLUE])
 
 def ramp(v) -> np.ndarray:
     """v in [0, 1] -> uint8 rgb along the blue ramp (0 light, 1 dark)."""
-    v = np.clip(np.asarray(v, float), 0, 1) * (len(_STOPS) - 1)
+    v = np.clip(np.nan_to_num(np.asarray(v, float), nan=0.0), 0, 1) * (len(_STOPS) - 1)
     i = np.minimum(np.floor(v).astype(int), len(_STOPS) - 2)
     f = (v - i)[..., None]
     return (_STOPS[i] * (1 - f) + _STOPS[i + 1] * f + 0.5).astype(np.uint8)
@@ -67,6 +68,7 @@ class Ctx:
         from .visuals import exposure_of
         self.ex = exposure_of(a0, a0["looks"]["ahead"][0])
         A = dict(np.load(self.out / "fused" / "anchors.npz"))
+        A["hit"] = hits(A)
         o = np.argsort(A["t_avail"], kind="stable")
         self.A = {k: v[o] for k, v in A.items()}
         self.ex_rgb = exposure_rgb(self.A["rgb"]) if len(self.A["rgb"]) else 1.0
@@ -106,7 +108,9 @@ class Ctx:
         n = int(np.searchsorted(self.A["t_avail"], f, side="right"))
         if self._fz[0] != n:
             A = self.A
-            F = fuse(A["P"][:n], A["w"][:n], A["rgb"][:n], {"rel": A["rel"][:n]}) if n else None
+            h = A["hit"][:n].astype(float)
+            F = fuse(A["P"][:n], A["w"][:n], A["rgb"][:n],
+                     {"relh": np.where(h > 0, A["rel"][:n], 0.0), "h": h}) if n else None
             if F is not None:
                 keep = F["P"][:, 2] < self.tv["cut_z_m"]
                 F = {k: (v[keep] if k != "inv" else v) for k, v in F.items()}
@@ -127,8 +131,17 @@ class Ctx:
 
     def colours(self, F):
         if self.color == "error":
-            return ramp(F["rel"] / ERR_MAX)
+            return error_colours(F)
         return srgb_u8(F["rgb"], self.ex_rgb)
+
+
+def error_colours(F) -> np.ndarray:
+    """|dz|/z over a voxel's truth-hit anchors on the blue ramp (0 -> 5 %); NO_TRUTH grey where it has none."""
+    has = F["h"] > 0
+    rel = np.where(has, F["relh"] / np.where(has, F["h"], 1.0), 0.0)
+    c = ramp(rel / ERR_MAX)
+    c[~has] = NO_TRUTH
+    return c
 
 
 # ----------------------------------------------------------------------------- panels
@@ -292,8 +305,11 @@ def cloud_panel(ctx: Ctx, f: int, size=(CLOUD[2], CLOUD[3]), az=None, title=True
     d.ellipse((x[-1] - 5, y[-1] - 5, x[-1] + 5, y[-1] + 5), fill=ink)
     if title:
         n = 0 if F is None else len(F["P"])
-        what = "coloured by error |Δz|/z, 0 (light) → 5 % (dark)" if ctx.color == "error" else "in the sensor's colours"
-        _text(d, (16, 10), f"3D: the fused cloud so far (below {ctx.tv['cut_z_m']:g} m), {n:,} voxels of 2 cm, {what}", 18, ink)
+        band = 54 if ctx.color == "error" else 34
+        d.rectangle((0, 0, w, band), fill=bgc)
+        _text(d, (16, 8), f"3D: the fused cloud so far (below {ctx.tv['cut_z_m']:g} m), {n:,} voxels of 2 cm", 18, ink)
+        if ctx.color == "error":
+            _text(d, (16, 31), "colour: |Δz|/z, 0 (light) → 5 % (dark); grey: no truth (the ray leaves the scene)", 15, MUTED)
     return im
 
 
@@ -316,7 +332,7 @@ def end_card(ctx: Ctx, i: int, n: int) -> Image.Image:
     _text(d, (40, 30), f"{ctx.spec['name']}: the frozen M4 (both5) on the whole tour", 34, ink)
     _text(d, (40, 80), f"{0 if F is None else len(F['P']):,} voxels of 2 cm from "
                        f"{len(np.unique(np.stack([ctx.A['leg'], ctx.A['phase'], ctx.A['r']], 1), axis=0))} references"
-                       + ("  ·  colour: |Δz|/z, 0 → 5 %" if ctx.color == "error" else ""), 24, ink)
+                       + ("  ·  colour: |Δz|/z, 0 → 5 %; grey: no truth (the ray leaves the scene)" if ctx.color == "error" else ""), 24, ink)
     return im
 
 

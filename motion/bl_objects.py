@@ -1,10 +1,14 @@
-"""Blender side: world bounding boxes of a scene's mesh objects whose name matches (D1b Step 0, #19).
+"""Blender side: world bounding boxes of a scene's meshes whose name matches (D1b Step 0, #19).
+
+Meshes are walked through the evaluated depsgraph's object instances, so the meshes inside linked collection
+instances (the Classroom's desks, chairs, teacherDesk) are listed too, one row per instance, with the instancer's
+name (#19's Step 0 found the first version, which listed scene objects only, missed them).
 
     blender -b --python-exit-code 1 -P motion/bl_objects.py -- --blend B --out J [--match door desk table board]
     python -m motion.bl_objects --blend B --out J [--match ...]                         (the bpy wheel)
 
-Writes J: one row per mesh object (name, collection, world AABB min/max, centre), names matched case-insensitively
-by any of --match (all objects when none is given). MEASURED from the .blend; it is how Step 0 finds the front door
+Writes J: one row per mesh instance (name, instancer or null, collection, world AABB min/max, centre); a row matches
+when any of --match occurs, case-insensitively, in the mesh object's name or its instancer's (all when none given). MEASURED from the .blend; it is how Step 0 finds the front door
 and the free strip between the board and the first desk row.
 """
 from __future__ import annotations
@@ -27,24 +31,29 @@ def main(argv) -> int:
     dg = bpy.context.evaluated_depsgraph_get()
     rows = []
     pats = [m.lower() for m in a.match]
-    for ob in bpy.context.scene.objects:
+    for inst in dg.object_instances:
+        ob = inst.object
         if ob.type != "MESH":
             continue
-        if pats and not any(p in ob.name.lower() for p in pats):
+        parent = inst.parent.original.name if inst.is_instance and inst.parent is not None else None
+        names = [ob.original.name.lower()] + ([parent.lower()] if parent else [])
+        if pats and not any(p in n for p in pats for n in names):
             continue
-        ev = ob.evaluated_get(dg)
-        pts = [ev.matrix_world @ Vector(c) for c in ev.bound_box]
+        M = inst.matrix_world.copy()
+        pts = [M @ Vector(c) for c in ob.bound_box]
         lo = [min(p[i] for p in pts) for i in range(3)]
         hi = [max(p[i] for p in pts) for i in range(3)]
-        rows.append({"name": ob.name, "collection": ob.users_collection[0].name if ob.users_collection else None,
+        orig = ob.original
+        rows.append({"name": orig.name, "instancer": parent,
+                     "collection": orig.users_collection[0].name if orig.users_collection else None,
                      "min_w": lo, "max_w": hi, "centre_w": [(l + h) / 2 for l, h in zip(lo, hi)],
-                     "visible_render": not ob.hide_render})
-    rows.sort(key=lambda r: r["name"])
+                     "visible_render": not orig.hide_render})
+    rows.sort(key=lambda r: (r["instancer"] or "", r["name"], r["min_w"]))
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps({"schema": "foveal-motion-objects-v1", "blend": str(Path(a.blend).resolve()),
                                        "match": a.match, "objects": rows}, indent=1))
     for r in rows:
-        print(f"[objects] {r['name']:40s} min {[round(v, 3) for v in r['min_w']]} max {[round(v, 3) for v in r['max_w']]}")
+        print(f"[objects] {(r['instancer'] + '/' if r['instancer'] else '') + r['name']:48s} min {[round(v, 3) for v in r['min_w']]} max {[round(v, 3) for v in r['max_w']]}")
     return 0
 
 

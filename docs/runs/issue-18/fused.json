@@ -4,6 +4,16 @@
  "voxels": 213062,
  "voxel_m": 0.02,
  "exposure": 0.7795609671485523,
+ "errors_on": "anchors with a truth hit (as M4's evaluation, #19); the cloud and the PLY keep every anchor",
+ "anchors_no_truth": {
+  "total": 0,
+  "fraction": 0.0,
+  "per_leg": {
+   "A": 0,
+   "B": 0
+  }
+ },
+ "voxels_with_truth": 213062,
  "median_voxel_error_m": 0.04108899004223678,
  "p90_voxel_error_m": 0.23524073372126883,
  "median_anchor_rel": 0.007309648562719909,

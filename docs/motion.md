@@ -840,13 +840,24 @@ plus the same video coloured by error.
 |---|---|---|
 | D1.1 | the estimator's file hashes and settings equal the freeze; every phase imported it | a changed recorded hash is refused; settings with `ncc_min − 0.01` differ |
 | D1.2 | a both5 window across the pivot is refused by #5's alignment gate inside the frozen `estimate()` | the same construction inside leg A passes the gate |
-| D1.3 | per leg, median ‖P_fused − P_true‖ / range ≤ 0.05 (#5's calibration-gate median) | the last leg's poses yawed 5° about the head: its median must exceed 0.05 |
+| D1.3 | per leg, median ‖P_fused − P_true‖ / range ≤ 0.05 (#5's calibration-gate median), over the anchors with a truth hit | the last leg's poses yawed 5° about the head: its median must exceed 0.05 |
 
 D1.3 changed from #17's proposal, before any Classroom number. #17 proposed a tolerance from the sandbox and a 0.10 m
 shift as the control. At the sandbox's 2–6 m ranges, 0.10 m is only 2–5 %, so that control could not be relied on to
 fail. The check now uses #5's declared median, and the control is a 5° heading error.
 
 **#5's metrics per phase** (`demo-report`) are reported, not gated (M-D17).
+
+**Anchors without truth** (#19). On the Classroom, 0.62 % of the accepted anchors (all on leg A) look through the
+right wall's windows, where the rays leave the scene and the record has no surface. Their `P_true` was NaN, so
+D1.3's leg A median and `fused.json`'s voxel error were NaN, and the error video's colours failed. The fix follows M4's
+evaluation, which counts only anchors with a hit:
+- D1.3 and `fused.json` compare with truth only the anchors that have one, and report how many they left out, per leg.
+- The cloud, the PLY files and the RGB video keep every anchor, because they are estimates.
+- The error video draws voxels with no truth-hit anchor in a neutral grey, named in its legend.
+- `selftest` reproduces the NaN with the old median and checks the fix on a synthetic cloud.
+- Code's diagnosis on the Classroom's anchors, without the no-hit ones: D1.3 median 0.0188 (A), 0.0126 (B); control
+  0.0861 (Code, workstation, #19).
 
 ### Chat sandbox, calibration room (CPU, 64 spp, `full` profile; #18)
 

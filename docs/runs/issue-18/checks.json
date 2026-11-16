@@ -22,7 +22,7 @@
   },
   {
    "id": "D1.3",
-   "what": "fused voxels (0.02 m) lie on the truth surface: per leg, median |P_fused - P_true| / range <= 0.05 (#5's calibration-gate median)",
+   "what": "fused voxels (0.02 m) lie on the truth surface: per leg, median |P_fused - P_true| / range <= 0.05 (#5's calibration-gate median), over the anchors with a truth hit (as M4's evaluation, #19)",
    "ok": true,
    "control_fails": true,
    "control": "leg B's poses yawed 5.0 deg about the head: its median must exceed the tolerance",
@@ -36,12 +36,20 @@
      "B": 0.08475968503576929
     },
     "anchors": 427640,
+    "left_out_no_truth": {
+     "total": 0,
+     "fraction": 0.0,
+     "per_leg": {
+      "A": 0,
+      "B": 0
+     }
+    },
     "median_anchor_rel": 0.007309648562719909
    }
   }
  ],
  "git": {
-  "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+  "commit": "347d021f439c44a5e530c3844c867782e62a6cf1",
   "clean": false
  }
 }

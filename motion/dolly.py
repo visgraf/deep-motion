@@ -530,6 +530,8 @@ def selftest(_a) -> int:
     res = list(paths.selftest())
     from . import tour
     res += [(f"tour: {n}", ok) for n, ok in tour.selftest()]          # D1 (#17)
+    from . import demo_steps
+    res += [(f"demo: {n}", ok) for n, ok in demo_steps.selftest()]    # D1 (#19)
     # the inverse warp round-trips the forward warp: the projection M1.3 relies on
     m = sensors.Foveated().model("small")
     rays = m.rays()
