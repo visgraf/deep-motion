@@ -264,14 +264,34 @@ def stage5b2(runs: dict, out, sigma_px=0.5) -> list:
         ax.scatter(P[o][~u[o], 0], P[o][~u[o], 1], s=0.6, c=ACCENT, lw=0, rasterized=True)
         ax.plot(m["path"][:, 0], m["path"][:, 1], color=INK, lw=2.2)
         ax.set_aspect("equal")
-        ax.set_title(f"{k}: {100 * u.mean():.1f} % of cells usable at {sigma_px:g} px (blue); not usable: orange", loc="left")
+        ax.set_title(f"{k} path: {100 * u.mean():.1f} % usable at {sigma_px:g} px\n(blue usable, orange not; black: the path)", loc="left")
         ax.set_xlabel("x, m")
         ax.set_ylabel("y, m")
         _clean(ax)
     f1 = out / "stage5b2_topdown.png"
     fig.savefig(f1, dpi=120, bbox_inches="tight")
     plt.close(fig)
+    recs = {"composed": out.parent / "stage5b2.json", "straight": out.parent / "stage5b2_straight.json"}
+    if all(p.exists() for p in recs.values()):
+        fig, ax = plt.subplots(figsize=(7.2, 4.2))
+        for (k, p), col, ls in zip(recs.items(), (ACCENT, BLUE[3]), ("-", "--")):
+            pr_ = _json.loads(p.read_text())["numbers"]["progress_0.5px"]
+            ax.plot(pr_["s_m"], 100 * np.asarray(pr_["usable"]), ls, color=col, lw=2, label=f"{k} path")
+        for x in (0.3, 0.6):
+            ax.axvline(x, color=GRID, lw=1)
+        ax.text(0.15, 3, "line", ha="center", color=INK2, fontsize=9)
+        ax.text(0.45, 3, "arc (composed)", ha="center", color=INK2, fontsize=9)
+        ax.text(0.75, 3, "line", ha="center", color=INK2, fontsize=9)
+        ax.set_xlabel("arc length travelled, m")
+        ax.set_ylabel("cells usable at 0.5 px, %")
+        ax.set_title("Fused surface: usable fraction as the path is travelled (records of the checks)", loc="left")
+        ax.set_ylim(0, 100)
+        _clean(ax)
+        ax.legend(frameon=False, fontsize=9, loc="lower right")
+        f2 = out / "stage5b2_progress.png"
+        fig.savefig(f2, dpi=130, bbox_inches="tight")
+        plt.close(fig)
     summ = {k: fu.cone_summary(m) for k, m in maps.items()}
     (out / "stage5b2_cones.json").write_text(_json.dumps({"sigma_px": sigma_px, "runs": runs, "cones": summ}, indent=1,
                                                          ensure_ascii=False))
-    return [f1, out / "stage5b2_cones.json"]
+    return [p for p in (f1, out / "stage5b2_progress.png", out / "stage5b2_cones.json") if p.exists()]
