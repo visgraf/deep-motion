@@ -237,3 +237,31 @@ def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind="composed"):
     num["first_usable_segment_0.5px"] = {names[i]: float(np.mean(fseg == i)) for i in range(len(names))}
     num["first_usable_segment_0.5px"]["never"] = float(np.mean(fseg < 0))
     return res, num, {"P": P, "vis": vis, "H": H, "sub": sub, "first_seg": fseg, "seg": seg, "s": s}
+
+
+def usable_map(run_dirs, sigma_px=0.5, cell=CELL):
+    """The Fisher gate only (no fit): cells, usable at sigma_px, and their bearing from the path's middle look
+    relative to the start heading (+Y), for the figure and the cone summary."""
+    looks = load_looks(run_dirs)
+    fan = sn.SlitFan(width=int(json.loads((Path(run_dirs[0]) / "run.json").read_text())["carrier"]["width"]))
+    P = cells(looks, cell)
+    vis = np.stack([orc.visible(lk[0], lk[1], lk[2], P, fan) for lk in looks], 1)
+    H = np.zeros((len(P), 3, 3))
+    for lk, k in zip(looks, range(len(looks))):
+        _, _, gl, gt = _derivs(P, lk[1], lk[2])
+        H += vis[:, k][:, None, None] * (gl[:, :, None] * gl[:, None, :] + gt[:, :, None] * gt[:, None, :])
+    worst, _, _ = ray_interval(P, H, vis, looks, sigma_px, fan)
+    cm = looks[len(looks) // 2][1]
+    d = P - cm
+    b = np.degrees(np.arctan2(-d[:, 0], d[:, 1]))          # from +Y, + left (toward -X)
+    return {"P": P, "usable": worst <= orc.USABLE_REL, "worst": worst, "bearing": b,
+            "path": np.stack([lk[1] for lk in looks])}
+
+
+CONES = {"ahead |b| < 15°": (0, 15), "ahead 15–30°": (15, 30), "lateral 60–120°": (60, 120), "behind |b| > 165°": (165, 181)}
+
+
+def cone_summary(m):
+    ab = np.abs(m["bearing"])
+    return {k: {"cells": int(((ab >= lo) & (ab < hi)).sum()), "usable": float(m["usable"][(ab >= lo) & (ab < hi)].mean())}
+            for k, (lo, hi) in CONES.items()}

@@ -245,3 +245,33 @@ def stage5a(runs: dict, out, stride=1) -> list:
     fig.savefig(f2, dpi=130, bbox_inches="tight")
     plt.close(fig)
     return [f1, f2]
+
+
+def stage5b2(runs: dict, out, sigma_px=0.5) -> list:
+    """stage5b2_topdown.png: the cells from above, usable at sigma_px (dark) or not (orange), per path, with the path;
+    stage5b2_progress.png: usable fraction against arc length (from the checks' records); stage5b2_cones.json."""
+    import json as _json
+    from . import fusion as fu
+    plt = _plt()
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    maps = {k: fu.usable_map(v, sigma_px) for k, v in runs.items()}
+    fig, axs = plt.subplots(1, len(maps), figsize=(6.2 * len(maps), 6.4), gridspec_kw={"wspace": 0.15})
+    for ax, (k, m) in zip(np.atleast_1d(axs), maps.items()):
+        P, u = m["P"], m["usable"]
+        o = np.argsort(P[:, 2])                      # floor first, so walls draw over it
+        ax.scatter(P[o][u[o], 0], P[o][u[o], 1], s=0.15, c=BLUE[3], lw=0, rasterized=True)
+        ax.scatter(P[o][~u[o], 0], P[o][~u[o], 1], s=0.6, c=ACCENT, lw=0, rasterized=True)
+        ax.plot(m["path"][:, 0], m["path"][:, 1], color=INK, lw=2.2)
+        ax.set_aspect("equal")
+        ax.set_title(f"{k}: {100 * u.mean():.1f} % of cells usable at {sigma_px:g} px (blue); not usable: orange", loc="left")
+        ax.set_xlabel("x, m")
+        ax.set_ylabel("y, m")
+        _clean(ax)
+    f1 = out / "stage5b2_topdown.png"
+    fig.savefig(f1, dpi=120, bbox_inches="tight")
+    plt.close(fig)
+    summ = {k: fu.cone_summary(m) for k, m in maps.items()}
+    (out / "stage5b2_cones.json").write_text(_json.dumps({"sigma_px": sigma_px, "runs": runs, "cones": summ}, indent=1,
+                                                         ensure_ascii=False))
+    return [f1, out / "stage5b2_cones.json"]
