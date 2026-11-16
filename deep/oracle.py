@@ -90,14 +90,19 @@ def visible(rec_k, c_k, R_k, P, fan: sn.SlitFan):
     return vis & np.isfinite(rec_k.distance_m[np.maximum(q, 0)]) & (err <= tol)
 
 
-def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12):
+def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12, stride=1):
     """The oracle on a run. offset: a world displacement added to every look's centre but the reference's (a control).
+    stride: keep every stride-th anchor of the reference (memory at the design resolution).
     Returns a dict of arrays per anchor and summaries."""
-    fan = fan or sn.SlitFan()
     run, looks = load(run_dir)
+    fan = fan or sn.SlitFan(width=int(run["carrier"]["width"]))
     iref = len(looks) // 2
     rec_r, c_r, R_r, _ = looks[iref]
     hit = np.isfinite(rec_r.distance_m)
+    if stride > 1:
+        keep = np.zeros_like(hit)
+        keep[np.flatnonzero(hit)[::stride]] = True
+        hit = keep
     P = rec_r.position_w[hit].astype(np.float64)
     pix = rec_r.raster_index[hit]
     rtrue = np.linalg.norm(P - c_r, axis=-1)
@@ -118,7 +123,7 @@ def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12)
         I += np.where(vis[:, j], dlon ** 2 + dlat ** 2, 0.0)
     res_px = fan.res
     psi3 = np.arccos(np.clip(np.cos(lat_ref) * np.cos(b_ref), -1, 1))
-    out = {"rtrue": rtrue, "b_ref": b_ref, "lat_ref": lat_ref, "psi3": psi3, "nvis": vis.sum(1), "I": I, "pix": pix, "fits": {}}
+    out = {"rtrue": rtrue, "b_ref": b_ref, "lat_ref": lat_ref, "psi3": psi3, "res": fan.res, "width": fan.width, "nvis": vis.sum(1), "I": I, "pix": pix, "fits": {}}
     rng = np.random.default_rng(seed)
     for sg in (0.0,) + tuple(sigmas):
         nz = [(o[0] + rng.normal(size=len(P)) * sg * res_px, o[1] + rng.normal(size=len(P)) * sg * res_px) for o in obs]
@@ -222,7 +227,7 @@ PROFILE_EDGES = (0, 2, 5, 10, 15, 25, 35, 45, 60, 75, 90, 105, 120, 135, 145, 15
 def profile(ev, sigma_px=0.25, edges=PROFILE_EDGES):
     """Median 95 % half-interval / range, and median range, per bin of the 3-D angle from the heading (the figure's data)."""
     with np.errstate(divide="ignore"):
-        ci = Z95 * sigma_px * sn.SlitFan().res / np.sqrt(ev["I"]) / ev["rtrue"]
+        ci = Z95 * sigma_px * ev["res"] / np.sqrt(ev["I"]) / ev["rtrue"]
     psi = np.degrees(ev["psi3"])
     rows = []
     for a, b in zip(edges[:-1], edges[1:]):

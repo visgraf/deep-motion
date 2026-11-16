@@ -47,7 +47,7 @@ def selftest(a) -> int:
 def figures(a) -> int:
     from . import figures as fg
     fn = {"2": fg.stage2, "3": fg.stage3, "4": lambda o: fg.stage4(a.run, o),
-          "5a": lambda o: fg.stage5a(dict(r.split("=", 1) for r in a.runs), o)}[a.stage]
+          "5a": lambda o: fg.stage5a(dict(r.split("=", 1) for r in a.runs), o, stride=a.stride)}[a.stage]
     for f in fn(a.out):
         print(f"{PREFIX} figure {f}")
     return 0
@@ -93,7 +93,7 @@ def stage5a_table(a) -> int:
     out = {}
     for spec in a.runs:
         name, d = spec.split("=", 1)
-        ev = oracle.evaluate(d)
+        ev = oracle.evaluate(d, stride=a.stride)
         out[name] = {"run": d, "anchors": int(len(ev["rtrue"])), "seen_by_another": float(np.mean(ev["nvis"] >= 1)),
                      "table": oracle.sector_table(ev), "profile_0.25px": oracle.profile(ev)}
         print(f"{PREFIX} {name}: " + json.dumps(out[name]["table"], ensure_ascii=False))
@@ -115,6 +115,7 @@ def main(argv=None) -> int:
     p.add_argument("--stage", default="2", choices=["2", "3", "4", "5a"])
     p.add_argument("--run", default=None, help="stage 4: the rendered run")
     p.add_argument("--runs", nargs="*", default=[], help="stage 5a: name=DIR ...")
+    p.add_argument("--stride", type=int, default=1, help="stage 5a: keep every n-th reference anchor")
     p.add_argument("--out", required=True)
     p = sub.add_parser("stage4-render", help="stage 4: three Panorama looks on an arc in the calibration room (CPU)")
     p.add_argument("--run", required=True)
@@ -138,6 +139,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default=None)
     p = sub.add_parser("stage5a-table", help="stage 5a: the oracle's sector tables on runs, no checks")
     p.add_argument("runs", nargs="+", help="name=DIR")
+    p.add_argument("--stride", type=int, default=1, help="keep every n-th reference anchor (memory at 3600 wide)")
     p.add_argument("--out", default=None)
     a = ap.parse_args(argv)
     return {"stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,

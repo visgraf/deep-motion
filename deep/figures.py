@@ -185,7 +185,7 @@ def stage4(run_dir, out) -> list:
     return sorted(str(p) for p in out.glob("stage4_*.png"))
 
 
-def stage5a(runs: dict, out) -> list:
+def stage5a(runs: dict, out, stride=1) -> list:
     """stage5a_maps.png: the oracle's 95 % half-interval (relative, 0.25 px) over the reference panorama of each run,
     the usable region (<= 10 %) outlined; stage5a_profile.png: its median against the 3-D angle from the heading."""
     from matplotlib.colors import LinearSegmentedColormap, LogNorm
@@ -194,17 +194,16 @@ def stage5a(runs: dict, out) -> list:
     plt = _plt()
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    fan = sn.SlitFan()
-    W, H = fan.width, fan.width // 2
     cmap = LinearSegmentedColormap.from_list("blue", list(BLUE[::-1]))
     cmap.set_bad(GRID)
-    evs = {k: orc.evaluate(d, fan, sigmas=(0.25,)) for k, d in runs.items()}
+    evs = {k: orc.evaluate(d, sigmas=(0.25,), stride=stride) for k, d in runs.items()}
     fig, axs = plt.subplots(len(evs), 1, figsize=(10.5, 2.9 * len(evs)), gridspec_kw={"hspace": 0.45})
     norm = LogNorm(0.005, 2.0)
     for ax, (k, e) in zip(np.atleast_1d(axs), evs.items()):
+        W, H = e["width"], e["width"] // 2
         img = np.full(H * W, np.nan)
         with np.errstate(divide="ignore"):
-            ci = orc.Z95 * 0.25 * fan.res / np.sqrt(e["I"]) / e["rtrue"]
+            ci = orc.Z95 * 0.25 * e["res"] / np.sqrt(e["I"]) / e["rtrue"]
         img[e["pix"]] = np.where(np.isfinite(ci), ci, np.nan)
         img = img.reshape(H, W)
         im = ax.imshow(img, cmap=cmap, norm=norm, extent=(180, -180, -90, 90), aspect="auto", interpolation="nearest")
@@ -226,7 +225,7 @@ def stage5a(runs: dict, out) -> list:
     styles = {"line": (BLUE[3], "o"), "arc": (ACCENT, "s")}
     for k, e in evs.items():
         with np.errstate(divide="ignore"):
-            ci = orc.Z95 * 0.25 * fan.res / np.sqrt(e["I"]) / e["rtrue"]
+            ci = orc.Z95 * 0.25 * e["res"] / np.sqrt(e["I"]) / e["rtrue"]
         psi = np.degrees(e["psi3"])
         med = [np.median(ci[(psi >= a) & (psi < b)]) if np.any((psi >= a) & (psi < b)) else np.nan for a, b in zip(edges[:-1], edges[1:])]
         col, mk = styles["arc" if k.startswith("arc") else "line"]
