@@ -1061,3 +1061,86 @@ by r's eccentricity ([`t1_residual.png`](runs/issue-22/figures/t1_residual.png),
 - For T3, this measures the term #21's model approximates with the sample spacing. A both5 window on a 1 m arc turns
   r + 5 by 28°. Its far frames will match the reference's fovea against images about as blurred as T1's 30° column.
   Whether the near frames and the spread epipoles still win, as the model predicts, is T3's question.
+
+### T2, the crab dolly: an off-centre epipole with no rotation (Chat sandbox; #22)
+
+**The matcher** ([`motion/m6_matcher.py`](../motion/m6_matcher.py)) is M4's frozen matcher with frame k sampled through
+v_k = A_k (m − ζ T_k), where m is the anchor's unit-depth ray and A_k, T_k are k's pose relative to r. Derotation is
+folded into the sampling.
+- It uses M4's settings, sensor map, sampling and window sums; M4's files are untouched.
+- Coarse: each grid node of r is mapped into k's log-polar grid for every ζ. M4's row shift is the case with no
+  rotation and the epipole on the axis.
+- Fine: d I/d ζ comes from the map's analytic derivatives.
+- Texture and px-per-ζ use each frame's epipolar direction.
+- Cost: 108–118 s per reference on the sandbox CPU; M4 takes 61 s.
+
+**T2.0, the reduction to M4** (`m6-t2-repro --refs 12` at `37519cd`, clean; [`t2_repro.json`](runs/issue-22/t2/t2_repro.json)).
+On M4's own run (`runs/m3-calib-1024`, Code's 1024-spp records, the `data-m3-calib-1024` release), M6 with the
+recorded poses gives M4's decision on all 48,752 anchors of r = 12.
+- Coarse NCC is identical, and accepted ζ agrees within 1.6e-13 (relative). **PASS**.
+- Control, epipoles misplaced by 1°: 24.8 % of the decisions differ, and acceptance falls from 0.393 to 0.262. The
+  control fails, as it must.
+
+**T2.1a, the generalised oracle** ([`motion/m6_crab.py`](../motion/m6_crab.py) `oracle`; `m6-t2 --oracle-repro` at
+`e8bbe06`, clean; [`t2_oracle_repro.json`](runs/issue-22/t2/t2_oracle_repro.json)). It is M4's O-M with every
+correspondence placed through the matcher's map, and noise along each frame's epipolar direction. On M4's geometry
+(r = 10, 15) it reproduces M4's recorded O-M (`docs/runs/issue-10/oracle_multiframe.txt`) within 0.0024 at every rung
+and region. **PASS**.
+- Control, translations turned 20°: it differs by up to 0.995, so it fails as it must.
+- Two fixes came on the oracle's first trials:
+  - Projections now use unit directions; `pixel_of` needs them, and without them the noise had no effect.
+  - The first control, noise across the epipolar line, could not fail: O-M's usable fraction is the Fisher interval's,
+    set by the geometry and the stated σ. It was replaced.
+
+**Runs** (records `t2/a{0,10,20}/run.json`): `calib_dolly`'s 22 heads, the head facing α = 0, 10 and 20° left of the
+travel, so the epipole sits α to the right of the fovea with no rotation.
+- Paths: `paths/calib_dolly.json`, `paths/calib_crab_a10.json`, `paths/calib_crab_a20.json`.
+- 256 spp, seeds 8000 + 10α + k, CPU, `full` profile, 682–739 s per run (Chat sandbox).
+- Then `m6-t2 --oracle --rgb` on held-out references 8, 12 and 16, at `e8bbe06` (clean); records
+  `t2/a{α}/t2_oracle.json` and `t2_rgb.json`.
+- Luiz chose the reduced sweep in Chat on 2026-11-16. #21's foreign-geometry control was replaced by the aligned-pose
+  control below, as stated on #22 before these runs.
+
+| | α = 0 | α = 10° | α = 20° |
+|---|---|---|---|
+| O-M field usable at 0.1 / 0.25 / 0.5 px | 0.991 / 0.852 / 0.274 | 0.992 / 0.923 / 0.733 | 0.992 / 0.952 / 0.886 |
+| O-M fovea (< 2°) usable at 0.1 / 0.25 / 0.5 px | 0.834 / 0.025 / 0.004 | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 |
+| O-M median σ_ζ/ζ at 0.25 px, fovea / 5–40° | 0.081 / 0.036 | 0.0086 / 0.021 | 0.0055 / 0.013 |
+| M6 RGB: field usable (of all hits) / accepted | 0.342 / 0.362 | 0.307 / 0.319 | 0.268 / 0.279 |
+| M6 RGB: fovea usable (anchors at 1–2°) | 0.150 | 0.173 | 0.101 |
+| M6 RGB: #5's calibration gate, coverage / median / p90 / > 50 % | 0.465 / 0.61 % / 2.15 % / 0.36 % | 0.404 / 0.49 % / 1.72 % / 0.24 % | 0.365 / 0.30 % / 1.30 % / 0.04 % |
+| interval coverage, interior (both5's scale 1.4875) | 0.951 | 0.931 | 0.924 |
+| rejected as ambiguous | 0.008 | 0.043 | 0.064 |
+
+Controls (each must fail #5's gate, and does):
+- Steps × 1.2, at every α.
+- At α = 10, the crab's images matched with M4's aligned poses: field usable 0.069, gate coverage 0.099, median error
+  26 % (record `t2/a10/aligned_control/`).
+
+None of the three passes #5's calibration gate at 256 spp; all three fail it on coverage. M4 passed it at 1024 spp
+(0.503), so the gate is a 1024-spp matter. Here the α's are compared with each other.
+
+**Diagnosis** (`direction_breakdown`; [`t2_direction.json`](runs/issue-22/t2/t2_direction.json), at `650f919`).
+Acceptance is binned by |cos| of the angle between an anchor's motion and r's radial direction, which is the direction
+M4's windows (± 3 px) are long in:
+
+| α | \|cos\| < 0.5 | 0.5–0.8 | 0.8–0.95 | > 0.95 |
+|---|---|---|---|---|
+| 0 (every anchor radial) | | | | 0.362 (all) |
+| 10° (share of anchors) | 0.195 (24 %) | 0.285 (40 %) | 0.445 (20 %) | 0.436 (15 %) |
+| 20° (share of anchors) | 0.160 (53 %) | 0.371 (25 %) | 0.446 (12 %) | 0.486 (10 %) |
+
+Figures: [`t2_summary.png`](runs/issue-22/figures/t2_summary.png), [`t2_maps.png`](runs/issue-22/figures/t2_maps.png).
+
+**Reading:**
+- **The geometry delivers what #21's model predicted.** With the epipole 10° off, the oracle's fovea becomes fully
+  usable at 0.5 px, against 0.004 on the dolly. Its median relative σ in the fovea falls 9.4× (14.7× at 20°); the model
+  predicted 7.5× at 10°. The whole field gains too.
+- **M6's RGB matcher does not collect that gain yet.** Where it accepts, it is more accurate as α grows: median error
+  0.61 → 0.49 → 0.30 %, p90 2.15 → 1.30 %. But it accepts less: field usable 0.342 → 0.268, with ambiguity eight times
+  as frequent.
+- **The cause is the window, not the geometry.** M4's matching windows are long along r's radius, which was the motion
+  direction under the aligned dolly. Where the crab's motion is still near-radial, M6 accepts more than at α = 0
+  (0.44–0.49 against 0.36). Where it runs across the radius, M6 accepts 0.16–0.20. At α = 20° that is half the field.
+- **The fovea is not measured by T2's RGB.** M4's anchors start at 1°, and the 1–2° ring is mostly where the crab's
+  motion is tangential.
