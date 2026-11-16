@@ -102,7 +102,7 @@ def _pix(model, A, T, m, zeta):
     return rc, inside & (-v[:, 2] > m6.DEPTH_MIN)
 
 
-def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, noise_dir="epipolar", log=print) -> dict:
+def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, noise_dir="epipolar", turn_deg=0.0, log=print) -> dict:
     from . import multiframe as mf
     run = analysis.load_run(run_dir)
     es = {e["k"]: e for e in run["looks"]["ahead"]}
@@ -119,6 +119,7 @@ def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, noise_
         zeta_t = 1.0 / (rng_t * np.cos(e))
         m = d / np.cos(e)[:, None]
         poses = m6.relative_poses(c_r, R_r, [(looks[k][2], looks[k][1]) for k in ks])
+        poses = [(A, _turn_y(T, turn_deg)) for A, T in poses]
         vis = np.stack([analysis._agree(looks[k][0], model, looks[k][1], looks[k][2], P)[0] for k in ks], 1)
         h = 1e-6
         obs, U = [], []
@@ -263,11 +264,13 @@ M4_OM_BOTH5 = {"field_usable": {"0": 1.000, "0.1": 0.991, "0.25": 0.856, "0.5": 
 
 def oracle_repro(run_dir="runs/m3-calib-1024", log=print) -> dict:
     """T2.1a: the generalised O-M reproduces M4's O-M on M4's geometry within 0.01 at every rung and region. Control
-    (must fail): the noise put across each frame's epipolar line instead of along it (it then carries no depth error)."""
+    (must fail): every frame's translation turned 20 deg about r's +Y (a consistent other geometry: the epipoles move
+    off the fovea). A first control, noise across the epipolar line, could not fail: O-M's usable fraction is the
+    Fisher interval's, set by the geometry and the stated sigma, not by the drawn noise (found on its first run)."""
     def worst(o):
         return max(abs(o[sg][reg] - want) for reg, d in M4_OM_BOTH5.items() for sg, want in d.items())
     o = oracle(run_dir, [10, 15], log=log)
-    oc = oracle(run_dir, [10, 15], noise_dir="perpendicular", log=log)
+    oc = oracle(run_dir, [10, 15], turn_deg=20.0, log=log)
     res = {"id": "T2.1a", "max_diff": worst(o), "control_max_diff": worst(oc), "oracle": o, "control_oracle": oc}
     res["ok"], res["control_fails"] = res["max_diff"] <= 0.01, res["control_max_diff"] > 0.01
     log(f"[m6-t2] T2.1a {'PASS' if res['ok'] else 'FAIL'} max diff {res['max_diff']:.4f} (control "
