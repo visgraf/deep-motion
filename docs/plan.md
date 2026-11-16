@@ -423,3 +423,80 @@ median against ψ).
   slightly worse than the line, as stage 3 found, so the ±15° sector counts fewer usable anchors on arc50 than on
   line50. The gain needs longer windows, nearer surfaces or finer pixels (the design's 0.1° is five times finer):
   that is 5b's question.
+
+### Stage 5b.2, Chat part: the composed path and the fusion in world 3D (#7; Chat sandbox)
+
+**What it is.** [`deep/fusion.py`](../deep/fusion.py). The design and the checks were declared on #7 before the code
+was written.
+- **Why not windows.** Sliding windows share looks. Merging their estimates would count the same measurement several
+  times. So the oracle's fusion is a joint fit.
+- **Cells.** Surface cells are 2 cm voxels of the true points.
+- **The fit.** Each cell's 3-D point is fitted by Gauss–Newton to its bearing and elevation in every look that sees it
+  (M1.3's agreement), each look counted once. A step that raises the cost is halved.
+- **Covariance.** σ² × the pixel angle² × H⁻¹.
+- **Usable.** The 95 % interval along the ray is within ±10 % of range from every look that sees the cell.
+
+**Runs** (calibration room, from the EYE heading +Y, Panorama 720 × 360, 16 spp, CPU, 37 looks every 2.5 cm). Each
+path is rendered as two runs (looks 0–18 and 19–36). Records are in [`runs/issue-7/runs/`](runs/issue-7/runs).
+- **composed:** 30 cm line, then a 30 cm left arc (R = 1.6 m, 10.7°), then a 30 cm line. Rendered at `5d34b5f`,
+  194 + 187 s.
+- **straight:** a 90 cm line, for comparison. Rendered at `f5dfa76`, 191 + 181 s.
+
+Commands: `python -m deep stage5b2-render [--path straight] --run runs/s5b2-{a,b,sa,sb} --first 0|19 --last 18|36
+[--seed-base 11000]`.
+
+**Checks** (`python -m deep stage5b2 runs/s5b2-a runs/s5b2-b --out docs/runs/issue-7` at `b8300e9`, clean; record
+[`stage5b2.json`](runs/issue-7/stage5b2.json)). 3 checks PASS; each control fails as it must. The straight path passes
+the same checks at `f5dfa76` ([`stage5b2_straight.json`](runs/issue-7/stage5b2_straight.json)). There, the F1 control
+moves every look, since a straight path has no join.
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| F1 no noise: the fused points are the true points (432 633 cells, 99.95 % seen by two looks) | 7.4e-14 of range | looks after the first join moved 1 cm | median 1.0e-2 |
+| F2 the fused σ is honest: std of along-ray error / Fisher σ (30 draws, 0.5 px, 2000 usable cells) | 0.9993 | each look counted twice (the window-overlap mistake) | 1.413 |
+| F3 the usable cells' 95 % intervals cover the truth (0.25, 0.5, 1 px) | 95.0, 94.9, 94.9 % | σ halved | ≤ 67.4 % |
+
+**F1 failed on its first run, at `5d34b5f`** (record kept:
+[`stage5b2_first_run_F1_fail.json`](runs/issue-7/stage5b2_first_run_F1_fail.json)).
+- **The failure.** Two cells were off by up to 2.3e5 of range: one on the ceiling straight above the path, one on the
+  floor straight below. Both are seen at up to 89.8° elevation, where lon is singular, and a full Gauss–Newton step
+  threw them away.
+- **The fix.** The fit now halves such steps. No threshold moved.
+- **Also changed.** A dry run on 5a's line50 run (not a record) had found one such cell still moving after 15 steps,
+  so the fit now iterates to convergence.
+
+**Results** (from the same records):
+
+| path | σ | usable cells | coverage | median / 95th-percentile 3-D error |
+|---|---|---|---|---|
+| composed | 0.25 px | 96.7 % | 95.0 % | 1.3 / 10.1 cm |
+| | 0.5 px | 91.5 % | 94.9 % | 2.5 / 15.9 cm |
+| | 1 px | 77.0 % | 94.9 % | 4.1 / 20.4 cm |
+| straight | 0.25 / 0.5 / 1 px | 96.7 / 91.6 / 76.7 % | 95.0 / 95.0 / 95.0 % | 1.3 / 2.5 / 4.1 cm median |
+
+**By bearing from the path's middle, relative to the start heading** (Fisher gate at 0.5 px;
+[`stage5b2_cones.json`](runs/issue-7/figures/stage5b2_cones.json), at `db65ef7`):
+
+| path | ahead < 15° | ahead 15–30° | lateral 60–120° | behind > 165° |
+|---|---|---|---|---|
+| composed | 65.6 % | 78.5 % | 100 % | 91.0 % |
+| straight | 61.7 % | 82.2 % | 100 % | 90.7 % |
+
+Figures (at `db65ef7`): [`stage5b2_topdown.png`](runs/issue-7/figures/stage5b2_topdown.png) (the cells from above,
+usable or not, with each path) and [`stage5b2_progress.png`](runs/issue-7/figures/stage5b2_progress.png) (the usable
+fraction as the path is travelled).
+
+**Reading:**
+- **Joint fusion is right, and window fusion would not be.** The fused σ is honest to 0.1 %. Counting each look twice
+  (what merging overlapping windows does) makes σ too small by √2, and F2's control shows it at 1.413.
+- **A 90 cm path in the calibration room fuses most of the room at 0.5°/px.** 91.5 % of the visible surface is usable
+  at 0.5 px, and 77 % at 1 px.
+- **A short arc changes almost nothing overall.** A 10.7° turn moves the totals by under half a point, and the
+  progress curves lie on each other. It shifts precision between neighbouring directions: more ahead within 15° of the
+  start heading (65.6 against 61.7 %), less at 15–30° (78.5 against 82.2 %). Stage 3 predicted that trade.
+- **What is not usable off the heading is mostly what few looks see.** Off the heading, cells that fail are seen by a
+  median of 13 of the 37 looks, against 37 for those that pass. If every look saw them, only 0.5 % would fail (a
+  diagnostic, not in the records). They are surfaces at grazing incidence, where M1.3's 2 px agreement rejects most
+  looks, or cells occluded behind the boards; this run does not separate the two.
+- **Cost.** The checks take 5.7 min in the Chat sandbox, just over the ~5 min batch rule. On Code's machine, at
+  3600 wide, cells grow 25×. Code should use a coarser cell (`cell`) or a subset, and say which.
