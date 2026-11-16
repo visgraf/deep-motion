@@ -903,3 +903,47 @@ All Chat sandbox.
 - Leg B, sideways past the ring cards and toward the right wall, covers more than leg A. In the calibration room, the
   sensor's centre sees nearer, textured walls on that heading.
 - At 64 spp, the cloud is visibly noisy in the 3D panel. The Classroom renders at 1024 spp.
+
+### Code, workstation, the Classroom (RTX 4090, OPTIX, 1024 spp; #19, records in `docs/runs/issue-19/`)
+
+**Step 0** (measured, `a34a576`).
+- P stays at `near_board`, and the turn in place is +70.22° (left), in 35 pivot looks.
+- Leg B runs 27 steps of 0.0990 m toward the front door's centre and ends at (−1.618, 1.664, 1.6). That is 0.44 m from
+  the ajar door leaf.
+- Every phase passed `classroom_dolly`'s preflight limits.
+- Top-view bounds: x −2.445..3.584, y −4.596..3.573.
+
+**The run** (`347d021`, rerun of the fusion, checks and videos at `130ff02`, records `07e57d5`):
+- 256 looks (221 phase looks plus 35 pivot looks), in 7.6 min of rendering.
+- 161 references estimated with `both5` in 7.7 min on CUDA, about 3 s each.
+
+| D1 check | Result |
+|---|---|
+| D1.1 | PASS |
+| D1.2 | PASS: refused across the pivot, max rotation 1.2255 rad |
+| D1.3 | PASS: 0.0188 (A), 0.0126 (B); control 0.0861 fails |
+
+Every control fails as it must.
+
+**Fusion.** 3,668,287 anchors fused into 768,418 voxels.
+- 22,764 anchors (0.62 %, all on leg A, through the windows) have no truth and are left out of the errors.
+- Per anchor: median 0.0085, p90 0.0347.
+- Per voxel: median 7.8 cm, p90 32.8 cm.
+
+**#5's metrics, reported, not gated:**
+
+| phase | coverage | median | p90 | over 50 % | interval coverage |
+|---|---|---|---|---|---|
+| A0 / A1 / A2 | 0.368–0.371 | 0.011 | 0.035 | 0.00001 | 0.94 |
+| B0 / B1 / B2 | 0.387–0.389 | 0.005 | 0.017 | 0.007 | 0.94 |
+
+**Videos** (20.7 s, 1920 × 1080): `d1_tour_classroom_L_{rgb,error}_130ff02.mp4` on the `figures-issue-19` release.
+
+**Reading:**
+- **Leg A repeats #11 on independent renders:** seeds 6000+, and phases offset by 3.3 cm.
+- **Leg B is new geometry for M4.** It is gated nowhere, and passes #5's Classroom thresholds with more coverage and
+  half the error, because the door wall is nearer.
+- **Its errors over 50 % (0.7 %)** come from the ajar door's gap. There the matcher gives the corridor seen behind the
+  door the door's depth: an occlusion edge.
+- **In the error video** the per-voxel mean error (median 1.8 %) is about twice the per-anchor error. Voxels with few
+  anchors, at edges and in sparse regions, carry more of the error.

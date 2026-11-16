@@ -50,7 +50,10 @@ _STOPS = np.stack([_hex(h) for h in BLUE])
 
 def ramp(v) -> np.ndarray:
     """v in [0, 1] -> uint8 rgb along the blue ramp (0 light, 1 dark)."""
-    v = np.clip(np.nan_to_num(np.asarray(v, float), nan=0.0), 0, 1) * (len(_STOPS) - 1)
+    v = np.asarray(v, float)
+    if np.isnan(v).any():                    # a NaN has no colour: fail, never paint it as 0 (#19)
+        raise ValueError("ramp: NaN input (no truth?); colour such voxels explicitly, as error_colours does")
+    v = np.clip(v, 0, 1) * (len(_STOPS) - 1)
     i = np.minimum(np.floor(v).astype(int), len(_STOPS) - 2)
     f = (v - i)[..., None]
     return (_STOPS[i] * (1 - f) + _STOPS[i + 1] * f + 0.5).astype(np.uint8)

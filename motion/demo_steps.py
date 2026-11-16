@@ -373,6 +373,14 @@ def dispatch(a):
             "demo-report": report, "demo-video": demo_video.video}[a.cmd](a)
 
 
+def _raises(f) -> bool:
+    try:
+        f()
+    except ValueError:
+        return True
+    return False
+
+
 def selftest() -> list[tuple[str, bool]]:
     """#19: anchors without truth (rays leaving the scene) must not reach D1.3 or the error colours as NaN."""
     rng = np.random.default_rng(0)
@@ -402,5 +410,6 @@ def selftest() -> list[tuple[str, bool]]:
         ("no-truth counted per leg", no_truth_counts(A, ["A", "B"])["per_leg"] == {"A": n // 10, "B": 0}),
         ("error colours: no-truth voxels grey", bool(nohit_vox.any()) and bool(np.all(col[nohit_vox] == NO_TRUTH))),
         ("error colours: truth voxels on the ramp", bool(np.all(np.any(col[~nohit_vox] != NO_TRUTH, axis=1)))),
+        ("ramp refuses NaN", _raises(lambda: __import__("motion.demo_video", fromlist=["ramp"]).ramp([0.1, np.nan]))),
         ("the old median is NaN (the #19 bug, reproduced)", bool(np.isnan(np.median(np.where(hit, rel, np.nan))))),
     ]
