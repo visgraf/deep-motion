@@ -328,3 +328,93 @@ At the design resolution of 0.1° the steps are five times shorter (stage 3's ta
 at their own rate. What it does not give for free is cost: the dense looks that the uncertain phase needs (sub-cm
 laterally) are many renders. That is the case for Code's GPU, and later perhaps for a `SlitFan` sensor that renders
 only the slits due at each look.
+
+### Stage 5a: the oracle on renders, short windows (#5; Chat sandbox)
+
+**What it is.** [`deep/oracle.py`](../deep/oracle.py): a perfect matcher, as M4's O-M. Every hit of the reference look
+(a window's middle) has its true point P from Position. P is projected into every other look and kept where that look
+sees the same surface (M1.3's agreement, 2 px at the range). There its bearing and elevation are exact or carry
+Gaussian noise of σ ∈ {0.25, 0.5, 1} px (0.5°/px). Range along the anchor ray is fitted by Gauss–Newton through the
+known poses, with analytic derivatives. Usable: a 95 % interval within ±10 % (as M4).
+
+**Runs** (calibration room, from the EYE heading +Y, Panorama 720 × 360, 16 spp, CPU; records in
+[`runs/issue-5/runs/`](runs/issue-5/runs)):
+
+| run | looks | window | rendered at | seconds |
+|---|---|---|---|---|
+| line20 (`s5a-line`) | 21 | 20 cm, 1 cm steps | `5ec7a6f` | 222 |
+| arc20 (`s5a-arc`), R = 1.6 m, left | 21 | 20 cm, 1 cm steps | `5ec7a6f` | 225 |
+| pivot (`s5a-pivot`) | 21 | 20°, 1° steps | `5ec7a6f` | 221 |
+| line50 (`s5a-line50`), addendum | 21 | 50 cm, 2.5 cm steps | `43e6177` | 234 |
+| arc50 (`s5a-arc50`), R = 1.6 m, addendum | 21 | 50 cm, 2.5 cm steps | `43e6177` | 236 |
+
+Commands: `python -m deep stage5a-render --kind {line,arc,pivot} --run runs/s5a-K --seed-base 9200|9300|9400`, and for
+the addendum `--ds 0.025 --seed-base 9500|9600`.
+
+Three departures from #5, said here:
+- The pivot has 21 looks over 20°, not 11 over 10°; `run_poses` shares the look count, and a longer pivot is the
+  harder control.
+- #5 named the sectors but not the angle they are measured in. The first report used bearing over all elevations,
+  where floor and ceiling anchors straight ahead sit far from the heading in 3-D and hide the line's blind cone. The
+  tables now give three ways: the 3-D angle ψ from the heading (primary), bearing at eye height (|lat| < 10°, stage 3's
+  setting), and bearing over all elevations. The checks did not change.
+- The 50 cm windows are an addendum, with tables only and no checks. The 20 cm windows cannot show the arc's heading
+  gain; the atlas predicted that, and the addendum tests it.
+
+**Checks** (`python -m deep stage5a --line runs/s5a-line --arc runs/s5a-arc --pivot runs/s5a-pivot --out
+docs/runs/issue-5` at `60dd9cb`, clean; record [`stage5a.json`](runs/issue-5/stage5a.json)). 3 checks PASS; each control
+fails as it must:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| O5.1 no noise: the fit recovers the true range on every anchor seen by another look | 1.4e-13 | the looks' centres off by 1 cm | median 2.8 % |
+| O5.2 eye height, every look sees it: the oracle's Fisher equals stage 3's atlas (line and arc; 2232 and 2316 anchors) | median 9.4e-5 | the atlas over a window twice as long | median 100 % |
+| O5.3 the pivot carries no range | I ≤ 9.8e-24 of the line's; none usable | the line is usable | 90.9 % |
+
+**Usable fraction, %, by the 3-D angle from the heading** (`python -m deep stage5a-table line20=… arc20=… line50=…
+arc50=… pivot=… --out docs/runs/issue-5` at `594c7cc`, clean; record [`stage5a_table.json`](runs/issue-5/stage5a_table.json)):
+
+| run | σ | heading ψ < 15° | lateral 60–120° | behind ψ ≥ 165° | all |
+|---|---|---|---|---|---|
+| line20 | 0.25 px | 0 | 100 | 0 | 90.9 |
+| | 0.5 px | 0 | 90.9 | 0 | 69.0 |
+| | 1 px | 0 | 62.5 | 0 | 39.4 |
+| arc20 | 0.25 / 0.5 / 1 px | 0 / 0 / 0 | 99.9 / 90.9 / 62.6 | 0 / 0 / 0 | 90.9 / 68.8 / 39.4 |
+| line50 | 0.25 px | 27.8 | 100 | 59.1 | 98.3 |
+| | 0.5 px | 16.6 | 100 | 0 | 93.5 |
+| | 1 px | 0 | 99.8 | 0 | 78.3 |
+| arc50 | 0.25 px | 16.2 | 100 | 63.2 | 98.2 |
+| | 0.5 px | 5.8 | 100 | 0 | 93.4 |
+| | 1 px | 0 | 98.8 | 0 | 78.0 |
+| pivot | every rung | 0 | 0 | 0 | 0 |
+
+At eye height (the walls, 1.7–5 m), the lateral sector is usable at 99.8 / 50.3 / 1.2 % (line20, 0.25 / 0.5 / 1 px)
+and 100 / 99.9 / 98.9 % (line50); arcs within a point of the lines, except arc50 at 1 px (92.5 %). The usable anchors'
+95 % intervals cover the truth 94.9–95.0 % of the time on every run and rung.
+
+**Near the heading** (median 95 % half-interval / range at 0.25 px, by ψ; the profile in the same record and figure):
+
+| ψ | 0–2° | 2–5° | 5–10° | 175–178° | 178–180° |
+|---|---|---|---|---|---|
+| median range, m | 4.8 | 4.8 | 4.8 | 2.7 | 2.7 |
+| line20 / arc20 | 3.33 / 1.88 | 1.01 / 0.95 | 0.49 / 0.52 | 0.60 / 0.56 | 1.57 / 1.14 |
+| line50 / arc50 | 1.14 / 0.44 | 0.39 / 0.30 | 0.18 / 0.19 | 0.25 / 0.19 | 0.65 / 0.25 |
+
+Figures (at `60dd9cb`): [`stage5a_maps.png`](runs/issue-5/figures/stage5a_maps.png) (the half-interval over each
+reference panorama, the ±10 % contour) and [`stage5a_profile.png`](runs/issue-5/figures/stage5a_profile.png) (its
+median against ψ).
+
+**Reading:**
+- **The oracle works on renders and agrees with the atlas.** It recovers range exactly without noise, its Fisher bound
+  is stage 3's to 1e-4, the pivot carries nothing, and its intervals are calibrated (95.0 % coverage).
+- **The calibration room does not test visibility.** Over windows up to 50 cm, every anchor is seen by another look
+  (≥ 99.999 %). Occlusion is the Classroom's question (5b, stage 6).
+- **Window length and pixel noise set precision.** At 0.5°/px, 20 cm windows give the walls only at 0.25 px; 50 cm
+  windows give the lateral walls at 1 px. Precision near the heading and behind grows fastest with the window.
+- **The arc's heading gain is real on renders but small at these lengths.** At 20 cm, arc and line are the same
+  everywhere but the innermost cone. At 50 cm the arc's median interval in the 2° cone is 2.6 times the line's
+  precision (±44 % against ±114 %), and behind it is also better. The wall ahead is at 4.8 m, and neither reaches
+  ±10 % there; the atlas puts the arc at ±10 % at 1.5 m with a 50 cm window and 0.25 px. Between 5° and 15° the arc is
+  slightly worse than the line, as stage 3 found, so the ±15° sector counts fewer usable anchors on arc50 than on
+  line50. The gain needs longer windows, nearer surfaces or finer pixels (the design's 0.1° is five times finer):
+  that is 5b's question.
