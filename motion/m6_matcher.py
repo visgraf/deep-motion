@@ -170,13 +170,16 @@ def coarse_curves(Jr, Js, maps, zetas, grid, rows, s):
     return total, count
 
 
-def joint_fit(Ir, Is, maps, fm, q, phi, gq, gp, zeta0, mask0, s):
-    """M4's joint_fit with frame k sampled through its FrameMap (see the module docstring)."""
+def joint_fit(Ir, Is, maps, fm, q, phi, gq, gp, zeta0, mask0, s, ref_sample=None):
+    """M4's joint_fit with frame k sampled through its FrameMap (see the module docstring). ref_sample(Q, PH) samples
+    r at grid coordinates (default: r's own log-polar, M4's)."""
     dt = q.dtype
+    if ref_sample is None:
+        ref_sample = lambda Q_, P_: mb.sample(Ir, fm, Q_, P_)
     N, K = len(q), len(Is)
     u, v = mb._patch(s, gq, gp, dt)
     Q, PH = q[:, None] + u, phi[:, None] + v
-    A = mb.sample(Ir, fm, Q, PH)
+    A = ref_sample(Q, PH)
     a_ok = torch.isfinite(A).all(1)
     mx, my, mz = _m(Q, PH)
     zeta, zq = zeta0.clone(), torch.zeros_like(zeta0)
@@ -287,7 +290,7 @@ def joint_fit(Ir, Is, maps, fm, q, phi, gq, gp, zeta0, mask0, s):
         nrm = torch.sqrt(ex * ex + ey * ey)
         cx, cy = ex / nrm, ey / nrm
         dq_s, dp_s = (0.5 * cx / gq)[:, None], (0.5 * cy / gp)[:, None]
-        gr = mb.sample(Ir, fm, Q + dq_s, PH + dp_s) - mb.sample(Ir, fm, Q - dq_s, PH - dp_s)
+        gr = ref_sample(Q + dq_s, PH + dp_s) - ref_sample(Q - dq_s, PH - dp_s)
         tk = torch.sqrt((gr ** 2).mean(1)) / torch.abs(A.mean(1))
         tex = torch.fmax(tex, torch.where(nrm > 0, tk, torch.full_like(tk, float("nan"))))
     tex = torch.where(tex < 0, torch.full_like(tex, float("nan")), tex)
@@ -311,34 +314,211 @@ def px_per_zeta(model, maps, qb, pb, dev):
     return np.stack(out, 1)
 
 
-def match_reference(img_r, imgs, poses, model, settings=None, dev=None):
-    """As multibaseline.match_reference, with poses [(A_k, T_k)] (relative_poses) instead of signed steps."""
+# ----------------------------------------------------------------------------- rectification (#22, option A)
+
+def window_epipole(poses):
+    """The window's mean forward epipole in r's eye frame (each frame's epipole as a line, turned forward)."""
+    hs = []
+    for _, T in poses:
+        h = np.asarray(T, float) / np.linalg.norm(T)
+        hs.append(h if h[2] <= 0 else -h)
+    hb = np.mean(hs, 0)
+    return hb / np.linalg.norm(hb)
+
+
+def rectifying_rotation(poses, tol=1e-12):
+    """V (virtual eye frame -> r's eye frame) taking the virtual axis -Z to the window's mean epipole: the minimal
+    rotation; exactly the identity when the epipole is r's axis (M4's dolly). Returns V, the angle (rad)."""
+    a = np.array([0.0, 0.0, -1.0])
+    b = window_epipole(poses)
+    ang = float(np.arctan2(np.linalg.norm(np.cross(a, b)), a @ b))
+    if ang < tol:
+        return np.eye(3), 0.0
+    k = np.cross(a, b)
+    k /= np.linalg.norm(k)
+    K = np.array([[0, -k[2], k[1]], [k[2], 0, -k[0]], [-k[1], k[0], 0]])
+    return np.eye(3) + np.sin(ang) * K + (1 - np.cos(ang)) * K @ K, ang
+
+
+class View:
+    """Virtual log-polar (q, phi) about the window's epipole -> r's native raster (torch), and the same in numpy."""
+
+    def __init__(self, model, fm, V, dev, dtype=torch.float64):
+        self.model, self.fm, self.Vn = model, fm, np.asarray(V, float)
+        self.V = torch.tensor(self.Vn, dtype=dtype, device=dev)
+
+    def rc(self, qv, phv):
+        mx, my, mz = _m(qv, phv)
+        V = self.V
+        dx, dy, dz = (V[0, 0] * mx + V[0, 1] * my + V[0, 2] * mz, V[1, 0] * mx + V[1, 1] * my + V[1, 2] * mz,
+                      V[2, 0] * mx + V[2, 1] * my + V[2, 2] * mz)
+        front = -dz > 0
+        dz = torch.where(front, dz, -torch.ones_like(dz))
+        q = 0.5 * torch.log(dx * dx + dy * dy) - torch.log(-dz)
+        i, j, inside = self.fm.rc(q, torch.atan2(dy, dx))
+        return i, j, inside & front
+
+    def sample(self, img, qv, phv):
+        i, j, inside = self.rc(qv, phv)
+        v = mb.bilinear(img, i, j)
+        return torch.where(inside, v, torch.full_like(v, float("nan")))
+
+    def rc_np(self, qv, phv):
+        d = lp.dir_of_qphi(qv, phv) @ self.Vn.T
+        rc, inside = self.model.pixel_of(lp.unit(d))
+        return rc, inside & (d[..., 2] < 0)
+
+    def px_per(self, qv, phv, h=1e-5):
+        """Native px per unit virtual q and per unit virtual phi (numpy)."""
+        gq = np.linalg.norm(self.rc_np(qv + h, phv)[0] - self.rc_np(qv - h, phv)[0], axis=-1) / (2 * h)
+        gp = np.linalg.norm(self.rc_np(qv, phv + h)[0] - self.rc_np(qv, phv - h)[0], axis=-1) / (2 * h)
+        return gq, gp
+
+
+class VGrid:
+    """M4's grid laid out about the virtual axis, with native px per q and per phi at every node (windows per node)."""
+
+    def __init__(self, view: View, s, ang, dev, dtype=torch.float64):
+        dq = s["coarse_dq"]
+        q_lo = lp.q_of_e(np.radians(s["e_grid_lo_deg"]))
+        q_hi = lp.q_of_e(np.radians(min(89.0, 45.0 + np.degrees(ang) + 2.0)))
+        n = int(np.ceil((q_hi - q_lo) / dq)) + 1
+        qn = q_hi - dq * np.arange(n)[::-1]
+        self.q = torch.tensor(qn, dtype=dtype, device=dev)
+        phn = -np.pi + (np.arange(s["n_phi"]) + 0.5) * (2 * np.pi / s["n_phi"])
+        self.phi = torch.tensor(phn, dtype=dtype, device=dev)
+        Q, PH = torch.meshgrid(self.q, self.phi, indexing="ij")
+        self.i, self.j, self.inside = view.rc(Q, PH)
+        Qn, Pn = np.meshgrid(qn, phn, indexing="ij")
+        gq, gp = view.px_per(Qn, Pn)
+        ins = self.inside.cpu().numpy()
+        self.gq_node = torch.tensor(np.where(ins, gq, np.nan), dtype=dtype, device=dev)
+        self.gp_node = torch.tensor(np.where(ins, gp, np.nan), dtype=dtype, device=dev)
+        self.dq, self.dphi = dq, 2 * np.pi / s["n_phi"]
+
+    def unwrap(self, img):
+        v = mb.bilinear(img, self.i, self.j)
+        return torch.where(self.inside, v, torch.full_like(v, float("nan")))
+
+
+def _box_node(X, ri, h, w, wmax):
+    """Window sums with a window per node: rows ri (R,) +/- h (R, P), periodic columns +/- w (R, P); X (E, P)."""
+    C = torch.cat([torch.zeros_like(X[:1]), torch.cumsum(X, 0)])
+    R, P = h.shape
+    rr = ri[:, None].expand(R, P)
+    S = torch.gather(C, 0, rr + h + 1) - torch.gather(C, 0, rr - h)
+    if wmax:
+        S = torch.cat([S[:, -wmax:], S, S[:, :wmax]], 1)
+    C2 = torch.cat([torch.zeros_like(S[:, :1]), torch.cumsum(S, 1)], 1)
+    j = torch.arange(P, device=X.device)[None, :] + wmax
+    return torch.gather(C2, 1, j + w + 1) - torch.gather(C2, 1, j - w)
+
+
+def coarse_curves_v(Jr, Js, maps, zetas, grid: VGrid, rows, s):
+    """coarse_curves on the virtual grid: frames sampled on their own grid through their FrameMap (virtual -> k), windows
+    of +/- r_half_px native px along the virtual radius (the epipolar line) and +/- a_half_px across, per node."""
+    dev = Jr.device
+    gq = torch.nan_to_num(grid.gq_node[rows], nan=1e9)
+    gp = torch.nan_to_num(grid.gp_node[rows], nan=1e9)
+    hq = torch.clamp(torch.round(s["r_half_px"] / (gq * grid.dq)), min=1).long()
+    hp = torch.clamp(torch.round(s["a_half_px"] / (gp * grid.dphi)), min=0).long()
+    hp = torch.clamp(hp, max=s["n_phi"] // 4)
+    hmax, wmax = int(hq.max()), int(hp.max())
+    R, P = Jr.shape
+    lo, hi = int(rows.min()) - hmax, int(rows.max()) + hmax
+    ext = torch.arange(lo, hi + 1, device=dev)
+    ri = rows - lo
+    nfull = ((2 * hq + 1) * (2 * hp + 1)).to(Jr.dtype)
+    def take_rows(J, rr):
+        ok = (rr >= 0) & (rr < R)
+        out = J[rr.clamp(0, R - 1)]
+        return torch.where(ok[:, None], out, torch.full_like(out, float("nan")))
+    A = take_rows(Jr, ext)
+    Ma = torch.isfinite(A)
+    Ae = torch.where(Ma, A, torch.zeros_like(A))
+    box = lambda X: _box_node(X, ri, hq, hp, wmax)
+    Sa, Saa = box(Ae), box(Ae * Ae)
+    na = box(Ma.to(Jr.dtype))
+    va = Saa - Sa * Sa / nfull
+    a_ok = (na == nfull) & (va > 1e-12)
+    qn = grid.q[0] + ext.to(Jr.dtype) * grid.dq
+    Qn, PHn = torch.meshgrid(qn, grid.phi, indexing="ij")
+    mx, my, mz = _m(Qn, PHn)
+    total = torch.zeros((len(rows), P, len(zetas)), dtype=torch.float32, device=dev)
+    count = torch.zeros((len(rows), P, len(zetas)), dtype=torch.int16, device=dev)
+    for Jk, (fm_k, grid_k) in zip(Js, maps):
+        for z_i, zeta in enumerate(zetas):
+            qk, pk, okd, _, _ = fm_k.qphi(mx, my, mz, zeta)
+            if not bool(okd.any()):
+                continue
+            row = (qk - grid_k.q[0]) / grid_k.dq
+            col = (pk + math.pi) / grid_k.dphi - 0.5
+            T = _sample_grid(Jk, row, col, P)
+            T = torch.where(okd, T, torch.full_like(T, float("nan")))
+            Mt = torch.isfinite(T)
+            Te = torch.where(Mt, T, torch.zeros_like(T))
+            n = box((Ma & Mt).to(Jr.dtype))
+            St, Stt, Sat = box(Te), box(Te * Te), box(Ae * Te)
+            vt = Stt - St * St / nfull
+            c = (Sat - Sa * St / nfull) / torch.sqrt(torch.clamp(va * vt, min=1e-300))
+            ok = a_ok & (n == nfull) & (vt > 1e-12)
+            total[:, :, z_i] += torch.where(ok, c, torch.zeros_like(c)).float()
+            count[:, :, z_i] += ok.to(torch.int16)
+    return total, count
+
+
+def match_reference(img_r, imgs, poses, model, settings=None, dev=None, rectify=True):
+    """As multibaseline.match_reference, with poses [(A_k, T_k)] (relative_poses) instead of signed steps. With rectify
+    (#22, option A), everything is laid out about the window's mean epipole: a virtual eye frame V (virtual -> r) whose
+    axis is that epipole; zeta is then the inverse depth along it, and the anchors' e, phi, q are virtual (e_ref is r's
+    own eccentricity). When the epipole is r's axis, V is the identity and the path is M4's grid, unchanged."""
     s = dict(SETTINGS, **(settings or {}))
     dev = dev or mb.device()
     dt = torch.float64
     fm = mb.FovMap(model, dev)
-    grid = mb.Grid(model, fm, s, dev, dt)
+    V, ang = rectifying_rotation(poses) if rectify else (np.eye(3), 0.0)
+    virtual = ang > 0
     to_t = lambda a: torch.tensor(np.asarray(a, np.float64), dtype=dt, device=dev)
     Ir, Is = to_t(img_r), [to_t(x) for x in imgs]
-    Jr, Js = grid.unwrap(Ir), [grid.unwrap(x) for x in Is]
-    maps = [FrameMap(A, T, dev, dt) for A, T in poses]
+    if virtual:
+        view = View(model, fm, V, dev, dt)
+        grid = VGrid(view, s, ang, dev, dt)
+        kgrid = mb.Grid(model, fm, s, dev, dt)                          # each frame's own log-polar grid
+        Jr, Js = grid.unwrap(Ir), [kgrid.unwrap(x) for x in Is]
+        maps = [FrameMap(np.asarray(A) @ V, V.T @ np.asarray(T, float), dev, dt) for A, T in poses]
+        ref_sample = lambda Q_, P_: view.sample(Ir, Q_, P_)
+        gq_grid = grid.gq_node
+    else:
+        grid = mb.Grid(model, fm, s, dev, dt)
+        Jr, Js = grid.unwrap(Ir), [grid.unwrap(x) for x in Is]
+        maps = [FrameMap(A, T, dev, dt) for A, T in poses]
+        ref_sample = None
+        gq_grid = grid.gq
     tmax = max(float(np.linalg.norm(T)) for _, T in poses)
     zmin, zmax = s["z_envelope_m"]
-    gmax = float(grid.gq.max())
+    gmax = float(torch.nan_to_num(gq_grid, nan=0.0).max())
     dz = s["zeta_step_px"] / (gmax * tmax)
     zetas = list(np.arange(0.0, 1.0 / zmin + dz, dz))
-    e_lo, e_hi = np.radians(s["e_anchor_deg"][0]), np.radians(s["e_anchor_deg"][1])
+    e_lo, e_hi = np.radians(s["e_anchor_deg"][0]), np.radians(s["e_anchor_deg"][1] + np.degrees(ang))
     qn = grid.q.cpu().numpy()
-    rows = torch.tensor(np.flatnonzero((qn >= lp.q_of_e(e_lo) - 2 * grid.dq) & (qn <= lp.q_of_e(e_hi) + 2 * grid.dq)),
+    rows = torch.tensor(np.flatnonzero((qn >= lp.q_of_e(e_lo) - 2 * grid.dq) & (qn <= lp.q_of_e(min(e_hi, np.radians(89.0))) + 2 * grid.dq)),
                         device=dev)
-    total, count = coarse_curves(Jr, Js, maps, zetas, grid, rows, s)
+    if virtual:
+        total, count = coarse_curves_v(Jr, Js, list(zip(maps, [kgrid] * len(maps))), zetas, grid, rows, s)
+    else:
+        total, count = coarse_curves(Jr, Js, maps, zetas, grid, rows, s)
     with np.errstate(invalid="ignore"):
         C = torch.where(count >= s["min_frames"], total / torch.clamp(count.float(), min=1), torch.full_like(total, float("nan")))
     rays = model.rays()
-    e_px, phi_px = lp.e_phi(rays.direction)
+    e_ref_px = lp.e_phi(rays.direction)[0]
+    if virtual:
+        e_px, phi_px = lp.e_phi(lp.unit(rays.direction.astype(np.float64)) @ V)   # virtual coordinates (V^T d)
+    else:
+        e_px, phi_px = e_ref_px, lp.e_phi(rays.direction)[1]            # M4's, unchanged
     sel = rays.valid & (e_px >= e_lo) & (e_px <= e_hi)
     flat = np.flatnonzero(sel.reshape(-1))
     eb, pb = e_px.reshape(-1)[flat], phi_px.reshape(-1)[flat]
+    e_ref = e_ref_px.reshape(-1)[flat]
     qb = lp.q_of_e(eb)
     ir = np.clip(np.rint((qb - qn[rows[0].item()]) / grid.dq).astype(int), 0, len(rows) - 1)
     ic = np.mod(np.rint((pb + np.pi) / grid.dphi - 0.5).astype(int), s["n_phi"])
@@ -347,9 +527,12 @@ def match_reference(img_r, imgs, poses, model, settings=None, dev=None):
     cz = torch.nan_to_num(curves, nan=-2.0)
     j1 = torch.argmax(cz, 1)
     c1 = cz.gather(1, j1[:, None])[:, 0]
-    gq_b = lp.native_px_per_q(model, qb, pb)
-    gp_b = np.linalg.norm(model.pixel_of(lp.dir_of_e_phi(eb, pb + 1e-5))[0] - model.pixel_of(lp.dir_of_e_phi(eb, pb - 1e-5))[0],
-                          axis=-1) / 2e-5
+    if virtual:
+        gq_b, gp_b = view.px_per(qb, pb)
+    else:
+        gq_b = lp.native_px_per_q(model, qb, pb)
+        gp_b = np.linalg.norm(model.pixel_of(lp.dir_of_e_phi(eb, pb + 1e-5))[0] - model.pixel_of(lp.dir_of_e_phi(eb, pb - 1e-5))[0],
+                              axis=-1) / 2e-5
     gk = px_per_zeta(model, maps, qb, pb, dev)
     geq = gk.max(1)
     excl = torch.tensor(np.ceil(s["excl_px"] / (geq * dz)), device=dev)
@@ -368,7 +551,7 @@ def match_reference(img_r, imgs, poses, model, settings=None, dev=None):
     for a in range(0, N, s["chunk"]):
         b = min(N, a + s["chunk"])
         m0 = torch.ones((b - a, len(Is)), dtype=torch.bool, device=dev)
-        f = joint_fit(Ir, Is, maps, fm, q_t[a:b], p_t[a:b], gq_t[a:b], gp_t[a:b], zeta0[a:b], m0, s)
+        f = joint_fit(Ir, Is, maps, fm, q_t[a:b], p_t[a:b], gq_t[a:b], gp_t[a:b], zeta0[a:b], m0, s, ref_sample=ref_sample)
         for k in out:
             out[k].append(f[k])
     fit = {k: torch.cat(v).cpu().numpy() for k, v in out.items()}
@@ -422,7 +605,7 @@ def match_reference(img_r, imgs, poses, model, settings=None, dev=None):
     edge_dev = dev_.reshape(-1)[flat]
     mark(cand2 & (edge_dev > s["edge_tol_px"]), "depth_edge")
     half = Z95 * s["interval_scale"] * sig
-    return {"flat": flat, "e": eb, "phi": pb, "q": qb, "zeta": zeta, "zeta_lo": zeta - half, "zeta_hi": zeta + half,
+    return {"flat": flat, "e": eb, "e_ref": e_ref, "V": V, "rectify_deg": float(np.degrees(ang)), "phi": pb, "q": qb, "zeta": zeta, "zeta_lo": zeta - half, "zeta_hi": zeta + half,
             "sigma_zeta": sig, "sigma_px": sig * geq, "zeta_q": fit["zeta_q"], "n_frames": fit["n_frames"],
             "ncc_coarse": c1n, "ncc_second": c2n, "zeta_coarse": z0, "texture": fit["texture"], "support": support,
             "edge_dev_px": edge_dev, "px_per_zeta": geq, "px_per_zeta_frames": gk, "reason": reason,
