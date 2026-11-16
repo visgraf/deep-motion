@@ -989,3 +989,19 @@ Two changes before this record, both on the first run of the module, neither mov
   exceed. Too narrow to rely on, so the control now misplaces them by 20° (13.8 %).
 - The table check compared with #21's 2-decimal table at 0.005 and passed at 0.00495, its rounding. It now compares with
   #21's script at 4 decimals, within 1e-4. The module and #21's script agree to 8e-10 (Chat sandbox).
+
+**Figures** ([`m6_figures.py`](../motion/m6_figures.py); `python -m motion.dolly m6-figures --out
+docs/runs/issue-22/figures` at `9f7485b`, Chat sandbox, 7 s). All three draw #21's model from the poses alone.
+- [`t0_field_maps.png`](runs/issue-22/figures/t0_field_maps.png): depth precision over the Foveated `full` raster for
+  each case, with the window's epipoles. The median over the fovea's pixels is 0.48 for the straight dolly, 3.58 for
+  the crab, and 0.63 / 0.72 / 0.77 on arcs of 4 / 2 / 1 m (1 = M4 at 20°).
+- [`t0_profiles.png`](runs/issue-22/figures/t0_profiles.png): the same as the median over azimuth against eccentricity,
+  with the 10–90 % band.
+- [`t0_resolution.png`](runs/issue-22/figures/t0_resolution.png): the sample spacing at which frame r + k sees the
+  reference's fovea, relative to the fovea's own. At r + 5 it is 3.0× (R = 8 m), 4.9× (4 m), 8.8× (2 m), 12.1× (1.4 m)
+  and 16.5× (1 m).
+
+Reading: on arcs, the spread epipoles fill the straight dolly's foveal hole, but the far frames' coarse sampling caps
+the gain at about the field's level (0.6–0.8). Only an epipole held outside the fovea with no rotation, as in the crab,
+makes the fovea the best depth sensor in the field. T1 measures the first part of that cost on renders, and T2 the
+second.
