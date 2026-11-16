@@ -1144,3 +1144,35 @@ Figures: [`t2_summary.png`](runs/issue-22/figures/t2_summary.png), [`t2_maps.png
   (0.44–0.49 against 0.36). Where it runs across the radius, M6 accepts 0.16–0.20. At α = 20° that is half the field.
 - **The fovea is not measured by T2's RGB.** M4's anchors start at 1°, and the 1–2° ring is mostly where the crab's
   motion is tangential.
+
+**Option A, rectification about the window's epipole: a first trial** (Luiz's choice on #22, 2026-11-16, in Chat).
+`m6_matcher.match_reference(..., rectify=True)` at `d80f11e` lays M4's grid out about the window's mean forward
+epipole.
+- A virtual eye frame V takes the virtual axis to that epipole. The windows are ± 3 native px along the virtual radius,
+  which is the epipolar line, sized per node.
+- r is sampled through V, and the frames through their own grids. ζ is the inverse depth along the virtual axis.
+- At α = 0, V = I and the path is M4's grid. T2.0, re-run after the change at `36a39c9`, is reported on #22.
+
+On the crab at α = 10°, reference 12 (Chat sandbox; the trial ran on a working tree identical to `d80f11e`):
+
+| | unrectified (T2) | rectified |
+|---|---|---|
+| accepted / usable | 0.320 / 0.318 | 0.302 / 0.302 |
+| fovea usable (r's e < 2°; rectified anchors include e < 1°) | 0.106 (1–2°) | 0.118 (2,417 anchors) |
+| invalid support / ambiguous / depth edge / low NCC | 0.047 / 0.043 / 0.298 / 0.246 | 0.137 / 0.043 / 0.207 / 0.259 |
+| seconds per reference | 108 | 623 |
+
+**Rectification, as built, does not help.** Ambiguity is unchanged, and the gain from fewer depth-edge rejections is
+lost to invalid support. The rectified windows are oriented along the epipolar line in virtual coordinates, but they
+hang off the reference's field near its rim.
+
+The motion-direction effect is still real when anchors are binned by their angle ψ from the epipole. At α = 20°:
+
+| ψ | 0–10° | 10–20° | 20–30° | 30–45° | 45–70° |
+|---|---|---|---|---|---|
+| \|cos\| < 0.5 (motion across r's radius) | 0.187 | 0.159 | 0.174 | 0.130 | 0.013 |
+| \|cos\| ≥ 0.8 (motion along r's radius) | 0.346 | 0.240 | 0.281 | 0.690 | 0.599 |
+
+So the T2 diagnosis stands: matching fails where the motion crosses M4's windows, at any distance from the epipole.
+Rectification v1 does not cure it, so the cause lies elsewhere in the matcher as well. Rectification stays in the code,
+off by default (`36a39c9`), so T2's records reproduce.
