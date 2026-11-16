@@ -1,7 +1,7 @@
 """python -m deep <command>: deep-motion's commands.
 
-    selftest [--out DIR]    stage 2 (#2): the primitives' geometry, numpy only
-    figures --out DIR       stage 2's figure
+    selftest [--stage 2|3] [--out DIR]   stage 2 (#2) the primitives' geometry; stage 3 (#3) the atlas; numpy only
+    figures [--stage 2|3] --out DIR      a stage's figures
 """
 from __future__ import annotations
 
@@ -24,22 +24,23 @@ def _git(path: Path) -> dict:
 
 
 def selftest(a) -> int:
-    from . import primitives
-    res, num = primitives.selftest()
+    from . import atlas, primitives
+    stage = {"2": primitives, "3": atlas}[a.stage]
+    res, num = stage.selftest()
     for name, ok in res:
-        print(f"{PREFIX} stage 2 {'PASS' if ok else 'FAIL'} {name}")
+        print(f"{PREFIX} stage {a.stage} {'PASS' if ok else 'FAIL'} {name}")
     if a.out:
         out = Path(a.out)
         out.mkdir(parents=True, exist_ok=True)
         rec = {"command": "selftest", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
                "numpy": np.__version__, "python": sys.version.split()[0], "computed_by": {"deep-motion": _git(REPO)}}
-        (out / "stage2_selftest.json").write_text(json.dumps(rec, indent=1, default=float))
+        (out / f"stage{a.stage}_selftest.json").write_text(json.dumps(rec, indent=1, default=float))
     return 0 if all(ok for _, ok in res) else 1
 
 
 def figures(a) -> int:
     from . import figures as fg
-    for f in fg.stage2(a.out):
+    for f in {"2": fg.stage2, "3": fg.stage3}[a.stage](a.out):
         print(f"{PREFIX} figure {f}")
     return 0
 
@@ -47,9 +48,11 @@ def figures(a) -> int:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m deep")
     sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("selftest", help="stage 2: the primitives' geometry (numpy)")
+    p = sub.add_parser("selftest", help="a stage's checks: 2 the primitives' geometry, 3 the atlas (numpy)")
+    p.add_argument("--stage", default="2", choices=["2", "3"])
     p.add_argument("--out", default=None)
-    p = sub.add_parser("figures", help="stage 2's figure")
+    p = sub.add_parser("figures", help="a stage's figures")
+    p.add_argument("--stage", default="2", choices=["2", "3"])
     p.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     return {"selftest": selftest, "figures": figures}[a.cmd](a)
