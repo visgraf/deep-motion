@@ -461,6 +461,29 @@ def m6_t2_repro(a) -> int:
     return 0 if res["check"]["ok"] and res["check"]["control_fails"] else 1
 
 
+def m6_t2(a) -> int:
+    """M6 T2 (#22) on a crab run: the O-M oracle and M6's matcher on held-out references; --oracle-repro: T2.1a."""
+    from . import m6_crab
+    import torch
+    git = {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER), "torch": torch.__version__}
+    out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    if a.oracle_repro:
+        res = m6_crab.oracle_repro()
+        res["computed_by"] = git
+        (out / "t2_oracle_repro.json").write_text(json.dumps(res, indent=1, default=float))
+        return 0 if res["ok"] and res["control_fails"] else 1
+    if a.oracle:
+        o = m6_crab.oracle(a.run, a.refs)
+        (out / "t2_oracle.json").write_text(json.dumps({"run": a.run, "refs": a.refs, "computed_by": git, "oracle": o},
+                                                       indent=1, default=float))
+    if a.rgb:
+        m6_crab.rgb(a.run, a.refs, out / "rgb", git=git)
+    if a.control_aligned:
+        m6_crab.rgb(a.run, a.refs, out / "rgb_aligned_control", git=git, poses_override=m6_crab.aligned_override)
+    return 0
+
+
 def _m4_log(m):
     print(m, flush=True)
 
@@ -699,6 +722,14 @@ def main(argv=None) -> int:
     p.add_argument("--run", default="runs/m3-calib-1024")
     p.add_argument("--refs", type=int, nargs="+", default=[12])
     p.add_argument("--out", default=None)
+    p = sub.add_parser("m6-t2", help="M6 T2: the O-M oracle and M6's matcher on a crab run")
+    p.add_argument("--run", default=None)
+    p.add_argument("--refs", type=int, nargs="+", default=[8, 12, 16])
+    p.add_argument("--out", required=True)
+    p.add_argument("--oracle", action="store_true")
+    p.add_argument("--rgb", action="store_true")
+    p.add_argument("--control-aligned", action="store_true", help="the crab's images matched with M4's aligned poses")
+    p.add_argument("--oracle-repro", action="store_true", help="T2.1a on M4's own run")
     p = sub.add_parser("m6-figures", help="M6 T0 figures: #21's information model on the Foveated raster")
     p.add_argument("--out", required=True)
     p = sub.add_parser("m4-fixtures")
@@ -756,7 +787,7 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m6-figures": m6_figures, "m6-t1-render": m6_t1_render, "m6-t1": m6_t1, "m6-t2-repro": m6_t2_repro, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
+            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m6-figures": m6_figures, "m6-t1-render": m6_t1_render, "m6-t1": m6_t1, "m6-t2-repro": m6_t2_repro, "m6-t2": m6_t2, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
             "m4-calibration": m4_calibration, "m4-classroom": m4_classroom, "m4-freeze": m4_freeze,
             "m4-oracle": m4_oracle}[a.cmd](a)
 

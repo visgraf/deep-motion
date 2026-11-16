@@ -97,12 +97,12 @@ def _frame_poses(ob, r, ks):
 
 
 def _pix(model, A, T, m, zeta):
-    v = (m - zeta[:, None] * T[None]) @ A.T
-    rc, inside = model.pixel_of(v)
+    v = (m - zeta[:, None] * T[None]) @ A.T                  # unit depth along r's axis; pixel_of needs unit vectors
+    rc, inside = model.pixel_of(lp.unit(v))
     return rc, inside & (-v[:, 2] > m6.DEPTH_MIN)
 
 
-def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, log=print) -> dict:
+def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, noise_dir="epipolar", log=print) -> dict:
     from . import multiframe as mf
     run = analysis.load_run(run_dir)
     es = {e["k"]: e for e in run["looks"]["ahead"]}
@@ -130,7 +130,9 @@ def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, log=pr
             obs.append((rc0, in0, g / np.where(gn > 0, gn, 1)[:, None]))
         for s in sigmas:
             rs = np.random.default_rng(seed + 7919 * r)
-            O = [(rc0 + (rs.normal(size=len(m)) * s)[:, None] * u, ok) for rc0, ok, u in obs]
+            perp = lambda u: np.stack([-u[:, 1], u[:, 0]], -1)
+            O = [(rc0 + (rs.normal(size=len(m)) * s)[:, None] * (u if noise_dir == "epipolar" else perp(u)), ok)
+                 for rc0, ok, u in obs]
             sig = max(s, 1e-3)
             zeta = zeta_t * (1 + 0.05 * rs.normal(size=len(m)))         # started near the truth: O-M fits, it does not search
             zeta = np.clip(zeta, 1e-6, None)
@@ -144,7 +146,8 @@ def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, log=pr
                     w = vis[:, j] & ok & inside & np.isfinite(J) & np.isfinite(res)
                     Hs += np.where(w, J * J, 0.0)
                     gs += np.where(w, J * res, 0.0)
-                step = np.where(Hs > 0, gs / Hs, 0.0)
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    step = np.where(Hs > 0, gs / Hs, 0.0)
                 zeta = np.clip(zeta + step, 1e-6, None)
             with np.errstate(divide="ignore", invalid="ignore"):
                 sz = np.where(Hs > 0, sig / np.sqrt(Hs), np.inf)
@@ -155,14 +158,17 @@ def oracle(run_dir, refs, sigmas=(0.0, 0.1, 0.25, 0.5), seed=0, iters=12, log=pr
             nvis = vis.sum(1)
             usable = (nvis >= 1) & np.isfinite(half) & (half <= 0.10)
             cover = (rng_t >= near) & (rng_t <= far)
-            rows[s].append({"usable": usable, "e": np.degrees(e), "cover": cover[usable], "rel": np.abs(rng - rng_t)[usable] / rng_t[usable]})
+            rows[s].append({"usable": usable, "e": np.degrees(e), "cover": cover[usable], "rel": np.abs(rng - rng_t)[usable] / rng_t[usable],
+                            "rel_sigma": np.where(nvis >= 1, sz / zeta, np.inf)})
         log(f"[m6-t2] O-M r {r}: " + ", ".join(f"{s:g} px {np.mean(rows[s][-1]['usable']):.3f}" for s in sigmas))
     out = {}
     for s in sigmas:
         U = np.concatenate([x["usable"] for x in rows[s]])
         E = np.concatenate([x["e"] for x in rows[s]])
         C = np.concatenate([x["cover"] for x in rows[s]])
+        RS = np.concatenate([x["rel_sigma"] for x in rows[s]])
         out[f"{s:g}"] = {"field_usable": float(U.mean()), "fovea_usable": float(U[E < 2].mean()),
+                         "median_rel_sigma_fovea": float(np.median(RS[E < 2])), "median_rel_sigma_5_40": float(np.median(RS[(E >= 5) & (E < 40)])),
                          "fovea_1deg_usable": float(U[E < 1].mean()), "band_5_40_usable": float(U[(E >= 5) & (E < 40)].mean()),
                          "interval_coverage": float(C.mean()) if C.size else None, "hits": int(U.size)}
     return out
@@ -247,3 +253,23 @@ def aligned_override(ob, r, ks):
     """The control: M4's assumption (no rotation, steps along r's axis by the true baseline's axial component)."""
     h = ob[r].R @ [0, 0, -1.0]
     return m6.aligned_poses([float((ob[k].c - ob[r].c) @ h) for k in ks])
+
+
+# M4's O-M, both5, refs 10 and 15 of the calibration room's geometry (docs/runs/issue-10/oracle_multiframe.txt)
+M4_OM_BOTH5 = {"field_usable": {"0": 1.000, "0.1": 0.991, "0.25": 0.856, "0.5": 0.279},
+               "band_5_40_usable": {"0": 1.000, "0.1": 0.999, "0.25": 0.928, "0.5": 0.293},
+               "fovea_usable": {"0": 1.000, "0.1": 0.839, "0.25": 0.021, "0.5": 0.005}}
+
+
+def oracle_repro(run_dir="runs/m3-calib-1024", log=print) -> dict:
+    """T2.1a: the generalised O-M reproduces M4's O-M on M4's geometry within 0.01 at every rung and region. Control
+    (must fail): the noise put across each frame's epipolar line instead of along it (it then carries no depth error)."""
+    def worst(o):
+        return max(abs(o[sg][reg] - want) for reg, d in M4_OM_BOTH5.items() for sg, want in d.items())
+    o = oracle(run_dir, [10, 15], log=log)
+    oc = oracle(run_dir, [10, 15], noise_dir="perpendicular", log=log)
+    res = {"id": "T2.1a", "max_diff": worst(o), "control_max_diff": worst(oc), "oracle": o, "control_oracle": oc}
+    res["ok"], res["control_fails"] = res["max_diff"] <= 0.01, res["control_max_diff"] > 0.01
+    log(f"[m6-t2] T2.1a {'PASS' if res['ok'] else 'FAIL'} max diff {res['max_diff']:.4f} (control "
+        f"{'fails' if res['control_fails'] else 'DOES NOT FAIL'}: {res['control_max_diff']:.3f})")
+    return res
