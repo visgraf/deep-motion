@@ -276,3 +276,33 @@ def oracle_repro(run_dir="runs/m3-calib-1024", log=print) -> dict:
     log(f"[m6-t2] T2.1a {'PASS' if res['ok'] else 'FAIL'} max diff {res['max_diff']:.4f} (control "
         f"{'fails' if res['control_fails'] else 'DOES NOT FAIL'}: {res['control_max_diff']:.3f})")
     return res
+
+
+def direction_breakdown(run_dir, est_dir, refs, bins=(0.5, 0.8, 0.95)) -> dict:
+    """Diagnosis (observation and poses only): M6's acceptance by |cos| of the angle between an anchor's motion (its
+    derotated displacement toward r + 5, in native px) and r's radial direction, the direction M4's windows are long in."""
+    run = analysis.load_run(run_dir)
+    es = {e["k"]: e for e in run["looks"]["ahead"]}
+    acc, n = np.zeros(len(bins) + 1), np.zeros(len(bins) + 1)
+    for r in refs:
+        z = dict(np.load(Path(est_dir) / f"r{r:04d}.npz"))
+        ob_r, ob_k = flow_depth.load_observation(run, es[r]), flow_depth.load_observation(run, es[r + 5])
+        T = ob_r.R.T @ (ob_k.c - ob_r.c)
+        e, ph = z["e"], z["phi"]
+        v = np.stack([np.tan(e) * np.cos(ph), np.tan(e) * np.sin(ph), -np.ones_like(e)], -1)
+        b = -T
+        rho2 = v[:, 0] ** 2 + v[:, 1] ** 2
+        dq = (v[:, 0] * b[0] + v[:, 1] * b[1]) / rho2 - b[2] / v[:, 2]
+        dphi = (v[:, 0] * b[1] - v[:, 1] * b[0]) / rho2
+        model = ob_r.model
+        gq = lp.native_px_per_q(model, z["q"], ph)
+        gp = np.linalg.norm(model.pixel_of(lp.dir_of_e_phi(e, ph + 1e-5))[0]
+                            - model.pixel_of(lp.dir_of_e_phi(e, ph - 1e-5))[0], axis=-1) / 2e-5
+        c = np.abs(dq * gq) / np.hypot(dq * gq, dphi * gp)
+        idx = np.digitize(c, bins)
+        for i in range(len(bins) + 1):
+            acc[i] += np.sum(z["reason"][idx == i] == 0)
+            n[i] += np.sum(idx == i)
+    edges = (0.0,) + tuple(bins) + (1.0,)
+    return {"bins_abs_cos": [[edges[i], edges[i + 1]] for i in range(len(bins) + 1)],
+            "accepted": (acc / np.maximum(n, 1)).tolist(), "share_of_anchors": (n / n.sum()).tolist()}

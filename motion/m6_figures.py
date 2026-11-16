@@ -281,3 +281,70 @@ def t1_figures(run_dir, res, out) -> list:
 
 def lp_unit(v):
     return lp.unit(v)
+
+
+# ----------------------------------------------------------------------------- T2 (#22): the crab dolly
+
+def t2_figures(results: dict, out, ref=12) -> list:
+    """results: {alpha_deg: {"run": run_dir, "est": dir with rgb/r####.npz, "oracle": {...}, "rgb": {...}}}.
+    t2_summary.png: usable fractions against alpha (O-M at 0.25 px and RGB, field and fovea);
+    t2_maps.png: for reference `ref`, M6's usable anchors on the Foveated raster, coloured by the 95 % interval's
+    relative half-width, with the window's epipoles (as t0_field_maps)."""
+    from matplotlib.colors import LogNorm
+    from . import analysis, flow_depth, m6_matcher as m6, multibaseline as mb
+    plt = _plt()
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    al = sorted(results)
+    fig, ax = plt.subplots(figsize=(7.8, 4.4))
+    series = (("O-M 0.25 px, field", lambda R: R["oracle"]["0.25"]["field_usable"], SERIES[0], "--", "o"),
+              ("O-M 0.25 px, fovea < 2°", lambda R: R["oracle"]["0.25"]["fovea_usable"], SERIES[1], "--", "s"),
+              ("M6 RGB, field", lambda R: R["rgb"]["field_usable_of_all_hits"], SERIES[0], "-", "o"),
+              ("M6 RGB, fovea 1–2°", lambda R: R["rgb"]["fovea_usable_1_2deg"], SERIES[1], "-", "s"))
+    for name, f, col, ls, mk in series:
+        ax.plot(al, [f(results[a]) for a in al], ls, marker=mk, color=col, lw=2, ms=7, mec=SURFACE, mew=1.2, label=name)
+    ax.set_xticks(al), ax.set_xticklabels([f"{a:g}°" for a in al])
+    ax.set_xlabel("crab angle α (the epipole's distance from the fovea)")
+    ax.set_ylabel("usable fraction (95 % interval ≤ 10 %)")
+    ax.set_ylim(0, 1.02)
+    ax.grid(True, axis="y", color=GRID, lw=0.6)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    ax.legend(frameon=False, labelcolor=INK, fontsize=9, loc="center right")
+    ax.set_title("T2, crab dolly (calibration room, 256 spp, both5, r = 8, 12, 16): moving the epipole off the fovea",
+                 color=INK, loc="left", fontsize=10)
+    fig.savefig(out / "t2_summary.png", dpi=130, bbox_inches="tight")
+    plt.close(fig)
+
+    from fov_render.sensors import FoveatedModel
+    model = FoveatedModel(253)
+    fig, axs = plt.subplots(1, len(al), figsize=(4.6 * len(al), 4.6), gridspec_kw={"wspace": 0.05})
+    norm, cmap = LogNorm(0.003, 0.1), _cmap().reversed()
+    cmap.set_bad(GRID)
+    fov = _circle_px(model, 2.0)
+    for ax, a in zip(np.atleast_1d(axs), al):
+        R = results[a]
+        z = dict(np.load(Path(R["est"]) / f"r{ref:04d}.npz"))
+        half = mb.Z95 * 1.4875 * z["sigma_zeta"] / z["zeta"]            # relative half-width in zeta ~ in range
+        use = (z["reason"] == 0) & np.isfinite(half) & (half <= 0.10)
+        img = np.full(model.n * model.n, np.nan)
+        img[z["flat"][use]] = half[use]
+        ax.imshow(img.reshape(model.n, model.n), cmap=cmap, norm=norm, interpolation="nearest")
+        ax.plot(fov[:, 1], fov[:, 0], ls="--", lw=1.0, color=INK2)
+        run = analysis.load_run(R["run"])
+        es = {e["k"]: e for e in run["looks"]["ahead"]}
+        ob = {k: flow_depth.load_observation(run, es[k]) for k in [ref + o for o in range(-5, 6)]}
+        for o in [o for o in range(-5, 6) if o]:
+            _, T = m6.relative_poses(ob[ref].c, ob[ref].R, [(ob[ref + o].c, ob[ref + o].R)])[0]
+            hf = T / np.linalg.norm(T) * (1 if o > 0 else -1)
+            rc, ok = model.pixel_of(hf[None])
+            if ok[0]:
+                ax.plot(rc[0, 1], rc[0, 0], "o", ms=5.5, mfc=SERIES[2] if o > 0 else "none", mec=SERIES[2] if o > 0 else SERIES[1], mew=1.6)
+        ax.set_title(f"α = {a:g}°: usable {use.mean():.2f} of anchors", color=INK)
+        ax.set_axis_off()
+    fig.suptitle(f"M6 on the crab dolly, reference {ref}: usable anchors coloured by the interval's half-width "
+                 "(darker = tighter; grey = rejected or not usable; anchors start at 1°). Dots: epipoles; dashed: the 2° fovea",
+                 color=INK, y=1.02, fontsize=10)
+    fig.savefig(out / "t2_maps.png", dpi=120, bbox_inches="tight")
+    plt.close(fig)
+    return sorted(str(p) for p in out.glob("t2_*.png"))
