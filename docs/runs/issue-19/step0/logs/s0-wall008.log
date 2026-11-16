@@ -1,0 +1,54 @@
+00:00.215  blend            | Read blend: "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend"
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/lamps/lamps.blend', '//assets/lamps/lamps.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/chairs/chairs.blend', '//assets/chairs/chairs.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/coatStand/coatStand.blend', '//assets/coatStand/coatStand.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/desks/desks.blend', '//assets/desks/desks.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/dustBin/dustBin.blend', '//assets/dustBin/dustBin.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/radiator/radiator.blend', '//assets/radiator/radiator.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/suitcase/suitcase.blend', '//assets/suitcase/suitcase.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wallClock/wallClock.blend', '//assets/wallClock/wallClock.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wastes/wastes.blend', '//assets/wastes/wastes.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/books/books.blend', '//assets/books/books.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/officeSupplies/officeSupplies.blend', '//assets/officeSupplies/officeSupplies.blend', parent '<direct>'
+[wall008] (-2.445, 3.566)
+[wall008] (-2.438, 3.573)
+[wall008] (-1.16, 3.573)
+[wall008] (-1.149, 3.156)
+[wall008] (-1.149, 3.562)
+[wall008] (-1.146, 3.156)
+[wall008] (-1.143, 3.15)
+[wall008] (-1.14, 3.15)
+[wall008] (-0.795, 3.151)
+[wall008] (-0.793, 3.15)
+[wall008] (-0.79, 3.15)
+[wall008] (-0.789, 3.157)
+[wall008] (-0.787, 3.157)
+[wall008] (-0.787, 3.275)
+[wall008] (-0.785, 3.275)
+[wall008] (-0.784, 3.156)
+[wall008] (-0.784, 3.275)
+[wall008] (-0.784, 3.278)
+[wall008] (-0.782, 3.278)
+[wall008] (-0.781, 3.278)
+[wall008] (3.757, 3.278)
+[wall008-face -Y] -0.781 3.757 y 3.278 3.278
+[wall008-face -Y] -1.143 -0.79 y 3.15 3.15
+[wall008-face -Y] -2.438 -1.16 y 3.573 3.573
+[wall008-face -Y] -0.781 3.757 y 3.278 3.278
+[wall008-face -Y] -1.143 -0.79 y 3.15 3.15
+[wall008-face -Y] -2.438 -1.16 y 3.573 3.573
+[wall008-face -Y] -2.438 -1.16 y 3.573 3.573
+[wall008-face -Y] -1.143 -0.79 y 3.15 3.15
+[wall008-face -Y] -0.782 3.757 y 3.278 3.278
+[wall008-face -Y] -2.438 -1.16 y 3.573 3.573
+[wall008-face -Y] -1.143 -0.79 y 3.15 3.15
+[wall008-face -Y] -0.782 3.757 y 3.278 3.278
+[wall008-face -Y] -0.784 3.757 y 3.278 3.278
+[wall008-face -Y] -1.143 -0.793 y 3.15 3.151
+[wall008-face -Y] -2.438 -1.16 y 3.573 3.573
+[wall008-face -Y] -2.438 -1.16 y 3.573 3.573
+[wall008-face -Y] -1.143 -0.793 y 3.15 3.151
+[wall008-face -Y] -0.784 3.757 y 3.278 3.278
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+
+Blender quit

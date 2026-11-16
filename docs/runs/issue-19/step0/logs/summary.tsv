@@ -1,0 +1,6 @@
+s0-preflight-A0	0	49.5	22:24:26	22:25:16	.venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/A0.json --run runs/d1-classroom/step0/preflight/A0 --device OPTIX --width 720 --spp 4
+s0-preflight-A1	0	48.3	22:25:16	22:26:04	.venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/A1.json --run runs/d1-classroom/step0/preflight/A1 --device OPTIX --width 720 --spp 4
+s0-preflight-A2	0	48.0	22:26:04	22:26:52	.venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/A2.json --run runs/d1-classroom/step0/preflight/A2 --device OPTIX --width 720 --spp 4
+s0-preflight-B0	0	30.0	22:26:52	22:27:22	.venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/B0.json --run runs/d1-classroom/step0/preflight/B0 --device OPTIX --width 720 --spp 4
+s0-preflight-B1	0	29.2	22:27:22	22:27:51	.venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/B1.json --run runs/d1-classroom/step0/preflight/B1 --device OPTIX --width 720 --spp 4
+s0-preflight-B2	0	29.0	22:27:51	22:28:20	.venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/B2.json --run runs/d1-classroom/step0/preflight/B2 --device OPTIX --width 720 --spp 4

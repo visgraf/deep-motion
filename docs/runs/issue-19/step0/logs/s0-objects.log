@@ -1,0 +1,42 @@
+00:00.218  blend            | Read blend: "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend"
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/lamps/lamps.blend', '//assets/lamps/lamps.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/chairs/chairs.blend', '//assets/chairs/chairs.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/coatStand/coatStand.blend', '//assets/coatStand/coatStand.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/desks/desks.blend', '//assets/desks/desks.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/dustBin/dustBin.blend', '//assets/dustBin/dustBin.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/radiator/radiator.blend', '//assets/radiator/radiator.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/suitcase/suitcase.blend', '//assets/suitcase/suitcase.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wallClock/wallClock.blend', '//assets/wallClock/wallClock.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wastes/wastes.blend', '//assets/wastes/wastes.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/books/books.blend', '//assets/books/books.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/officeSupplies/officeSupplies.blend', '//assets/officeSupplies/officeSupplies.blend', parent '<direct>'
+[objects] blackBoard                               min [-0.203, 3.259, 0.765] max [1.997, 3.259, 1.904]
+[objects] blackBoardLamp                           min [-0.399, 3.052, 1.98] max [2.195, 3.198, 2.038]
+[objects] blackBoard_upPart                        min [-0.4, 3.194, 1.992] max [2.194, 3.241, 2.084]
+[objects] blackboardLamp                           min [-0.323, 3.064, 1.985] max [2.119, 3.175, 1.991]
+[objects] boardFrame                               min [-0.276, 3.175, 0.709] max [2.07, 3.28, 1.96]
+[objects] corkboard                                min [-2.447, -2.139, 1.185] max [-2.429, 0.825, 2.133]
+[objects] corkboard.001                            min [2.27, 3.263, 1.208] max [3.518, 3.278, 2.069]
+[objects] doorFrame                                min [-2.551, 1.42, -0.0] max [-2.472, 2.502, 2.547]
+[objects] doorFrame.001                            min [-2.497, -4.273, -0.0] max [-2.418, -3.19, 2.547]
+[objects] door_window                              min [-2.52, 1.485, 2.122] max [-2.347, 2.438, 2.466]
+[objects] wall                                     min [-2.642, -4.793, -0.0] max [-2.445, 3.573, 2.953]
+[objects] wall.001                                 min [3.584, 1.314, 0.933] max [3.781, 1.512, 2.953]
+[objects] wall.002                                 min [3.584, -0.651, 0.933] max [3.781, -0.453, 2.953]
+[objects] wall.003                                 min [3.584, -2.621, 0.933] max [3.781, -2.405, 2.953]
+[objects] wall.004                                 min [3.584, -4.596, 0.933] max [3.781, -4.38, 2.953]
+[objects] wall.005                                 min [-5.468, -4.793, -0.0] max [-2.542, -4.596, 2.953]
+[objects] wall.006                                 min [-5.468, 3.278, 0.0] max [-2.542, 3.475, 2.953]
+[objects] wall.007                                 min [3.584, -4.596, -0.0] max [3.757, 3.475, 0.933]
+[objects] wall.008                                 min [-2.445, 3.15, 0.0] max [3.757, 3.573, 2.953]
+[objects] wall.009                                 min [-5.665, -4.793, -0.0] max [-5.468, 3.475, 2.953]
+[objects] wall.010                                 min [-2.542, -4.793, -0.0] max [3.757, -4.596, 2.953]
+[objects] wall.011                                 min [-2.445, 1.36, 0.0] max [-2.429, 2.562, 2.6]
+[objects] wall.012                                 min [3.56, -4.793, 2.674] max [3.757, 3.475, 2.9]
+[objects] wallPlug                                 min [-0.615, -4.587, 0.337] max [-0.516, -4.573, 0.485]
+[objects] wallPlug.001                             min [0.42, 3.257, 0.426] max [0.518, 3.27, 0.573]
+[objects] wallPlug.002                             min [1.731, -4.587, 0.337] max [1.829, -4.573, 0.485]
+[objects] wallSwitch                               min [-2.447, 1.03, 1.277] max [-2.418, 1.197, 1.375]
+[objects] woodBaseboard                            min [-5.022, -4.925, -0.0] max [3.57, 3.558, 0.147]
+exit 0

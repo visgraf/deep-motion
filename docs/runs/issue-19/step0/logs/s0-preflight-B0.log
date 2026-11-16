@@ -1,0 +1,5 @@
+22:26:52 $ .venv/bin/python -m motion.dolly preflight --path runs/d1-classroom/step0/specs/B0.json --run runs/d1-classroom/step0/preflight/B0 --device OPTIX --width 720 --spp 4
+22:26:52 [dolly] preflight: 28 heads + 1 control, 720 px, 4 spp, OPTIX
+22:27:22 [preflight] k= 27 [-1.618, 1.664, 1.6] holes 0.01426 nearest 0.4500445483122303 ok
+22:27:22 [preflight] target target_ray [-2.205839336980274, 1.8749822813769792, 1.6] (Box25.001): visible from every head True, occluded []; hidden control hidden True
+22:27:22 [preflight] PASS over 28 heads; control fails as it must: ['clearance']
