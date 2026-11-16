@@ -44,7 +44,8 @@ def selftest(a) -> int:
 
 def figures(a) -> int:
     from . import figures as fg
-    for f in {"2": fg.stage2, "3": fg.stage3}[a.stage](a.out):
+    fn = {"2": fg.stage2, "3": fg.stage3, "4": lambda o: fg.stage4(a.run, o)}[a.stage]
+    for f in fn(a.out):
         print(f"{PREFIX} figure {f}")
     return 0
 
@@ -64,7 +65,8 @@ def main(argv=None) -> int:
     p.add_argument("--run", default=None, help="stage 4: the rendered run for S4.2")
     p.add_argument("--out", default=None)
     p = sub.add_parser("figures", help="a stage's figures")
-    p.add_argument("--stage", default="2", choices=["2", "3"])
+    p.add_argument("--stage", default="2", choices=["2", "3", "4"])
+    p.add_argument("--run", default=None, help="stage 4: the rendered run")
     p.add_argument("--out", required=True)
     p = sub.add_parser("stage4-render", help="stage 4: three Panorama looks on an arc in the calibration room (CPU)")
     p.add_argument("--run", required=True)

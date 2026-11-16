@@ -147,3 +147,39 @@ def stage3(out) -> list:
     fig.savefig(out / "stage3_profiles.png", dpi=130, bbox_inches="tight")
     plt.close(fig)
     return sorted(str(p) for p in out.glob("stage3_*.png"))
+
+
+def stage4(run_dir, out) -> list:
+    """stage4_slit_fan.png: the carrier's panorama of the calibration room from the arc's first look, with slits marked
+    (columns at bearings from the heading) and each slit's time step from the schedule (prior band; converged +/-10 % at
+    3 m)."""
+    from fov_render import exr_lite
+    from . import sensor
+    plt = _plt()
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    fan = sensor.SlitFan()
+    x = exr_lite.read_uncompressed_exr(str(Path(run_dir) / "k0000" / "raw_C.exr"))
+    rgb = np.stack([x[f"ViewLayer.Combined.{c}"] for c in "RGB"], -1)
+    rgb = np.clip(rgb / max(np.percentile(rgb, 99.5), 1e-9), 0, 1) ** (1 / 2.2)
+    W, H = fan.width, fan.width // 2
+    fig, ax = plt.subplots(figsize=(15, 8.2))
+    ax.imshow(rgb, extent=(180, -180, -90, 90))         # bearing + left: left edge of the picture = +180
+    for b in (-150, -120, -90, -60, -30, -12, 12, 30, 60, 90, 120, 150):
+        psi = np.radians(abs(b))
+        prior, conv = 100 * fan.step(psi), 100 * fan.step(psi, (2.7, 3.3))
+        ax.axvline(b, color=ACCENT, lw=1.2, alpha=0.9)
+        ax.text(b, 84, f"{b:+d}°", ha="center", va="top", color="white", fontsize=9, fontweight="bold")
+        ax.text(b, -62, f"{prior:.2g} cm\n{conv:.2g} cm", ha="center", va="center", color="white", fontsize=8.5,
+                bbox=dict(boxstyle="round,pad=0.25", fc="#0d366b", ec="none", alpha=0.85))
+    ax.axvline(0, color="white", lw=1.0, ls="--")
+    ax.set_xlim(180, -180)
+    ax.set_xticks([180, 90, 0, -90, -180]), ax.set_xticklabels(["behind", "left 90°", "heading", "right 90°", "behind"])
+    ax.set_yticks([-90, -45, 0, 45, 90]), ax.set_yticklabels(["−90°", "−45°", "0°", "45°", "90°"])
+    ax.set_ylabel("elevation")
+    ax.set_title("Stage 4: the slit fan on fov-render's Panorama (calibration room, start of an arc, R = 1.6 m, 0.5°/px). "
+                 "Each column is a slit; boxes: its largest step while 0.5–20 m uncertain / once ±10 % at 3 m",
+                 color=INK, loc="left", fontsize=10)
+    fig.savefig(out / "stage4_slit_fan.png", dpi=110, bbox_inches="tight")
+    plt.close(fig)
+    return sorted(str(p) for p in out.glob("stage4_*.png"))
