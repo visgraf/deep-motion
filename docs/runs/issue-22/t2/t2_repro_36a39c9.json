@@ -1,0 +1,53 @@
+{
+ "schema": "foveal-motion-m6-t2-repro-v1",
+ "run": "/home/claude/foveal-motion/runs/m3-calib-1024",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "3938239d19bb93fb8253cf8f12e7512a57f50b6c",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "refs": [
+  12
+ ],
+ "window": "both5",
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "36a39c9235ddb07646e26db3b53edec0544d14c9",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  },
+  "torch": "2.15.0+cpu",
+  "device": "cpu"
+ },
+ "per_ref": [
+  {
+   "r": 12,
+   "anchors": 48752,
+   "accepted_m4": 0.3926197899573351,
+   "accepted_m6": 0.3926197899573351,
+   "decisions_differ": 0,
+   "max_rel_dzeta_accepted": 1.5891841412257653e-13,
+   "max_abs_dzeta_any_finite": 3.1009029299866597e-07,
+   "coarse_ncc_max_diff": 0.0,
+   "control_decisions_differ_fraction": 0.24760009845749917,
+   "control_accepted": 0.2615892681325894,
+   "seconds_m4": 62.3,
+   "seconds_m6": 113.7,
+   "ok": true,
+   "control_fails": true
+  }
+ ],
+ "check": {
+  "id": "T2.0",
+  "ok": true,
+  "control_fails": true
+ }
+}

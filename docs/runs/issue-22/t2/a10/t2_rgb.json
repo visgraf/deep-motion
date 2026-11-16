@@ -1,0 +1,77 @@
+{
+ "schema": "foveal-motion-m6-t2-rgb-v1",
+ "run": "/home/claude/foveal-motion/runs/m6-crab-a10",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "b1953ee5f2c0cae98c09d7982452785e16723652",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "refs": [
+  8,
+  12,
+  16
+ ],
+ "window": "both5",
+ "interval_scale": 1.4875,
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "e8bbe065ca1a0b04e7318d54bd08321314ca4457",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  },
+  "torch": "2.15.0+cpu"
+ },
+ "field_usable_of_all_hits": 0.3065507569277288,
+ "accepted_fraction": 0.3186741056777158,
+ "fovea_usable_1_2deg": 0.17317380352644837,
+ "interval_coverage_interior": 0.9314361462093863,
+ "rejections": {
+  "accepted": 0.3186741056777158,
+  "invalid_support": 0.047095503774204135,
+  "low_texture": 0.013879772453779674,
+  "low_ncc": 0.24606170003281916,
+  "ambiguous": 0.0426649163111257,
+  "unresolved_far": 3.4186631659555845e-05,
+  "near_boundary": 0.0,
+  "gn_failed": 0.005490373044524669,
+  "few_frames": 0.0,
+  "unsupported": 0.028327042993107975,
+  "depth_edge": 0.29777239908106334
+ },
+ "gate": {
+  "subset": 74503,
+  "accepted_usable": 30130,
+  "coverage_of_subset": 0.404413245104224,
+  "median_rel": 0.004875985286340803,
+  "p90_rel": 0.017160517588338173,
+  "over_50pct": 0.002389644872220378,
+  "gate_pass": false
+ },
+ "gate_thresholds": {
+  "median": 0.05,
+  "p90": 0.1,
+  "coverage": 0.5,
+  "outlier50": null,
+  "band_deg": [
+   5.0,
+   40.0
+  ]
+ },
+ "control_steps_x1.2": {
+  "subset": 74503,
+  "accepted_usable": 30130,
+  "coverage_of_subset": 0.404413245104224,
+  "median_rel": 0.19947951821364823,
+  "p90_rel": 0.212895537241537,
+  "over_50pct": 0.00033189512114171923,
+  "gate_pass": false
+ }
+}

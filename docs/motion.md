@@ -28,6 +28,8 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D15 | M4's window (Luiz, 2026-11-15, in Chat; #10) | Chat's recommendation after Stage 5. The Classroom run (#11) carries **5 frames each side** of the reference as M4's main window: the only window that passed #5's calibration gate on held-out frames (coverage 0.503, median 0.42 %, p90 1.81 %). **5 steps back** comes along as the causal baseline. A five-frame delay (about 0.5 m of travel) before a frame's depth is ready is accepted. 10 steps back is dropped. Stage 6 (figures, the foreign-geometry control) comes first, then freezing the estimator |
 | M-D16 | M4 accepted; the merge; torch; the device record; next, depth edges (Luiz, 2026-11-15, in Chat; #11) | M4 is accepted and #11 closed: 5 frames each side passes #5's Classroom gate, held out. `experiment/m4a-multibaseline` merges into `main` by PR. `requirements.txt` lists `torch==2.15.0`; each machine picks the CPU or CUDA build. The M4 commands write `env_<command>.json` beside each result (device, torch and CUDA build), in `dolly.py`, leaving the frozen estimator's files untouched. The next milestone (M5) is depth edges: about 27 % of the anchors with both5 are rejected as depth edges |
 | M-D17 | D1, a demonstration (Luiz, 2026-11-15, in Chat; #17) | the frozen M4 (`docs/runs/issue-10/frozen.json`, `both5`, its five-step delay accepted) on an **L-shaped tour** of the Classroom: from the back straight toward the board, a **turn in place** toward the front door, straight to the door; gaze `ahead` throughout. Turns in place keep the estimator inside its gated geometry; smooth arcs with the rotation removed are a later milestone (M6). Each leg is rendered at 0.033 m per look as three interleaved 0.099 m paths, each run unchanged; the pivot is display-only. #5's metrics on leg B are reported, not gated; the ~40 min estimation is OK'd; the error-coloured second video is part of D1. Split: D1a (Chat, calibration room) builds, D1b (Code, Classroom) runs |
+| M-D18 | M6, rotation removal (Luiz, 2026-11-16, in Chat; #21) | **any gaze, any smooth path**: the known poses remove the rotation between a window's frames, and each frame is matched about its own epipole, so the estimator no longer dictates where the eye looks. The first framing, "keep the focus of expansion at the fovea", is dropped: on a curved path the epipoles spread whatever the sensor's orientation, and the FOE is the fovea's worst place for depth. Low-parallax masking lives in the estimator (cones about the epipoles, from the poses), reported in M6, not gated. #21's four recommendations: sweep Δψ = 1–4° per step; measure the resolution loss before compensating; physical gaze stabilisation later, as a gaze policy to compare; M6b's optional fixation leg on M2's side target, if T2b passes. Split: M6a (Chat, calibration room, T0–T4, freeze), M6b (Code, Classroom arc tour) |
+| M-D19 | M6 reformulated; M6a closed (Luiz, 2026-11-16, in Chat; #22) | M6a's T0–T2 stand as findings: the geometry of an off-centre epipole gains as predicted, but M4's matcher, extended or rectified about the epipole, does not collect the gain. M6 continues in a **new repository, visgraf/deep-motion**, forked from this one. There, depth from motion along a curved path is built on coordinates adapted to the motion's symmetry: paths composed of lines, arcs and pivots (curvature 0, finite, infinite); 1-D search over the primitive's depth invariant (distance from the path line, or from the turn axis); trace-scans for the temporal reading; any sensor design (a heading-locked slit fan is the first candidate), with sampling in time per region. It is estimated in the invariant and reported and gated in world 3D and range. Order: formulation first, judged with an oracle; real matching last. T2c is dropped. M4 stays the frozen baseline; T2b–T4 and M6b (#23) are not run here |
 
 ## Experiment M1, the dolly
 
@@ -947,3 +949,247 @@ Every control fails as it must.
   door the door's depth: an occlusion edge.
 - **In the error video** the per-voxel mean error (median 1.8 %) is about twice the per-anchor error. Voxels with few
   anchors, at edges and in sparse regions, carry more of the error.
+
+## M6, rotation removal: any gaze, any smooth path (#21; M6a #22, M6b #23)
+
+**Question** (M-D18). M4 accepts only windows whose frames differ by a translation along the eye's axis (#5's alignment
+gate), so D1 turned in place, and the gaze had to be `ahead`. M6 removes that restriction with the known poses.
+
+**Geometry** ([`motion/derotate.py`](../motion/derotate.py), numpy). A pose is (c, R), world = R · local, eye frame as
+`logpolar` (−Z forward).
+- *Derotation.* Frame k sees reference ray d as R_kᵀ R_r d. A rotation about the eye's centre (`C`, the head origin) adds
+  no parallax, so this holds at every depth. It is folded into the sampling through `pixel_of`; no image is resampled.
+- *Each frame's epipole.* After derotation, frame k differs from r by |t_k| h_k, with h_k the unit direction toward c_k
+  in r's eye frame. On an arc, the chord to r + k lies along the tangent at r + k/2, so h_k sits k·Δψ/2 from the
+  heading: inside the turn for frames ahead, outside for frames behind. A window's band has half-width W·s/(2R),
+  whatever the sensor's orientation.
+- *The law.* With ψ the angle from h_k and q = ln |tan ψ|, a point at inverse range ρ along d keeps its azimuth about
+  h_k and moves by d_k(ρ) = −ln(1 − |t_k| ρ / cos ψ). ρ is the window's one unknown. With every h_k on the axis this is
+  M4's d_k(ζ) with ζ = ρ / cos e.
+- *The information map* (#21's hypothesis, a model): relative σ_ρ/ρ from the poses alone, for a frontal plane at 3 m,
+  with per-frame noise proportional to the Foveated spacing (e + E2) in the reference and in frame k.
+
+### T0, geometry (Chat sandbox; #22)
+
+`python -m motion.dolly m6-selftest --out docs/runs/issue-22` at `d8169a8` (clean), numpy 2.2.6, Python 3.13, 1.4 s.
+Record: [`t0_selftest.json`](runs/issue-22/t0_selftest.json). 14/14 PASS:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| the law equals the exact forward model after derotation (300 random poses, rotations to 30°) | max 9.7e-13 in q | R_rk with the wrong sign | median 0.64 in q |
+| azimuth about each epipole unchanged | max 2.2e-14 rad | | |
+| epipoles on the axis: the law is M4's `d_of_zeta` | max 2.3e-14 | | |
+| Fisher σ_ρ on the aligned dolly = M4's σ_ζ cos e | relative 0 | epipoles 20° off the axis | 13.8 % different |
+| derotation round trip; a rotation about `C` is depth-independent | 1.4e-15; 7.8e-16 | the head turning about a point 5 cm behind the eye | median 5.0° between 0.5 m and 20 m |
+| arc epipoles at k·Δψ/2 (R = 1, 2, 4 m) | max 2.0e-15 | the straight dolly's band against a 2 m arc's | 0° against 7.09° |
+| both5 inside the 2° fovea needs R ≥ 7.09 m | 7.087 m | | |
+| #21's information table reproduced | max 5.0e-5 (its 4-decimal rounding) | the same table with E2 = 2.2° | max 0.56 different |
+
+Two changes before this record, both on the first run of the module, neither moving a check's threshold:
+- The Fisher control first misplaced the epipoles by 10°; it changed the bound by 5.4 % against the 5 % it had to
+  exceed. Too narrow to rely on, so the control now misplaces them by 20° (13.8 %).
+- The table check compared with #21's 2-decimal table at 0.005 and passed at 0.00495, its rounding. It now compares with
+  #21's script at 4 decimals, within 1e-4. The module and #21's script agree to 8e-10 (Chat sandbox).
+
+**Figures** ([`m6_figures.py`](../motion/m6_figures.py); `python -m motion.dolly m6-figures --out
+docs/runs/issue-22/figures` at `9f7485b`, Chat sandbox, 7 s). All three draw #21's model from the poses alone.
+- [`t0_field_maps.png`](runs/issue-22/figures/t0_field_maps.png): depth precision over the Foveated `full` raster for
+  each case, with the window's epipoles. The median over the fovea's pixels is 0.48 for the straight dolly, 3.58 for
+  the crab, and 0.63 / 0.72 / 0.77 on arcs of 4 / 2 / 1 m (1 = M4 at 20°).
+- [`t0_profiles.png`](runs/issue-22/figures/t0_profiles.png): the same as the median over azimuth against eccentricity,
+  with the 10–90 % band.
+- [`t0_resolution.png`](runs/issue-22/figures/t0_resolution.png): the sample spacing at which frame r + k sees the
+  reference's fovea, relative to the fovea's own. At r + 5 it is 3.0× (R = 8 m), 4.9× (4 m), 8.8× (2 m), 12.1× (1.4 m)
+  and 16.5× (1 m).
+
+Reading: on arcs, the spread epipoles fill the straight dolly's foveal hole, but the far frames' coarse sampling caps
+the gain at about the field's level (0.6–0.8). Only an epipole held outside the fovea with no rotation, as in the crab,
+makes the fovea the best depth sensor in the field. T1 measures the first part of that cost on renders, and T2 the
+second.
+
+### T1, pure rotation (Chat sandbox; #22)
+
+**Run** (`runs/m6-t1`, record [`t1/run.json`](runs/issue-22/t1/run.json)):
+- `python -m motion.dolly m6-t1-render --run runs/m6-t1 --spp 256` at `cc0929e` (clean), fov-render `0f6fa7d`, bpy 5.2.1
+  wheel, CPU, `full` profile.
+- The head stays at the calibration room's EYE (0, 0, 1.6), facing the rings, and turns left in place by 2, 5, 10, 15,
+  20 and 30°, gaze `ahead`.
+- Look 0 is the reference. A last look repeats yaw 0 with a new seed, giving the noise floor.
+- 8 looks at 256 spp, seeds 7000 + k, in 255 s (Chat sandbox).
+
+**Checks** (`m6-t1`, declared in `cc0929e` before the render; record [`t1/t1.json`](runs/issue-22/t1/t1.json) and
+[`t1/t1.log`](runs/issue-22/t1/t1.log), computed at `905debc`, clean):
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| T1.0 each look's centre is the reference's; its rotation is the requested yaw | 0 m; 1.7e-16 rad | the next look's yaw | off by ≥ 0.035 rad |
+| T1.1 k's model rays, derotated with the recorded poses into r: r's ray there is k's rendered world ray (≤ 1e-4°) | max 1.0e-11° | a 0.5° yaw error | median 0.49° |
+| T1.2 (oracle) r's hits derotated into k land on the same surface (2 px at range, ≥ 0.80 every frame) | 0.949–0.975 | a 0.5° yaw error, points landing at e_k < 5° | all of them lost |
+
+Two controls were corrected after the first analysis of this render, because they did not fail. No threshold moved,
+and the render was not repeated.
+- T1.1 first compared k's world rays with themselves through R_r alone. R_k never entered, so it was a tautology and
+  its control could not fail.
+- T1.2's control first took the points at e_r < 5°. But the 2 px tolerance is set by k's pixel where a point lands: at
+  30° of yaw they land at 25–35°, where 2 px is about 1.6°. The control now takes the points that land at e_k < 5°,
+  as its stated reason required.
+
+T1.2's agreement falls slowly with yaw (0.975 at 2°, 0.949 at 30°). The disagreements are where a coarse peripheral
+pixel of k straddles a depth edge.
+
+**Photometric residual** (observation only, reported, not gated; M-D18), median |L_k − L_r| / L_r over r's pixels,
+by r's eccentricity ([`t1_residual.png`](runs/issue-22/figures/t1_residual.png),
+[`t1_fovea.png`](runs/issue-22/figures/t1_fovea.png)):
+
+| yaw | 0–1° | 1–2° | 2–5° | 5–10° | 10–20° | 20–30° | 30–45° |
+|---|---|---|---|---|---|---|---|
+| noise floor (yaw 0, new seed) | 0.035 | 0.029 | 0.032 | 0.033 | 0.037 | 0.039 | 0.039 |
+| 2° | 0.050 | 0.033 | 0.037 | 0.042 | 0.048 | 0.060 | 0.063 |
+| 10° | 0.098 | 0.044 | 0.054 | 0.054 | 0.054 | 0.061 | 0.055 |
+| 20° | 0.183 | 0.074 | 0.084 | 0.082 | 0.065 | 0.067 | 0.055 |
+| 30° | 0.210 | 0.121 | 0.121 | 0.112 | 0.081 | 0.064 | 0.062 |
+
+**Reading:**
+- **Derotation is exact.** With the recorded poses, a turned frame's rays land on the reference's to 1e-11°, and its
+  surface points on the reference's.
+- **The resolution cost is real, and it hits the fovea first.** The reference's central degree, seen by a frame turned
+  30°, is sampled where that frame's pixels are about 16× coarser (`t0_resolution.png`). Its residual is 0.21, six
+  times the noise floor. At 10° of yaw it is about three times the floor.
+  - The periphery does not suffer: at 20–45° in the reference, every yaw stays at 0.055–0.067.
+  - `t1_fovea.png` shows the derotated frames blurred in the middle, and sharp where the turned frame's own fovea looked.
+- **Even 2° of yaw costs something** in the central degree: 0.050 against the 0.035 floor. That is the bilinear
+  resampling of a fine texture.
+- For T3, this measures the term #21's model approximates with the sample spacing. A both5 window on a 1 m arc turns
+  r + 5 by 28°. Its far frames will match the reference's fovea against images about as blurred as T1's 30° column.
+  Whether the near frames and the spread epipoles still win, as the model predicts, is T3's question.
+
+### T2, the crab dolly: an off-centre epipole with no rotation (Chat sandbox; #22)
+
+**The matcher** ([`motion/m6_matcher.py`](../motion/m6_matcher.py)) is M4's frozen matcher with frame k sampled through
+v_k = A_k (m − ζ T_k), where m is the anchor's unit-depth ray and A_k, T_k are k's pose relative to r. Derotation is
+folded into the sampling.
+- It uses M4's settings, sensor map, sampling and window sums; M4's files are untouched.
+- Coarse: each grid node of r is mapped into k's log-polar grid for every ζ. M4's row shift is the case with no
+  rotation and the epipole on the axis.
+- Fine: d I/d ζ comes from the map's analytic derivatives.
+- Texture and px-per-ζ use each frame's epipolar direction.
+- Cost: 108–118 s per reference on the sandbox CPU; M4 takes 61 s.
+
+**T2.0, the reduction to M4** (`m6-t2-repro --refs 12` at `37519cd`, clean; [`t2_repro.json`](runs/issue-22/t2/t2_repro.json)).
+On M4's own run (`runs/m3-calib-1024`, Code's 1024-spp records, the `data-m3-calib-1024` release), M6 with the
+recorded poses gives M4's decision on all 48,752 anchors of r = 12.
+- Coarse NCC is identical, and accepted ζ agrees within 1.6e-13 (relative). **PASS**.
+- Control, epipoles misplaced by 1°: 24.8 % of the decisions differ, and acceptance falls from 0.393 to 0.262. The
+  control fails, as it must.
+
+**T2.1a, the generalised oracle** ([`motion/m6_crab.py`](../motion/m6_crab.py) `oracle`; `m6-t2 --oracle-repro` at
+`e8bbe06`, clean; [`t2_oracle_repro.json`](runs/issue-22/t2/t2_oracle_repro.json)). It is M4's O-M with every
+correspondence placed through the matcher's map, and noise along each frame's epipolar direction. On M4's geometry
+(r = 10, 15) it reproduces M4's recorded O-M (`docs/runs/issue-10/oracle_multiframe.txt`) within 0.0024 at every rung
+and region. **PASS**.
+- Control, translations turned 20°: it differs by up to 0.995, so it fails as it must.
+- Two fixes came on the oracle's first trials:
+  - Projections now use unit directions; `pixel_of` needs them, and without them the noise had no effect.
+  - The first control, noise across the epipolar line, could not fail: O-M's usable fraction is the Fisher interval's,
+    set by the geometry and the stated σ. It was replaced.
+
+**Runs** (records `t2/a{0,10,20}/run.json`): `calib_dolly`'s 22 heads, the head facing α = 0, 10 and 20° left of the
+travel, so the epipole sits α to the right of the fovea with no rotation.
+- Paths: `paths/calib_dolly.json`, `paths/calib_crab_a10.json`, `paths/calib_crab_a20.json`.
+- 256 spp, seeds 8000 + 10α + k, CPU, `full` profile, 682–739 s per run (Chat sandbox).
+- Then `m6-t2 --oracle --rgb` on held-out references 8, 12 and 16, at `e8bbe06` (clean); records
+  `t2/a{α}/t2_oracle.json` and `t2_rgb.json`.
+- Luiz chose the reduced sweep in Chat on 2026-11-16. #21's foreign-geometry control was replaced by the aligned-pose
+  control below, as stated on #22 before these runs.
+
+| | α = 0 | α = 10° | α = 20° |
+|---|---|---|---|
+| O-M field usable at 0.1 / 0.25 / 0.5 px | 0.991 / 0.852 / 0.274 | 0.992 / 0.923 / 0.733 | 0.992 / 0.952 / 0.886 |
+| O-M fovea (< 2°) usable at 0.1 / 0.25 / 0.5 px | 0.834 / 0.025 / 0.004 | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 |
+| O-M median σ_ζ/ζ at 0.25 px, fovea / 5–40° | 0.081 / 0.036 | 0.0086 / 0.021 | 0.0055 / 0.013 |
+| M6 RGB: field usable (of all hits) / accepted | 0.342 / 0.362 | 0.307 / 0.319 | 0.268 / 0.279 |
+| M6 RGB: fovea usable (anchors at 1–2°) | 0.150 | 0.173 | 0.101 |
+| M6 RGB: #5's calibration gate, coverage / median / p90 / > 50 % | 0.465 / 0.61 % / 2.15 % / 0.36 % | 0.404 / 0.49 % / 1.72 % / 0.24 % | 0.365 / 0.30 % / 1.30 % / 0.04 % |
+| interval coverage, interior (both5's scale 1.4875) | 0.951 | 0.931 | 0.924 |
+| rejected as ambiguous | 0.008 | 0.043 | 0.064 |
+
+Controls (each must fail #5's gate, and does):
+- Steps × 1.2, at every α.
+- At α = 10, the crab's images matched with M4's aligned poses: field usable 0.069, gate coverage 0.099, median error
+  26 % (record `t2/a10/aligned_control/`).
+
+None of the three passes #5's calibration gate at 256 spp; all three fail it on coverage. M4 passed it at 1024 spp
+(0.503), so the gate is a 1024-spp matter. Here the α's are compared with each other.
+
+**Diagnosis** (`direction_breakdown`; [`t2_direction.json`](runs/issue-22/t2/t2_direction.json), at `650f919`).
+Acceptance is binned by |cos| of the angle between an anchor's motion and r's radial direction, which is the direction
+M4's windows (± 3 px) are long in:
+
+| α | \|cos\| < 0.5 | 0.5–0.8 | 0.8–0.95 | > 0.95 |
+|---|---|---|---|---|
+| 0 (every anchor radial) | | | | 0.362 (all) |
+| 10° (share of anchors) | 0.195 (24 %) | 0.285 (40 %) | 0.445 (20 %) | 0.436 (15 %) |
+| 20° (share of anchors) | 0.160 (53 %) | 0.371 (25 %) | 0.446 (12 %) | 0.486 (10 %) |
+
+Figures: [`t2_summary.png`](runs/issue-22/figures/t2_summary.png), [`t2_maps.png`](runs/issue-22/figures/t2_maps.png).
+
+**Reading:**
+- **The geometry delivers what #21's model predicted.** With the epipole 10° off, the oracle's fovea becomes fully
+  usable at 0.5 px, against 0.004 on the dolly. Its median relative σ in the fovea falls 9.4× (14.7× at 20°); the model
+  predicted 7.5× at 10°. The whole field gains too.
+- **M6's RGB matcher does not collect that gain yet.** Where it accepts, it is more accurate as α grows: median error
+  0.61 → 0.49 → 0.30 %, p90 2.15 → 1.30 %. But it accepts less: field usable 0.342 → 0.268, with ambiguity eight times
+  as frequent.
+- **The cause is the window, not the geometry.** M4's matching windows are long along r's radius, which was the motion
+  direction under the aligned dolly. Where the crab's motion is still near-radial, M6 accepts more than at α = 0
+  (0.44–0.49 against 0.36). Where it runs across the radius, M6 accepts 0.16–0.20. At α = 20° that is half the field.
+- **The fovea is not measured by T2's RGB.** M4's anchors start at 1°, and the 1–2° ring is mostly where the crab's
+  motion is tangential.
+
+**Option A, rectification about the window's epipole: a first trial** (Luiz's choice on #22, 2026-11-16, in Chat).
+`m6_matcher.match_reference(..., rectify=True)` at `d80f11e` lays M4's grid out about the window's mean forward
+epipole.
+- A virtual eye frame V takes the virtual axis to that epipole. The windows are ± 3 native px along the virtual radius,
+  which is the epipolar line, sized per node.
+- r is sampled through V, and the frames through their own grids. ζ is the inverse depth along the virtual axis.
+- At α = 0, V = I and the path is M4's grid. T2.0, re-run after the change at `36a39c9`, is reported on #22.
+
+On the crab at α = 10°, reference 12 (Chat sandbox; the trial ran on a working tree identical to `d80f11e`):
+
+| | unrectified (T2) | rectified |
+|---|---|---|
+| accepted / usable | 0.320 / 0.318 | 0.302 / 0.302 |
+| fovea usable (r's e < 2°; rectified anchors include e < 1°) | 0.106 (1–2°) | 0.118 (2,417 anchors) |
+| invalid support / ambiguous / depth edge / low NCC | 0.047 / 0.043 / 0.298 / 0.246 | 0.137 / 0.043 / 0.207 / 0.259 |
+| seconds per reference | 108 | 623 |
+
+**Rectification, as built, does not help.** Ambiguity is unchanged, and the gain from fewer depth-edge rejections is
+lost to invalid support. The rectified windows are oriented along the epipolar line in virtual coordinates, but they
+hang off the reference's field near its rim.
+
+The motion-direction effect is still real when anchors are binned by their angle ψ from the epipole. At α = 20°:
+
+| ψ | 0–10° | 10–20° | 20–30° | 30–45° | 45–70° |
+|---|---|---|---|---|---|
+| \|cos\| < 0.5 (motion across r's radius) | 0.187 | 0.159 | 0.174 | 0.130 | 0.013 |
+| \|cos\| ≥ 0.8 (motion along r's radius) | 0.346 | 0.240 | 0.281 | 0.690 | 0.599 |
+
+So the T2 diagnosis stands: matching fails where the motion crosses M4's windows, at any distance from the epipole.
+Rectification v1 does not cure it, so the cause lies elsewhere in the matcher as well. Rectification stays in the code,
+off by default (`36a39c9`), so T2's records reproduce.
+
+
+### M6a closed (M-D19, 2026-11-16)
+
+After T2, Luiz and Chat reconsidered the method in a brainstorm (in Chat, 2026-11-16). Its conclusions:
+- **Biology transfers as hypotheses, not as methods.** Every borrowing is kept in a ledger: the feature, its claimed
+  computational benefit, and the evidence for it. Log-polar matching suited forward motion. It is not a principle.
+- **The representation should follow the motion.** For forward motion log-polar makes the flow a shift. For a line it
+  is the epipolar-plane pencil, whose traces are straight. For an arc it is concentric mosaics, whose traces are
+  time-shifts for one depth. Paths are composed of these primitives.
+- **Correspondence is the hardest problem.** As in the project's binocular work, the formulation is judged with an
+  oracle first, and real matching comes last.
+
+The work continues in visgraf/deep-motion. Its plan document carries the brainstorm, the decisions and the stages.
+What stays here: M6a's geometry (`motion/derotate.py`), its matcher (`motion/m6_matcher.py`, rectification off by
+default), the T0–T2 records (`docs/runs/issue-22/`), and the crab paths.
