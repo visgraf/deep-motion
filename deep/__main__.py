@@ -4,6 +4,8 @@
     figures [--stage 2|3] --out DIR      a stage's figures
     selftest --stage 4 [--run DIR]       stage 4 (#4) the slit fan on the Panorama carrier; S4.2 needs the run
     stage4-render --run DIR              stage 4's three looks on an arc in the calibration room (CPU)
+    stage5a-render --kind K --run DIR    stage 5a (#5): a short Panorama run, line / arc / pivot (CPU)
+    stage5a --line D --arc D --pivot D   stage 5a: the oracle evaluation and checks O5.1-O5.3
 """
 from __future__ import annotations
 
@@ -57,6 +59,32 @@ def stage4_render(a) -> int:
                          git={"deep-motion": _git(REPO)})
 
 
+def stage5a_render(a) -> int:
+    from . import oracle, sensor
+    poses = oracle.run_poses(a.kind)
+    return sensor.render(a.run, sensor.SlitFan(width=a.width), poses, spp=a.spp, seed_base=a.seed_base, device=a.device,
+                         git={"deep-motion": _git(REPO)})
+
+
+def stage5a(a) -> int:
+    from . import oracle
+    res, num, ev = oracle.selftest({"line": a.line, "arc": a.arc, "pivot": a.pivot})
+    for name, ok in res:
+        print(f"{PREFIX} stage 5a {'PASS' if ok else 'FAIL'} {name}")
+    for k, t in num["tables"].items():
+        print(f"{PREFIX} {k}: " + json.dumps(t))
+    if a.out:
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage5a", "runs": {"line": a.line, "arc": a.arc, "pivot": a.pivot},
+               "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (out / "stage5a.json").write_text(json.dumps(rec, indent=1, default=float))
+        np.savez_compressed(out / "stage5a_maps.npz", **{f"{k}_{f}": v for k, e in ev.items()
+                            for f, v in (("pix", e["pix"]), ("rtrue", e["rtrue"]), ("I", e["I"]), ("nvis", e["nvis"]))})
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m deep")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -74,8 +102,21 @@ def main(argv=None) -> int:
     p.add_argument("--spp", type=int, default=16)
     p.add_argument("--seed-base", type=int, default=9000)
     p.add_argument("--device", default="CPU")
+    p = sub.add_parser("stage5a-render", help="stage 5a: a short Panorama run (line, arc or pivot) in the calibration room")
+    p.add_argument("--kind", required=True, choices=["line", "arc", "pivot"])
+    p.add_argument("--run", required=True)
+    p.add_argument("--width", type=int, default=720)
+    p.add_argument("--spp", type=int, default=16)
+    p.add_argument("--seed-base", type=int, default=9100)
+    p.add_argument("--device", default="CPU")
+    p = sub.add_parser("stage5a", help="stage 5a: the oracle evaluation and its checks on the three runs")
+    p.add_argument("--line", required=True)
+    p.add_argument("--arc", required=True)
+    p.add_argument("--pivot", required=True)
+    p.add_argument("--out", default=None)
     a = ap.parse_args(argv)
-    return {"selftest": selftest, "figures": figures, "stage4-render": stage4_render}[a.cmd](a)
+    return {"selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+            "stage5a": stage5a}[a.cmd](a)
 
 
 if __name__ == "__main__":
