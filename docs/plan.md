@@ -265,7 +265,7 @@ Figures: [`stage3_atlas.png`](runs/issue-3/figures/stage3_atlas.png) (precision 
 
 **Reading:**
 - **Arcs have no blind direction.** Curving the path fills the line's blind cone at the heading: tighter turns fill
-  it more. Elsewhere, lines and arcs are within a few per cent of each other. Lateral directions are the most precise
+  it more. Elsewhere, lines and arcs agree within about 10 % (at 10° from the heading the arcs are slightly worse). Lateral directions are the most precise
   on both, at about 0.2 % at 3 m.
 - **Time sampling should be driven by uncertainty, not fixed.** Before a point's range is known, lateral rays need
   sub-millimetre steps to stay within a resolution element. Once range is within ±10 %, 2.6 cm suffices laterally and
