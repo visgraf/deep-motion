@@ -61,7 +61,7 @@ def stage4_render(a) -> int:
 
 def stage5a_render(a) -> int:
     from . import oracle, sensor
-    poses = oracle.run_poses(a.kind)
+    poses = oracle.run_poses(a.kind, n=a.n, ds=a.ds)
     return sensor.render(a.run, sensor.SlitFan(width=a.width), poses, spp=a.spp, seed_base=a.seed_base, device=a.device,
                          git={"deep-motion": _git(REPO)})
 
@@ -84,6 +84,23 @@ def stage5a(a) -> int:
                             for f, v in (("pix", e["pix"]), ("rtrue", e["rtrue"]), ("I", e["I"]), ("nvis", e["nvis"]),
                                          ("b_ref", e["b_ref"]), ("lat_ref", e["lat_ref"]))})
     return 0 if all(ok for _, ok in res) else 1
+
+
+def stage5a_table(a) -> int:
+    """The oracle's sector tables on any runs, no checks (the addendum to #5: longer windows)."""
+    from . import oracle
+    out = {}
+    for spec in a.runs:
+        name, d = spec.split("=", 1)
+        ev = oracle.evaluate(d)
+        out[name] = {"run": d, "anchors": int(len(ev["rtrue"])), "seen_by_another": float(np.mean(ev["nvis"] >= 1)),
+                     "table": oracle.sector_table(ev)}
+        print(f"{PREFIX} {name}: " + json.dumps(out[name]["table"], ensure_ascii=False))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage5a-table", "runs": out, "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "stage5a_table.json").write_text(json.dumps(rec, indent=1, ensure_ascii=False))
+    return 0
 
 
 def main(argv=None) -> int:
@@ -109,14 +126,19 @@ def main(argv=None) -> int:
     p.add_argument("--width", type=int, default=720)
     p.add_argument("--spp", type=int, default=16)
     p.add_argument("--seed-base", type=int, default=9100)
+    p.add_argument("--n", type=int, default=21, help="looks")
+    p.add_argument("--ds", type=float, default=0.01, help="step, m (line, arc)")
     p.add_argument("--device", default="CPU")
     p = sub.add_parser("stage5a", help="stage 5a: the oracle evaluation and its checks on the three runs")
     p.add_argument("--line", required=True)
     p.add_argument("--arc", required=True)
     p.add_argument("--pivot", required=True)
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage5a-table", help="stage 5a: the oracle's sector tables on runs, no checks")
+    p.add_argument("runs", nargs="+", help="name=DIR")
+    p.add_argument("--out", default=None)
     a = ap.parse_args(argv)
-    return {"selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
