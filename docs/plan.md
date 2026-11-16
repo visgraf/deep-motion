@@ -501,3 +501,41 @@ fraction as the path is travelled).
 - **Cost.** The checks take 5.7 min in the Chat sandbox, just over the ~5 min batch rule. On Code's machine, at
   3600 wide, the cells stay the same (2 cm voxels), but each look has 25× the samples to load and bin. Code may need to
   subsample the hits before binning, and should say how.
+
+**Addendum: a 90° turn** (Luiz agreed on #7 to a real turn, 2026-11-16, in Chat).
+- **The path.** 30 cm line, then a left arc of 90° at **R = 1 m**, then a 30 cm line. The turn was proposed at
+  R = 1.6 m, but at 1.6 m the arc runs into a board of the calibration room: 0.8 cm from its surface points, against
+  18 cm at 1 m.
+- **The run.** `python -m deep stage5b2-render --path turn90 --step 0.1 --run runs/s5b2-turn --seed-base 12000` at
+  `4892e22` (clean). 22 looks every 10 cm, ending at 2.1 m of the path's 2.17 m; 240 s. Record:
+  [`runs/issue-7/runs/s5b2-turn`](runs/issue-7/runs/s5b2-turn).
+- **What else changed.** `run.json` now records the path, its start and its step. Records are loaded one at a time.
+  `--hit-stride` and `--max-cells` bound memory and time for Code. The refactored fusion reproduces the composed
+  path's record exactly (cells, F1–F3, rungs, progress).
+
+**Checks** (`python -m deep stage5b2 runs/s5b2-turn --out docs/runs/issue-7` at `4892e22`, clean; record
+[`stage5b2_turn90.json`](runs/issue-7/stage5b2_turn90.json)). All pass: F1 3.2e-14 (control 4.2e-3); F2 1.0018
+(control 1.417); F3 95.0 / 95.0 / 94.9 % (σ halved ≤ 67.3 %).
+
+| path | length | looks | usable at 0.25 / 0.5 / 1 px | median 3-D error at 0.5 px |
+|---|---|---|---|---|
+| straight | 0.9 m | 37 | 96.7 / 91.6 / 76.7 % | 2.5 cm |
+| turn90 | 2.1 m | 22 | 99.5 / 98.4 / 92.8 % | 1.6 cm |
+
+By bearing from the path's middle, relative to the start heading, at 0.5 px
+([`turn90/stage5b2_cones.json`](runs/issue-7/figures/turn90/stage5b2_cones.json)):
+- turn90: ahead < 15° 98.6 %, 15–30° 98.0 %, behind 100 %;
+- straight: 61.7 %, 82.2 % and 90.7 %.
+
+On the turn, 92.8 % of the cells first become usable on the arc, 5.4 % on the first line and 0.3 % on the last. 1.5 %
+never do. Figure: [`turn90/stage5b2_topdown.png`](runs/issue-7/figures/turn90/stage5b2_topdown.png).
+
+**Reading:**
+- **A real turn closes the line's blind cone and most of the grazing losses.** As the heading sweeps, the wall ahead
+  and the boards seen edge-on from the straight path come into view from other directions.
+- **This comparison confounds turning with length.** The turn is 2.3× longer and the looks are 4× sparser. A straight
+  path of 2.1 m in this room would run into the box ahead. Separating the two needs a larger scene (the Classroom) or
+  a turn and a straight path of equal length; that is for Code.
+- **Subsampling hits changes the cell set.** With `--hit-stride 5 --max-cells 50000` (a smoke test of the options,
+  Chat sandbox, not a record), the turn gives 99.1 % at 0.5 px. Paths compared against each other must use the same
+  stride and cell settings.
