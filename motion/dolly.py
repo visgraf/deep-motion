@@ -452,6 +452,15 @@ def m6_t1(a) -> int:
     return 0 if all(c["ok"] and c["control_fails"] for c in res["checks"]) else 1
 
 
+def m6_t2_repro(a) -> int:
+    """M6 T2.0 (#22): M6's matcher reduces to M4's on M4's own run."""
+    from . import m6_crab
+    import torch
+    res = m6_crab.repro(a.run, a.refs, a.out, git={"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER),
+                                                    "torch": torch.__version__, "device": str(torch.device("cpu"))})
+    return 0 if res["check"]["ok"] and res["check"]["control_fails"] else 1
+
+
 def _m4_log(m):
     print(m, flush=True)
 
@@ -686,6 +695,10 @@ def main(argv=None) -> int:
     p.add_argument("--run", required=True)
     p.add_argument("--out", default=None)
     p.add_argument("--figures", default=None)
+    p = sub.add_parser("m6-t2-repro", help="M6 T2.0: M6's matcher against M4's frozen one on M4's run")
+    p.add_argument("--run", default="runs/m3-calib-1024")
+    p.add_argument("--refs", type=int, nargs="+", default=[12])
+    p.add_argument("--out", default=None)
     p = sub.add_parser("m6-figures", help="M6 T0 figures: #21's information model on the Foveated raster")
     p.add_argument("--out", required=True)
     p = sub.add_parser("m4-fixtures")
@@ -743,7 +756,7 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m6-figures": m6_figures, "m6-t1-render": m6_t1_render, "m6-t1": m6_t1, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
+            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m6-figures": m6_figures, "m6-t1-render": m6_t1_render, "m6-t1": m6_t1, "m6-t2-repro": m6_t2_repro, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
             "m4-calibration": m4_calibration, "m4-classroom": m4_classroom, "m4-freeze": m4_freeze,
             "m4-oracle": m4_oracle}[a.cmd](a)
 
