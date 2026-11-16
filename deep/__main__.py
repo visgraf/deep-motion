@@ -95,7 +95,7 @@ def stage5a_table(a) -> int:
         name, d = spec.split("=", 1)
         ev = oracle.evaluate(d)
         out[name] = {"run": d, "anchors": int(len(ev["rtrue"])), "seen_by_another": float(np.mean(ev["nvis"] >= 1)),
-                     "table": oracle.sector_table(ev)}
+                     "table": oracle.sector_table(ev), "profile_0.25px": oracle.profile(ev)}
         print(f"{PREFIX} {name}: " + json.dumps(out[name]["table"], ensure_ascii=False))
     if a.out:
         Path(a.out).mkdir(parents=True, exist_ok=True)

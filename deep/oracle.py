@@ -214,3 +214,19 @@ def selftest(runs: dict, fan=None):
     num["anchors"] = {k: int(len(e["rtrue"])) for k, e in ev.items()}
     num["seen_by_another"] = {k: float(np.mean(e["nvis"] >= 1)) for k, e in ev.items()}
     return res, num, ev
+
+
+PROFILE_EDGES = (0, 2, 5, 10, 15, 25, 35, 45, 60, 75, 90, 105, 120, 135, 145, 155, 165, 170, 175, 178, 180.0)
+
+
+def profile(ev, sigma_px=0.25, edges=PROFILE_EDGES):
+    """Median 95 % half-interval / range, and median range, per bin of the 3-D angle from the heading (the figure's data)."""
+    with np.errstate(divide="ignore"):
+        ci = Z95 * sigma_px * sn.SlitFan().res / np.sqrt(ev["I"]) / ev["rtrue"]
+    psi = np.degrees(ev["psi3"])
+    rows = []
+    for a, b in zip(edges[:-1], edges[1:]):
+        m = (psi >= a) & (psi < b)
+        rows.append({"psi_deg": [a, b], "n": int(m.sum()), "median_half_interval": float(np.median(ci[m])) if m.any() else None,
+                     "median_range_m": float(np.median(ev["rtrue"][m])) if m.any() else None})
+    return rows
