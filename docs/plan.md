@@ -275,3 +275,47 @@ Figures: [`stage3_atlas.png`](runs/issue-3/figures/stage3_atlas.png) (precision 
   arcs, slits near the heading also carry range, which a line never gives. M4's windows of 10 cm steps sit far
   outside the tracking regime for lateral rays: one 10 cm step moves a lateral point at 3 m by about 1.9°, about
   19 resolution elements.
+
+### Stage 4: the sensor, a slit fan on fov-render's Panorama (#4; Chat sandbox)
+
+**Rendering path** (proposed on #4; a decision for Luiz, reversible). fov-render's existing **Panorama** sensor
+(head-locked, equirectangular) carries the slit fan, so fov-render needs no change.
+- With the head locked to the tangent, each column is a vertical slit at bearing −lon from the heading, and each row an
+  elevation. That is exactly the arc's concentric-mosaic (β, v = tan lat); the line's pencil coordinates come from the
+  same rays.
+- Per-slit time sampling is emulated by rendering dense looks and keeping each slit's samples at its own rate.
+- A `SlitFan` sensor in fov-render (rendering only the needed columns, per look) is worth it only if cost bites.
+- Cost (Chat sandbox, calibration room, width 720 = 0.5°/px): 10.1–10.3 s per look at 16 spp; 39 s at 64 spp in a
+  first, untracked trial (one look, not in the repo). The design resolution of 0.1° (width 3600) is Code's, on the GPU.
+
+**The schedule is solved exactly.** Stage 3's ds_max is the first-order step. Over a finite step a near point gets
+closer and its parallax grows. S4.3's first run caught this: at 10° from travel, a point at 0.5 m overshot one pixel
+by 5.5 %. `SlitFan.step` now solves the straight step exactly by bisection on the bearings of the band's two ends.
+
+**Run** (`runs/stage4-arc`, record [`run.json`](runs/issue-4/run.json)): `python -m deep stage4-render --run
+runs/stage4-arc` at `e7d821a` (clean). Three looks on a left-turning arc (R = 1.6 m) from the calibration room's
+EYE, heading +Y, at s = 0, 1 and 10 cm; width 720, 16 spp, seeds 9000 + k, CPU, 31 s.
+
+**Checks** (`python -m deep selftest --stage 4 --run runs/stage4-arc` at `e7d821a`, clean; record
+[`stage4_selftest.json`](runs/issue-4/stage4_selftest.json)). 3 checks PASS; each control fails as it must:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| S4.1 the carrier's pixel rays have the designed slit coordinates (bearing = −lon, v = tan lat) | 5.9e-16 | bearing sign flipped | median 1.61 rad |
+| S4.2 every rendered ray is the designed ray R_head d_local; its bearing is its column's | 6.4e-15°, bearing 2.5e-14° | designed head yawed 0.5° | median 0.43° |
+| S4.3 each slit at its scheduled step: unpredicted parallax within one pixel (line and arc, 7 slits, band 0.5–20 m) | ≤ 1.002 px | twice the step | ≥ 1.93 px |
+
+**The schedule at 0.5°/px**, largest step per slit in cm, while 0.5–20 m uncertain / once ±10 % at 3 m (figure
+[`stage4_slit_fan.png`](runs/issue-4/figures/stage4_slit_fan.png), at `efbc768`):
+
+| angle from travel | 12° | 30° | 60° | 90° | 120° | 150° |
+|---|---|---|---|---|---|---|
+| uncertain, 0.5–20 m | 2.1 | 0.88 | 0.51 | 0.45 | 0.52 | 0.91 |
+| converged, ±10 % at 3 m | 45 | 23 | 14 | 13 | 16 | 31 |
+
+At the design resolution of 0.1° the steps are five times shorter (stage 3's table).
+
+**Reading.** The sensor exists without new code in fov-render: a panorama is a slit fan whose columns can each be kept
+at their own rate. What it does not give for free is cost: the dense looks that the uncertain phase needs (sub-cm
+laterally) are many renders. That is the case for Code's GPU, and later perhaps for a `SlitFan` sensor that renders
+only the slits due at each look.
