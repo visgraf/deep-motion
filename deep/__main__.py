@@ -2,6 +2,8 @@
 
     selftest [--stage 2|3] [--out DIR]   stage 2 (#2) the primitives' geometry; stage 3 (#3) the atlas; numpy only
     figures [--stage 2|3] --out DIR      a stage's figures
+    selftest --stage 4 [--run DIR]       stage 4 (#4) the slit fan on the Panorama carrier; S4.2 needs the run
+    stage4-render --run DIR              stage 4's three looks on an arc in the calibration room (CPU)
 """
 from __future__ import annotations
 
@@ -24,9 +26,11 @@ def _git(path: Path) -> dict:
 
 
 def selftest(a) -> int:
-    from . import atlas, primitives
-    stage = {"2": primitives, "3": atlas}[a.stage]
-    res, num = stage.selftest()
+    from . import atlas, primitives, sensor
+    if a.stage == "4":
+        res, num = sensor.selftest(run_dir=a.run)
+    else:
+        res, num = {"2": primitives, "3": atlas}[a.stage].selftest()
     for name, ok in res:
         print(f"{PREFIX} stage {a.stage} {'PASS' if ok else 'FAIL'} {name}")
     if a.out:
@@ -45,17 +49,31 @@ def figures(a) -> int:
     return 0
 
 
+def stage4_render(a) -> int:
+    from . import sensor
+    fan = sensor.SlitFan(width=a.width)
+    return sensor.render(a.run, fan, sensor.arc_run_poses(), spp=a.spp, seed_base=a.seed_base, device=a.device,
+                         git={"deep-motion": _git(REPO)})
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="python -m deep")
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("selftest", help="a stage's checks: 2 the primitives' geometry, 3 the atlas (numpy)")
-    p.add_argument("--stage", default="2", choices=["2", "3"])
+    p.add_argument("--stage", default="2", choices=["2", "3", "4"])
+    p.add_argument("--run", default=None, help="stage 4: the rendered run for S4.2")
     p.add_argument("--out", default=None)
     p = sub.add_parser("figures", help="a stage's figures")
     p.add_argument("--stage", default="2", choices=["2", "3"])
     p.add_argument("--out", required=True)
+    p = sub.add_parser("stage4-render", help="stage 4: three Panorama looks on an arc in the calibration room (CPU)")
+    p.add_argument("--run", required=True)
+    p.add_argument("--width", type=int, default=720)
+    p.add_argument("--spp", type=int, default=16)
+    p.add_argument("--seed-base", type=int, default=9000)
+    p.add_argument("--device", default="CPU")
     a = ap.parse_args(argv)
-    return {"selftest": selftest, "figures": figures}[a.cmd](a)
+    return {"selftest": selftest, "figures": figures, "stage4-render": stage4_render}[a.cmd](a)
 
 
 if __name__ == "__main__":
