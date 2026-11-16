@@ -194,3 +194,90 @@ def all_figures(out) -> list:
     out.mkdir(parents=True, exist_ok=True)
     field_maps(out), profiles(out), resolution(out)
     return sorted(str(p) for p in out.glob("t0_*.png"))
+
+
+# ----------------------------------------------------------------------------- T1 (#22): pure rotation
+
+def _tone(rgb):
+    x = np.clip(np.nan_to_num(rgb, nan=0.0), 0, None)
+    x = x / max(np.percentile(x, 99.5), 1e-9)
+    return np.clip(x, 0, 1) ** (1 / 2.2)
+
+
+def t1_figures(run_dir, res, out) -> list:
+    """t1_residual.png: the photometric residual of derotation against the reference's eccentricity, per yaw,
+    with the noise floor; t1_fovea.png: the reference, frames derotated into it, and the residual images."""
+    from . import analysis, flow_depth, m6_rotation as m6r, matcher
+    plt = _plt()
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    per = [p for p in res["per_look"] if not p["noise_repeat"]]
+    floor = next(p for p in res["per_look"] if p["noise_repeat"])
+    mids = lambda bs: [np.sqrt(max(b["bin_deg"][0], 0.5) * b["bin_deg"][1]) for b in bs]
+
+    # 1. residual against e_r
+    ramp = BLUE_RAMP[2:]                                       # ordinal: start no lighter than step 300
+    fig, ax = plt.subplots(figsize=(8.2, 4.6))
+    for p, col in zip(per, np.array(ramp)[np.linspace(0, len(ramp) - 1, len(per)).round().astype(int)]):
+        bs = p["residual_by_e_r"]
+        ax.plot(mids(bs), [b["median"] for b in bs], "-o", color=col, lw=2, ms=6, mec=SURFACE, mew=1.2,
+                label=f"yaw {p['yaw_deg']:g}°")
+    bs = floor["residual_by_e_r"]
+    ax.plot(mids(bs), [b["median"] for b in bs], "--", color=INK2, lw=1.5, label="noise floor (same pose, new seed)")
+    ax.axvspan(0.4, 2.0, color=GRID, alpha=0.5, lw=0)
+    ax.text(0.9, 0.205, "fovea", ha="center", color=INK2)
+    ax.set_xscale("log")
+    ax.set_xticks([0.7, 1.4, 3.2, 7.1, 14, 24, 37]), ax.set_xticklabels(["0–1", "1–2", "2–5", "5–10", "10–20", "20–30", "30–45"])
+    ax.set_xlim(0.4, 50), ax.set_ylim(0, 0.23)
+    ax.grid(True, axis="y", color=GRID, lw=0.6)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    ax.set_xlabel("eccentricity in the reference (deg)")
+    ax.set_ylabel("median |L_k − L_r| / L_r after derotation")
+    ax.legend(frameon=False, labelcolor=INK, loc="upper right", fontsize=9)
+    ax.set_title(f"T1, pure rotation (calibration room, {res['spp']} spp): the reference's fovea, seen by a turned "
+                 "frame, loses detail", color=INK, loc="left", fontsize=10)
+    fig.savefig(out / "t1_residual.png", dpi=130, bbox_inches="tight")
+    plt.close(fig)
+
+    # 2. images on the reference's raster
+    run = analysis.load_run(run_dir)
+    es = {e["k"]: e for e in run["looks"]["ahead"]}
+    yaws = run["t1"]["yaws_deg"]
+    ob_r = flow_depth.load_observation(run, es[0])
+    model = ob_r.model
+    rays = model.rays()
+    valid = rays.valid
+    d = lp_unit(rays.direction[valid].astype(np.float64))
+    show = [k for k in es if yaws[k] in (10.0, 30.0) and k != run["t1"]["noise_repeat"]]
+    Lr = matcher.luminance(ob_r.rgb)
+    fig, axs = plt.subplots(2, 1 + len(show), figsize=(4.0 * (1 + len(show)), 8.2))
+    axs[0, 0].imshow(_tone(ob_r.rgb)), axs[0, 0].set_title("reference (yaw 0)", color=INK)
+    axs[1, 0].imshow(np.abs(matcher.luminance(flow_depth.load_observation(run, es[run["t1"]["noise_repeat"]]).rgb) - Lr)
+                     / np.where(Lr > 0, Lr, np.nan), cmap=_cmap(), vmin=0, vmax=0.5)
+    axs[1, 0].set_title("|ΔL|/L: same pose, new seed (noise)", color=INK)
+    for j, k in enumerate(show, 1):
+        ob_k = flow_depth.load_observation(run, es[k])
+        dk = m6r.dr.derotate(d, ob_r.R, ob_k.R)
+        rc, inside = model.pixel_of(dk)
+        img = np.full(ob_r.rgb.shape, np.nan)
+        vals = np.full((len(d), 3), np.nan)
+        for c in range(3):
+            vals[inside, c] = m6r._bilinear(ob_k.rgb[..., c], rc[inside])
+        img[valid] = vals
+        axs[0, j].imshow(_tone(img)), axs[0, j].set_title(f"yaw {yaws[k]:g}°, derotated into the reference", color=INK)
+        L = matcher.luminance(img)
+        im = axs[1, j].imshow(np.abs(L - Lr) / np.where(Lr > 0, Lr, np.nan), cmap=_cmap(), vmin=0, vmax=0.5)
+        axs[1, j].set_title(f"|ΔL|/L, yaw {yaws[k]:g}°", color=INK)
+    for a in axs.ravel():
+        a.set_axis_off()
+    fig.colorbar(im, ax=axs[1, :], fraction=0.02, pad=0.01).set_label("|ΔL| / L", color=INK2)
+    fig.suptitle("T1 on the Foveated raster: grey = outside the turned frame's field; darker = larger residual",
+                 color=INK, y=0.995)
+    fig.savefig(out / "t1_fovea.png", dpi=110, bbox_inches="tight")
+    plt.close(fig)
+    return sorted(str(p) for p in out.glob("t1_*.png"))
+
+
+def lp_unit(v):
+    return lp.unit(v)

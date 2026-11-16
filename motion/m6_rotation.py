@@ -10,13 +10,19 @@ Checks (`analyze`, each with a control that must fail; proposed in #22 before an
     T1.0  poses     every look's eye centre is the reference's (<= 1e-6 m) and its rotation from the reference
                     is the requested yaw about world +Z (<= 1e-6 rad, float32 matrices); control: the next look's
                     yaw requested instead
-    T1.1  rays      derotation with the recorded poses maps every rendered ray of frame k (its record's world
-                    direction at each pixel centre) through pixel_of into the reference, and the reference's model
-                    ray there is the same world ray (<= 1e-4 deg: float32 directions); control: a 0.5 deg yaw error
+    T1.1  rays      frame k's model ray at each rendered pixel, derotated into the reference with the recorded poses
+                    (R_r^T R_k) and placed through pixel_of: the reference's model ray there is the world ray k's
+                    record holds for that pixel (<= 1e-4 deg: float32 directions); control: a 0.5 deg yaw error
+
+Two corrections after the first analysis of the T1 render (cc0929e), both because a control did not fail:
+T1.1 compared k's world rays with themselves through R_r alone (R_k never entered: a tautology, its control could
+not fail); T1.2's control took the points at e_r < 5 deg, but the tolerance is set by k's pixel where they land
+(at 30 deg of yaw they land at 25-35 deg, where 2 px is ~1.6 deg), so it now takes those landing at e_k < 5 deg,
+as its stated reason requires. No threshold moved.
     T1.2  surface   every reference hit, derotated into frame k, lands on a pixel whose Position is the same
                     point within 2 pixels at the range (M1.3's tolerance), for >= 0.80 of those inside k's field
                     (M1.3's REPROJECT_MIN), every frame; control: a 0.5 deg yaw error must lose at least half of
-                    the agreeing points at e_r < 5 deg (2 px there is <= 0.35 deg)
+                    the agreeing points that land at e_k < 5 deg in frame k (2 px there is <= 0.35 deg)
 
 Reported, not gated (M-D18: measure before compensating): the photometric residual |L_k(derotated) - L_r| / L_r
 per eccentricity at which frame k samples the point, against the noise floor of the repeated render.
@@ -129,11 +135,13 @@ def _bilinear(img, rc):
 # ----------------------------------------------------------------------------- the checks
 
 def ray_check(rec_k, model, R_r, R_k):
-    """T1.1: frame k's rendered world rays, derotated into r through pixel_of, against r's model ray there (deg)."""
-    w = lp.unit(rec_k.direction.astype(np.float64))                  # world rays at k's pixel centres
-    d_r = w @ R_r                                                     # in r's eye frame: R_r^T w
+    """T1.1: frame k's model rays at its rendered pixels, derotated into r (R_r^T R_k) and placed through pixel_of;
+    r's model ray there, in the world, against the world ray k's record holds for that pixel (deg)."""
+    w = lp.unit(rec_k.direction.astype(np.float64))                  # the renderer's world rays at k's pixels
+    d_k = lp.unit(model.rays().direction.reshape(-1, 3)[rec_k.raster_index].astype(np.float64))
+    d_r = dr.derotate(d_k, R_k, R_r)                                  # k's eye frame -> r's
     rc, inside = model.pixel_of(d_r)
-    back = dir_of_rc(model, rc[inside]) @ R_r.T                       # r's model ray at that position, world
+    back = dir_of_rc(model, rc[inside]) @ R_r.T                       # r's model ray there, world
     return analysis.angle_deg(back, w[inside]), inside
 
 
@@ -159,7 +167,7 @@ def surface_check(rec_r, rec_k, model, R_r, c_r, R_k):
     tol = TOL_PX * rng * np.sqrt(rec_k.footprint_sr[q])
     agree = np.zeros(len(P), bool)
     agree[considered] = np.isfinite(rec_k.distance_m[q]) & (err <= tol)
-    return agree, considered, e_r
+    return agree, considered, e_r, analysis.eccentricity_deg(dk)
 
 
 def photometric(ob_r, ob_k, model, R_r, R_k):
@@ -218,10 +226,10 @@ def analyze(run_dir, out=None, log=print) -> dict:
         ray_max = max(ray_max, float(np.max(ang)))
         ray_ctrl_min = min(ray_ctrl_min, float(np.median(angc)))
         # T1.2 (oracle)
-        agree, cons, e_r = surface_check(rec_r, rec_k, model, R_r, c_r, R_k)
-        agree_c, cons_c, _ = surface_check(rec_r, rec_k, model, R_r, c_r, _yaw_err(R_k, 0.5))
+        agree, cons, e_r, e_k = surface_check(rec_r, rec_k, model, R_r, c_r, R_k)
+        agree_c, cons_c, _, _ = surface_check(rec_r, rec_k, model, R_r, c_r, _yaw_err(R_k, 0.5))
         frac = float(agree[cons].mean()) if cons.any() else float("nan")
-        fov = e_r < 5.0
+        fov = e_k < 5.0                    # where they land in k: 2 px there is <= 0.35 deg
         a5, a5c = int((agree & fov).sum()), int((agree_c & fov).sum())
         lost = 1.0 - a5c / a5 if a5 else float("nan")
         surf_ok &= frac >= REPROJECT_MIN
@@ -230,10 +238,10 @@ def analyze(run_dir, out=None, log=print) -> dict:
         er, ek, rel, _, _ = photometric(ob_r, ob_k, model, R_r, R_k)
         per.append({"k": k, "yaw_deg": yaws[k], "noise_repeat": k == nrep,
                     "T1.2_agree_fraction": frac, "T1.2_considered": int(cons.sum()),
-                    "T1.2_control_lost_below_5deg": lost,
+                    "T1.2_control_lost_e_k_below_5deg": lost,
                     "residual_by_e_k": _binned(ek, rel), "residual_by_e_r": _binned(er, rel),
                     "residual_median_all": float(np.nanmedian(rel))})
-        log(f"{PREFIX} k={k} yaw {yaws[k]:5.1f}: T1.2 agree {frac:.4f} (control loses {lost:.3f} below 5 deg), "
+        log(f"{PREFIX} k={k} yaw {yaws[k]:5.1f}: T1.2 agree {frac:.4f} (control loses {lost:.3f} at e_k < 5 deg), "
             f"residual median {np.nanmedian(rel):.4f}")
     checks.append({"id": "T1.0", "ok": max(pose_err_c) <= 1e-6 and max(pose_err_a) <= 1e-6,
                    "control_fails": min(ctrl_pose) > 1e-6,
@@ -243,7 +251,7 @@ def analyze(run_dir, out=None, log=print) -> dict:
                    "numbers": {"max_deg": ray_max, "control_min_median_deg": ray_ctrl_min}})
     checks.append({"id": "T1.2", "oracle": True, "ok": bool(surf_ok), "control_fails": bool(surf_ctrl_ok),
                    "numbers": {"min_agree": min(p["T1.2_agree_fraction"] for p in per),
-                               "min_control_lost_below_5deg": min(p["T1.2_control_lost_below_5deg"] for p in per)}})
+                               "min_control_lost_e_k_below_5deg": min(p["T1.2_control_lost_e_k_below_5deg"] for p in per)}})
     res = {"schema": "foveal-motion-m6-t1-v1", "run": run["_dir"], "run_git": run["git"], "spp": run["spp"],
            "checks": checks, "per_look": per}
     for c in checks:
