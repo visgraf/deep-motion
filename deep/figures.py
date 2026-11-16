@@ -287,7 +287,7 @@ def stage5b2(runs: dict, out, sigma_px=0.5) -> list:
         ax.set_title("Fused surface: usable fraction as the path is travelled (records of the checks)", loc="left")
         ax.set_ylim(0, 100)
         _clean(ax)
-        ax.legend(frameon=False, fontsize=9, loc="lower right")
+        ax.legend(frameon=False, fontsize=9, loc="upper left")
         f2 = out / "stage5b2_progress.png"
         fig.savefig(f2, dpi=130, bbox_inches="tight")
         plt.close(fig)
