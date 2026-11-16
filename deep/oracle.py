@@ -157,10 +157,11 @@ def sector_table(ev, sigmas=SIGMAS_PX):
             for name, (lo, hi) in SECTORS.items():
                 m = sel & (ang >= lo) & (ang < hi)
                 row[way][name] = float(f["usable"][m].mean()) if m.any() else None
-        row["heading_fine_eye_height"] = {}
+        row["heading_fine_psi_3d"] = {}
+        psi = np.degrees(ev["psi3"])
         for lo, hi in ((0.0, 2.0), (2.0, 5.0), (5.0, 15.0)):
-            m = eye & (absb >= lo) & (absb < hi)
-            row["heading_fine_eye_height"][f"{lo:g}–{hi:g}°"] = float(f["usable"][m].mean()) if m.any() else None
+            m = (psi >= lo) & (psi < hi)
+            row["heading_fine_psi_3d"][f"{lo:g}–{hi:g}°"] = float(f["usable"][m].mean()) if m.any() else None
         u = f["usable"]
         row["coverage_of_usable"] = float(f["cover"][u].mean()) if u.any() else None
         tab[f"{sg:g}"] = row
