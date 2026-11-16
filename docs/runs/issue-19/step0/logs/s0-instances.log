@@ -1,0 +1,15 @@
+00:00.210  blend            | Read blend: "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend"
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/lamps/lamps.blend', '//assets/lamps/lamps.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/chairs/chairs.blend', '//assets/chairs/chairs.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/coatStand/coatStand.blend', '//assets/coatStand/coatStand.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/desks/desks.blend', '//assets/desks/desks.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/dustBin/dustBin.blend', '//assets/dustBin/dustBin.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/radiator/radiator.blend', '//assets/radiator/radiator.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/suitcase/suitcase.blend', '//assets/suitcase/suitcase.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wallClock/wallClock.blend', '//assets/wallClock/wallClock.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wastes/wastes.blend', '//assets/wastes/wastes.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/books/books.blend', '//assets/books/books.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/officeSupplies/officeSupplies.blend', '//assets/officeSupplies/officeSupplies.blend', parent '<direct>'
+[instances] 854 mesh instances -> runs/d1-classroom/step0/instances.json
+exit 0

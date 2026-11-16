@@ -1,0 +1,1849 @@
+{
+ "schema": "foveal-motion-d1-tour-v1",
+ "spec": {
+  "schema": "foveal-motion-tour-v1",
+  "name": "tour_classroom_L",
+  "scene": "scenes/classroom/classroom_eye.blend",
+  "legs": [
+   {
+    "name": "A",
+    "start_w": [
+     0.897,
+     -3.793,
+     1.6
+    ],
+    "end_w": [
+     0.897,
+     0.759,
+     1.6
+    ]
+   },
+   {
+    "name": "B",
+    "start_w": [
+     0.897,
+     0.759,
+     1.6
+    ],
+    "end_w": [
+     -1.618261,
+     1.663651,
+     1.6
+    ]
+   }
+  ],
+  "step_m": 0.099,
+  "phases": 3,
+  "pivot_deg": 2.0,
+  "seed_base": 6000,
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.046,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    0.897,
+    3.159,
+    1.6
+   ]
+  },
+  "source": {
+   "scene": "the Classroom demo (CC0, Christophe Seux) with the playground's EYE (scripts/setup_scene.sh)",
+   "legs": "M-D17: leg A on classroom_dolly.json's line, from back_of_room (0.897, -3.793, 1.6) to near_board (0.897, 0.759, 1.6), yarbus-agent REPORT.md (MEASURED), 4.552 m in 46 steps of 0.0990 m; a turn in place of +70.22 deg (left) at P = near_board; leg B straight from P toward the front door's centre, 27 steps of 0.0990 m (2.673 m), ending at clearance from the door (leg_B)",
+   "leg_B": "MEASURED (D1b Step 0, #19, Code, workstation; motion/bl_objects.py and the depsgraph's mesh instances of scenes/classroom/classroom_eye.blend, docs/runs/issue-19/step0/): the front door is in the left wall (inner face x = -2.445), doorFrame x -2.551..-2.472, y 1.420..2.502 (centre y 1.961); its leaf (Box25.001) stands ajar into the room, at head height (1.3-1.9 m) from (-2.445, 2.29) to (-2.13, 1.71). Leg B aims at the doorway's centre on the wall's inner face (-2.445, 1.961): heading (-0.940988, 0.338440, 0). The free strip: the first desk row ends at y <= 0.55, and the front furniture (leatherChair y >= 2.04 at x -1.55..-0.79; teacherDesk x 1.60..2.98, y 1.24..1.83) leaves the leg clear by >= 0.39 m in plan (the AABBs of every mesh instance below 1.85 m; nearest: the first row's chair.019 and leatherChair) for 27 steps; from step 28 on, the door's handle (Cube.024, 0.31 m) and leaf come nearer. So leg B ends after 27 steps of 0.0990 m, at (-1.618261, 1.663651, 1.6): 0.44 m (plan) from the leaf, 0.83 m from the wall. P stays at near_board. Preflight of the six phases (OPTIX, 720 px, 4 spp): PASS, nearest surface >= 0.45 m on leg B (at its end: the leaf), holes <= 0.0376; leg B's target ray hits the leaf at (-2.206, 1.875, 1.6)",
+   "step_m": "classroom_dolly.json's step (46 equal steps of 0.0990 m), the step M4 was gated at on the Classroom (#11)",
+   "phases": "M-D17: three interleaved paths, a look every 3.3 cm",
+   "pivot_deg": "#17: about 2 deg per look (display only)",
+   "limits": "classroom_dolly.json's (M-D6: holes 0.046 for that path's window band); if leg B's view of the room breaks them, Step 0 reports and stops (rule 2), the limit is not moved",
+   "control_head_w": "classroom_dolly.json's: 0.10 m in front of the board, must fail the clearance"
+  }
+ },
+ "tour_file": "paths/tour_classroom_L.json",
+ "blend": "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend",
+ "spp": 1024,
+ "device": "OPTIX",
+ "profile": "full",
+ "timeline": [
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 0,
+   "s_m": 0.0
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 0,
+   "s_m": 0.03298550724637681
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 0,
+   "s_m": 0.06597101449275362
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 1,
+   "s_m": 0.09895652173913044
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 1,
+   "s_m": 0.13194202898550725
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 1,
+   "s_m": 0.16492753623188405
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 2,
+   "s_m": 0.19791304347826089
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 2,
+   "s_m": 0.23089855072463772
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 2,
+   "s_m": 0.2638840579710145
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 3,
+   "s_m": 0.29686956521739133
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 3,
+   "s_m": 0.32985507246376816
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 3,
+   "s_m": 0.36284057971014494
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 4,
+   "s_m": 0.39582608695652177
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 4,
+   "s_m": 0.42881159420289855
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 4,
+   "s_m": 0.46179710144927544
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 5,
+   "s_m": 0.4947826086956522
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 5,
+   "s_m": 0.527768115942029
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 5,
+   "s_m": 0.5607536231884058
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 6,
+   "s_m": 0.5937391304347827
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 6,
+   "s_m": 0.6267246376811595
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 6,
+   "s_m": 0.6597101449275363
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 7,
+   "s_m": 0.6926956521739132
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 7,
+   "s_m": 0.7256811594202899
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 7,
+   "s_m": 0.7586666666666667
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 8,
+   "s_m": 0.7916521739130435
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 8,
+   "s_m": 0.8246376811594204
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 8,
+   "s_m": 0.8576231884057971
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 9,
+   "s_m": 0.8906086956521739
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 9,
+   "s_m": 0.9235942028985509
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 9,
+   "s_m": 0.9565797101449276
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 10,
+   "s_m": 0.9895652173913044
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 10,
+   "s_m": 1.0225507246376813
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 10,
+   "s_m": 1.055536231884058
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 11,
+   "s_m": 1.088521739130435
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 11,
+   "s_m": 1.1215072463768117
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 11,
+   "s_m": 1.1544927536231884
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 12,
+   "s_m": 1.1874782608695653
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 12,
+   "s_m": 1.2204637681159423
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 12,
+   "s_m": 1.253449275362319
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 13,
+   "s_m": 1.2864347826086957
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 13,
+   "s_m": 1.3194202898550726
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 13,
+   "s_m": 1.3524057971014494
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 14,
+   "s_m": 1.3853913043478263
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 14,
+   "s_m": 1.418376811594203
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 14,
+   "s_m": 1.4513623188405798
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 15,
+   "s_m": 1.4843478260869567
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 15,
+   "s_m": 1.5173333333333334
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 15,
+   "s_m": 1.5503188405797101
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 16,
+   "s_m": 1.583304347826087
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 16,
+   "s_m": 1.6162898550724638
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 16,
+   "s_m": 1.6492753623188408
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 17,
+   "s_m": 1.6822608695652175
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 17,
+   "s_m": 1.7152463768115942
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 17,
+   "s_m": 1.7482318840579714
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 18,
+   "s_m": 1.7812173913043479
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 18,
+   "s_m": 1.8142028985507246
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 18,
+   "s_m": 1.8471884057971018
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 19,
+   "s_m": 1.8801739130434785
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 19,
+   "s_m": 1.9131594202898552
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 19,
+   "s_m": 1.9461449275362321
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 20,
+   "s_m": 1.9791304347826089
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 20,
+   "s_m": 2.0121159420289856
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 20,
+   "s_m": 2.0451014492753625
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 21,
+   "s_m": 2.0780869565217395
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 21,
+   "s_m": 2.111072463768116
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 21,
+   "s_m": 2.144057971014493
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 22,
+   "s_m": 2.17704347826087
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 22,
+   "s_m": 2.2100289855072464
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 22,
+   "s_m": 2.2430144927536233
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 23,
+   "s_m": 2.2760000000000002
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 23,
+   "s_m": 2.3089855072463767
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 23,
+   "s_m": 2.341971014492754
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 24,
+   "s_m": 2.3749565217391306
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 24,
+   "s_m": 2.407942028985507
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 24,
+   "s_m": 2.4409275362318845
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 25,
+   "s_m": 2.473913043478261
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 25,
+   "s_m": 2.506898550724638
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 25,
+   "s_m": 2.539884057971015
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 26,
+   "s_m": 2.5728695652173914
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 26,
+   "s_m": 2.6058550724637684
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 26,
+   "s_m": 2.6388405797101453
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 27,
+   "s_m": 2.671826086956522
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 27,
+   "s_m": 2.7048115942028987
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 27,
+   "s_m": 2.7377971014492757
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 28,
+   "s_m": 2.7707826086956526
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 28,
+   "s_m": 2.803768115942029
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 28,
+   "s_m": 2.836753623188406
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 29,
+   "s_m": 2.869739130434783
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 29,
+   "s_m": 2.9027246376811595
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 29,
+   "s_m": 2.9357101449275365
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 30,
+   "s_m": 2.9686956521739134
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 30,
+   "s_m": 3.00168115942029
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 30,
+   "s_m": 3.034666666666667
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 31,
+   "s_m": 3.067652173913044
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 31,
+   "s_m": 3.1006376811594203
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 31,
+   "s_m": 3.1336231884057977
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 32,
+   "s_m": 3.166608695652174
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 32,
+   "s_m": 3.199594202898551
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 32,
+   "s_m": 3.2325797101449276
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 33,
+   "s_m": 3.2655652173913046
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 33,
+   "s_m": 3.2985507246376815
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 33,
+   "s_m": 3.331536231884058
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 34,
+   "s_m": 3.364521739130435
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 34,
+   "s_m": 3.397507246376812
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 34,
+   "s_m": 3.4304927536231884
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 35,
+   "s_m": 3.4634782608695653
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 35,
+   "s_m": 3.4964637681159427
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 35,
+   "s_m": 3.529449275362319
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 36,
+   "s_m": 3.5624347826086957
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 36,
+   "s_m": 3.595420289855073
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 36,
+   "s_m": 3.628405797101449
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 37,
+   "s_m": 3.6613913043478266
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 37,
+   "s_m": 3.6943768115942035
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 37,
+   "s_m": 3.72736231884058
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 38,
+   "s_m": 3.760347826086957
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 38,
+   "s_m": 3.793333333333334
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 38,
+   "s_m": 3.8263188405797104
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 39,
+   "s_m": 3.8593043478260873
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 39,
+   "s_m": 3.8922898550724643
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 39,
+   "s_m": 3.9252753623188408
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 40,
+   "s_m": 3.9582608695652177
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 40,
+   "s_m": 3.9912463768115947
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 40,
+   "s_m": 4.024231884057971
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 41,
+   "s_m": 4.0572173913043486
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 41,
+   "s_m": 4.090202898550725
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 41,
+   "s_m": 4.1231884057971016
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 42,
+   "s_m": 4.156173913043479
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 42,
+   "s_m": 4.189159420289855
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 42,
+   "s_m": 4.222144927536232
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 43,
+   "s_m": 4.255130434782609
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 43,
+   "s_m": 4.288115942028986
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 43,
+   "s_m": 4.321101449275362
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 44,
+   "s_m": 4.35408695652174
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 44,
+   "s_m": 4.387072463768116
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 44,
+   "s_m": 4.420057971014493
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 45,
+   "s_m": 4.45304347826087
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 1,
+   "k": 45,
+   "s_m": 4.486028985507247
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 2,
+   "k": 45,
+   "s_m": 4.519014492753623
+  },
+  {
+   "kind": "leg",
+   "leg": 0,
+   "phase": 0,
+   "k": 46,
+   "s_m": 4.5520000000000005
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 0
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 1
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 2
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 3
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 4
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 5
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 6
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 7
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 8
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 9
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 10
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 11
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 12
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 13
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 14
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 15
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 16
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 17
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 18
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 19
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 20
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 21
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 22
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 23
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 24
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 25
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 26
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 27
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 28
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 29
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 30
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 31
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 32
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 33
+  },
+  {
+   "kind": "pivot",
+   "leg": 0,
+   "j": 34
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 0,
+   "s_m": 0.0
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 0,
+   "s_m": 0.033000005380558695
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 0,
+   "s_m": 0.06600001076111739
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 1,
+   "s_m": 0.09900001614167608
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 1,
+   "s_m": 0.13200002152223478
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 1,
+   "s_m": 0.16500002690279345
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 2,
+   "s_m": 0.19800003228335217
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 2,
+   "s_m": 0.2310000376639109
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 2,
+   "s_m": 0.26400004304446956
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 3,
+   "s_m": 0.29700004842502825
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 3,
+   "s_m": 0.33000005380558695
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 3,
+   "s_m": 0.36300005918614564
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 4,
+   "s_m": 0.39600006456670434
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 4,
+   "s_m": 0.429000069947263
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 4,
+   "s_m": 0.4620000753278218
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 5,
+   "s_m": 0.4950000807083804
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 5,
+   "s_m": 0.5280000860889391
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 5,
+   "s_m": 0.5610000914694978
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 6,
+   "s_m": 0.5940000968500565
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 6,
+   "s_m": 0.6270001022306152
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 6,
+   "s_m": 0.6600001076111739
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 7,
+   "s_m": 0.6930001129917326
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 7,
+   "s_m": 0.7260001183722913
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 7,
+   "s_m": 0.75900012375285
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 8,
+   "s_m": 0.7920001291334087
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 8,
+   "s_m": 0.8250001345139675
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 8,
+   "s_m": 0.858000139894526
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 9,
+   "s_m": 0.8910001452750848
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 9,
+   "s_m": 0.9240001506556436
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 9,
+   "s_m": 0.957000156036202
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 10,
+   "s_m": 0.9900001614167608
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 10,
+   "s_m": 1.0230001667973196
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 10,
+   "s_m": 1.0560001721778782
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 11,
+   "s_m": 1.0890001775584368
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 11,
+   "s_m": 1.1220001829389956
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 11,
+   "s_m": 1.1550001883195542
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 12,
+   "s_m": 1.188000193700113
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 12,
+   "s_m": 1.2210001990806718
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 12,
+   "s_m": 1.2540002044612304
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 13,
+   "s_m": 1.2870002098417892
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 13,
+   "s_m": 1.3200002152223478
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 13,
+   "s_m": 1.3530002206029064
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 14,
+   "s_m": 1.3860002259834652
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 14,
+   "s_m": 1.419000231364024
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 14,
+   "s_m": 1.4520002367445826
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 15,
+   "s_m": 1.4850002421251411
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 15,
+   "s_m": 1.5180002475057
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 15,
+   "s_m": 1.5510002528862585
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 16,
+   "s_m": 1.5840002582668173
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 16,
+   "s_m": 1.617000263647376
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 16,
+   "s_m": 1.650000269027935
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 17,
+   "s_m": 1.6830002744084935
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 17,
+   "s_m": 1.716000279789052
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 17,
+   "s_m": 1.749000285169611
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 18,
+   "s_m": 1.7820002905501695
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 18,
+   "s_m": 1.815000295930728
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 18,
+   "s_m": 1.8480003013112871
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 19,
+   "s_m": 1.8810003066918455
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 19,
+   "s_m": 1.914000312072404
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 19,
+   "s_m": 1.947000317452963
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 20,
+   "s_m": 1.9800003228335217
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 20,
+   "s_m": 2.0130003282140803
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 20,
+   "s_m": 2.0460003335946393
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 21,
+   "s_m": 2.079000338975198
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 21,
+   "s_m": 2.1120003443557565
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 21,
+   "s_m": 2.1450003497363155
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 22,
+   "s_m": 2.1780003551168736
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 22,
+   "s_m": 2.211000360497432
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 22,
+   "s_m": 2.2440003658779912
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 23,
+   "s_m": 2.27700037125855
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 23,
+   "s_m": 2.3100003766391084
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 23,
+   "s_m": 2.3430003820196674
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 24,
+   "s_m": 2.376000387400226
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 24,
+   "s_m": 2.4090003927807846
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 24,
+   "s_m": 2.4420003981613436
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 25,
+   "s_m": 2.475000403541902
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 25,
+   "s_m": 2.508000408922461
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 25,
+   "s_m": 2.54100041430302
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 26,
+   "s_m": 2.5740004196835784
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 1,
+   "k": 26,
+   "s_m": 2.6070004250641365
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 2,
+   "k": 26,
+   "s_m": 2.6400004304446956
+  },
+  {
+   "kind": "leg",
+   "leg": 1,
+   "phase": 0,
+   "k": 27,
+   "s_m": 2.673000435825254
+  }
+ ],
+ "git": {
+  "foveal-motion": {
+   "commit": "a34a576f36d1011abd43c276b469edad2a50b446",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "command": [
+  "/home/lvelho/rd/foveal-motion/motion/dolly.py",
+  "demo-render",
+  "--tour",
+  "paths/tour_classroom_L.json",
+  "--out",
+  "runs/d1-classroom",
+  "--device",
+  "OPTIX",
+  "--spp",
+  "1024"
+ ],
+ "phases": {
+  "A0": {
+   "run": "A0",
+   "spec": "specs/A0.json",
+   "seed_base": 6000
+  },
+  "A1": {
+   "run": "A1",
+   "spec": "specs/A1.json",
+   "seed_base": 6200
+  },
+  "A2": {
+   "run": "A2",
+   "spec": "specs/A2.json",
+   "seed_base": 6400
+  },
+  "B0": {
+   "run": "B0",
+   "spec": "specs/B0.json",
+   "seed_base": 6600
+  },
+  "B1": {
+   "run": "B1",
+   "spec": "specs/B1.json",
+   "seed_base": 6800
+  },
+  "B2": {
+   "run": "B2",
+   "spec": "specs/B2.json",
+   "seed_base": 7000
+  }
+ },
+ "pivots": {
+  "0": {
+   "run": "pivot0"
+  }
+ }
+}

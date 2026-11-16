@@ -1,0 +1,22 @@
+{
+ "schema": "foveal-motion-d1-fused-v1",
+ "anchors": 3668287,
+ "voxels": 768418,
+ "voxel_m": 0.02,
+ "exposure": 0.9014818298741613,
+ "errors_on": "anchors with a truth hit (as M4's evaluation, #19); the cloud and the PLY keep every anchor",
+ "anchors_no_truth": {
+  "total": 22764,
+  "fraction": 0.0062056213158894055,
+  "per_leg": {
+   "A": 22764,
+   "B": 0
+  }
+ },
+ "voxels_with_truth": 753944,
+ "median_voxel_error_m": 0.07786899397629785,
+ "p90_voxel_error_m": 0.32791706172680607,
+ "median_anchor_rel": 0.008526663202850624,
+ "p90_anchor_rel": 0.03470992363694299,
+ "references": 161
+}

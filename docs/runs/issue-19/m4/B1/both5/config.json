@@ -1,0 +1,143 @@
+{
+ "schema": "foveal-motion-m4-estimate-v1",
+ "run": "/home/lvelho/rd/foveal-motion/runs/d1-classroom/B1",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "a34a576f36d1011abd43c276b469edad2a50b446",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "window": "both5",
+ "offsets": [
+  -5,
+  -4,
+  -3,
+  -2,
+  -1,
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 1.0,
+  "chunk": 6000
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "a34a576f36d1011abd43c276b469edad2a50b446",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "refs": [
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21
+ ],
+ "inputs_sha256": {
+  "5/record_C.npz": "4b9b37cde568478fa363391165f5b218f9ee8e5caa527d36937e0f67c8ac03cf",
+  "5/meta.json": "12340ff8fa2a72f35435812195b137a502b6027ce2a067187b16c4567dc7d6ca",
+  "0/record_C.npz": "eaca497433f4a6c958143c7ee430e1714b9ce3e68090d215180a1693e07affa7",
+  "0/meta.json": "f5b013f10203d5dbb2cd4e6909841f1fa8f43e9c8e82b27c480a152da8ddeafe",
+  "1/record_C.npz": "bf751de02a0e1836c15289b62661f1f7057c9e3ebdc694abdea88da487da65c4",
+  "1/meta.json": "0d47ee36066eea795571b16ab92d09638b8050090ba4e9cdf5a0964b5303acbe",
+  "2/record_C.npz": "8bbb223521e8886e70ee7b5a9d60bfda61592b394c71ad5f610497dd48a2b622",
+  "2/meta.json": "b8cadde918442fb84c189ec5b16edec07a1b64503fd99e76a92108a73d449d71",
+  "3/record_C.npz": "114637e1f4df28964564f22cf8d71e8abeaff3096931d9d399bd6f20e19baf10",
+  "3/meta.json": "6ace53bb8a61c2949a7036102f47cee15287867874e6acfefe1a5b1cc4ca5bd9",
+  "4/record_C.npz": "ad9842f71694bf6e2c71aaa82ca3cb9975b5e236f4651c5cfdc0531a3235f81a",
+  "4/meta.json": "779cdc124b25654f9fd207536e0f3c530c196c1eddc85fb207181803c289ffe6",
+  "6/record_C.npz": "4e5d8724a0675b54574fcf0d7f7f04ade51190c515de0624f0bba7b96ffba85c",
+  "6/meta.json": "83ddde35ed9dd6b5cfa6437b6682343bcae7a9064930ecf86615bd6053a2b817",
+  "7/record_C.npz": "a1ee9206a3f1c76e570309e5639e57ba42ee56620fe801fe8f1556c8636f6702",
+  "7/meta.json": "aaa2451a050a38c63c20e8a354be2fd53664529746fbaf2a56bef65caad3beff",
+  "8/record_C.npz": "9eb01389f53dd7e0ac1fb0f291008f150ae108d3d78f4ca3d294de732242b0b3",
+  "8/meta.json": "bb20db70410af8bf37a402a41be5d93803f474a27e726dc3c990c6ee7e25a75e",
+  "9/record_C.npz": "2acd5d9e5dc7666331909ddd00e35b7c3b5f2907b77894f1b4375122a5b61a7e",
+  "9/meta.json": "9ba82d016e267eabe87277e6e4b71ba2164589777a6e981fc50ccf912e491a84",
+  "10/record_C.npz": "b1e59aa11c9d49d61691ad131fd0edfa9a326c48134aa5553062e4353bcd8a45",
+  "10/meta.json": "0ce3ab4a2f0b6bb360bbb6bd209585780a03c17f3fb1658e76daeadc9a0ad68d",
+  "11/record_C.npz": "e66f9facaaf2c6e009ab98aca1604a4204353e6ba13c4e60d098ce920e4469c0",
+  "11/meta.json": "cb0bb24452ce9e59f214cb5a3b8da3b4d8b72ecd82719984760a521b397f6f49",
+  "12/record_C.npz": "6aef7b261efa3e0e2cfa5e2141686e8f12913e761cc35ca0d2199c4265ee750b",
+  "12/meta.json": "d2fbc0a5ed509331f63734b612f457cbb6bdc70a8099af0d85f9683b5ef71a47",
+  "13/record_C.npz": "d2167a48f4aea5d138908b571bee1b4195a3b75301668eaa28979bebafb5950a",
+  "13/meta.json": "03f60883906dc315b70a98c993a42f7d05658f01ca057d32aa693fd329775491",
+  "14/record_C.npz": "d84e65a0b8ff82053afd84022d91845300eed2c33e1e28a05ec69d895ce9a5ad",
+  "14/meta.json": "8fc67984514e230a3a2f557953f1bc3b7d17a430ffb3ac6050ce616bb03bf097",
+  "15/record_C.npz": "8fd58e54414bae320bbecc92da62227d7a47da78a5da163affb6f662393157d6",
+  "15/meta.json": "5af85f30708b431b18bc1fc7d23f8515ff41343da4a0916423522fe6bdfa9acf",
+  "16/record_C.npz": "9a59a48f26b1b4dfc98667ab59fd90f78803a73be2bd66ed36c96c75d3b98650",
+  "16/meta.json": "785b48e0b82878f287308c2b4180ae8a9b8bc89ba7e77f9db17d66b9752968f8",
+  "17/record_C.npz": "c9d56fbaf85be9c78100252f501893997d791b9d08ceb1971a6a44bfda798e83",
+  "17/meta.json": "4df850255d7646a4582320a48514b92990e32b922f7ea44b1903bf0ecc3e9464",
+  "18/record_C.npz": "f316c0c738d4d88e4bc70f52a82ab404d45ecfa57e98c8a168a1aadb0285dad7",
+  "18/meta.json": "b2cf96e52ea9a2141aa850bc7032dbf034b0a819aa6b5527b8d40192edeaaf3b",
+  "19/record_C.npz": "401f078051eec91daffa9636f1a7c55dee1b71665562afd2e67c4154a6124951",
+  "19/meta.json": "03a525fd3a6bb9934bccc59fe25d623adaac39672b0c9f7b416056283009d8bd",
+  "20/record_C.npz": "38b5f341d5200761a5a89c4a45bb0a11f1cd31fe87c3e9a08b2b7a358416066c",
+  "20/meta.json": "291a527b93a377b614d65c22bcd8dada0224269bc70f298e5659771ec8e19ab3",
+  "21/record_C.npz": "07c5e8374365539f1640768daaad96831d89e11efaddfb80dec614dd5fb99033",
+  "21/meta.json": "899327c272835ed0d7a54b290f0e9bab9bd8e0f1da309fa428b8cd76ddadf5b4",
+  "22/record_C.npz": "7ba6893cabb64ee337d1bf410ae431c66631950512de94db7db7c471434f29ae",
+  "22/meta.json": "64c6fa3c7663d490ab39b0dbd290b38814e5fe7c78e10f92644b83cd1fef17b1",
+  "23/record_C.npz": "2331c12da9e71504a95e43f729a1ab5850c5d916afd287a54f665c83f884eca3",
+  "23/meta.json": "cb28dc24f32534734db00866a1cf806b7091f11ab5d9cbd2d6d377d5e04f3449",
+  "24/record_C.npz": "84ead1f6fa16fa2de6ef54338a6aa887429b7995507eefc031c6292dc1ed6e63",
+  "24/meta.json": "1d5d958eeb03b45e87d824878d308682d9b7181461c7f36fb072c111720284be",
+  "25/record_C.npz": "3cdca1096cb2f84c834211a36045501deec7ad666ded6702f6c8b459dd5d4406",
+  "25/meta.json": "d865c390050c4a802f3416eeb31c02a705068e052bc1e9fb6c581f8e5a92e602",
+  "26/record_C.npz": "fb43cb7e893f977da489b2c7bb7212458a7159d2711977055d4c356c849d710b",
+  "26/meta.json": "b65bf7322f9ee2e71709a495d97e36ecab33c63f50ce308145a94cdc6ddb262c"
+ }
+}

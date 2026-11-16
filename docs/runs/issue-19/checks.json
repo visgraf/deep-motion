@@ -1,0 +1,55 @@
+{
+ "schema": "foveal-motion-d1-checks-v1",
+ "rows": [
+  {
+   "id": "D1.1",
+   "what": "the frozen estimator: file hashes and settings equal docs/runs/issue-10/frozen.json, and every phase's result imported that freeze",
+   "ok": true,
+   "control_fails": true,
+   "control": "a recorded hash changed must be refused; settings with ncc_min - 0.01 must differ"
+  },
+  {
+   "id": "D1.2",
+   "what": "a both5 window across the pivot is refused by #5's alignment gate inside the frozen estimate()",
+   "ok": true,
+   "control_fails": true,
+   "control": "the same construction inside leg A must pass the gate (the refusal comes from the pivot)",
+   "detail": {
+    "refusal": "[m4] refused: alignment gate failed at r = 5: {'pairs': 10, 'tol_rad': 1e-06, 'max_axis_rad': 1.2255374653808007, 'max_rotation_rad': 1.2255374653807973, 'min_B_m': 0.09895652173913039}",
+    "across_max_rotation_rad": 1.2255374653807973,
+    "straight_max_rotation_rad": 0.0
+   }
+  },
+  {
+   "id": "D1.3",
+   "what": "fused voxels (0.02 m) lie on the truth surface: per leg, median |P_fused - P_true| / range <= 0.05 (#5's calibration-gate median), over the anchors with a truth hit (as M4's evaluation, #19)",
+   "ok": true,
+   "control_fails": true,
+   "control": "leg B's poses yawed 5.0 deg about the head: its median must exceed the tolerance",
+   "detail": {
+    "median_rel": {
+     "A": 0.0187613347357775,
+     "B": 0.012633376426058118
+    },
+    "control_median_rel": {
+     "A": 0.01853702113619188,
+     "B": 0.08606743701009476
+    },
+    "anchors": 3668287,
+    "left_out_no_truth": {
+     "total": 22764,
+     "fraction": 0.0062056213158894055,
+     "per_leg": {
+      "A": 22764,
+      "B": 0
+     }
+    },
+    "median_anchor_rel": 0.008526663202850624
+   }
+  }
+ ],
+ "git": {
+  "commit": "130ff023c5ce2ccd9fd1008f8a7e0bc1d1d25f01",
+  "clean": true
+ }
+}

@@ -1,0 +1,109 @@
+{
+ "schema": "foveal-motion-m4-estimate-v1",
+ "run": "/home/claude/foveal-motion/runs/d1-calib/B2",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "window": "both5",
+ "offsets": [
+  -5,
+  -4,
+  -3,
+  -2,
+  -1,
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 1.0,
+  "chunk": 6000
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "refs": [
+  7,
+  10,
+  13
+ ],
+ "inputs_sha256": {
+  "7/record_C.npz": "27604afa486adf2137769713b2cf1061573467b4502941fd94f3d40df3a24730",
+  "7/meta.json": "e0b73c33feb5e0f89794fc65804d3e1f13d8e52aa10a129311f6f2aefac2c54b",
+  "2/record_C.npz": "c04593b25cbd4bb63b8dac4fc653b404935520d88dada6871822ff3f52658cb3",
+  "2/meta.json": "1bfc939f718c303aa9d6f01e322b96b68ebda9c133f888f52d5f07fb2c93f2a0",
+  "3/record_C.npz": "97f8cabbf2e234a377f77033b1c28ebfdbdf41af4f968df6f0ea2a3581d4837b",
+  "3/meta.json": "3652992efd9d20b8c53c0b3ace7f01823b3eaaaa868e521ae1b2a32512b5ece7",
+  "4/record_C.npz": "402cbb2d446b50f2b97da2a09b580d6f0972f8fcde34af9065948bbbd32b3005",
+  "4/meta.json": "2ad94ff1396560b701780c00fe3dd7da5234c0f93c35204860aa23c05a7fdc2b",
+  "5/record_C.npz": "1f882cf9879a88c6a69f509e5c127f942e450342f86ded54aa382fb542c79d05",
+  "5/meta.json": "b51bf8d222d76613b1faffa547bef3443a0a38a7b72f34f854bcd0c0e944cde2",
+  "6/record_C.npz": "f0320361646c9cd3a1aac3760d8ea148eeb13ebe0a9a08d79a03c2a7259eb814",
+  "6/meta.json": "7e3fa7bbb4f0c5e958b44ab6436c66025e6019242b32b70f586117628d4713a7",
+  "8/record_C.npz": "dc041ec0eaa0b7378a7b2267de221c72eedc451b6a084ed3129e56347867299b",
+  "8/meta.json": "3a49ef2006b2730d24bcf0d06656bfe37817ede8e11952d18ffe3ea172a4e436",
+  "9/record_C.npz": "063b50eac24dfa565beb4e186ed662508ee63db60a41dc495ff18cbd9bd457ca",
+  "9/meta.json": "3b42f1c582168ace34f4acd47e755516d63f76f4904bb675d93fc4d780ff6a44",
+  "10/record_C.npz": "0512ea0604fbef76506321bf69938c347fd017311b5c1980bfd3806a1bf6e6fe",
+  "10/meta.json": "6de26a44255ba79c8e413ca24939cea4df8626f79ee9481173d4fb1a28418dfa",
+  "11/record_C.npz": "cd3fd664532ce9f3ae03261d406b9580f131cdeebec1927b5b97ee016bca521b",
+  "11/meta.json": "47fa05424f5ebbdeaf0f15aa0f25e48f77232c7923930f0737b58d1a11db8a18",
+  "12/record_C.npz": "deefe8f492394425a695a56ef43a3e0221d1e1a4e74d68abc6ed1d0b68e0926c",
+  "12/meta.json": "28aa881f42f376c93b39fcb93b6eb686999ad923963c5f4de43d155abdde2376",
+  "13/record_C.npz": "bbef644ea28e4f7d6ebb9315c7fbb9914acc8dd7b7e2dcd7c1f0255dd3d8de64",
+  "13/meta.json": "fbf66b2c75ab1c067eb5170114b892918e5a4a76fdae56c0dcd4bc22c8444f78",
+  "14/record_C.npz": "fe2d556ff99c68eb05122b38254481146ee49a878433dcad5db9caaf75bc5456",
+  "14/meta.json": "d787e0724c106cdf472237da82ee8b80b0b67c26f5e0eb707d2a23299f10599f",
+  "15/record_C.npz": "7454d41f56b5da4b2a40cd88c86444c4bc80cdb1c9216fa37f95fe1ed9d5bfb3",
+  "15/meta.json": "f855f87639b1786fb4acc308bb68d941cbdb41473efaee4f89234afdd7fd31b8",
+  "16/record_C.npz": "259b741336e1d941bb49333d8700947a76ca0ca5412517c13fa6e380c4fcc91c",
+  "16/meta.json": "c99f0615d0691f050655e3dadb5fba402b131b63eaf0dc9da0b65bd6e44a93a7",
+  "17/record_C.npz": "0ce3e21cda18d9daa00f224fd52cc026ea52f78bd24b9454bea18bf6e9ac10e5",
+  "17/meta.json": "3a02c023536617f4393f1e2dceba224de5bb269f2d0e2087ee14dcd9302c5db4",
+  "18/record_C.npz": "32af72c3a2f532f7ec101aa454aedfe5ef33ad136171aa61a044ebad20969259",
+  "18/meta.json": "f514dfd0c35f885b41c634531cf4f2288032bf7385fffd43e7ae871cc0928430"
+ }
+}

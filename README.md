@@ -48,6 +48,7 @@ foveated raster, for M1's run and for the same path fixating a target off the pa
 | [`motion/analysis.py`](motion/analysis.py) | the checks and the flow, from the run's files |
 | [`motion/visuals.py`](motion/visuals.py) | contact sheet, flow figure, side-by-side video, depth figure |
 | [`motion/depth.py`](motion/depth.py) | M2: range from the head's motion, pixel-limited, and check M2.1 |
+| [`motion/tour.py`](motion/tour.py), [`motion/demo*.py`](motion/demo.py) | D1 (#17): a tour of straight legs and turns in place, the frozen M4 on it, fusion, checks, the three-panel video |
 
 How we work on it (Luiz, Chat, Code, GitHub Issues): [`CLAUDE.md`](CLAUDE.md).
 

@@ -1,0 +1,5 @@
+f1-selftest	0	0.1	08:14:25	08:14:26	.venv/bin/python -m motion.dolly selftest
+f2-demo-fuse	0	33.4	08:14:26	08:14:59	.venv/bin/python -m motion.dolly demo-fuse --out runs/d1-classroom
+f3-demo-checks	0	15.1	08:14:59	08:15:14	.venv/bin/python -m motion.dolly demo-checks --out runs/d1-classroom
+f4-demo-video-rgb	0	733.1	08:15:14	08:27:27	.venv/bin/python -m motion.dolly demo-video --out runs/d1-classroom --color rgb --best
+f5-demo-video-error	0	734.4	08:27:27	08:39:42	.venv/bin/python -m motion.dolly demo-video --out runs/d1-classroom --color error --best

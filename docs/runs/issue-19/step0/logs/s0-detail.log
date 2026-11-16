@@ -1,0 +1,19 @@
+00:00.226  blend            | Read blend: "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend"
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/lamps/lamps.blend', '//assets/lamps/lamps.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/chairs/chairs.blend', '//assets/chairs/chairs.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/coatStand/coatStand.blend', '//assets/coatStand/coatStand.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/desks/desks.blend', '//assets/desks/desks.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/dustBin/dustBin.blend', '//assets/dustBin/dustBin.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/radiator/radiator.blend', '//assets/radiator/radiator.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/suitcase/suitcase.blend', '//assets/suitcase/suitcase.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wallClock/wallClock.blend', '//assets/wallClock/wallClock.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/wastes/wastes.blend', '//assets/wastes/wastes.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/books/books.blend', '//assets/books/books.blend', parent '<direct>'
+Info: Read library: '/home/lvelho/rd/foveal-motion/scenes/classroom/assets/officeSupplies/officeSupplies.blend', '//assets/officeSupplies/officeSupplies.blend', parent '<direct>'
+[detail] wall.011: 0 vertices in band, plan hull []
+[detail] doorFrame: 0 vertices in band, plan hull []
+[detail] porte: 0 vertices in band, plan hull []
+[detail] Box25.001: 60 vertices in band, plan hull [(-2.4451, 2.2883), (-2.4437, 2.2746), (-2.1919, 1.7253), (-2.1873, 1.7153), (-2.1779, 1.7053), (-2.1749, 1.703), (-2.1275, 1.7248), (-2.1273, 1.7285), (-2.1287, 1.7422), (-2.3851, 2.3015), (-2.3946, 2.3114), (-2.3975, 2.3137), (-2.4449, 2.292)]
+[detail] wall.008: 33 vertices in band, plan hull [(-2.4445, 3.566), (-1.1426, 3.1497), (-0.7902, 3.1497), (3.7572, 3.2782), (-1.1597, 3.5728), (-2.4377, 3.5728)]
+exit 0

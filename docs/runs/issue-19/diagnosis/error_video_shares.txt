@@ -1,0 +1,24 @@
+{
+ "ERR_MAX": 0.05,
+ "cut_z_m": 2.2,
+ "all": {
+  "voxels": 768418,
+  "grey_no_truth": 14474,
+  "grey_fraction": 0.018836102225611582,
+  "truth_voxels": 753944,
+  "rel_median": 0.018095366665094852,
+  "rel_p90": 0.0648256632066776,
+  "at_dark_end_ge_ERR_MAX": 0.14809057436626594,
+  "below_1pct": 0.29599943762401454
+ },
+ "below_2.2": {
+  "voxels": 571783,
+  "grey_no_truth": 13006,
+  "grey_fraction": 0.022746391550640715,
+  "truth_voxels": 558777,
+  "rel_median": 0.01801471455708505,
+  "rel_p90": 0.06203056382209323,
+  "at_dark_end_ge_ERR_MAX": 0.1432718240013458,
+  "below_1pct": 0.29845179740755257
+ }
+}

@@ -1,0 +1,657 @@
+{
+ "schema": "foveal-motion-preflight-v1",
+ "blend": "/home/claude/foveal-motion/runs/calib-scene/scenes/calib_room.blend",
+ "path": {
+  "schema": "foveal-motion-path-v1",
+  "name": "tour_calib_L_B2",
+  "scene": "runs/calib-scene/scenes/calib_room.blend",
+  "start_w": [
+   -0.23333333333333334,
+   1.0,
+   1.5
+  ],
+  "end_w": [
+   1.7666666666666666,
+   1.0,
+   1.5
+  ],
+  "n_looks": 21,
+  "facing_w": [
+   1.0,
+   0.0,
+   0.0
+  ],
+  "target_ray": {
+   "from_k": 0,
+   "toward_w": [
+    49.766666666666666,
+    1.0,
+    1.5
+   ]
+  },
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.001,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    -0.3,
+    4.9,
+    1.5
+   ]
+  },
+  "source": {
+   "tour": "tour_calib_L",
+   "leg": "B",
+   "phase": 2,
+   "phases": 3,
+   "step_m": 0.1,
+   "what": "phase 2 of 3: looks at start + (i + 2/3) step along the leg, i = 0..20; written by motion/tour.py"
+  },
+  "seed_base": 4000
+ },
+ "device_requested": "CPU",
+ "width": 360,
+ "spp": 2,
+ "limits": {
+  "min_clearance_m": 0.25,
+  "max_hole_fraction": 0.001,
+  "max_backface_fraction_other": 0.001,
+  "backface_allowed": [],
+  "control_head_w": [
+   -0.3,
+   4.9,
+   1.5
+  ]
+ },
+ "ok": true,
+ "control_fails": true,
+ "control": {
+  "hole_fraction": 0.0,
+  "nearest_surface_m": 0.10000759717814518,
+  "backface_closed_fraction": 0.0,
+  "backface_open_fraction": 0.00773360018634218,
+  "backface_closed_not_allowed": {},
+  "consistency_p999_deg": 0.0008745277632152452,
+  "render_seconds": 0.338,
+  "device": "CPU",
+  "fails": [
+   "clearance"
+  ],
+  "ok": false,
+  "head_origin_w_m": [
+   -0.3,
+   4.9,
+   1.5
+  ]
+ },
+ "heads": [
+  {
+   "k": 0,
+   "head_origin_w_m": [
+    -0.23333333333333334,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.9730067221743073,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007072086714171822,
+   "render_seconds": 0.346,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 1,
+   "head_origin_w_m": [
+    -0.13333333333333333,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.9875494112972427,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007073825186608521,
+   "render_seconds": 0.35,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 2,
+   "head_origin_w_m": [
+    -0.033333333333333326,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.9867174114379756,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0016272182899884286,
+   "render_seconds": 0.353,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 3,
+   "head_origin_w_m": [
+    0.06666666666666671,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.9076289894411126,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007070459987785806,
+   "render_seconds": 0.348,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 4,
+   "head_origin_w_m": [
+    0.16666666666666669,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.9826488691824675,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007091335322536001,
+   "render_seconds": 0.377,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 5,
+   "head_origin_w_m": [
+    0.26666666666666666,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.7386382920867655,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 4.8007113382060254e-05,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007071622329153394,
+   "render_seconds": 0.349,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 6,
+   "head_origin_w_m": [
+    0.36666666666666675,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.7218278151977676,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 4.8007113382060254e-05,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.000707181482998609,
+   "render_seconds": 0.353,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 7,
+   "head_origin_w_m": [
+    0.46666666666666673,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.7228303793821439,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 4.8007113382060254e-05,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.00070723417221281,
+   "render_seconds": 0.356,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 8,
+   "head_origin_w_m": [
+    0.5666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.6408832345158689,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.00011992216096786978,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0015719575052998338,
+   "render_seconds": 0.35,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 9,
+   "head_origin_w_m": [
+    0.6666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.6277552365308087,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.00011978251323099343,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007096073829019243,
+   "render_seconds": 0.36,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 10,
+   "head_origin_w_m": [
+    0.7666666666666666,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.6168418476783744,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.00021564977157465917,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.000709766555585251,
+   "render_seconds": 0.357,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 11,
+   "head_origin_w_m": [
+    0.8666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.6369396182790981,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0002876236989865139,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.000707349082101609,
+   "render_seconds": 0.355,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 12,
+   "head_origin_w_m": [
+    0.9666666666666668,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.6126408025973852,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.00026391425425046754,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.000709764385458894,
+   "render_seconds": 0.332,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 13,
+   "head_origin_w_m": [
+    1.0666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.54755240081285,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.00045470176184050155,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007068862661152568,
+   "render_seconds": 0.359,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 14,
+   "head_origin_w_m": [
+    1.1666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.4882313941311589,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0006223371979181596,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007075582260991713,
+   "render_seconds": 0.325,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 15,
+   "head_origin_w_m": [
+    1.2666666666666666,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.4426470603116933,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0005986284378310966,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007095398080011806,
+   "render_seconds": 0.325,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 16,
+   "head_origin_w_m": [
+    1.3666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.416929416051418,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0007432819807008926,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007077929700644028,
+   "render_seconds": 0.33,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 17,
+   "head_origin_w_m": [
+    1.4666666666666668,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.41547302176099354,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0006482230392744514,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007132525087741171,
+   "render_seconds": 0.367,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 18,
+   "head_origin_w_m": [
+    1.5666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.43431147752476573,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0005771392600106703,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007088599797420368,
+   "render_seconds": 0.341,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 19,
+   "head_origin_w_m": [
+    1.6666666666666667,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.48724340011727013,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0005294631402521397,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007100176986838187,
+   "render_seconds": 0.357,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  },
+  {
+   "k": 20,
+   "head_origin_w_m": [
+    1.7666666666666666,
+    1.0,
+    1.5
+   ],
+   "hole_fraction": 0.0,
+   "nearest_surface_m": 0.5397598605718,
+   "backface_closed_fraction": 0.0,
+   "backface_open_fraction": 0.0008627973933910301,
+   "backface_closed_not_allowed": {},
+   "consistency_p999_deg": 0.0007112021195736217,
+   "render_seconds": 0.416,
+   "device": "CPU",
+   "fails": [],
+   "ok": true
+  }
+ ],
+ "target": {
+  "flagged_passed_through": [],
+  "tol_m": 0.01,
+  "source": "target_ray",
+  "ray": {
+   "from_k": 0,
+   "toward_w": [
+    49.766666666666666,
+    1.0,
+    1.5
+   ]
+  },
+  "hit_object": "wall_right",
+  "target_w": [
+   3.0,
+   1.0,
+   1.5
+  ],
+  "rows": [
+   {
+    "k": 0,
+    "visible": true,
+    "range_m": 3.2333333333333334,
+    "first_hit_m": 3.2333333333333334,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 1,
+    "visible": true,
+    "range_m": 3.1333333333333333,
+    "first_hit_m": 3.1333335717519124,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 2,
+    "visible": true,
+    "range_m": 3.033333333333333,
+    "first_hit_m": 3.0333335717519123,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 3,
+    "visible": true,
+    "range_m": 2.933333333333333,
+    "first_hit_m": 2.933333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 4,
+    "visible": true,
+    "range_m": 2.8333333333333335,
+    "first_hit_m": 2.8333338101704917,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 5,
+    "visible": true,
+    "range_m": 2.7333333333333334,
+    "first_hit_m": 2.7333333333333334,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 6,
+    "visible": true,
+    "range_m": 2.6333333333333333,
+    "first_hit_m": 2.6333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 7,
+    "visible": true,
+    "range_m": 2.533333333333333,
+    "first_hit_m": 2.5333335717519123,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 8,
+    "visible": true,
+    "range_m": 2.4333333333333336,
+    "first_hit_m": 2.4333333333333336,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 9,
+    "visible": true,
+    "range_m": 2.333333333333333,
+    "first_hit_m": 2.333333571751912,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 10,
+    "visible": true,
+    "range_m": 2.2333333333333334,
+    "first_hit_m": 2.2333335717519125,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 11,
+    "visible": true,
+    "range_m": 2.1333333333333333,
+    "first_hit_m": 2.1333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 12,
+    "visible": true,
+    "range_m": 2.033333333333333,
+    "first_hit_m": 2.0333335717519123,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 13,
+    "visible": true,
+    "range_m": 1.9333333333333333,
+    "first_hit_m": 1.9333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 14,
+    "visible": true,
+    "range_m": 1.8333333333333333,
+    "first_hit_m": 1.8333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 15,
+    "visible": true,
+    "range_m": 1.7333333333333334,
+    "first_hit_m": 1.7333333333333334,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 16,
+    "visible": true,
+    "range_m": 1.6333333333333333,
+    "first_hit_m": 1.6333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 17,
+    "visible": true,
+    "range_m": 1.5333333333333332,
+    "first_hit_m": 1.5333333333333332,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 18,
+    "visible": true,
+    "range_m": 1.4333333333333333,
+    "first_hit_m": 1.4333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 19,
+    "visible": true,
+    "range_m": 1.3333333333333333,
+    "first_hit_m": 1.3333333333333333,
+    "first_hit_object": "wall_right"
+   },
+   {
+    "k": 20,
+    "visible": true,
+    "range_m": 1.2333333333333334,
+    "first_hit_m": 1.2333333333333334,
+    "first_hit_object": "wall_right"
+   }
+  ],
+  "ok": true,
+  "occluded_heads": [],
+  "control_point_w": [
+   3.5,
+   1.0,
+   1.5
+  ],
+  "control_hidden": true
+ },
+ "summary": {
+  "max_hole_fraction": 0.0,
+  "min_nearest_surface_m": 0.41547302176099354,
+  "max_backface_closed_fraction": 0.0,
+  "failing_heads": [],
+  "target_occluded_heads": [],
+  "target_w": [
+   3.0,
+   1.0,
+   1.5
+  ]
+ },
+ "seconds": 11.35
+}

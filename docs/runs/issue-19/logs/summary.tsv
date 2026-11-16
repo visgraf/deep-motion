@@ -1,0 +1,9 @@
+s1-selftest	0	0.1	22:31:19	22:31:19	.venv/bin/python -m motion.dolly selftest
+s2-demo-render	0	456.5	22:31:19	22:38:56	.venv/bin/python -m motion.dolly demo-render --tour paths/tour_classroom_L.json --out runs/d1-classroom --device OPTIX --spp 1024
+s3-demo-topview	0	7.1	22:38:56	22:39:03	.venv/bin/python -m motion.dolly demo-topview --out runs/d1-classroom --device OPTIX --bounds -2.445 -4.596 3.584 3.573 --spp 256 --m-per-px 0.005
+s4-demo-estimate	0	461.0	22:39:03	22:46:44	.venv/bin/python -m motion.dolly demo-estimate --out runs/d1-classroom
+s5-demo-fuse	0	31.0	22:46:44	22:47:15	.venv/bin/python -m motion.dolly demo-fuse --out runs/d1-classroom
+s6-demo-checks	1	14.9	22:47:15	22:47:30	.venv/bin/python -m motion.dolly demo-checks --out runs/d1-classroom
+s7-demo-report	0	2495.4	22:47:30	23:29:05	.venv/bin/python -m motion.dolly demo-report --out runs/d1-classroom
+s8-demo-video-rgb	0	728.0	23:29:05	23:41:13	.venv/bin/python -m motion.dolly demo-video --out runs/d1-classroom --color rgb --best
+s9-demo-video-error	1	5.8	23:41:13	23:41:19	.venv/bin/python -m motion.dolly demo-video --out runs/d1-classroom --color error --best

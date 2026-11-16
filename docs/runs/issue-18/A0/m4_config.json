@@ -1,0 +1,130 @@
+{
+ "schema": "foveal-motion-m4-estimate-v1",
+ "run": "/home/claude/foveal-motion/runs/d1-calib/A0",
+ "run_git": {
+  "foveal-motion": {
+   "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "window": "both5",
+ "offsets": [
+  -5,
+  -4,
+  -3,
+  -2,
+  -1,
+  1,
+  2,
+  3,
+  4,
+  5
+ ],
+ "settings": {
+  "coarse_dq": 0.01,
+  "n_phi": 800,
+  "e_grid_lo_deg": 0.1,
+  "e_anchor_deg": [
+   1.0,
+   44.0
+  ],
+  "r_half_px": 3,
+  "a_half_px": 1,
+  "z_envelope_m": [
+   0.25,
+   20.0
+  ],
+  "zeta_step_px": 0.5,
+  "excl_px": 1.5,
+  "ncc_min": 0.8,
+  "ambig_margin": 0.05,
+  "texture_min": 0.02,
+  "gn_iters": 8,
+  "gn_max_move_px": 1.5,
+  "zeta_q_max": 2.0,
+  "frame_ncc_min": 0.5,
+  "min_frames": 3,
+  "support_min": 3,
+  "support_tol_px": 0.5,
+  "edge_half_px": 3,
+  "edge_tol_px": 0.5,
+  "interval_scale": 1.0,
+  "chunk": 6000
+ },
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "refs": [
+  5,
+  8,
+  11,
+  14,
+  17,
+  20
+ ],
+ "inputs_sha256": {
+  "5/record_C.npz": "94c55a9e1aa473bcdf62a93046cfaab9173c03c74377a8738a76831ed3f6ffc1",
+  "5/meta.json": "cf899871718e6d1c998e868096b71846d03289785c31d3dc2496ea571e8da197",
+  "0/record_C.npz": "1f49ffa2909fdc0b0fb1012ebc3caad6b16f6e46b832fe246a8d2a3aa8febc53",
+  "0/meta.json": "ffed79744b4db9d52575368d9196d52c422f2c9a4597b657baf70e09a01db5b2",
+  "1/record_C.npz": "06db431df4328291d8d7b589db8c371cad4e3876720f49bd0df722af298c8dab",
+  "1/meta.json": "5587e55a46df5b2b639c956fcc99a5a940098775f4bfaccce7af2c7f9ea7aece",
+  "2/record_C.npz": "22d670aedbba41fe51f139dd2f32844080b21604be97837bf4ac0ddeaf096715",
+  "2/meta.json": "22f7c95d19032300ddb11d7f1fcfda18b1b75efde3becd16312aef184af32b11",
+  "3/record_C.npz": "b32dba144bc977c24ee046dfe14d6dc8a81f4d0ee180ea61bc11b905d395f8d9",
+  "3/meta.json": "14d4191e0c7f89de41a215472d7239213244013ff85337a8e52f44ff047358f6",
+  "4/record_C.npz": "7040a6a08005f5c06973b5f90422bc8e9a036fe12a8f94e9a169178a3294c2ff",
+  "4/meta.json": "5e4a0f2cc11f138f70d885f439b0db3d73e353f403a75f24fbe2e10b9fa2da16",
+  "6/record_C.npz": "7477224fa9d8f69ef03315e422e3e826ac4936ebbf657e705a8774a56a69e50a",
+  "6/meta.json": "b8f5c2a77f28eaa879476b11ae37ea7960754010ed09e73ed721658d97523239",
+  "7/record_C.npz": "01fbec655e2ed2031c77cb67dbb67d74b5e3c75e03ca51d73e0410205441a322",
+  "7/meta.json": "f1eb7c6ff623a71e7d3684186e1e111879587a5afb13102cd89752cb2ad7f0bb",
+  "8/record_C.npz": "71d199a1ba487eb37afce4c939c48076ce4761b3f96485d1e330d9b964feda81",
+  "8/meta.json": "f6f837d949f705179fe5b76d21a9968c7e906d473f80bcd7c296470cd0b97f0c",
+  "9/record_C.npz": "e68ac292934af2e320aea000145e879f336ab154ea5ec1e412b4e5c606c01025",
+  "9/meta.json": "61c8cb4ced10c92d2e32f7212416f97330ff2bd9d012598afb4a9125c76c2e1d",
+  "10/record_C.npz": "8fc4291800fb7a74350eee5128bc35a066dae2ebf1a8d74c0d2c9ca6a16f7f44",
+  "10/meta.json": "29639d93beb789675a8d1ddad8ce9da2b978820bc66187b7303e5c6d8c2c8710",
+  "11/record_C.npz": "af48c9c1ec10d06ab7860b8488d1394dcb6a7acebce6fc364b387714ea5f5794",
+  "11/meta.json": "f8594277b53a2f1066a473e4e6f7e58dd738d65164c745512ab079586c4d0947",
+  "12/record_C.npz": "73af470e56a760c255cc4144b9d44aca7af20c2985c505fe06cca1ea1e979052",
+  "12/meta.json": "0e6053fec5aa6398fcb512ea323c13639e03ba3de78c3c43416f6be4417250fb",
+  "13/record_C.npz": "68154be9a0dc0d12de57a0c82b9bd9ad4bffa79143a6e3558be701f315298131",
+  "13/meta.json": "5dbbe0bc5d9e0f84337277ee73072ec08b11df192af6f9f027b029e6ff236da1",
+  "14/record_C.npz": "3d7f7d89916207d963568feeacf07bcb63c377dfc54cfdc1a4e01fe70bde4b30",
+  "14/meta.json": "01eb1e6bc40a0b3cf7b3670d0773ed22b3c7f1cf9d5f14c8e2634227eb6f44b7",
+  "15/record_C.npz": "2b206cb912b5a2e5dadee817a837d57ac49f04cae12b1ea5dbd8c84d0648081f",
+  "15/meta.json": "b884c2aaa7d2221e79b97c61fd67fc27673b12b1ed99f3216a8dfb672c7e35a3",
+  "16/record_C.npz": "4ca796c9b62fc6b7d7b7ebc81c22e1a6a6e4cd0a45ce985282c73a1a39c1029f",
+  "16/meta.json": "7aed26a2755fe5578fa4e48b812d14ee7e549efb07fb5368ceb41ae9d3ed4509",
+  "17/record_C.npz": "43166adc5cf590e526ca334a28f4fc93123f0975691b69583abf8812e58ab362",
+  "17/meta.json": "9ebf893374d266e8fc02be2e2497109bf9fe9e4191a9a96ca99f28220492fa72",
+  "18/record_C.npz": "6166540bd8cb61e73be2923bd9656e44ad67be44ee86fd3bde107dd61fffa9e8",
+  "18/meta.json": "8092ec28ec3c15a767499b42e5e33b66f2ff7cde264308ccb80621fe0c0238dc",
+  "19/record_C.npz": "39b4f030ffcf390ecbcc27cb931ec0d164f27d3e8caa67ecf27f03d5c5b0e1e1",
+  "19/meta.json": "f06a2e5b7c811d0c456481377fcd700dcace7a6a2c5d57da1d159ac679bc6512",
+  "20/record_C.npz": "0fd2515054abcd7c22b6aedc6b22fa37c5f7ee96667b79d104e9b69356c363f6",
+  "20/meta.json": "6e7a4575e67e551854ad87dd00311192685e868867829a23f51b87261d741394",
+  "21/record_C.npz": "793b854ed12df5efa159894ed6ae32e6db05147dbeac16f643323168270b7889",
+  "21/meta.json": "f83bc8bb47411a0204cf2378d68e37366593b041fc537fbea07565df9cfc53dc",
+  "22/record_C.npz": "4f927832d528145112fcf699cedad811ad1cb5faa9834d59ee8c3e143acd9af7",
+  "22/meta.json": "e2319adff7798fcacea84dfc76814bfbce97c553b4e2d51a858d269f7ffc3428",
+  "23/record_C.npz": "6a71a12ec2206fc146184cf9d50c443ebf0cb43651ef99cc7be5168875cccae2",
+  "23/meta.json": "0a88d930a5a97e67e326f5ed337b67912e4f3dd5934d4a106d7f3acd7ab8534c",
+  "24/record_C.npz": "83f23a66a93e80347f3cfac39d4d911c6ee79cc0f43f6b8018bb3eb3c6bc9306",
+  "24/meta.json": "2879a568ac0e7de6fd15aeeae0eca33bda11933469ffda95328cd9d53b06a2a8",
+  "25/record_C.npz": "5ee813d0efa03df4a550f509a5a34f1587d92228d07dbd20f5c33d95c025da78",
+  "25/meta.json": "3a7b1e1f7a768f491918e4bb11d7469969f6992035e9fb6a7598b525c1f60431"
+ }
+}
