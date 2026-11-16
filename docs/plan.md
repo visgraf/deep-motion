@@ -499,4 +499,5 @@ fraction as the path is travelled).
   diagnostic, not in the records). They are surfaces at grazing incidence, where M1.3's 2 px agreement rejects most
   looks, or cells occluded behind the boards; this run does not separate the two.
 - **Cost.** The checks take 5.7 min in the Chat sandbox, just over the ~5 min batch rule. On Code's machine, at
-  3600 wide, cells grow 25×. Code should use a coarser cell (`cell`) or a subset, and say which.
+  3600 wide, the cells stay the same (2 cm voxels), but each look has 25× the samples to load and bin. Code may need to
+  subsample the hits before binning, and should say how.
