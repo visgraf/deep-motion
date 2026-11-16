@@ -183,3 +183,66 @@ def stage4(run_dir, out) -> list:
     fig.savefig(out / "stage4_slit_fan.png", dpi=110, bbox_inches="tight")
     plt.close(fig)
     return sorted(str(p) for p in out.glob("stage4_*.png"))
+
+
+def stage5a(runs: dict, out) -> list:
+    """stage5a_maps.png: the oracle's 95 % half-interval (relative, 0.25 px) over the reference panorama of each run,
+    the usable region (<= 10 %) outlined; stage5a_profile.png: its median against the 3-D angle from the heading."""
+    from matplotlib.colors import LinearSegmentedColormap, LogNorm
+    from . import oracle as orc
+    from . import sensor as sn
+    plt = _plt()
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    fan = sn.SlitFan()
+    W, H = fan.width, fan.width // 2
+    cmap = LinearSegmentedColormap.from_list("blue", list(BLUE[::-1]))
+    cmap.set_bad(GRID)
+    evs = {k: orc.evaluate(d, fan, sigmas=(0.25,)) for k, d in runs.items()}
+    fig, axs = plt.subplots(len(evs), 1, figsize=(10.5, 2.9 * len(evs)), gridspec_kw={"hspace": 0.45})
+    norm = LogNorm(0.005, 2.0)
+    for ax, (k, e) in zip(np.atleast_1d(axs), evs.items()):
+        img = np.full(H * W, np.nan)
+        with np.errstate(divide="ignore"):
+            ci = orc.Z95 * 0.25 * fan.res / np.sqrt(e["I"]) / e["rtrue"]
+        img[e["pix"]] = np.where(np.isfinite(ci), ci, np.nan)
+        img = img.reshape(H, W)
+        im = ax.imshow(img, cmap=cmap, norm=norm, extent=(180, -180, -90, 90), aspect="auto", interpolation="nearest")
+        ax.contour(np.linspace(180, -180, W), np.linspace(90, -90, H), np.nan_to_num(img, nan=9.0), levels=[orc.USABLE_REL],
+                   colors=[ACCENT], linewidths=1.2)
+        ax.set_title(f"{k}: 95 % half-interval of range, 0.25 px (orange: ±10 %, usable inside the darker regions)", loc="left")
+        ax.set_xlabel("bearing from the heading, deg (+ left)")
+        ax.set_ylabel("elevation, deg")
+        ax.set_xticks(range(-180, 181, 45))
+        ax.set_yticks(range(-90, 91, 45))
+    cb = fig.colorbar(im, ax=axs, fraction=0.025, pad=0.02)
+    cb.set_label("σ-based 95 % half-interval / range")
+    f1 = out / "stage5a_maps.png"
+    fig.savefig(f1, dpi=110, bbox_inches="tight")
+    plt.close(fig)
+    fig, ax = plt.subplots(figsize=(7.5, 4.4))
+    edges = np.array([0, 2, 5, 10, 15, 25, 35, 45, 60, 75, 90, 105, 120, 135, 145, 155, 165, 170, 175, 178, 180.0])
+    mid = 0.5 * (edges[1:] + edges[:-1])
+    styles = {"line": (BLUE[3], "o"), "arc": (ACCENT, "s")}
+    for k, e in evs.items():
+        with np.errstate(divide="ignore"):
+            ci = orc.Z95 * 0.25 * fan.res / np.sqrt(e["I"]) / e["rtrue"]
+        psi = np.degrees(e["psi3"])
+        med = [np.median(ci[(psi >= a) & (psi < b)]) if np.any((psi >= a) & (psi < b)) else np.nan for a, b in zip(edges[:-1], edges[1:])]
+        col, mk = styles["arc" if k.startswith("arc") else "line"]
+        ls = "-" if "50" in k else "--"
+        ax.plot(mid, med, ls, color=col, marker=mk, ms=4, lw=2, label=k)
+    ax.axhline(orc.USABLE_REL, color=INK2, lw=1, ls=":")
+    ax.text(178, orc.USABLE_REL * 1.12, "usable: ±10 %", ha="right", color=INK2, fontsize=9)
+    ax.set_yscale("log")
+    ax.set_xlim(0, 180)
+    ax.set_xticks(range(0, 181, 30))
+    ax.set_xlabel("3-D angle from the heading, deg")
+    ax.set_ylabel("median 95 % half-interval / range")
+    ax.set_title("Oracle on renders, 0.25 px (0.125°): median by angle from the heading", loc="left")
+    _clean(ax)
+    ax.legend(frameon=False, fontsize=9)
+    f2 = out / "stage5a_profile.png"
+    fig.savefig(f2, dpi=130, bbox_inches="tight")
+    plt.close(fig)
+    return [f1, f2]
