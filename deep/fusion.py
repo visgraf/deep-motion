@@ -96,8 +96,18 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None):
     c0 = np.stack([poses[k][0] for k in range(K)])[first]
     X = c0 + 1.05 * (P - c0)
     act = np.flatnonzero(vis.sum(1) >= 2)
+
+    def cost(Xa, idx):
+        c = np.zeros(len(idx))
+        for k in range(K):
+            lon, lat, _, _ = _derivs(Xa, *poses[k])
+            rl = np.angle(np.exp(1j * (obs[k][0][idx] - lon)))
+            c += np.where(vis[idx, k], rl ** 2 + (obs[k][1][idx] - lat) ** 2, 0.0)
+        return c
+
     for _ in range(iters):
-        # only the cells still moving: near a look's pole (lon singular) a few cells need more steps
+        # only the cells still moving; a step that raises the cost is halved (near a look's pole lon is singular
+        # and a full Gauss-Newton step can throw a cell away)
         Xa, va = X[act], vis[act]
         Hx, g = np.zeros((len(act), 3, 3)), np.zeros((len(act), 3))
         for k in range(K):
@@ -109,8 +119,19 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None):
             g += w * (gl * rl[:, None] + gt * rt[:, None])
         Hx += 1e-12 * np.eye(3)
         dX = np.linalg.solve(Hx, g[..., None])[..., 0]
-        X[act] += dX
-        act = act[np.linalg.norm(dX, axis=-1) > 1e-14 * np.linalg.norm(Xa - poses[0][0], axis=-1)]
+        c0 = cost(Xa, act)
+        lam = np.ones(len(act))
+        todo = np.arange(len(act))
+        for _ in range(40):
+            cn = cost(Xa[todo] + lam[todo, None] * dX[todo], act[todo])
+            todo = todo[cn > c0[todo] * (1 + 1e-12) + 1e-30]
+            if not len(todo):
+                break
+            lam[todo] *= 0.5
+        lam[todo] = 0.0
+        step = lam[:, None] * dX
+        X[act] += step
+        act = act[np.linalg.norm(step, axis=-1) > 1e-14 * np.linalg.norm(Xa - poses[0][0], axis=-1)]
         if not len(act):
             break
     return X, H, vis
