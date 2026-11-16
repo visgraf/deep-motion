@@ -1005,3 +1005,59 @@ Reading: on arcs, the spread epipoles fill the straight dolly's foveal hole, but
 the gain at about the field's level (0.6–0.8). Only an epipole held outside the fovea with no rotation, as in the crab,
 makes the fovea the best depth sensor in the field. T1 measures the first part of that cost on renders, and T2 the
 second.
+
+### T1, pure rotation (Chat sandbox; #22)
+
+**Run** (`runs/m6-t1`, record [`t1/run.json`](runs/issue-22/t1/run.json)):
+- `python -m motion.dolly m6-t1-render --run runs/m6-t1 --spp 256` at `cc0929e` (clean), fov-render `0f6fa7d`, bpy 5.2.1
+  wheel, CPU, `full` profile.
+- The head stays at the calibration room's EYE (0, 0, 1.6), facing the rings, and turns left in place by 2, 5, 10, 15,
+  20 and 30°, gaze `ahead`.
+- Look 0 is the reference. A last look repeats yaw 0 with a new seed, giving the noise floor.
+- 8 looks at 256 spp, seeds 7000 + k, in 255 s (Chat sandbox).
+
+**Checks** (`m6-t1`, declared in `cc0929e` before the render; record [`t1/t1.json`](runs/issue-22/t1/t1.json) and
+[`t1/t1.log`](runs/issue-22/t1/t1.log), computed at `905debc`, clean):
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| T1.0 each look's centre is the reference's; its rotation is the requested yaw | 0 m; 1.7e-16 rad | the next look's yaw | off by ≥ 0.035 rad |
+| T1.1 k's model rays, derotated with the recorded poses into r: r's ray there is k's rendered world ray (≤ 1e-4°) | max 1.0e-11° | a 0.5° yaw error | median 0.49° |
+| T1.2 (oracle) r's hits derotated into k land on the same surface (2 px at range, ≥ 0.80 every frame) | 0.949–0.975 | a 0.5° yaw error, points landing at e_k < 5° | all of them lost |
+
+Two controls were corrected after the first analysis of this render, because they did not fail. No threshold moved,
+and the render was not repeated.
+- T1.1 first compared k's world rays with themselves through R_r alone. R_k never entered, so it was a tautology and
+  its control could not fail.
+- T1.2's control first took the points at e_r < 5°. But the 2 px tolerance is set by k's pixel where a point lands: at
+  30° of yaw they land at 25–35°, where 2 px is about 1.6°. The control now takes the points that land at e_k < 5°,
+  as its stated reason required.
+
+T1.2's agreement falls slowly with yaw (0.975 at 2°, 0.949 at 30°). The disagreements are where a coarse peripheral
+pixel of k straddles a depth edge.
+
+**Photometric residual** (observation only, reported, not gated; M-D18), median |L_k − L_r| / L_r over r's pixels,
+by r's eccentricity ([`t1_residual.png`](runs/issue-22/figures/t1_residual.png),
+[`t1_fovea.png`](runs/issue-22/figures/t1_fovea.png)):
+
+| yaw | 0–1° | 1–2° | 2–5° | 5–10° | 10–20° | 20–30° | 30–45° |
+|---|---|---|---|---|---|---|---|
+| noise floor (yaw 0, new seed) | 0.035 | 0.029 | 0.032 | 0.033 | 0.037 | 0.039 | 0.039 |
+| 2° | 0.050 | 0.033 | 0.037 | 0.042 | 0.048 | 0.060 | 0.063 |
+| 10° | 0.098 | 0.044 | 0.054 | 0.054 | 0.054 | 0.061 | 0.055 |
+| 20° | 0.183 | 0.074 | 0.084 | 0.082 | 0.065 | 0.067 | 0.055 |
+| 30° | 0.210 | 0.121 | 0.121 | 0.112 | 0.081 | 0.064 | 0.062 |
+
+**Reading:**
+- **Derotation is exact.** With the recorded poses, a turned frame's rays land on the reference's to 1e-11°, and its
+  surface points on the reference's.
+- **The resolution cost is real, and it hits the fovea first.** The reference's central degree, seen by a frame turned
+  30°, is sampled where that frame's pixels are about 16× coarser (`t0_resolution.png`). Its residual is 0.21, six
+  times the noise floor. At 10° of yaw it is about three times the floor.
+  - The periphery does not suffer: at 20–45° in the reference, every yaw stays at 0.055–0.067.
+  - `t1_fovea.png` shows the derotated frames blurred in the middle, and sharp where the turned frame's own fovea looked.
+- **Even 2° of yaw costs something** in the central degree: 0.050 against the 0.035 floor. That is the bilinear
+  resampling of a fine texture.
+- For T3, this measures the term #21's model approximates with the sample spacing. A both5 window on a 1 m arc turns
+  r + 5 by 28°. Its far frames will match the reference's fovea against images about as blurred as T1's 30° column.
+  Whether the near frames and the spread epipoles still win, as the model predicts, is T3's question.
