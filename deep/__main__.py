@@ -87,6 +87,27 @@ def stage5a(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def stage5b2_render(a) -> int:
+    from . import fusion, sensor
+    poses = fusion.path_poses()[a.first:a.last + 1]
+    return sensor.render(a.run, sensor.SlitFan(width=a.width), [(s, c, R) for s, c, R, _ in poses], spp=a.spp,
+                         seed_base=a.seed_base + a.first, device=a.device, git={"deep-motion": _git(REPO)})
+
+
+def stage5b2(a) -> int:
+    from . import fusion
+    res, num, ex = fusion.selftest(a.runs)
+    for name, ok in res:
+        print(f"{PREFIX} stage 5b.2 {'PASS' if ok else 'FAIL'} {name}")
+    print(f"{PREFIX} " + json.dumps({k: v for k, v in num.items() if k != "progress_0.5px"}))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage5b2", "runs": a.runs, "checks": [{"name": n, "ok": bool(ok)} for n, ok in res],
+               "numbers": num, "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "stage5b2.json").write_text(json.dumps(rec, indent=1, default=float))
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def stage5a_table(a) -> int:
     """The oracle's sector tables on any runs, no checks (the addendum to #5: longer windows)."""
     from . import oracle
@@ -141,8 +162,19 @@ def main(argv=None) -> int:
     p.add_argument("runs", nargs="+", help="name=DIR")
     p.add_argument("--stride", type=int, default=1, help="keep every n-th reference anchor (memory at 3600 wide)")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage5b2-render", help="stage 5b.2: looks first..last of the composed path (CPU)")
+    p.add_argument("--run", required=True)
+    p.add_argument("--first", type=int, required=True)
+    p.add_argument("--last", type=int, required=True)
+    p.add_argument("--width", type=int, default=720)
+    p.add_argument("--spp", type=int, default=16)
+    p.add_argument("--seed-base", type=int, default=10000)
+    p.add_argument("--device", default="CPU")
+    p = sub.add_parser("stage5b2", help="stage 5b.2: the fusion and checks F1-F3 on the composed path's runs")
+    p.add_argument("runs", nargs="+")
+    p.add_argument("--out", default=None)
     a = ap.parse_args(argv)
-    return {"stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
