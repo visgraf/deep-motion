@@ -948,3 +948,44 @@ Every control fails as it must.
   door the door's depth: an occlusion edge.
 - **In the error video** the per-voxel mean error (median 1.8 %) is about twice the per-anchor error. Voxels with few
   anchors, at edges and in sparse regions, carry more of the error.
+
+## M6, rotation removal: any gaze, any smooth path (#21; M6a #22, M6b #23)
+
+**Question** (M-D18). M4 accepts only windows whose frames differ by a translation along the eye's axis (#5's alignment
+gate), so D1 turned in place, and the gaze had to be `ahead`. M6 removes that restriction with the known poses.
+
+**Geometry** ([`motion/derotate.py`](../motion/derotate.py), numpy). A pose is (c, R), world = R · local, eye frame as
+`logpolar` (−Z forward).
+- *Derotation.* Frame k sees reference ray d as R_kᵀ R_r d. A rotation about the eye's centre (`C`, the head origin) adds
+  no parallax, so this holds at every depth. It is folded into the sampling through `pixel_of`; no image is resampled.
+- *Each frame's epipole.* After derotation, frame k differs from r by |t_k| h_k, with h_k the unit direction toward c_k
+  in r's eye frame. On an arc, the chord to r + k lies along the tangent at r + k/2, so h_k sits k·Δψ/2 from the
+  heading: inside the turn for frames ahead, outside for frames behind. A window's band has half-width W·s/(2R),
+  whatever the sensor's orientation.
+- *The law.* With ψ the angle from h_k and q = ln |tan ψ|, a point at inverse range ρ along d keeps its azimuth about
+  h_k and moves by d_k(ρ) = −ln(1 − |t_k| ρ / cos ψ). ρ is the window's one unknown. With every h_k on the axis this is
+  M4's d_k(ζ) with ζ = ρ / cos e.
+- *The information map* (#21's hypothesis, a model): relative σ_ρ/ρ from the poses alone, for a frontal plane at 3 m,
+  with per-frame noise proportional to the Foveated spacing (e + E2) in the reference and in frame k.
+
+### T0, geometry (Chat sandbox; #22)
+
+`python -m motion.dolly m6-selftest --out docs/runs/issue-22` at `d8169a8` (clean), numpy 2.2.6, Python 3.13, 1.4 s.
+Record: [`t0_selftest.json`](runs/issue-22/t0_selftest.json). 14/14 PASS:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| the law equals the exact forward model after derotation (300 random poses, rotations to 30°) | max 9.7e-13 in q | R_rk with the wrong sign | median 0.64 in q |
+| azimuth about each epipole unchanged | max 2.2e-14 rad | | |
+| epipoles on the axis: the law is M4's `d_of_zeta` | max 2.3e-14 | | |
+| Fisher σ_ρ on the aligned dolly = M4's σ_ζ cos e | relative 0 | epipoles 20° off the axis | 13.8 % different |
+| derotation round trip; a rotation about `C` is depth-independent | 1.4e-15; 7.8e-16 | the head turning about a point 5 cm behind the eye | median 5.0° between 0.5 m and 20 m |
+| arc epipoles at k·Δψ/2 (R = 1, 2, 4 m) | max 2.0e-15 | the straight dolly's band against a 2 m arc's | 0° against 7.09° |
+| both5 inside the 2° fovea needs R ≥ 7.09 m | 7.087 m | | |
+| #21's information table reproduced | max 5.0e-5 (its 4-decimal rounding) | the same table with E2 = 2.2° | max 0.56 different |
+
+Two changes before this record, both on the first run of the module, neither moving a check's threshold:
+- The Fisher control first misplaced the epipoles by 10°; it changed the bound by 5.4 % against the 5 % it had to
+  exceed. Too narrow to rely on, so the control now misplaces them by 20° (13.8 %).
+- The table check compared with #21's 2-decimal table at 0.005 and passed at 0.00495, its rounding. It now compares with
+  #21's script at 4 decimals, within 1e-4. The module and #21's script agree to 8e-10 (Chat sandbox).
