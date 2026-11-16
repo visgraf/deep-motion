@@ -71,7 +71,7 @@ tangent, is the orbit of a one-parameter group of rigid motions. One family cove
 | Primitive | κ | Group | Canonical coordinates | Depth invariant | Blind set |
 | --- | --- | --- | --- | --- | --- |
 | Line | 0 | translation | epipolar-plane pencil about the path line: plane angle ω, u = cot ψ | D, distance from the path line | the path line (focus of expansion and its opposite) |
-| Arc | between 0 and ∞ | rotation about an axis offset by R | concentric mosaics: arc position θ, slit angle β to the tangent | ρ, distance from the turn axis | the turn's vertical axis |
+| Arc | between 0 and ∞ | rotation about an axis offset by R | concentric mosaics: arc position θ, slit angle β to the tangent | ρ, distance from the turn axis | none for range (stage 3): the turn axis is stationary in the head, but every other range along its ray moves |
 | Pivot | ∞ | rotation about the eye | azimuth relative to the heading | none: no parallax | everything |
 
 **What the coordinates give.**
@@ -208,3 +208,70 @@ The sideways (radial) directions point at the turn axis, the arc's blind set. On
 therefore the lateral ones, as the heading is on a line. The plan's "lateral slits carry the most depth per metre"
 holds for lines; for arcs, the slits near the tangent carry the depth. Stage 3's atlas measures this properly, before
 the sensor is designed.
+
+**Correction (stage 3).** The observation above is wrong. It measured the sensitivity of a slit's *absolute* crossing
+angle, which depends on the point's unknown angle φ_P. What carries range is the difference between slits, and at
+β → ±90° the curves converge with different slopes (dθ/dβ = −(1 + R/ρ)). Stage 3's Fisher atlas shows that on an arc
+the lateral directions are the most precise, as on a line, and that no direction is blind.
+
+### Stage 3: the information atlas (#3; Chat sandbox)
+
+`python -m deep selftest --stage 3 --out docs/runs/issue-3` at `ea67d0e` (clean). Records:
+[`stage3_selftest.json`](runs/issue-3/stage3_selftest.json), [`stage3_atlas_summary.json`](runs/issue-3/stage3_atlas_summary.json).
+Module: [`deep/atlas.py`](../deep/atlas.py). 6 checks PASS; each of the 6 controls fails as it must.
+
+**The model** (a design model, not a measurement):
+- an anchor ray at the window's centre, with the point on it at eye height;
+- its bearing measured every 1 cm over a 1 m window, with 0.1° noise (a proposed angular resolution), the anchor's own
+  bearing exact;
+- known poses, so the arc's rotation is predicted;
+- σ_r is Fisher's bound on range along the ray.
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| analytic d b/d r equals the numerical derivative | 4.2e-8 of its median size | steps 2 % longer | 1.9e-2 |
+| line, 10 steps of 0.1 m: equals T0's Fisher bound (`motion/derotate.py`) | 2.9e-15 relative | T0's bound with steps 20 % longer | median 21 % |
+| an arc with R = 1e7 m is the line | 1.0e-7 relative | R = 20 m | 5.2 % |
+| line: no information on the path line | I = 1.9e-33 | 1 cm off | I = 1.4e-6 |
+| arcs: no blind cell on the grid; the turn axis's range carries information | 0 blind cells; I = 1.28 | the line's grid | 60 blind cells |
+| time step: the parallax spread is \|sin ψ\| (1/r_lo − 1/r_hi) | 3.5e-8 relative | arcs with the rotation left in | ≥ 10 % off |
+
+Three checks were corrected on their first run. No threshold moved, and the reasons are in the code and the commit:
+- Check 1's error was first measured relative to the derivative, which is undefined where the derivative crosses zero.
+  It is now measured against the derivative's median size.
+- Check 1's control, a constant yaw, cannot change d b/d r. It now lengthens the steps by 2 %.
+- Check 4 declared the turn axis blind (I ≤ 1e-20) and **failed at I = 1.28**. That is how the arc's lack of a blind
+  direction was found. The check now states what is true, and the line's blind cells are its control.
+
+**σ_r / r at 3 m, by bearing from the heading** (1 m window, 1 cm steps, 0.1°):
+
+| bearing | 1° | 10° | 30° | 90° | 150° | 179° |
+|---|---|---|---|---|---|---|
+| line | 0.097 | 0.0097 | 0.0035 | 0.0019 | 0.0035 | 0.097 |
+| arc R = 4 m | 0.038 | 0.011 | 0.0036 | 0.0018 | 0.0036 | 0.038 |
+| arc R = 1.6 m | 0.015 | 0.011 | 0.0037 | 0.0018 | 0.0037 | 0.015 |
+
+Exactly on the heading, the line is blind; the arcs give 0.034 (R = 4 m) and 0.014 (R = 1.6 m).
+
+**The largest time step** that keeps the unpredicted parallax within one resolution element (0.1°), in cm:
+
+| angle from travel ψ | 5° | 10° | 30° | 60° | 90° |
+|---|---|---|---|---|---|
+| prior band, 0.5–20 m | 1.0 | 0.52 | 0.18 | 0.10 | 0.09 |
+| converged ±10 % at 3 m | 30 | 15 | 5.2 | 3.0 | 2.6 |
+
+Figures: [`stage3_atlas.png`](runs/issue-3/figures/stage3_atlas.png) (precision around the head, polar),
+[`stage3_profiles.png`](runs/issue-3/figures/stage3_profiles.png) (the 3 m profile and the time steps).
+
+**Reading:**
+- **Arcs have no blind direction.** Curving the path fills the line's blind cone at the heading: tighter turns fill
+  it more. Elsewhere, lines and arcs are within a few per cent of each other. Lateral directions are the most precise
+  on both, at about 0.2 % at 3 m.
+- **Time sampling should be driven by uncertainty, not fixed.** Before a point's range is known, lateral rays need
+  sub-millimetre steps to stay within a resolution element. Once range is within ±10 %, 2.6 cm suffices laterally and
+  30 cm near the heading. Sampling can start fine and coarsen as each point converges: coarse-to-fine in time,
+  per direction and per point.
+- **For the sensor (stage 4).** Lateral slits deserve the finest angular resolution and the densest time sampling. On
+  arcs, slits near the heading also carry range, which a line never gives. M4's windows of 10 cm steps sit far
+  outside the tracking regime for lateral rays: one 10 cm step moves a lateral point at 3 m by about 1.9°, about
+  19 resolution elements.
