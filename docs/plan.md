@@ -141,6 +141,11 @@ Later decisions, numbered P-D1, P-D2, …:
 - **P-D2** (Luiz, 2026-11-16, in Chat; #4). Stage 5 is split. 5a (Chat) builds the oracle evaluation on short windows
   in the sandbox: a line, an arc and a pivot. 5b (Code) runs the full windows and a composed path at the design
   resolution on the GPU.
+- **P-D3** (Luiz, 2026-11-16, in Chat; #5). 5b is split in two. **5b.1** (Code, #6, now): 5a's line, arc and pivot at
+  the design resolution (0.1°/px), 1 m windows at 1 cm steps, with 5a's commands. **5b.2** (#7): Chat first builds
+  and tests the composed path (line, arc, line; the reference look sliding along it) and the fusion into world 3D,
+  gated in range, at 0.5°/px in the calibration room; then Code runs it at the design resolution in the calibration
+  room and the Classroom.
 
 ## The plan
 
