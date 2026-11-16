@@ -1,0 +1,39 @@
+08:14:25 $ .venv/bin/python -m motion.dolly selftest
+08:14:26 [dolly] selftest PASS accepted spec
+08:14:26 [dolly] selftest PASS facing +Y gives the playground's H0 axes
+08:14:26 [dolly] selftest PASS first and last heads are start_w and end_w
+08:14:26 [dolly] selftest PASS equal steps
+08:14:26 [dolly] selftest PASS every head faces facing_w
+08:14:26 [dolly] selftest PASS refused: tilted facing
+08:14:26 [dolly] selftest PASS refused: n_looks 1
+08:14:26 [dolly] selftest PASS refused: no control head
+08:14:26 [dolly] selftest PASS refused: no motion
+08:14:26 [dolly] selftest PASS modes differ
+08:14:26 [dolly] selftest PASS refused: both target_w and target_ray
+08:14:26 [dolly] selftest PASS refused: target_ray from a head not on the path
+08:14:26 [dolly] selftest PASS accepted: target_ray alone
+08:14:26 [dolly] selftest PASS resolved() takes the preflight's target
+08:14:26 [dolly] selftest PASS tour: accepted tour
+08:14:26 [dolly] selftest PASS tour: phase specs are valid v1 paths
+08:14:26 [dolly] selftest PASS tour: every phase keeps the leg's step
+08:14:26 [dolly] selftest PASS tour: phases interleave at step / 3
+08:14:26 [dolly] selftest PASS tour: phase looks: n + 1, n, n
+08:14:26 [dolly] selftest PASS tour: timeline along leg A is monotone, step / 3
+08:14:26 [dolly] selftest PASS tour: timeline holds every look once
+08:14:26 [dolly] selftest PASS tour: pivot: 90 deg at <= 4 deg -> 22 inner looks
+08:14:26 [dolly] selftest PASS tour: pivot stays at the joint
+08:14:26 [dolly] selftest PASS tour: pivot turns left, monotone
+08:14:26 [dolly] selftest PASS tour: seeds differ across phases
+08:14:26 [dolly] selftest PASS tour: refused: legs not joined
+08:14:26 [dolly] selftest PASS tour: refused: a climbing leg
+08:14:26 [dolly] selftest PASS tour: refused: pivot_deg 0
+08:14:26 [dolly] selftest PASS demo: D1.3 finite with anchors lacking truth
+08:14:26 [dolly] selftest PASS demo: D1.3 near 1 % on the synthetic cloud
+08:14:26 [dolly] selftest PASS demo: D1.3 control (5 deg) exceeds 0.05
+08:14:26 [dolly] selftest PASS demo: hits derived for anchors.npz without `hit`
+08:14:26 [dolly] selftest PASS demo: no-truth counted per leg
+08:14:26 [dolly] selftest PASS demo: error colours: no-truth voxels grey
+08:14:26 [dolly] selftest PASS demo: error colours: truth voxels on the ramp
+08:14:26 [dolly] selftest PASS demo: the old median is NaN (the #19 bug, reproduced)
+08:14:26 [dolly] selftest PASS pixel_of inverts the warp (max 1e-6 px)
+08:14:26 [dolly] selftest PASS control: a central ray turned by one foveal pixel moves >= 0.5 px
