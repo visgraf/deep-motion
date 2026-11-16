@@ -204,13 +204,26 @@ def stage5a(runs: dict, out, stride=1) -> list:
         img = np.full(H * W, np.nan)
         with np.errstate(divide="ignore"):
             ci = orc.Z95 * 0.25 * e["res"] / np.sqrt(e["I"]) / e["rtrue"]
-        img[e["pix"]] = np.where(np.isfinite(ci), ci, np.nan)
+        val = np.where(np.isfinite(ci), ci, np.nan)
+        if stride > 1:
+            # Strided anchors are every stride-th hit in raster order (at width 3600 and stride 25, every 25th column):
+            # each pixel shows its nearest anchor in raster order, i.e. along its row (#6). Assumes every pixel is a hit,
+            # as in the calibration room; a miss would be painted with its neighbour.
+            o = np.argsort(e["pix"])
+            p, v = e["pix"][o], val[o]
+            q = np.arange(H * W)
+            j = np.clip(np.searchsorted(p, q), 1, len(p) - 1)
+            j -= (q - p[j - 1]) < (p[j] - q)
+            img = v[j]
+        else:
+            img[e["pix"]] = val
         img = img.reshape(H, W)
         im = ax.imshow(img, cmap=cmap, norm=norm, extent=(180, -180, -90, 90), aspect="auto", interpolation="nearest")
         ax.contour(np.linspace(180, -180, W), np.linspace(90, -90, H), np.nan_to_num(img, nan=9.0), levels=[orc.USABLE_REL],
                    colors=[ACCENT], linewidths=1.2)
         ax.set_title(f"{k}: 95 % half-interval of range, 0.25 px (orange: ±10 %, usable inside the darker regions)", loc="left")
-        ax.set_xlabel("bearing from the heading, deg (+ left)")
+        thin = f"; anchors every {stride}th pixel, each pixel its nearest along the row" if stride > 1 else ""
+        ax.set_xlabel(f"bearing from the heading, deg (+ left){thin}")
         ax.set_ylabel("elevation, deg")
         ax.set_xticks(range(-180, 181, 45))
         ax.set_yticks(range(-90, 91, 45))
@@ -238,7 +251,8 @@ def stage5a(runs: dict, out, stride=1) -> list:
     ax.set_xticks(range(0, 181, 30))
     ax.set_xlabel("3-D angle from the heading, deg")
     ax.set_ylabel("median 95 % half-interval / range")
-    ax.set_title("Oracle on renders, 0.25 px (0.125°): median by angle from the heading", loc="left")
+    res_deg = np.degrees(next(iter(evs.values()))["res"])
+    ax.set_title(f"Oracle on renders, 0.25 px ({0.25 * res_deg:.3g}°): median by angle from the heading", loc="left")
     _clean(ax)
     ax.legend(frameon=False, fontsize=9)
     f2 = out / "stage5a_profile.png"
