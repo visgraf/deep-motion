@@ -1,0 +1,40 @@
+[dolly] M4 matcher on cpu (x86_64), torch 2.15.0+cpu
+[demo] A0: 6 references to estimate: [5, 8, 11, 14, 17, 20]
+[m4] both5 r 5: accepted 0.293 (60 s)
+[m4] both5 r 8: accepted 0.286 (64 s)
+[m4] both5 r 11: accepted 0.295 (62 s)
+[m4] both5 r 14: accepted 0.290 (62 s)
+[m4] both5 r 17: accepted 0.286 (61 s)
+[m4] both5 r 20: accepted 0.287 (61 s)
+[dolly] M4 matcher on cpu (x86_64), torch 2.15.0+cpu
+[demo] B0: 4 references to estimate: [5, 8, 11, 14]
+[m4] both5 r 5: accepted 0.415 (64 s)
+[m4] both5 r 8: accepted 0.386 (62 s)
+[m4] both5 r 11: accepted 0.378 (78 s)
+[m4] both5 r 14: accepted 0.355 (191 s)
+[dolly] M4 matcher on cpu (x86_64), torch 2.15.0+cpu
+[demo] A1: 5 references to estimate: [6, 9, 12, 15, 18]
+[m4] both5 r 6: accepted 0.288 (62 s)
+[m4] both5 r 9: accepted 0.289 (64 s)
+[m4] both5 r 12: accepted 0.289 (63 s)
+[m4] both5 r 15: accepted 0.283 (65 s)
+[m4] both5 r 18: accepted 0.287 (65 s)
+[dolly] M4 matcher on cpu (x86_64), torch 2.15.0+cpu
+[demo] B1: 4 references to estimate: [6, 9, 12, 15]
+[m4] both5 r 6: accepted 0.416 (62 s)
+[m4] both5 r 9: accepted 0.377 (65 s)
+[m4] both5 r 12: accepted 0.358 (65 s)
+[m4] both5 r 15: accepted 0.335 (64 s)
+[dolly] M4 matcher on cpu (x86_64), torch 2.15.0+cpu
+[demo] A2: 5 references to estimate: [7, 10, 13, 16, 19]
+[m4] both5 r 7: accepted 0.290 (61 s)
+[m4] both5 r 10: accepted 0.291 (67 s)
+[m4] both5 r 13: accepted 0.288 (65 s)
+[m4] both5 r 16: accepted 0.286 (60 s)
+[m4] both5 r 19: accepted 0.284 (61 s)
+[dolly] M4 matcher on cpu (x86_64), torch 2.15.0+cpu
+[demo] B2: 3 references to estimate: [7, 10, 13]
+[m4] both5 r 7: accepted 0.387 (61 s)
+[m4] both5 r 10: accepted 0.383 (63 s)
+[m4] both5 r 13: accepted 0.370 (60 s)
+ALLDONE

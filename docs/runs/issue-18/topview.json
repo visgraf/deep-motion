@@ -1,0 +1,21 @@
+{
+ "schema": "foveal-motion-d1-topview-v1",
+ "blend": "/home/claude/foveal-motion/runs/calib-scene/scenes/calib_room.blend",
+ "bounds_w": [
+  -3.0,
+  -2.5,
+  3.0,
+  5.0
+ ],
+ "cut_z_m": 2.2,
+ "m_per_px": 0.008,
+ "size_px": [
+  750,
+  938
+ ],
+ "spp": 32,
+ "device": "CPU",
+ "seconds": 98.96,
+ "map": "px = (x - x0) / m_per_px, py = (y1 - y) / m_per_px",
+ "view_transform": "AgX"
+}

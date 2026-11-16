@@ -11,6 +11,7 @@ per look (fov-render #20, PLAN D19). One Blender session renders both gaze modes
     python -m motion.dolly depth     --run runs/dolly-1 [--strides 1 5 10]   M2: range from the head's motion
     python -m motion.dolly sandbox   --run runs/calib-dolly            the calibration room on CPU, end to end
     python -m motion.dolly flow-depth-selftest --out runs/m3-selftest    M3 geometry known answers (numpy only)
+    python -m motion.dolly demo-*    ...                                 D1, the demonstration (#17): motion/demo.py
     python -m motion.dolly flow-depth --run R --mode ahead --strides 1 5 10 --correspondence oracle-exact --out O
                                                                        M3: range from log-polar flow (#6)
 
@@ -527,6 +528,8 @@ def visualize(a) -> int:
 
 def selftest(_a) -> int:
     res = list(paths.selftest())
+    from . import tour
+    res += [(f"tour: {n}", ok) for n, ok in tour.selftest()]          # D1 (#17)
     # the inverse warp round-trips the forward warp: the projection M1.3 relies on
     m = sensors.Foveated().model("small")
     rays = m.rays()
@@ -568,6 +571,10 @@ def sandbox(a) -> int:
 
 
 def main(argv=None) -> int:
+    args = sys.argv[1:] if argv is None else list(argv)
+    if args and args[0].startswith("demo-"):       # D1 (#17): motion/demo.py
+        from . import demo
+        return demo.main(args)
     ap = argparse.ArgumentParser(prog="python -m motion.dolly", description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
     for name in ("preflight", "run"):

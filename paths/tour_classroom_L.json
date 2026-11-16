@@ -1,0 +1,30 @@
+{
+ "schema": "foveal-motion-tour-v1",
+ "name": "tour_classroom_L",
+ "scene": "scenes/classroom/classroom_eye.blend",
+ "legs": [
+  {"name": "A", "start_w": [0.897, -3.793, 1.6], "end_w": [0.897, 0.759, 1.6]},
+  {"name": "B", "start_w": [0.897, 0.759, 1.6], "end_w": null}
+ ],
+ "step_m": 0.0990,
+ "phases": 3,
+ "pivot_deg": 2.0,
+ "seed_base": 6000,
+ "preflight": {
+  "min_clearance_m": 0.25,
+  "max_hole_fraction": 0.046,
+  "max_backface_fraction_other": 0.001,
+  "backface_allowed": [],
+  "control_head_w": [0.897, 3.159, 1.6]
+ },
+ "source": {
+  "status": "TEMPLATE: leg B's end_w is null, so the spec is refused until D1b's Step 0 (#19) measures the front door and the free strip and writes it (and P, if P has to move: then stop, for-luiz)",
+  "scene": "the Classroom demo (CC0, Christophe Seux) with the playground's EYE (scripts/setup_scene.sh)",
+  "legs": "M-D17: leg A on classroom_dolly.json's line, from back_of_room (0.897, -3.793, 1.6) to near_board (0.897, 0.759, 1.6), yarbus-agent REPORT.md (MEASURED), 4.552 m in 46 steps of 0.0990 m; a turn in place toward the front door; leg B straight toward the door, ending at clearance from it (Step 0)",
+  "step_m": "classroom_dolly.json's step (46 equal steps of 0.0990 m), the step M4 was gated at on the Classroom (#11)",
+  "phases": "M-D17: three interleaved paths, a look every 3.3 cm",
+  "pivot_deg": "#17: about 2 deg per look (display only)",
+  "limits": "classroom_dolly.json's (M-D6: holes 0.046 for that path's window band); if leg B's view of the room breaks them, Step 0 reports and stops (rule 2), the limit is not moved",
+  "control_head_w": "classroom_dolly.json's: 0.10 m in front of the board, must fail the clearance"
+ }
+}

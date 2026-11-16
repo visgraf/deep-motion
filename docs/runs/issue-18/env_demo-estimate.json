@@ -1,0 +1,32 @@
+{
+ "command": "demo-estimate",
+ "argv": [
+  "demo-estimate",
+  "--out",
+  "runs/d1-calib",
+  "--phases",
+  "B2",
+  "--every",
+  "3",
+  "--offset",
+  "7"
+ ],
+ "device": "cpu",
+ "device_name": "x86_64",
+ "torch": "2.15.0+cpu",
+ "torch_cuda": null,
+ "cudnn": null,
+ "numpy": "2.2.6",
+ "python": "3.13.18",
+ "platform": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39",
+ "computed_by": {
+  "foveal-motion": {
+   "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ }
+}

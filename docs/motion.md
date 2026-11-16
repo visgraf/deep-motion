@@ -801,3 +801,94 @@ windows. O-M's `pixel` rung is not #7's O2: O-M uses half a pixel as σ, O2 used
 **Gaps:**
 - The M4 records do not name the device or torch build that ran the matcher (Code's step-1 log does).
 - torch is not in `requirements.txt`.
+
+## D1, a demonstration: the frozen M4 on a tour (#17; D1a #18, D1b #19)
+
+**What** (M-D17): the frozen M4 (`docs/runs/issue-10/frozen.json`, `both5`) unchanged, on a tour of straight legs joined
+by turns in place, gaze `ahead`. The output is a video with three panels:
+- the foveated sensor, with an inset of the reference whose depth has just become available;
+- a top view: the path, the head and its 45° field, and the fused depth coloured by height;
+- the fused cloud in 3D;
+
+plus the same video coloured by error.
+
+**How** ([`motion/tour.py`](../motion/tour.py), [`motion/demo.py`](../motion/demo.py),
+[`motion/demo_steps.py`](../motion/demo_steps.py), [`motion/demo_video.py`](../motion/demo_video.py)):
+
+- **Tour spec** (`foveal-motion-tour-v1`, [`paths/tour_calib_L.json`](../paths/tour_calib_L.json),
+  [`paths/tour_classroom_L.json`](../paths/tour_classroom_L.json)):
+  - legs, each starting where the one before ends;
+  - the step (M4's gated step);
+  - P = 3 phases;
+  - the pivot's largest yaw per look;
+  - seeds;
+  - the v1 preflight limits.
+- **Phases.** Each leg compiles into P plain `foveal-motion-path-v1` specs offset by step / P. Each spec runs through
+  the existing `preflight` and `run`, so every phase has exactly M4's geometry. The timeline interleaves them, one look
+  every step / P.
+- **The pivot** is a run record of display looks. It never enters a window.
+- **Estimation.** Each phase imports the freeze and estimates truth-free.
+- **Fusion.** Each accepted anchor goes into the world: range = 1/(ζ cos e) along its sample's ray. Anchors fuse into
+  2 cm voxels: inverse-variance mean position, σ from σ_ζ and the frozen interval scale.
+- **Availability.** A reference's depth becomes available at the frame of r + 5, the both5 delay.
+- **The video** cuts the cloud at the top view's camera height (2.2 m), so the ceiling doesn't hide the room. The PLY
+  files keep everything.
+
+**Checks** (`demo-checks`, each with a control that must fail):
+
+| # | What | Control |
+|---|---|---|
+| D1.1 | the estimator's file hashes and settings equal the freeze; every phase imported it | a changed recorded hash is refused; settings with `ncc_min − 0.01` differ |
+| D1.2 | a both5 window across the pivot is refused by #5's alignment gate inside the frozen `estimate()` | the same construction inside leg A passes the gate |
+| D1.3 | per leg, median ‖P_fused − P_true‖ / range ≤ 0.05 (#5's calibration-gate median) | the last leg's poses yawed 5° about the head: its median must exceed 0.05 |
+
+D1.3 changed from #17's proposal, before any Classroom number. #17 proposed a tolerance from the sandbox and a 0.10 m
+shift as the control. At the sandbox's 2–6 m ranges, 0.10 m is only 2–5 %, so that control could not be relied on to
+fail. The check now uses #5's declared median, and the control is a 5° heading error.
+
+**#5's metrics per phase** (`demo-report`) are reported, not gated (M-D17).
+
+### Chat sandbox, calibration room (CPU, 64 spp, `full` profile; #18)
+
+**Tour** ([`paths/tour_calib_L.json`](../paths/tour_calib_L.json)):
+- leg A from (−0.3, −1.5, 1.5) to (−0.3, 1.0, 1.5), heading +Y;
+- a right turn in place, 22 looks at ≤ 4°;
+- leg B to (1.8, 1.0, 1.5), heading +X;
+- steps of 0.10 m, 3 phases: 162 video frames.
+
+A first L, with leg A to y = 1.3 and a left turn, failed B0's clearance against the e = 45° ring card (0.11 m).
+
+**Render.** 162 looks at about 8.5 s each (Chat sandbox).
+
+**Estimation.**
+- Every third reference of each phase, offset across the phases: 27 references at about 62 s each (Chat sandbox,
+  torch CPU). The Classroom run estimates every reference.
+- Accepted fraction 0.28–0.30 on leg A and 0.34–0.42 on leg B (Chat sandbox).
+
+| D1 check (Chat sandbox) | Result |
+|---|---|
+| D1.1 | PASS, control fails |
+| D1.2 | PASS: refused at r = 5, max rotation 1.571 rad across the pivot, 0 inside leg A |
+| D1.3 | PASS: median 0.0138 (A), 0.0084 (B); control 0.085 (B, must exceed 0.05) |
+
+**Fusion.**
+- 427,640 anchors from 27 references fused into 213,062 voxels.
+- Per anchor, relative error median 0.0073, p90 0.037.
+- Per voxel, absolute error median 4.1 cm, p90 23.5 cm.
+
+All Chat sandbox.
+
+**#5's metrics, reported, not gated** (Chat sandbox; the Classroom thresholds are 0.10 / 0.25 / 0.25 / 0.05):
+
+| phase | coverage | median | p90 | over 50 % | interval coverage |
+|---|---|---|---|---|---|
+| A0 / A1 / A2 | 0.358 / 0.355 / 0.356 | 0.009 | 0.030 | 0.004 | 0.95 |
+| B0 / B1 / B2 | 0.483 / 0.465 / 0.480 | 0.005 | 0.017 | 0.000 | 0.95 |
+
+**Reading:**
+- The pipeline runs end to end.
+- The pivot is refused where it must be.
+- Interleaving keeps M4's numbers: the three phases of a leg agree to within 0.02 in coverage.
+- Leg B, sideways past the ring cards and toward the right wall, covers more than leg A. In the calibration room, the
+  sensor's centre sees nearer, textured walls on that heading.
+- At 64 spp, the cloud is visibly noisy in the 3D panel. The Classroom renders at 1024 spp.

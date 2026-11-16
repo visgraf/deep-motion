@@ -1,0 +1,12 @@
+{
+ "schema": "foveal-motion-d1-fused-v1",
+ "anchors": 427640,
+ "voxels": 213062,
+ "voxel_m": 0.02,
+ "exposure": 0.7795609671485523,
+ "median_voxel_error_m": 0.04108899004223678,
+ "p90_voxel_error_m": 0.23524073372126883,
+ "median_anchor_rel": 0.007309648562719909,
+ "p90_anchor_rel": 0.03671953708500274,
+ "references": 27
+}

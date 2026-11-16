@@ -1,0 +1,837 @@
+{
+ "schema": "foveal-motion-run-v1",
+ "experiment": "M1 dolly",
+ "path": {
+  "schema": "foveal-motion-path-v1",
+  "name": "tour_calib_L_B0",
+  "scene": "runs/calib-scene/scenes/calib_room.blend",
+  "start_w": [
+   -0.3,
+   1.0,
+   1.5
+  ],
+  "end_w": [
+   1.8,
+   1.0,
+   1.5
+  ],
+  "n_looks": 22,
+  "facing_w": [
+   1.0,
+   0.0,
+   0.0
+  ],
+  "target_ray": {
+   "from_k": 0,
+   "toward_w": [
+    49.7,
+    1.0,
+    1.5
+   ]
+  },
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.001,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    -0.3,
+    4.9,
+    1.5
+   ]
+  },
+  "source": {
+   "tour": "tour_calib_L",
+   "leg": "B",
+   "phase": 0,
+   "phases": 3,
+   "step_m": 0.1,
+   "what": "phase 0 of 3: looks at start + (i + 0/3) step along the leg, i = 0..21; written by motion/tour.py"
+  },
+  "seed_base": 3600,
+  "target_w": [
+   3.000000238418579,
+   1.0,
+   1.5
+  ]
+ },
+ "target_source": "target_ray, found by the preflight",
+ "path_file": "runs/d1-calib/specs/B0.json",
+ "blend": "/home/claude/foveal-motion/runs/calib-scene/scenes/calib_room.blend",
+ "blend_sha256": "6a8ada70c3d0ecc0e129d6cb6b916eff2107b6cebbfda6294247b3f3bcc8c989",
+ "profile": "full",
+ "spp": 64,
+ "device_requested": "CPU",
+ "modes": [
+  "ahead"
+ ],
+ "seeds": "per look: C seed = 3600 + k (independent noise, #7)",
+ "sensor": {
+  "type": "foveated",
+  "E2_deg": 2.0,
+  "e_max_deg": 45.0
+ },
+ "eye": "C",
+ "git": {
+  "foveal-motion": {
+   "commit": "f4bf6e1f37b5c7d3db434b2a4f2112ec34ae9197",
+   "clean": false
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "command": [
+  "/home/claude/foveal-motion/motion/dolly.py",
+  "demo-render",
+  "--tour",
+  "paths/tour_calib_L.json",
+  "--out",
+  "runs/d1-calib",
+  "--device",
+  "CPU",
+  "--spp",
+  "64",
+  "--pf-width",
+  "360",
+  "--pf-spp",
+  "2"
+ ],
+ "preflight": {
+  "ok": true,
+  "control_fails": true,
+  "summary": {
+   "max_hole_fraction": 0.0,
+   "min_nearest_surface_m": 0.4103393297654901,
+   "max_backface_closed_fraction": 0.0,
+   "failing_heads": [],
+   "target_occluded_heads": [],
+   "target_w": [
+    3.000000238418579,
+    1.0,
+    1.5
+   ]
+  }
+ },
+ "looks": {
+  "ahead": [
+   {
+    "k": 0,
+    "out_dir": "ahead/k0000",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.3,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.234245242999805,
+    "wall_seconds": 8.381
+   },
+   {
+    "k": 1,
+    "out_dir": "ahead/k0001",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.19999999999999998,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.02667560000009,
+    "wall_seconds": 8.176
+   },
+   {
+    "k": 2,
+    "out_dir": "ahead/k0002",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      -0.09999999999999998,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.041306093000003,
+    "wall_seconds": 8.177
+   },
+   {
+    "k": 3,
+    "out_dir": "ahead/k0003",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.0,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.689851546999762,
+    "wall_seconds": 7.837
+   },
+   {
+    "k": 4,
+    "out_dir": "ahead/k0004",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.10000000000000003,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.940954188999967,
+    "wall_seconds": 8.073
+   },
+   {
+    "k": 5,
+    "out_dir": "ahead/k0005",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.2,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.748193793000155,
+    "wall_seconds": 7.894
+   },
+   {
+    "k": 6,
+    "out_dir": "ahead/k0006",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.3,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.957554959999925,
+    "wall_seconds": 8.108
+   },
+   {
+    "k": 7,
+    "out_dir": "ahead/k0007",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.39999999999999997,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.8282255399999485,
+    "wall_seconds": 7.971
+   },
+   {
+    "k": 8,
+    "out_dir": "ahead/k0008",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.5,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.8886672240000735,
+    "wall_seconds": 8.034
+   },
+   {
+    "k": 9,
+    "out_dir": "ahead/k0009",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.6000000000000001,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.665313673000128,
+    "wall_seconds": 7.817
+   },
+   {
+    "k": 10,
+    "out_dir": "ahead/k0010",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.7,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.824909516999924,
+    "wall_seconds": 7.963
+   },
+   {
+    "k": 11,
+    "out_dir": "ahead/k0011",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.7999999999999998,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.111431017000086,
+    "wall_seconds": 8.252
+   },
+   {
+    "k": 12,
+    "out_dir": "ahead/k0012",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.8999999999999999,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.123965716999919,
+    "wall_seconds": 8.282
+   },
+   {
+    "k": 13,
+    "out_dir": "ahead/k0013",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.0,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.976568662999853,
+    "wall_seconds": 8.114
+   },
+   {
+    "k": 14,
+    "out_dir": "ahead/k0014",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.0999999999999999,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.262289903000237,
+    "wall_seconds": 8.408
+   },
+   {
+    "k": 15,
+    "out_dir": "ahead/k0015",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.1999999999999997,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.042729581000003,
+    "wall_seconds": 8.189
+   },
+   {
+    "k": 16,
+    "out_dir": "ahead/k0016",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.3,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.154906681999819,
+    "wall_seconds": 8.291
+   },
+   {
+    "k": 17,
+    "out_dir": "ahead/k0017",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.4000000000000001,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.97139413900004,
+    "wall_seconds": 8.104
+   },
+   {
+    "k": 18,
+    "out_dir": "ahead/k0018",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.5,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.864744547999635,
+    "wall_seconds": 8.014
+   },
+   {
+    "k": 19,
+    "out_dir": "ahead/k0019",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.5999999999999999,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.16047672600007,
+    "wall_seconds": 8.314
+   },
+   {
+    "k": 20,
+    "out_dir": "ahead/k0020",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.7,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 7.326298068999677,
+    "wall_seconds": 7.471
+   },
+   {
+    "k": 21,
+    "out_dir": "ahead/k0021",
+    "head": {
+     "head_R_wh": [
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       -1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      1.8,
+      1.0,
+      1.5
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 8.224202874999719,
+    "wall_seconds": 8.366
+   }
+  ]
+ },
+ "session": {
+  "start_seconds": 0.55,
+  "launcher": {
+   "kind": "python",
+   "executable": "/home/claude/foveal-motion/.venv/bin/python"
+  },
+  "device": "CPU",
+  "session_head": {
+   "head_R_wh": [
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     3.422854177870249e-08,
+     -0.9999999403953552
+    ],
+    [
+     0.0,
+     0.9999999403953552,
+     3.422854177870249e-08
+    ]
+   ],
+   "head_origin_w_m": [
+    0.0,
+    0.0,
+    1.600000023841858
+   ]
+  }
+ },
+ "device": "CPU",
+ "seconds": 178.83
+}
