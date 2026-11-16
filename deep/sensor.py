@@ -83,7 +83,8 @@ def arc_run_poses(R=1.6, s_list=(0.0, 0.01, 0.10), p0=(0.0, 0.0), phi0=np.pi / 2
     return [(s, *pc.pose(p0, phi0, h, s)[:2]) for s in s_list]
 
 
-def render(out, fan: SlitFan, poses, spp=16, seed_base=9000, device="CPU", launcher="auto", git=None, blend=None) -> int:
+def render(out, fan: SlitFan, poses, spp=16, seed_base=9000, device="CPU", launcher="auto", git=None, blend=None,
+           meta=None) -> int:
     from fov_render import HeadPose, RenderConfig, Rig, Session, sensors
     from fov_render.checks.step1 import calib_room
     from motion import paths
@@ -97,6 +98,7 @@ def render(out, fan: SlitFan, poses, spp=16, seed_base=9000, device="CPU", launc
     rec = {"schema": "deep-motion-run-v1", "experiment": "stage 4: the slit fan on the Panorama carrier (#4)",
            "carrier": {"sensor": "panorama", "width": fan.width}, "spp": spp, "device_requested": device,
            "seeds": f"seed_base {seed_base} + k", "blend": str(blend), "git": git, "command": sys.argv, "looks": []}
+    rec.update(meta or {})
     t0 = time.perf_counter()
     with Session(Path(blend), RenderConfig(profile="full", device=device), Rig(), access="oracle", launcher=launcher,
                  workdir=rd / "session", prepare=sensors.Panorama(width=fan.width)) as sess:

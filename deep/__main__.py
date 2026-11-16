@@ -90,14 +90,26 @@ def stage5a(a) -> int:
 
 def stage5b2_render(a) -> int:
     from . import fusion, sensor
-    poses = fusion.path_poses(kind=a.path)[a.first:a.last + 1]
+    start = dict(fusion.START)
+    if a.start:
+        x, y, hd = (float(v) for v in a.start.split(","))
+        start.update({"p0": (x, y), "heading_deg": hd})
+    if a.height is not None:
+        start["h"] = a.height
+    allp = fusion.path_poses(kind=a.path, step=a.step, start=start)
+    last = len(allp) - 1 if a.last is None else a.last
+    poses = allp[a.first:last + 1]
+    meta = {"experiment": "stage 5b.2: the composed path and the fusion (#7)", "path": a.path, "step_m": a.step,
+            "start": {"p0": list(start["p0"]), "heading_deg": start["heading_deg"], "h": start["h"]},
+            "looks_of_path": [a.first, last, len(allp)]}
     return sensor.render(a.run, sensor.SlitFan(width=a.width), [(s, c, R) for s, c, R, _ in poses], spp=a.spp,
-                         seed_base=a.seed_base + a.first, device=a.device, git={"deep-motion": _git(REPO)})
+                         seed_base=a.seed_base + a.first, device=a.device, git={"deep-motion": _git(REPO)},
+                         blend=a.blend, meta=meta)
 
 
 def stage5b2(a) -> int:
     from . import fusion
-    res, num, ex = fusion.selftest(a.runs, kind=a.path)
+    res, num, ex = fusion.selftest(a.runs, kind=a.path, cell=a.cell, hit_stride=a.hit_stride, max_cells=a.max_cells)
     for name, ok in res:
         print(f"{PREFIX} stage 5b.2 {'PASS' if ok else 'FAIL'} {name}")
     print(f"{PREFIX} " + json.dumps({k: v for k, v in num.items() if k != "progress_0.5px"}))
@@ -105,7 +117,7 @@ def stage5b2(a) -> int:
         Path(a.out).mkdir(parents=True, exist_ok=True)
         rec = {"command": "stage5b2", "runs": a.runs, "checks": [{"name": n, "ok": bool(ok)} for n, ok in res],
                "numbers": num, "computed_by": {"deep-motion": _git(REPO)}}
-        (Path(a.out) / ("stage5b2.json" if a.path == "composed" else f"stage5b2_{a.path}.json")).write_text(json.dumps(rec, indent=1, default=float))
+        (Path(a.out) / ("stage5b2.json" if num["path"] == "composed" else f"stage5b2_{num['path']}.json")).write_text(json.dumps(rec, indent=1, default=float))
     return 0 if all(ok for _, ok in res) else 1
 
 
@@ -165,16 +177,24 @@ def main(argv=None) -> int:
     p.add_argument("--out", default=None)
     p = sub.add_parser("stage5b2-render", help="stage 5b.2: looks first..last of the composed path (CPU)")
     p.add_argument("--run", required=True)
-    p.add_argument("--first", type=int, required=True)
-    p.add_argument("--last", type=int, required=True)
+    p.add_argument("--first", type=int, default=0)
+    p.add_argument("--last", type=int, default=None, help="default: the path's last look")
+    p.add_argument("--step", type=float, default=0.025, help="m of arc length between looks")
+    p.add_argument("--blend", default=None, help="a scene .blend (default: the calibration room)")
+    p.add_argument("--start", default=None, help="x,y,heading_deg of the path's start (default: the room's EYE, 0,0,90)")
+    p.add_argument("--height", type=float, default=None, help="head height, m (default 1.6)")
     p.add_argument("--width", type=int, default=720)
     p.add_argument("--spp", type=int, default=16)
     p.add_argument("--seed-base", type=int, default=10000)
-    p.add_argument("--path", default="composed", choices=["composed", "straight"])
+    p.add_argument("--path", default="composed", choices=["composed", "straight", "turn90"])
     p.add_argument("--device", default="CPU")
     p = sub.add_parser("stage5b2", help="stage 5b.2: the fusion and checks F1-F3 on the composed path's runs")
     p.add_argument("runs", nargs="+")
-    p.add_argument("--path", default="composed", choices=["composed", "straight"])
+    p.add_argument("--path", default=None, choices=["composed", "straight", "turn90"],
+                   help="default: from run.json (composed for runs before it was recorded)")
+    p.add_argument("--cell", type=float, default=0.02)
+    p.add_argument("--hit-stride", type=int, default=1, help="bin every n-th hit of a look (memory at 3600 wide)")
+    p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
     a = ap.parse_args(argv)
     return {"stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,

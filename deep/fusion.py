@@ -22,16 +22,21 @@ CELL = 0.02
 STEP = 0.025
 PIECES = (("line", 0.30, 0.0), ("arc", 0.30, 1.0 / 1.6), ("line", 0.30, 0.0))
 SEG_NAMES = ("line A", "arc", "line B")
-PATHS = {"composed": PIECES, "straight": (("line", 0.90, 0.0),)}   # straight: the same length, for comparison
+PATHS = {"composed": PIECES, "straight": (("line", 0.90, 0.0),),   # straight: the same length, for comparison
+         # #7 (Luiz agreed to a real turn): 90 deg left; R = 1 m, since at R = 1.6 m the arc runs into a board of the
+         # calibration room (0.8 cm clearance from its surface points; R = 1 m: 18 cm)
+         "turn90": (("line", 0.30, 0.0), ("arc", 1.0 * np.pi / 2, 1.0), ("line", 0.30, 0.0))}
+START = {"p0": (0.0, 0.0), "heading_deg": 90.0, "h": 1.6}          # the calibration room's EYE, heading +Y
 
 
 def composed_path(pieces=PIECES, p0=(0.0, 0.0), phi0=np.pi / 2, h=1.6):
     return pr.Path([pr.Piece(k, L, kap) for k, L, kap in pieces], p0, phi0, h)
 
 
-def path_poses(path=None, step=STEP, kind="composed"):
+def path_poses(path=None, step=STEP, kind="composed", start=None):
     """[(s, c, R, piece)] every `step` of arc length over the whole path, joins included once."""
-    path = path or composed_path(PATHS[kind])
+    st = {**START, **(start or {})}
+    path = path or composed_path(PATHS[kind], st["p0"], np.radians(st["heading_deg"]), st["h"])
     total = sum(pc.length for pc in path.pieces)
     out = []
     for s in np.arange(0.0, total + 1e-9, step):
@@ -46,19 +51,49 @@ def path_poses(path=None, step=STEP, kind="composed"):
 
 
 def load_looks(run_dirs):
-    """Looks of one or more runs, in order: [(rec, c, R, s)]."""
+    """Looks of one or more runs, in order, without their records (loaded one at a time): [(path, c, R, s)]."""
     looks = []
     for d in run_dirs:
-        looks += orc.load(d)[1]
+        run = json.loads((Path(d) / "run.json").read_text())
+        looks += [(Path(d) / lk["out_dir"] / "record_C.npz", np.asarray(lk["c"], float), np.asarray(lk["R"], float),
+                   lk["s"]) for lk in run["looks"]]
     return looks
 
 
-def cells(looks, cell=CELL):
-    """Representative true points, one per voxel of `cell` m, the first hit wins (looks in order)."""
-    P = np.concatenate([lk[0].position_w[np.isfinite(lk[0].distance_m)].astype(np.float64) for lk in looks])
-    key = np.floor(P / cell).astype(np.int64)
-    _, first = np.unique(key, axis=0, return_index=True)
-    return P[np.sort(first)]
+def _record(path):
+    from fov_render.record import SampleRecord
+    return SampleRecord.load(path, access="oracle")
+
+
+def run_meta(run_dirs):
+    """The path's kind and start from the first run's record (runs before #7's turn carry none: composed, EYE)."""
+    run = json.loads((Path(run_dirs[0]) / "run.json").read_text())
+    return run.get("path", "composed"), {**START, **run.get("start", {})}, int(run["carrier"]["width"])
+
+
+def cells(looks, cell=CELL, hit_stride=1):
+    """Representative true points, one per voxel of `cell` m, the first hit wins (looks in order); every
+    hit_stride-th hit of a look is binned (memory at the design resolution)."""
+    keys, Ps = [], []
+    seen = np.empty((0, 3), dtype=np.int64)
+    for lk in looks:
+        rec = _record(lk[0])
+        P = rec.position_w[np.isfinite(rec.distance_m)][::hit_stride].astype(np.float64)
+        key = np.floor(P / cell).astype(np.int64)
+        _, first = np.unique(key, axis=0, return_index=True)
+        first = np.sort(first)
+        key, P = key[first], P[first]
+        allk = np.concatenate([seen, key])
+        _, idx = np.unique(allk, axis=0, return_index=True)
+        new = np.sort(idx[idx >= len(seen)]) - len(seen)
+        seen = np.concatenate([seen, key[new]])
+        Ps.append(P[new])
+    return np.concatenate(Ps)
+
+
+def visibility(looks, P, fan):
+    """(N, K): M1.3's agreement in every look, one record in memory at a time."""
+    return np.stack([orc.visible(_record(lk[0]), lk[1], lk[2], P, fan) for lk in looks], 1)
 
 
 def _derivs(X, c, R):
@@ -79,7 +114,7 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None):
     Returns X (N, 3), H (N, 3, 3) at the truth, vis (N, K)."""
     K = len(looks)
     if vis is None:
-        vis = np.stack([orc.visible(lk[0], lk[1], lk[2], P, fan) for lk in looks], 1)
+        vis = visibility(looks, P, fan)
     poses = poses or [(lk[1], lk[2]) for lk in looks]
     obs = []
     for k, lk in enumerate(looks):
@@ -158,31 +193,42 @@ def ray_interval(P, H, vis, looks, sigma_px, fan):
     return worst, s0, u0
 
 
-def progress(P, vis, looks, fan, seg, sigma_px=0.5):
-    """Usable fraction of the cells after the first m looks (m = 1..K), and each cell's first-usable segment."""
+def progress(P, vis, looks, fan, seg, sigma_px=0.5, points=40):
+    """Usable fraction of the cells after the first m looks (about `points` values of m, the last look included),
+    and each cell's first-usable segment (resolved to the same spacing)."""
     K = len(looks)
+    every = max(1, int(np.ceil(K / points)))
     H = np.zeros((len(P), 3, 3))
-    frac, first_seg = [], np.full(len(P), -1)
+    frac, at, first_seg = [], [], np.full(len(P), -1)
     for m in range(K):
         _, _, gl, gt = _derivs(P, looks[m][1], looks[m][2])
         w = vis[:, m][:, None, None]
         H += w * (gl[:, :, None] * gl[:, None, :] + gt[:, :, None] * gt[:, None, :])
+        if m % every and m != K - 1:
+            continue
+        at.append(m)
         worst, _, _ = ray_interval(P, H, vis[:, :m + 1], looks[:m + 1], sigma_px, fan)
         u = worst <= orc.USABLE_REL
         first_seg = np.where(u & (first_seg < 0), seg[m], first_seg)
         frac.append(float(u.mean()))
-    return frac, first_seg
+    return frac, first_seg, at
 
 
-def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind="composed"):
+def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind=None, hit_stride=1, max_cells=None):
     looks = load_looks(run_dirs)
-    fan = fan or sn.SlitFan(width=int(json.loads((Path(run_dirs[0]) / "run.json").read_text())["carrier"]["width"]))
+    k_meta, start, width = run_meta(run_dirs)
+    kind = kind or k_meta
+    fan = fan or sn.SlitFan(width=width)
     s = np.array([lk[3] for lk in looks])
     ends = np.cumsum([L for _, L, _ in PATHS[kind]])
     seg = np.searchsorted(ends - 1e-9, s)        # a join belongs to the piece it ends, as in path_poses
-    P = cells(looks, cell)
+    P = cells(looks, cell, hit_stride)
     rng = np.random.default_rng(seed)
-    res, num = [], {"path": kind, "cells": int(len(P)), "looks": len(looks), "cell_m": cell}
+    n_all = len(P)
+    if max_cells and len(P) > max_cells:
+        P = P[np.sort(rng.choice(len(P), size=max_cells, replace=False))]
+    res, num = [], {"path": kind, "start": start, "cells_binned": int(n_all), "cells": int(len(P)), "looks": len(looks),
+                    "cell_m": cell, "hit_stride": hit_stride, "max_cells": max_cells}
     X0, H, vis = fuse(looks, P, fan)
     seen2 = vis.sum(1) >= 2
     rmin = np.min(np.where(vis, np.stack([np.linalg.norm(P - lk[1], axis=-1) for lk in looks], 1), np.inf), 1)
@@ -230,10 +276,10 @@ def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind="composed"):
     res.append(("F3 the usable cells' 95 % intervals cover the truth at 95 +/- 1 % (0.25, 0.5, 1 px)", bool(cov_ok)))
     res.append(("F3 control: sigma halved covers <= 85 % on every rung", ctl_max <= 0.85))
     sub = rng.choice(len(P), size=min(20000, len(P)), replace=False)
-    frac, fseg = progress(P[sub], vis[sub], looks, fan, seg, 0.5)
+    frac, fseg, at = progress(P[sub], vis[sub], looks, fan, seg, 0.5)
     num["progress_cells"] = int(len(sub))
-    num["progress_0.5px"] = {"s_m": s.tolist(), "usable": frac}
-    names = SEG_NAMES if kind == "composed" else ("line",)
+    num["progress_0.5px"] = {"s_m": s[at].tolist(), "usable": frac}
+    names = SEG_NAMES if len(PATHS[kind]) == 3 else ("line",)
     num["first_usable_segment_0.5px"] = {names[i]: float(np.mean(fseg == i)) for i in range(len(names))}
     num["first_usable_segment_0.5px"]["never"] = float(np.mean(fseg < 0))
     return res, num, {"P": P, "vis": vis, "H": H, "sub": sub, "first_seg": fseg, "seg": seg, "s": s}
@@ -241,11 +287,12 @@ def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind="composed"):
 
 def usable_map(run_dirs, sigma_px=0.5, cell=CELL):
     """The Fisher gate only (no fit): cells, usable at sigma_px, and their bearing from the path's middle look
-    relative to the start heading (+Y), for the figure and the cone summary."""
+    relative to the start heading, for the figure and the cone summary."""
     looks = load_looks(run_dirs)
-    fan = sn.SlitFan(width=int(json.loads((Path(run_dirs[0]) / "run.json").read_text())["carrier"]["width"]))
+    _, start, width = run_meta(run_dirs)
+    fan = sn.SlitFan(width=width)
     P = cells(looks, cell)
-    vis = np.stack([orc.visible(lk[0], lk[1], lk[2], P, fan) for lk in looks], 1)
+    vis = visibility(looks, P, fan)
     H = np.zeros((len(P), 3, 3))
     for lk, k in zip(looks, range(len(looks))):
         _, _, gl, gt = _derivs(P, lk[1], lk[2])
@@ -253,7 +300,8 @@ def usable_map(run_dirs, sigma_px=0.5, cell=CELL):
     worst, _, _ = ray_interval(P, H, vis, looks, sigma_px, fan)
     cm = looks[len(looks) // 2][1]
     d = P - cm
-    b = np.degrees(np.arctan2(-d[:, 0], d[:, 1]))          # from +Y, + left (toward -X)
+    h0 = np.radians(start["heading_deg"])
+    b = np.degrees(np.angle(np.exp(1j * (np.arctan2(d[:, 1], d[:, 0]) - h0))))   # from the start heading, + left
     return {"P": P, "usable": worst <= orc.USABLE_REL, "worst": worst, "bearing": b,
             "path": np.stack([lk[1] for lk in looks])}
 
