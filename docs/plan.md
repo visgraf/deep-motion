@@ -412,8 +412,8 @@ median against ψ).
 - **Window length and pixel noise set precision.** At 0.5°/px, 20 cm windows give the walls only at 0.25 px; 50 cm
   windows give the lateral walls at 1 px. Precision near the heading and behind grows fastest with the window.
 - **The arc's heading gain is real on renders but small at these lengths.** At 20 cm, arc and line are the same
-  everywhere but the innermost cone. At 50 cm the arc's median interval in the 2° cone is 2.6 times the line's
-  precision (±44 % against ±114 %), and behind it is also better. The wall ahead is at 4.8 m, and neither reaches
+  everywhere but the innermost cone. At 50 cm the arc's median interval in the 2° cone is 2.6 times narrower than the line's
+  (±44 % against ±114 %), and behind it is also better. The wall ahead is at 4.8 m, and neither reaches
   ±10 % there; the atlas puts the arc at ±10 % at 1.5 m with a 50 cm window and 0.25 px. Between 5° and 15° the arc is
   slightly worse than the line, as stage 3 found, so the ±15° sector counts fewer usable anchors on arc50 than on
   line50. The gain needs longer windows, nearer surfaces or finer pixels (the design's 0.1° is five times finer):
