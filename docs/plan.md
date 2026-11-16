@@ -172,3 +172,39 @@ Code does the GPU and Classroom work.
 - [ ] **Planar paths first?** Lines, arcs and pivots in a horizontal plane before anything in 3D.
 - [ ] **Literature search** on concentric mosaics, crossed-slits and EPI analysis for depth along composed paths,
   before any claim of novelty.
+
+## Results
+
+### Stage 2: the geometry of the primitives (#2; Chat sandbox)
+
+`python -m deep selftest --out docs/runs/issue-2` at `0b04866` (clean), numpy 2.2.6, Python 3.13, about 1 s. Record:
+[`stage2_selftest.json`](runs/issue-2/stage2_selftest.json). Module: [`deep/primitives.py`](../deep/primitives.py).
+8 checks PASS; each of the 8 controls fails as it must:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| head axes are `motion.paths.head_axes` | 1.1e-16 | right flipped | ≥ 1.42 |
+| line: u = (x_P − s)/D, ω constant, against exact projection | 6.8e-14 | path line turned 1° | median ≥ 0.046 |
+| arc: slit β sees P at θ = φ_P − δ(β, ρ), v = dz cos β /(ρ sin δ), against exact projection (2,800 sightings, both branches) | 3.1e-15 | radius 2 % wrong | ≥ 2.1e-4 rad |
+| same orbit, same trace shifted in time (line along f, arc about the axis), exact projection | 7.8e-16 | the moved point 5 % farther | median ≥ 4.1e-3 |
+| blind sets: the path line and the turn axis keep their head direction | 2.2e-16 | 1 cm off | ≥ 3.2e-4 |
+| pivot: rotation alone, at any depth | 3.3e-16 | pivot 5 cm behind the eye | ≥ 3.8e-3 |
+| line with the gaze along it: −ln(u(s+t)/u(s)) is M4's d_k(ζ) | 3.6e-15 | head 1° off the path line | median ≥ 2.6e-4 |
+| composition (line, arc, pivot, line) joins continuously | 0 | an arc 1 % short | 0.015 m gap |
+
+Figure ([`stage2_primitives.png`](runs/issue-2/figures/stage2_primitives.png), `python -m deep figures`):
+- **Line.** Traces in (u, s) are straight, with slope −1/D.
+- **Arc.** θ − φ_P against β: one curve per ρ, the same for every point at that radius.
+- **A composed path** from above, with the turn axis marked.
+
+**An observation for stage 3.** On an arc, the traces of all radii converge as the slit turns sideways (β → ±90°).
+For R = 1.6 m, the crossing angle's sensitivity to ρ at ρ = 3.1 m falls with cos β:
+
+| β | 0° | 30° | 60° | 80° | 89° |
+|---|---|---|---|---|---|
+| ∂δ/∂ρ (deg per m) | 11.1 | 9.2 | 4.9 | 1.7 | 0.17 |
+
+The sideways (radial) directions point at the turn axis, the arc's blind set. On an arc, the blind directions are
+therefore the lateral ones, as the heading is on a line. The plan's "lateral slits carry the most depth per metre"
+holds for lines; for arcs, the slits near the tangent carry the depth. Stage 3's atlas measures this properly, before
+the sensor is designed.
