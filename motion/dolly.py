@@ -410,6 +410,22 @@ def m4_selftest(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def m6_selftest(a) -> int:
+    """M6 T0 (#22): rotation removal and translation about each frame's epipole, numpy only. With --out, a record."""
+    from . import derotate
+    res, num = derotate.selftest()
+    for name, ok in res:
+        print(f"{PREFIX} M6 T0 {'PASS' if ok else 'FAIL'} {name}")
+    if a.out:
+        out = Path(a.out)
+        out.mkdir(parents=True, exist_ok=True)
+        rec = {"command": "m6-selftest", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "numpy": np.__version__, "python": sys.version.split()[0],
+               "computed_by": {"foveal-motion": _git(REPO), "fov-render": _git(FOV_RENDER)}}
+        (out / "t0_selftest.json").write_text(json.dumps(rec, indent=1, default=float))
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def _m4_log(m):
     print(m, flush=True)
 
@@ -630,6 +646,8 @@ def main(argv=None) -> int:
     p.add_argument("--reference", default=None, help="an oracle result (O1) drawn grey under the cloud")
     p.add_argument("--no-truth", action="store_true", help="omit the evaluation overlays")
     sub.add_parser("m4-selftest")
+    p = sub.add_parser("m6-selftest", help="M6 T0: derotation and the generalised law (numpy)")
+    p.add_argument("--out", default=None, help="write t0_selftest.json here")
     p = sub.add_parser("m4-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("m4-calibration", help="M4 Stage 5 protocol: calibrate, freeze, estimate held-out, evaluate")
@@ -685,7 +703,7 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
+            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
             "m4-calibration": m4_calibration, "m4-classroom": m4_classroom, "m4-freeze": m4_freeze,
             "m4-oracle": m4_oracle}[a.cmd](a)
 
