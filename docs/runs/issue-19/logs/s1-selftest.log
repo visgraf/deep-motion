@@ -1,0 +1,31 @@
+22:31:19 $ .venv/bin/python -m motion.dolly selftest
+22:31:19 [dolly] selftest PASS accepted spec
+22:31:19 [dolly] selftest PASS facing +Y gives the playground's H0 axes
+22:31:19 [dolly] selftest PASS first and last heads are start_w and end_w
+22:31:19 [dolly] selftest PASS equal steps
+22:31:19 [dolly] selftest PASS every head faces facing_w
+22:31:19 [dolly] selftest PASS refused: tilted facing
+22:31:19 [dolly] selftest PASS refused: n_looks 1
+22:31:19 [dolly] selftest PASS refused: no control head
+22:31:19 [dolly] selftest PASS refused: no motion
+22:31:19 [dolly] selftest PASS modes differ
+22:31:19 [dolly] selftest PASS refused: both target_w and target_ray
+22:31:19 [dolly] selftest PASS refused: target_ray from a head not on the path
+22:31:19 [dolly] selftest PASS accepted: target_ray alone
+22:31:19 [dolly] selftest PASS resolved() takes the preflight's target
+22:31:19 [dolly] selftest PASS tour: accepted tour
+22:31:19 [dolly] selftest PASS tour: phase specs are valid v1 paths
+22:31:19 [dolly] selftest PASS tour: every phase keeps the leg's step
+22:31:19 [dolly] selftest PASS tour: phases interleave at step / 3
+22:31:19 [dolly] selftest PASS tour: phase looks: n + 1, n, n
+22:31:19 [dolly] selftest PASS tour: timeline along leg A is monotone, step / 3
+22:31:19 [dolly] selftest PASS tour: timeline holds every look once
+22:31:19 [dolly] selftest PASS tour: pivot: 90 deg at <= 4 deg -> 22 inner looks
+22:31:19 [dolly] selftest PASS tour: pivot stays at the joint
+22:31:19 [dolly] selftest PASS tour: pivot turns left, monotone
+22:31:19 [dolly] selftest PASS tour: seeds differ across phases
+22:31:19 [dolly] selftest PASS tour: refused: legs not joined
+22:31:19 [dolly] selftest PASS tour: refused: a climbing leg
+22:31:19 [dolly] selftest PASS tour: refused: pivot_deg 0
+22:31:19 [dolly] selftest PASS pixel_of inverts the warp (max 1e-6 px)
+22:31:19 [dolly] selftest PASS control: a central ray turned by one foveal pixel moves >= 0.5 px

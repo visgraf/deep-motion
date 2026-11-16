@@ -1,0 +1,2 @@
+22:46:44 $ .venv/bin/python -m motion.dolly demo-fuse --out runs/d1-classroom
+22:47:15 [demo] fused 3668287 anchors from 161 references into 768418 voxels; voxel error median nan cm, p90 nan cm

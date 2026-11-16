@@ -1,0 +1,1577 @@
+{
+ "schema": "foveal-motion-run-v1",
+ "experiment": "M1 dolly",
+ "path": {
+  "schema": "foveal-motion-path-v1",
+  "name": "tour_classroom_L_A2",
+  "scene": "scenes/classroom/classroom_eye.blend",
+  "start_w": [
+   0.897,
+   -3.7270289855072467,
+   1.6
+  ],
+  "end_w": [
+   0.897,
+   0.7260144927536234,
+   1.6
+  ],
+  "n_looks": 46,
+  "facing_w": [
+   0.0,
+   1.0,
+   0.0
+  ],
+  "target_ray": {
+   "from_k": 0,
+   "toward_w": [
+    0.897,
+    46.272971014492754,
+    1.6
+   ]
+  },
+  "preflight": {
+   "min_clearance_m": 0.25,
+   "max_hole_fraction": 0.046,
+   "max_backface_fraction_other": 0.001,
+   "backface_allowed": [],
+   "control_head_w": [
+    0.897,
+    3.159,
+    1.6
+   ]
+  },
+  "source": {
+   "tour": "tour_classroom_L",
+   "leg": "A",
+   "phase": 2,
+   "phases": 3,
+   "step_m": 0.09895652173913044,
+   "what": "phase 2 of 3: looks at start + (i + 2/3) step along the leg, i = 0..45; written by motion/tour.py"
+  },
+  "seed_base": 6400,
+  "target_w": [
+   0.897,
+   3.2590050697326656,
+   1.6
+  ]
+ },
+ "target_source": "target_ray, found by the preflight",
+ "path_file": "runs/d1-classroom/specs/A2.json",
+ "blend": "/home/lvelho/rd/foveal-motion/scenes/classroom/classroom_eye.blend",
+ "blend_sha256": "0c6634c005ca6a411d0b431fdcf8813699c37541ad5de7b5eeaacdafc8e6f6f3",
+ "profile": "full",
+ "spp": 1024,
+ "device_requested": "OPTIX",
+ "modes": [
+  "ahead"
+ ],
+ "seeds": "per look: C seed = 6400 + k (independent noise, #7)",
+ "sensor": {
+  "type": "foveated",
+  "E2_deg": 2.0,
+  "e_max_deg": 45.0
+ },
+ "eye": "C",
+ "git": {
+  "foveal-motion": {
+   "commit": "a34a576f36d1011abd43c276b469edad2a50b446",
+   "clean": true
+  },
+  "fov-render": {
+   "commit": "0f6fa7ddce21c20ec80121a6b418dff4ed278fdb",
+   "clean": true
+  }
+ },
+ "command": [
+  "/home/lvelho/rd/foveal-motion/motion/dolly.py",
+  "demo-render",
+  "--tour",
+  "paths/tour_classroom_L.json",
+  "--out",
+  "runs/d1-classroom",
+  "--device",
+  "OPTIX",
+  "--spp",
+  "1024"
+ ],
+ "preflight": {
+  "ok": true,
+  "control_fails": true,
+  "summary": {
+   "max_hole_fraction": 0.03859584766835747,
+   "min_nearest_surface_m": 0.7930073414667668,
+   "max_backface_closed_fraction": 5.8864803776127154e-06,
+   "failing_heads": [],
+   "target_occluded_heads": [],
+   "target_w": [
+    0.897,
+    3.2590050697326656,
+    1.6
+   ]
+  }
+ },
+ "looks": {
+  "ahead": [
+   {
+    "k": 0,
+    "out_dir": "ahead/k0000",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.7270289855072467,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 1.2113671690167394,
+    "wall_seconds": 1.351
+   },
+   {
+    "k": 1,
+    "out_dir": "ahead/k0001",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.6280724637681163,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6805510540143587,
+    "wall_seconds": 0.818
+   },
+   {
+    "k": 2,
+    "out_dir": "ahead/k0002",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.529115942028986,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.662822096986929,
+    "wall_seconds": 0.797
+   },
+   {
+    "k": 3,
+    "out_dir": "ahead/k0003",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.4301594202898555,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6746348769811448,
+    "wall_seconds": 0.805
+   },
+   {
+    "k": 4,
+    "out_dir": "ahead/k0004",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.3312028985507247,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6629898009996396,
+    "wall_seconds": 0.799
+   },
+   {
+    "k": 5,
+    "out_dir": "ahead/k0005",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.2322463768115943,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6483190430153627,
+    "wall_seconds": 0.783
+   },
+   {
+    "k": 6,
+    "out_dir": "ahead/k0006",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.133289855072464,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6734622190124355,
+    "wall_seconds": 0.812
+   },
+   {
+    "k": 7,
+    "out_dir": "ahead/k0007",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -3.0343333333333335,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6556671930011362,
+    "wall_seconds": 0.787
+   },
+   {
+    "k": 8,
+    "out_dir": "ahead/k0008",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.935376811594203,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6444341719907243,
+    "wall_seconds": 0.79
+   },
+   {
+    "k": 9,
+    "out_dir": "ahead/k0009",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.8364202898550728,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6656456959899515,
+    "wall_seconds": 0.799
+   },
+   {
+    "k": 10,
+    "out_dir": "ahead/k0010",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.7374637681159424,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.67087543400703,
+    "wall_seconds": 0.807
+   },
+   {
+    "k": 11,
+    "out_dir": "ahead/k0011",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.638507246376812,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6709534570109099,
+    "wall_seconds": 0.808
+   },
+   {
+    "k": 12,
+    "out_dir": "ahead/k0012",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.5395507246376816,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.65008806498372,
+    "wall_seconds": 0.781
+   },
+   {
+    "k": 13,
+    "out_dir": "ahead/k0013",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.440594202898551,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6574512619990855,
+    "wall_seconds": 0.786
+   },
+   {
+    "k": 14,
+    "out_dir": "ahead/k0014",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.3416376811594204,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6449112720147241,
+    "wall_seconds": 0.773
+   },
+   {
+    "k": 15,
+    "out_dir": "ahead/k0015",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.2426811594202896,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6398246570024639,
+    "wall_seconds": 0.772
+   },
+   {
+    "k": 16,
+    "out_dir": "ahead/k0016",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.143724637681159,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6525387350120582,
+    "wall_seconds": 0.782
+   },
+   {
+    "k": 17,
+    "out_dir": "ahead/k0017",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -2.0447681159420292,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6717947449942585,
+    "wall_seconds": 0.804
+   },
+   {
+    "k": 18,
+    "out_dir": "ahead/k0018",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.9458115942028986,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6580882810230833,
+    "wall_seconds": 0.788
+   },
+   {
+    "k": 19,
+    "out_dir": "ahead/k0019",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.8468550724637682,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6239553710038308,
+    "wall_seconds": 0.76
+   },
+   {
+    "k": 20,
+    "out_dir": "ahead/k0020",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.7478985507246376,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6480261060060002,
+    "wall_seconds": 0.779
+   },
+   {
+    "k": 21,
+    "out_dir": "ahead/k0021",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.6489420289855072,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6579430990095716,
+    "wall_seconds": 0.788
+   },
+   {
+    "k": 22,
+    "out_dir": "ahead/k0022",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.5499855072463768,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6352912340080366,
+    "wall_seconds": 0.765
+   },
+   {
+    "k": 23,
+    "out_dir": "ahead/k0023",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.451028985507246,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6604832090088166,
+    "wall_seconds": 0.792
+   },
+   {
+    "k": 24,
+    "out_dir": "ahead/k0024",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.352072463768116,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6573544130078517,
+    "wall_seconds": 0.788
+   },
+   {
+    "k": 25,
+    "out_dir": "ahead/k0025",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.2531159420289852,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6554768499918282,
+    "wall_seconds": 0.784
+   },
+   {
+    "k": 26,
+    "out_dir": "ahead/k0026",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.1541594202898549,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6584171949943993,
+    "wall_seconds": 0.786
+   },
+   {
+    "k": 27,
+    "out_dir": "ahead/k0027",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -1.055202898550725,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.669944140012376,
+    "wall_seconds": 0.796
+   },
+   {
+    "k": 28,
+    "out_dir": "ahead/k0028",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.9562463768115941,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6515213209786452,
+    "wall_seconds": 0.781
+   },
+   {
+    "k": 29,
+    "out_dir": "ahead/k0029",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.8572898550724637,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6648332360200584,
+    "wall_seconds": 0.791
+   },
+   {
+    "k": 30,
+    "out_dir": "ahead/k0030",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.7583333333333329,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6663247350079473,
+    "wall_seconds": 0.795
+   },
+   {
+    "k": 31,
+    "out_dir": "ahead/k0031",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.6593768115942029,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.670142336981371,
+    "wall_seconds": 0.797
+   },
+   {
+    "k": 32,
+    "out_dir": "ahead/k0032",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.5604202898550721,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6328473819885403,
+    "wall_seconds": 0.759
+   },
+   {
+    "k": 33,
+    "out_dir": "ahead/k0033",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.4614637681159417,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6469373060099315,
+    "wall_seconds": 0.772
+   },
+   {
+    "k": 34,
+    "out_dir": "ahead/k0034",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.36250724637681175,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6240788069844712,
+    "wall_seconds": 0.751
+   },
+   {
+    "k": 35,
+    "out_dir": "ahead/k0035",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.2635507246376809,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6471428340009879,
+    "wall_seconds": 0.77
+   },
+   {
+    "k": 36,
+    "out_dir": "ahead/k0036",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.16459420289855053,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6578976230230182,
+    "wall_seconds": 0.783
+   },
+   {
+    "k": 37,
+    "out_dir": "ahead/k0037",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      -0.0656376811594197,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6643076380132698,
+    "wall_seconds": 0.791
+   },
+   {
+    "k": 38,
+    "out_dir": "ahead/k0038",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.03331884057971024,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6655224179849029,
+    "wall_seconds": 0.792
+   },
+   {
+    "k": 39,
+    "out_dir": "ahead/k0039",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.13227536231884063,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6760056710045319,
+    "wall_seconds": 0.797
+   },
+   {
+    "k": 40,
+    "out_dir": "ahead/k0040",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.23123188405797146,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6648758029914461,
+    "wall_seconds": 0.792
+   },
+   {
+    "k": 41,
+    "out_dir": "ahead/k0041",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.33018840579710185,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6867458590131719,
+    "wall_seconds": 0.814
+   },
+   {
+    "k": 42,
+    "out_dir": "ahead/k0042",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.42914492753623223,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6457054509955924,
+    "wall_seconds": 0.775
+   },
+   {
+    "k": 43,
+    "out_dir": "ahead/k0043",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.5281014492753626,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6552250829990953,
+    "wall_seconds": 0.78
+   },
+   {
+    "k": 44,
+    "out_dir": "ahead/k0044",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.627057971014493,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6736807260022033,
+    "wall_seconds": 0.797
+   },
+   {
+    "k": 45,
+    "out_dir": "ahead/k0045",
+    "head": {
+     "head_R_wh": [
+      [
+       1.0,
+       0.0,
+       -0.0
+      ],
+      [
+       0.0,
+       0.0,
+       -1.0
+      ],
+      [
+       0.0,
+       1.0,
+       -0.0
+      ]
+     ],
+     "head_origin_w_m": [
+      0.897,
+      0.7260144927536234,
+      1.6
+     ]
+    },
+    "head_source": "request",
+    "render_seconds": 0.6391294710047077,
+    "wall_seconds": 0.763
+   }
+  ]
+ },
+ "session": {
+  "start_seconds": 0.5,
+  "launcher": {
+   "kind": "blender",
+   "executable": "/usr/local/bin/blender"
+  },
+  "device": "OPTIX",
+  "session_head": {
+   "head_R_wh": [
+    [
+     1.0,
+     0.0,
+     0.0
+    ],
+    [
+     0.0,
+     3.422854177870249e-08,
+     -0.9999999403953552
+    ],
+    [
+     0.0,
+     0.9999999403953552,
+     3.422854177870249e-08
+    ]
+   ],
+   "head_origin_w_m": [
+    -0.6000000238418579,
+    -1.0,
+    1.2000000476837158
+   ]
+  }
+ },
+ "device": "OPTIX",
+ "seconds": 37.45
+}

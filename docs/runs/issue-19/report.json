@@ -1,0 +1,868 @@
+{
+ "schema": "foveal-motion-d1-report-v1",
+ "what": "#5's Classroom metrics per phase, REPORTED, not gated (M-D17)",
+ "phases": {
+  "A0": {
+   "schema": "foveal-motion-m4-eval-v2",
+   "window": "both5",
+   "gate_name": "classroom",
+   "gate_thresholds": {
+    "median": 0.1,
+    "p90": 0.25,
+    "coverage": 0.25,
+    "outlier50": 0.05,
+    "band_deg": [
+     5.0,
+     40.0
+    ]
+   },
+   "interval_scale": 1.4874533063463462,
+   "m3_scale": 1.625204104083527,
+   "held_out_refs": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+   ],
+   "excluded_refs": [],
+   "imported_from": {
+    "frozen": "docs/runs/issue-10/frozen.json",
+    "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+    "source": "docs/runs/issue-10/stage5/both5",
+    "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+   },
+   "late_estimates_hashed_now": {
+    "r0005.npz": "3c81b64f100ca7ade6973e3c20d0cd6ce8bc7f149560b03788c8c09ab407d7b5",
+    "r0006.npz": "4f4ae73f8c3fa9ea17cc30e5a74a0ffccc88244adee79ad8373f10c23aed8e69",
+    "r0007.npz": "6a1d81931e5e58438349732eeca51dde8a8d84906262700933c2cf9ae4ec0334",
+    "r0008.npz": "59b6caf3958521c85572aa028b659fd4f3f035e626820062274a37c21e3707c8",
+    "r0009.npz": "e67b209e1122ee95a437582114aee42bf5648005037ad535a5ec61ff40584157",
+    "r0010.npz": "fc113d83f6c06e9dc241bfbf78cd3af84a38c722c9f05b4521863f43f7e26958",
+    "r0011.npz": "9233c6d9578e23ce520670ac8ddbda1bc530b49d0cade145806a5c4615f06e64",
+    "r0012.npz": "8e735f793bdd8478b66a4d86125acc201a2ac3e1a8a8c5772f06d5a69bc966d3",
+    "r0013.npz": "edade067a6a46bb9db8f7e17f03448e6553002ec5febabfe66a53c9f4d025d9e",
+    "r0014.npz": "9aba5035728662614a5107616bd95014e8ed2f96b67cf352613efd2603233798",
+    "r0015.npz": "83323845758e5700de356d56c0a8fb89ee84a05461e2d590fdc8e9dc63b97ac0",
+    "r0016.npz": "1c80af59ade2aaa94d7d47a9e0c08ccb7fb74314c452a83418770de9f8f34e57",
+    "r0017.npz": "1662f9bf598b3b983699ce1f895dcef6469033059fb7498c3c09d245d15b6648",
+    "r0018.npz": "7c7cef9fbeaa383618ad05c3d01a2e97d8c2b88cbf93e476415c542925158fe6",
+    "r0019.npz": "e24b6e40d43eedd31db40eaae272ef7ff95610cf3721431cbfe862e8b2d91ef5",
+    "r0020.npz": "149cb406c9c517f2cdba9411b87bfa03ce25a4094c4821fa6b91a1564cbde903",
+    "r0021.npz": "b89866206b2ae0ee767b2b8dd33672026a322505015fbc457117d52771825c48",
+    "r0022.npz": "735ff19e509c36b9ee67b0f77d7771cc2dbfa37d6e83e9e43b7a55f00368d770",
+    "r0023.npz": "64964b44545588a3cf9f5e228b9eabfdd3e9457b6c175b4315eb46376dcbedbd",
+    "r0024.npz": "f93c7bc6abc46e69e5d936099d5b39065b9bdc8ba0728978cb36c7c6a815b551",
+    "r0025.npz": "47b62e0833f86053cf91ea3027e8f8d7e926f967283050043720828b1dce4f14",
+    "r0026.npz": "0ad7a18a9cf32712a35338685636a32eb6c4ab6c7647b68dbce2fdb3cd5302a1",
+    "r0027.npz": "fcd25230b3c2580de75fcc86f5e100540f2874d91db4515922196170d347345f",
+    "r0028.npz": "17727c38abc1bd78928d01346b553601b25cf84516dedd995b336a053f33dd17",
+    "r0029.npz": "d4b6d7f4b68f08b6595586253a571ba5c770bdebe33fa56e4a25aa1152335d31",
+    "r0030.npz": "4b9462e94f60df528a76b954a385a63694f111e1af6cb1ecc9bf3d68d5dd1d1e",
+    "r0031.npz": "2f3a4857d8095855fa22951d50baeabb18889273489e31725039555265a452a2",
+    "r0032.npz": "4777ba7cdf98ee5143dbe141ff3ec00fc7ffe470d2f337765c5b98cbb2ec7a2b",
+    "r0033.npz": "efa9f07560d486e3294283db9cc67ff07714f5afac6d63396396692d02a359a9",
+    "r0034.npz": "2c69bdc7d8df20f4be604e198ae93cee54acad92356b8fd92f4cc1b190cfc44e",
+    "r0035.npz": "f5bc92aacf380be8d886ee1d431f8af1b4babdc83ea21fe76515d09d42e3cc66",
+    "r0036.npz": "93c4b8f17e35e04558e2ad95e7bc92b544d3cd462e3cef15bafd9a7840860790",
+    "r0037.npz": "ac9a566a905fbac3b3e7e1df8b3ff92c56df0e57bdbe8350b462099a47f3e26b",
+    "r0038.npz": "ed995736f71fdc6f2b065429d08fcaacf2a45d5b97d9e9438fe11b47e9e18097",
+    "r0039.npz": "d9a0fd47eae68d7c85571ddc0cc65a35fc1a9ce600792e163ba182f9d1950248",
+    "r0040.npz": "2404a472a31964db2b087807509652ed19226b8a906d643f4ef082520799d655",
+    "r0041.npz": "a3622f6cc45928fad575cd73c9a59df1c4c17be1ff82b9a6a04b858adf5899e7"
+   },
+   "M4": {
+    "field_usable_of_all_hits": 0.4569915966112864,
+    "accepted_fraction": 0.4941219320731956,
+    "interval_coverage_interior": 0.9362552375618005,
+    "usable_interior_median_rel": 0.011527434473904013,
+    "usable_interior_p90_rel": 0.037997676464191124,
+    "fovea_usable": 0.26227108720811493,
+    "gate": {
+     "subset": 681835,
+     "accepted_usable": 253178,
+     "coverage_of_subset": 0.37131857414183783,
+     "median_rel": 0.010953940900886595,
+     "p90_rel": 0.03524794528234353,
+     "over_50pct": 7.899580532273735e-06,
+     "gate_pass": true
+    }
+   },
+   "M3": {
+    "field_usable_of_all_hits": 0.19758738444051321,
+    "accepted_fraction": 0.253184346144635,
+    "interval_coverage_interior": 0.9188955085139646,
+    "usable_interior_median_rel": 0.019767959605973363,
+    "usable_interior_p90_rel": 0.058410724081021825,
+    "fovea_usable": 0.04995234529239567,
+    "gate": {
+     "subset": 681835,
+     "accepted_usable": 75657,
+     "coverage_of_subset": 0.11096086296538019,
+     "median_rel": 0.018510110463427584,
+     "p90_rel": 0.05242699940640477,
+     "over_50pct": 0.0003040035951729516,
+     "gate_pass": false
+    }
+   },
+   "checks": [
+    {
+     "id": "M4.GATE",
+     "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+     "ok": true,
+     "control": "every step x 1.2",
+     "control_fails": true,
+     "control_detail": {
+      "subset": 681835,
+      "accepted_usable": 253178,
+      "coverage_of_subset": 0.37131857414183783,
+      "median_rel": 0.19842502442277277,
+      "p90_rel": 0.22873498318555516,
+      "over_50pct": 4.344769292750555e-05,
+      "gate_pass": false
+     }
+    },
+    {
+     "id": "M4.COVER",
+     "what": "interior coverage of the 95 % intervals >= 0.9",
+     "ok": true,
+     "control": "intervals x 0.5",
+     "control_fails": true,
+     "control_detail": {
+      "coverage": 0.7461384762869053
+     }
+    }
+   ]
+  },
+  "A1": {
+   "schema": "foveal-motion-m4-eval-v2",
+   "window": "both5",
+   "gate_name": "classroom",
+   "gate_thresholds": {
+    "median": 0.1,
+    "p90": 0.25,
+    "coverage": 0.25,
+    "outlier50": 0.05,
+    "band_deg": [
+     5.0,
+     40.0
+    ]
+   },
+   "interval_scale": 1.4874533063463462,
+   "m3_scale": 1.625204104083527,
+   "held_out_refs": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+   ],
+   "excluded_refs": [],
+   "imported_from": {
+    "frozen": "docs/runs/issue-10/frozen.json",
+    "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+    "source": "docs/runs/issue-10/stage5/both5",
+    "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+   },
+   "late_estimates_hashed_now": {
+    "r0005.npz": "6f8983534268b6bcfa992d345809f14ba086ec49eb3ab8320fa0310885b4ecaf",
+    "r0006.npz": "3b29797bcfeaa966d24280085fd8a9709a55177d3c1a3c9a10980bede614f7b3",
+    "r0007.npz": "5647adae1cf58f7a1e4977b0e42a0ca9dee27b90f265fffbf82fea3086b2eeba",
+    "r0008.npz": "a60992e1eb6a06bf7942ee3e8f131f7fa41db8402ad787d1d3d7d890f7b63da0",
+    "r0009.npz": "09ee01075950d580c654879392bca26efba189b92ddb006904b1cbf8ff5b05ac",
+    "r0010.npz": "27c9d892587994d29fbe881057551c26e2f808a8846b0da8d7ff09a31cf124b6",
+    "r0011.npz": "d2c017a79fa4ad6d457dda6f387be0dd9fc1917ae8043f1c7f456574a0323d23",
+    "r0012.npz": "cc9487dda3dfba0c7f3a448b202398fc3a844ea79e5ad338cf940e3737a7e5c7",
+    "r0013.npz": "55d051c7813dd9593c4509a97147106321619ee4ec33496437eb102b7ba48fcc",
+    "r0014.npz": "4b9df50c4fad2c739a103e989db58b840700165c734a137d1690af2c378bb4ed",
+    "r0015.npz": "3f48d585a228eb5f7e1ca3f7f9ac974cd2ed9fbc84fc5edd238c95f85c47842f",
+    "r0016.npz": "4578911b99425571fe460919e07af9bf66bcfc32e1fa671ad419528543549c41",
+    "r0017.npz": "221665b51ca68072d42bb6fbcedfeed7f18210c572c82d217d75644f89d8c826",
+    "r0018.npz": "b6ffbc93ae790f1b61af596071c2f907d8110c66a401718d8ef6ba0499b96ad2",
+    "r0019.npz": "7365991d8f669cf4445df8f6477196c7e7c94839e89060b7353e806b274492ac",
+    "r0020.npz": "b89c8a40e310c44c2e675be59279f88d2dd63ceb8367e5c979f4f0fe0934b893",
+    "r0021.npz": "d76512669fb5f3016c9a40bc4b6f94a8019f92c06a0ab815cec4ba03c95263c3",
+    "r0022.npz": "dffc09abb0ca6bc3703908c4e7c5dfccf45693aa9e129fa31b82ecbf6ccced8f",
+    "r0023.npz": "468e27d95b216149f5e24859086f210a3fc68575ee39192997073a2c95d11db8",
+    "r0024.npz": "4d76c01bd8477d557e4fb6e3eb44274edf43668aa07c24541b9148e743b0db66",
+    "r0025.npz": "a477efad49f8d053c620f519d38a0e45585348a40a7f68c1aabdefb616ec7050",
+    "r0026.npz": "8acd7b165b402fa833b95bb9dc5c3fdb4f8c19e3811bf19c1b64c35a806cd41c",
+    "r0027.npz": "9b5c4bebf850bb150f17c69cec6f6baaea5a786c443aa07582f2965d20cf2778",
+    "r0028.npz": "88daf344a6c57b454ee8b3531fb9edeed34e8df7bc403232dd7d22fbd644f479",
+    "r0029.npz": "9d26594243735d330502eb490c2d2a3028cc8da7a769a122db5e1a0afd5cb777",
+    "r0030.npz": "b5d9af28dfcb353100ba9cd9f65320c7214658ef233ebb6ac559d157eba0c203",
+    "r0031.npz": "3e2fb71b1b8c412c5aad6a4c6827b6f7a9b4620bf191c19b352b01cf559ff363",
+    "r0032.npz": "ecff42ebf14c16803c82b94206d19a0f31f771091029cdbaf864122e61529ac7",
+    "r0033.npz": "2b5fdd558f00b1556e961a3971dac13b72a10b1abf26b7e4ff38ec4f642907b5",
+    "r0034.npz": "01179dd586ed26449ba9816f43f86f56579f70e3c19ed735f3f67aedddbed60a",
+    "r0035.npz": "f3d9aa8d5e8df89eab2f49a8a0afc374560b57a345d74816c93c0076b4dfd933",
+    "r0036.npz": "648aa95b1f2a2e56e8d0222d2ee9bd24dc622a26884e0b1fd9715486ac5f0043",
+    "r0037.npz": "e69a9da839f8feeb89aa5f533643be363e9e9f10eedf8322f070ccfa2c900db0",
+    "r0038.npz": "31dd22e1b6e523b7b49fd80c8a3cdd462480521337a5b3badf29c4f32a5ad896",
+    "r0039.npz": "43e63d7f73f23e290b97206d716259ace045587647c083694af465a2e6a829c0",
+    "r0040.npz": "28eba914eb01a11b4aba2497dfc5cc9eccb0a25b57a6cdd7f45881ee7c009801"
+   },
+   "M4": {
+    "field_usable_of_all_hits": 0.45415705560633096,
+    "accepted_fraction": 0.49157242551872515,
+    "interval_coverage_interior": 0.9360181398325126,
+    "usable_interior_median_rel": 0.011586944484049453,
+    "usable_interior_p90_rel": 0.038200199816685536,
+    "fovea_usable": 0.25433809123985446,
+    "gate": {
+     "subset": 662643,
+     "accepted_usable": 244430,
+     "coverage_of_subset": 0.3688713228691769,
+     "median_rel": 0.011024662986728766,
+     "p90_rel": 0.03555022905892536,
+     "over_50pct": 0.0,
+     "gate_pass": true
+    }
+   },
+   "M3": {
+    "field_usable_of_all_hits": 0.19622242086010203,
+    "accepted_fraction": 0.2518056239288189,
+    "interval_coverage_interior": 0.9204837391253576,
+    "usable_interior_median_rel": 0.019701817668626317,
+    "usable_interior_p90_rel": 0.05776787579109411,
+    "fovea_usable": 0.04861111111111111,
+    "gate": {
+     "subset": 662643,
+     "accepted_usable": 73077,
+     "coverage_of_subset": 0.11028110158863823,
+     "median_rel": 0.01847280725643737,
+     "p90_rel": 0.052326644983642985,
+     "over_50pct": 0.00020526294182848228,
+     "gate_pass": false
+    }
+   },
+   "checks": [
+    {
+     "id": "M4.GATE",
+     "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+     "ok": true,
+     "control": "every step x 1.2",
+     "control_fails": true,
+     "control_detail": {
+      "subset": 662643,
+      "accepted_usable": 244430,
+      "coverage_of_subset": 0.3688713228691769,
+      "median_rel": 0.19842565733025064,
+      "p90_rel": 0.22898536902851183,
+      "over_50pct": 3.2729206725851984e-05,
+      "gate_pass": false
+     }
+    },
+    {
+     "id": "M4.COVER",
+     "what": "interior coverage of the 95 % intervals >= 0.9",
+     "ok": true,
+     "control": "intervals x 0.5",
+     "control_fails": true,
+     "control_detail": {
+      "coverage": 0.7459310575077206
+     }
+    }
+   ]
+  },
+  "A2": {
+   "schema": "foveal-motion-m4-eval-v2",
+   "window": "both5",
+   "gate_name": "classroom",
+   "gate_thresholds": {
+    "median": 0.1,
+    "p90": 0.25,
+    "coverage": 0.25,
+    "outlier50": 0.05,
+    "band_deg": [
+     5.0,
+     40.0
+    ]
+   },
+   "interval_scale": 1.4874533063463462,
+   "m3_scale": 1.625204104083527,
+   "held_out_refs": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+   ],
+   "excluded_refs": [],
+   "imported_from": {
+    "frozen": "docs/runs/issue-10/frozen.json",
+    "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+    "source": "docs/runs/issue-10/stage5/both5",
+    "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+   },
+   "late_estimates_hashed_now": {
+    "r0005.npz": "c9258d612fe87c3bd4f0621b25166f153dcc09529c09c764bfc0ed63e21428d1",
+    "r0006.npz": "f86012403b8acd25aee39fc039c68ecf2e47a0ee82f19b85679a8ffef35ba010",
+    "r0007.npz": "c8628358746acd718d6083db920091942e78ed4d4f9de280879a255c58f158ee",
+    "r0008.npz": "e82f550164b3c8252c603e56b833f0d6a970da1fd16a327ec7548d49358cb88f",
+    "r0009.npz": "a799821c4c905761881c4c1b340cb54f3bdfe3311f789fe15137e4d9ee75cbc3",
+    "r0010.npz": "2c56878bc45c3c9c6001677fef77ce1d3b91e03b2d73576b7bdae40a5c0f7548",
+    "r0011.npz": "88b1db319f46fc55a099e35894a828026cce55dfb42209f69533fdfbc22e2c0f",
+    "r0012.npz": "6c84cd0b1548f485a70d9eeec85d130e453a763da41c6ccde65029008688fea4",
+    "r0013.npz": "f65a0bb0fea1f3c73ced20daec5dfe7a784d71e0dae7cc8e9b8792b436cffe55",
+    "r0014.npz": "ef6ba2f7b9e8d1eab01d89893041635ee067b322439e33dff168c3b89af74404",
+    "r0015.npz": "9fa35aaa1f6501ccfa42d2862ac939151abfe9be68e2da42586820cb09def97c",
+    "r0016.npz": "55aa5d4a5c00659f87f6ccbe9039b1ebba1b4384e7b174002b7d95ddac8eb49d",
+    "r0017.npz": "7db3b907ceb24808f479d6c78e3bbd26a00dbaaababb33f3a3ad30c4604495e8",
+    "r0018.npz": "e9356b9699e6963a4d364cfc9364ddb3ec2205ebde6126e8ad799e90587e9bfb",
+    "r0019.npz": "d5e2b177deabf837023427523c0dd0fe721b2b96b04af20dbdac884d658d4325",
+    "r0020.npz": "ddbe6791a8bbf1d7f3f86920455ab8760b918c8274f4910073e3f28174fbcb7b",
+    "r0021.npz": "458a3b04ed94cc25842b7478256b2629d887fa02492bde3324d35413c502b59f",
+    "r0022.npz": "89bec9cf2dbf873b35330f8f0a5a8f8bca44bb97245915d4c5fdf1b392896490",
+    "r0023.npz": "e5587b795417522538d6e69d7f51912d7fc7fccb568c356d7e0fe44f0270beef",
+    "r0024.npz": "59913c226feb7cdcd6fc661b155994a1afc08e656a975777fc9aba4fe476e864",
+    "r0025.npz": "d3e41cedc24aeda7eff1b44fec0b0c211da7abb7e8f8765028a237c85183fa45",
+    "r0026.npz": "5c6e9713460b5372e2432625434cc06789766adf70722cc00f2fbbb956f3fd02",
+    "r0027.npz": "333c590552be087f100db547b6ba0335f79b27f29604f6a1a6652adb374bff67",
+    "r0028.npz": "6d16396e059f2f5c1be980773b52863ed99830163fe861546e775d189cfc115a",
+    "r0029.npz": "9a573602757756fdea7c8619d04a712837eb58b685649104c5c1a20296a7f431",
+    "r0030.npz": "31e9a7d1cfcc780f538ef1694a5fa8d90765e06d532542eec526c7408007a403",
+    "r0031.npz": "738cd9a528ec36d0a01e107facf768e5b2e2d78ee4c7e8634824062996c7376c",
+    "r0032.npz": "d5c349ea3c837a668073e20340dfec7caf243c43e670d3fbb9e5aa329f06d8c3",
+    "r0033.npz": "31fac14bec1e4fa168803c9ac12129f4b046051aee2cc560c14e7b1225223faa",
+    "r0034.npz": "2924e5d1afc49deadfd7c33501d85f7a8ac83fb7ffb3f43936575d77390d694c",
+    "r0035.npz": "341bb8abbd8917e518df14c787b9f919d401c4bdbe2bab58e6d7eb3aa73c7eb3",
+    "r0036.npz": "955073c2d276295e111d15227b41cb736c27172db886a755de440252982fe800",
+    "r0037.npz": "46f686062ea022fe0edd9e31f25e63c062649be77091e302267a6ff55a24ceda",
+    "r0038.npz": "6bdf8985c5287808308f81cbf91a2321102257d339958475efb0da999268638d",
+    "r0039.npz": "d5ffbf014e67a99206508948420e07684016b7d954301f756e68bc3176871e83",
+    "r0040.npz": "1443b6056104fad28da9dac39ccaa8d704d1c8036eac78d55ff0ac75dbee1414"
+   },
+   "M4": {
+    "field_usable_of_all_hits": 0.45459516127322463,
+    "accepted_fraction": 0.4916846716260074,
+    "interval_coverage_interior": 0.9369400509564083,
+    "usable_interior_median_rel": 0.01148581187999287,
+    "usable_interior_p90_rel": 0.03768770103625708,
+    "fovea_usable": 0.26170235096557515,
+    "gate": {
+     "subset": 664147,
+     "accepted_usable": 244239,
+     "coverage_of_subset": 0.36774840509706436,
+     "median_rel": 0.010888206206808018,
+     "p90_rel": 0.035019701787218874,
+     "over_50pct": 0.0,
+     "gate_pass": true
+    }
+   },
+   "M3": {
+    "field_usable_of_all_hits": 0.1976995320618792,
+    "accepted_fraction": 0.25312009991612877,
+    "interval_coverage_interior": 0.9209247671501485,
+    "usable_interior_median_rel": 0.019778233739177684,
+    "usable_interior_p90_rel": 0.05772711190572475,
+    "fovea_usable": 0.0494682339770501,
+    "gate": {
+     "subset": 664147,
+     "accepted_usable": 74089,
+     "coverage_of_subset": 0.11155512258581309,
+     "median_rel": 0.01866427923525591,
+     "p90_rel": 0.05246229800332616,
+     "over_50pct": 0.00017546464387425934,
+     "gate_pass": false
+    }
+   },
+   "checks": [
+    {
+     "id": "M4.GATE",
+     "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+     "ok": true,
+     "control": "every step x 1.2",
+     "control_fails": true,
+     "control_detail": {
+      "subset": 664147,
+      "accepted_usable": 244239,
+      "coverage_of_subset": 0.36774840509706436,
+      "median_rel": 0.19863223674819158,
+      "p90_rel": 0.22897087231532376,
+      "over_50pct": 3.2754801649204265e-05,
+      "gate_pass": false
+     }
+    },
+    {
+     "id": "M4.COVER",
+     "what": "interior coverage of the 95 % intervals >= 0.9",
+     "ok": true,
+     "control": "intervals x 0.5",
+     "control_fails": true,
+     "control_detail": {
+      "coverage": 0.7477016652821836
+     }
+    }
+   ]
+  },
+  "B0": {
+   "schema": "foveal-motion-m4-eval-v2",
+   "window": "both5",
+   "gate_name": "classroom",
+   "gate_thresholds": {
+    "median": 0.1,
+    "p90": 0.25,
+    "coverage": 0.25,
+    "outlier50": 0.05,
+    "band_deg": [
+     5.0,
+     40.0
+    ]
+   },
+   "interval_scale": 1.4874533063463462,
+   "m3_scale": 1.625204104083527,
+   "held_out_refs": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22
+   ],
+   "excluded_refs": [],
+   "imported_from": {
+    "frozen": "docs/runs/issue-10/frozen.json",
+    "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+    "source": "docs/runs/issue-10/stage5/both5",
+    "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+   },
+   "late_estimates_hashed_now": {
+    "r0005.npz": "ca7e443df5267c4358f40c58762ce315be3fafa99bb392d4bed1b34773c942a7",
+    "r0006.npz": "2bfe6c348202b04a5ee77e768ace425f71c2b770171e54a33d1083e9d71d9880",
+    "r0007.npz": "fabc7c5cc67ab4ee68be95b13ab838bb4533775c55674de7c06c5386273e9b91",
+    "r0008.npz": "848695f182367ec52e14e4d79fabb81e613660a534dc5d34dd8d92728172ec06",
+    "r0009.npz": "6c4557ff55c3820d9d9abf922891a05ec23baa5b3db80625e3ac696166b87cb7",
+    "r0010.npz": "8b660e7b9e5b66abea91c9c1dbfe7cc4190418eae65c0d7ae00cca2fb11ad8ef",
+    "r0011.npz": "3392be78048cc89b67a45ebd305a3a777645169004744002890079951e7a02fe",
+    "r0012.npz": "36f6b517324f02aa7cee928be049a54461d18687e253f62a5ef50f5f9ed19d62",
+    "r0013.npz": "3cff3f8a5c5ae3c7e2a61b7e42ba72ebcf1eddf832afe74d4f079a21251f5624",
+    "r0014.npz": "ff6c6ed7220ad2780d36ac0930ca7c8881640a2390322ab98e28fa04c308497a",
+    "r0015.npz": "992c5a4c540f93ce31867515160b42aa5ecb4c7b6da074227f7137ac0c825400",
+    "r0016.npz": "4c50af9ff355512fdda3284df19fadb4196c6136cc348f3c67dd5faf938b4048",
+    "r0017.npz": "635dbe931c88b4cefaa57a5f8c03e4a9a4fa22cd6dd9f30da1358706d108d960",
+    "r0018.npz": "058ce9ec65cc568b57625e46937c18c146504930be8d71719fb634bd8f34c8de",
+    "r0019.npz": "8b1a0337533cc547974176f55305c5ff05e0803527ae709d48738f213d2ff8f2",
+    "r0020.npz": "33e9a6fedb3bcbf51811fa19a82cb47b0b0e75b59e7af12356f1ec1d23f02e41",
+    "r0021.npz": "0b13a103f06ced7694b6af4d04608d90ce6da9b9346eb40791620612d6947e35",
+    "r0022.npz": "f9fc40abf5b4102a8b7a868be5c8f8adc3d0d09ea6b77e574a0a9207327e37dd"
+   },
+   "M4": {
+    "field_usable_of_all_hits": 0.40145240826575246,
+    "accepted_fraction": 0.41398529519016886,
+    "interval_coverage_interior": 0.9423981088298384,
+    "usable_interior_median_rel": 0.005436437266533652,
+    "usable_interior_p90_rel": 0.01840066105435735,
+    "fovea_usable": 0.4440945983767142,
+    "gate": {
+     "subset": 441774,
+     "accepted_usable": 171511,
+     "coverage_of_subset": 0.3882324446436413,
+     "median_rel": 0.005047405142659783,
+     "p90_rel": 0.01702102414094817,
+     "over_50pct": 0.006880025187888823,
+     "gate_pass": true
+    }
+   },
+   "M3": {
+    "field_usable_of_all_hits": 0.18163944644479368,
+    "accepted_fraction": 0.19458574918863727,
+    "interval_coverage_interior": 0.9571903619125512,
+    "usable_interior_median_rel": 0.012344773508171905,
+    "usable_interior_p90_rel": 0.03675008737104766,
+    "fovea_usable": 0.1151343408900084,
+    "gate": {
+     "subset": 441774,
+     "accepted_usable": 67315,
+     "coverage_of_subset": 0.15237429092703508,
+     "median_rel": 0.011298122672679994,
+     "p90_rel": 0.03279241512389607,
+     "over_50pct": 0.0046943474708460225,
+     "gate_pass": false
+    }
+   },
+   "checks": [
+    {
+     "id": "M4.GATE",
+     "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+     "ok": true,
+     "control": "every step x 1.2",
+     "control_fails": true,
+     "control_detail": {
+      "subset": 441774,
+      "accepted_usable": 171511,
+      "coverage_of_subset": 0.3882324446436413,
+      "median_rel": 0.20002073689446584,
+      "p90_rel": 0.21390408372476263,
+      "over_50pct": 0.00622700584802141,
+      "gate_pass": false
+     }
+    },
+    {
+     "id": "M4.COVER",
+     "what": "interior coverage of the 95 % intervals >= 0.9",
+     "ok": true,
+     "control": "intervals x 0.5",
+     "control_fails": true,
+     "control_detail": {
+      "coverage": 0.713518364488027
+     }
+    }
+   ]
+  },
+  "B1": {
+   "schema": "foveal-motion-m4-eval-v2",
+   "window": "both5",
+   "gate_name": "classroom",
+   "gate_thresholds": {
+    "median": 0.1,
+    "p90": 0.25,
+    "coverage": 0.25,
+    "outlier50": 0.05,
+    "band_deg": [
+     5.0,
+     40.0
+    ]
+   },
+   "interval_scale": 1.4874533063463462,
+   "m3_scale": 1.625204104083527,
+   "held_out_refs": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+   ],
+   "excluded_refs": [],
+   "imported_from": {
+    "frozen": "docs/runs/issue-10/frozen.json",
+    "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+    "source": "docs/runs/issue-10/stage5/both5",
+    "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+   },
+   "late_estimates_hashed_now": {
+    "r0005.npz": "02afb0f771bad4b63998316b970ec531241aa99faeff6f2f56b401a17e147c92",
+    "r0006.npz": "e73d2487614ba22d538800cf7b61bff5e48f6773f47700cf038f4af07995f35e",
+    "r0007.npz": "7114f6debe2d60d3edc964495bcc104c3c58674d85cc0b2c41e7b6317f7a2d4b",
+    "r0008.npz": "ad7d5f5623e221818936237b30c00cde2ab219323828fa3f7959daad7e107de3",
+    "r0009.npz": "6f850b407e2dd16e6da0775d0fe515ba5cc7984af500664ae5a1e5c42502938b",
+    "r0010.npz": "3a01e8602f7d3604eb91648a6949d069bb7c4d1d3bedc052ee5c6c0fd15d38ee",
+    "r0011.npz": "1f4c3f34e3d53c483dcd2dac057daf9137eae4ebaeb94c0084a774afe922d0ab",
+    "r0012.npz": "c0da4d45aba10d98c7d5c773491752c4856d18b102abe5284f736e24872ac700",
+    "r0013.npz": "ae13d0978d37dc0ce0a19165851f4a5fe0355d9ffca7330006de356f332034db",
+    "r0014.npz": "80e7105279c020e584f5af43e0f250d73c7763369ee1351568bf22336a631e24",
+    "r0015.npz": "f364e1ab9a4b3059f2c7b9b80d508f24a84f3506a8946a45c5b771c94c0a70dd",
+    "r0016.npz": "85f6fd0934e138736592a39018d9717b558f66b18559d80e382e70dcf9568ca7",
+    "r0017.npz": "153e9546bd1441ddf481d3212b86a4173a4a17bc5cd3189e19ed870d56cb83d3",
+    "r0018.npz": "b1bbe0f901b69a3c8887a018a32a77879cacadcaaa5efa9808b0a4cbb37734c1",
+    "r0019.npz": "5262396911406333ce235fcb8aeef568cca5df54cbf84254fe2be8ffacb895ab",
+    "r0020.npz": "596e1df4ad9d93a90cc5ab14f316c648b9141bbbe4a0524a328cd77ff6b07e8a",
+    "r0021.npz": "6c8ec4803fc6cb38014c403ceb008d95f2ed0b4dc2ba085198e50ca20e852463"
+   },
+   "M4": {
+    "field_usable_of_all_hits": 0.40407665582694513,
+    "accepted_fraction": 0.4167201586903222,
+    "interval_coverage_interior": 0.9439819834072392,
+    "usable_interior_median_rel": 0.005544915111588306,
+    "usable_interior_p90_rel": 0.01849095774271162,
+    "fovea_usable": 0.4485849755519336,
+    "gate": {
+     "subset": 415505,
+     "accepted_usable": 161817,
+     "coverage_of_subset": 0.38944657705683444,
+     "median_rel": 0.005166871617594898,
+     "p90_rel": 0.017101472308609963,
+     "over_50pct": 0.006841061198761564,
+     "gate_pass": true
+    }
+   },
+   "M3": {
+    "field_usable_of_all_hits": 0.1829556983429151,
+    "accepted_fraction": 0.1961005521342111,
+    "interval_coverage_interior": 0.9566242446438381,
+    "usable_interior_median_rel": 0.012587717902294869,
+    "usable_interior_p90_rel": 0.03737370693540477,
+    "fovea_usable": 0.11801748407171433,
+    "gate": {
+     "subset": 415505,
+     "accepted_usable": 63083,
+     "coverage_of_subset": 0.15182248107724336,
+     "median_rel": 0.011614224515820597,
+     "p90_rel": 0.03341415172897502,
+     "over_50pct": 0.004676378739121475,
+     "gate_pass": false
+    }
+   },
+   "checks": [
+    {
+     "id": "M4.GATE",
+     "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+     "ok": true,
+     "control": "every step x 1.2",
+     "control_fails": true,
+     "control_detail": {
+      "subset": 415505,
+      "accepted_usable": 161817,
+      "coverage_of_subset": 0.38944657705683444,
+      "median_rel": 0.20007990784548016,
+      "p90_rel": 0.21404970582526436,
+      "over_50pct": 0.006420833410581088,
+      "gate_pass": false
+     }
+    },
+    {
+     "id": "M4.COVER",
+     "what": "interior coverage of the 95 % intervals >= 0.9",
+     "ok": true,
+     "control": "intervals x 0.5",
+     "control_fails": true,
+     "control_detail": {
+      "coverage": 0.7193282863298172
+     }
+    }
+   ]
+  },
+  "B2": {
+   "schema": "foveal-motion-m4-eval-v2",
+   "window": "both5",
+   "gate_name": "classroom",
+   "gate_thresholds": {
+    "median": 0.1,
+    "p90": 0.25,
+    "coverage": 0.25,
+    "outlier50": 0.05,
+    "band_deg": [
+     5.0,
+     40.0
+    ]
+   },
+   "interval_scale": 1.4874533063463462,
+   "m3_scale": 1.625204104083527,
+   "held_out_refs": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+   ],
+   "excluded_refs": [],
+   "imported_from": {
+    "frozen": "docs/runs/issue-10/frozen.json",
+    "frozen_sha256": "1342c212446854b33d4fb87b3b99b59109ab9b22f3eed993b65f383fb8b91433",
+    "source": "docs/runs/issue-10/stage5/both5",
+    "source_freeze_sha256": "70aa35ec3f560492692c5dabc801f29f7c1a60d7de93ee5715b73cc94573271b"
+   },
+   "late_estimates_hashed_now": {
+    "r0005.npz": "42167ab8aaa7ce10aba1412d3758160e48f240ab3785cb15687f00d89608018b",
+    "r0006.npz": "96164a387afead0661191952f6a761fddbb00346eb069a2cb67c8f7383ad7a01",
+    "r0007.npz": "16a5051dbb1dceb3659a907db08bfdc66f191899b0fc262485a9a10f0fceadea",
+    "r0008.npz": "2de86d986dc2a8c01bd54ab9af00e3f43ab4038acd8260deaeb0f47c9f0d011b",
+    "r0009.npz": "40c3b9bd6d4187f9c2c9528e06f55d0f7e10180ee8b3a0583071e554df351f32",
+    "r0010.npz": "191a431002d8dcdef07dc5de47b70fb17ed6ce328eec6e1b894efb7e9993da6f",
+    "r0011.npz": "6bc61b4da77dd8b3f4326d4eb9af0b41f18d20c0a038555e6e1691e784c15521",
+    "r0012.npz": "68372d94d9175909dedae48c5d01b858243025e5e950f9a36392a375953aefb3",
+    "r0013.npz": "0106701b3e4d242a5fc759ac33577b7f45874ac22eeb933143a689b24e7c4a78",
+    "r0014.npz": "d46927a01cb6933348df0a96118d4977fd3d93547d64bd885abfe9159afbf91c",
+    "r0015.npz": "ec0a122f62be9b418674cde69564eb8d2456973fdcc4cfcf76bf3ec9e9f5e4b7",
+    "r0016.npz": "f51c09067b0edeffb3acbaec1d737b05bc72beb8df69da15871ef3edc86be1c2",
+    "r0017.npz": "517062dac28d51c44b12ee2bdeb279fe0dd2d4a1ed7fbfe25b59b87fd5855ce3",
+    "r0018.npz": "d3dab9f483ec530f15f9f8beec4aaff055e8c73fc02435a9de18ed26e398f9bc",
+    "r0019.npz": "6994442d81067408fd894666a616f79c2dfe5622f75bc8a6fd1ddd447a50ffc6",
+    "r0020.npz": "7fdbd6bf35bdb81b0b0f232698d12281ab6be06d65b9e703395e67053a87f23a",
+    "r0021.npz": "5478498d291128758d56146bf96a53a75a4f70af6784e2b4fe2128bc7fb73e61"
+   },
+   "M4": {
+    "field_usable_of_all_hits": 0.4008984604006913,
+    "accepted_fraction": 0.41341652348500935,
+    "interval_coverage_interior": 0.9443270333917034,
+    "usable_interior_median_rel": 0.005451848114791141,
+    "usable_interior_p90_rel": 0.018234978938219987,
+    "fovea_usable": 0.46310564528078235,
+    "gate": {
+     "subset": 417923,
+     "accepted_usable": 161564,
+     "coverage_of_subset": 0.38658795998305906,
+     "median_rel": 0.005044041475422606,
+     "p90_rel": 0.01679880610692528,
+     "over_50pct": 0.007056027332821668,
+     "gate_pass": true
+    }
+   },
+   "M3": {
+    "field_usable_of_all_hits": 0.18117118139702518,
+    "accepted_fraction": 0.19398781829765052,
+    "interval_coverage_interior": 0.9582000182832069,
+    "usable_interior_median_rel": 0.012202471333861271,
+    "usable_interior_p90_rel": 0.03689256785636998,
+    "fovea_usable": 0.12142539635501556,
+    "gate": {
+     "subset": 417923,
+     "accepted_usable": 63188,
+     "coverage_of_subset": 0.15119531588354793,
+     "median_rel": 0.01115401248472855,
+     "p90_rel": 0.033025178691931015,
+     "over_50pct": 0.005000949547382415,
+     "gate_pass": false
+    }
+   },
+   "checks": [
+    {
+     "id": "M4.GATE",
+     "what": "#5's classroom gate on M3's subset (5-40 deg): median <= 0.1, p90 <= 0.25, coverage >= 0.25, > 50 % errors <= 0.05",
+     "ok": true,
+     "control": "every step x 1.2",
+     "control_fails": true,
+     "control_detail": {
+      "subset": 417923,
+      "accepted_usable": 161564,
+      "coverage_of_subset": 0.38658795998305906,
+      "median_rel": 0.1999689414385717,
+      "p90_rel": 0.21369622342437333,
+      "over_50pct": 0.0063751825901809805,
+      "gate_pass": false
+     }
+    },
+    {
+     "id": "M4.COVER",
+     "what": "interior coverage of the 95 % intervals >= 0.9",
+     "ok": true,
+     "control": "intervals x 0.5",
+     "control_fails": true,
+     "control_detail": {
+      "coverage": 0.719284881533538
+     }
+    }
+   ]
+  }
+ }
+}

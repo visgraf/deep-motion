@@ -1,0 +1,34 @@
+23:41:13 $ .venv/bin/python -m motion.dolly demo-video --out runs/d1-classroom --color error --best
+23:41:19 /home/lvelho/rd/foveal-motion/motion/demo_video.py:53: RuntimeWarning: invalid value encountered in cast
+23:41:19   i = np.minimum(np.floor(v).astype(int), len(_STOPS) - 2)
+23:41:19 Traceback (most recent call last):
+23:41:19   File "<frozen runpy>", line 198, in _run_module_as_main
+23:41:19   File "<frozen runpy>", line 88, in _run_code
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 692, in <module>
+23:41:19     sys.exit(main())
+23:41:19              ^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/dolly.py", line 577, in main
+23:41:19     return demo.main(args)
+23:41:19            ^^^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo.py", line 175, in main
+23:41:19     return demo_steps.dispatch(a)
+23:41:19            ^^^^^^^^^^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo_steps.py", line 340, in dispatch
+23:41:19     return {"demo-estimate": estimate, "demo-fuse": fuse_cmd, "demo-checks": checks, "demo-topview": topview,
+23:41:19            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo_video.py", line 337, in video
+23:41:19     img = frame(ctx, f)
+23:41:19           ^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo_video.py", line 304, in frame
+23:41:19     im.paste(cloud_panel(ctx, f), CLOUD[:2])
+23:41:19              ^^^^^^^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo_video.py", line 279, in cloud_panel
+23:41:19     c = ctx.colours(F)
+23:41:19         ^^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo_video.py", line 130, in colours
+23:41:19     return ramp(F["rel"] / ERR_MAX)
+23:41:19            ^^^^^^^^^^^^^^^^^^^^^^^^
+23:41:19   File "/home/lvelho/rd/foveal-motion/motion/demo_video.py", line 55, in ramp
+23:41:19     return (_STOPS[i] * (1 - f) + _STOPS[i + 1] * f + 0.5).astype(np.uint8)
+23:41:19             ~~~~~~^^^
+23:41:19 IndexError: index -9223372036854775808 is out of bounds for axis 0 with size 10

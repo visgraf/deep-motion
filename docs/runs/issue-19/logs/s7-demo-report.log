@@ -1,0 +1,182 @@
+22:47:30 $ .venv/bin/python -m motion.dolly demo-report --out runs/d1-classroom
+22:47:33 /home/lvelho/rd/foveal-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+22:47:33   den = cm - 2 * c1 + cp
+22:47:38 /home/lvelho/rd/foveal-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+22:47:38   return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+22:47:40 /home/lvelho/rd/foveal-motion/motion/matcher.py:294: RuntimeWarning: invalid value encountered in subtract
+22:47:40   r = Ib - alpha[:, None] * Ia - beta[:, None]
+22:47:40 /home/lvelho/rd/foveal-motion/motion/matcher.py:295: RuntimeWarning: invalid value encountered in multiply
+22:47:40   cols = [alpha[:, None] * dI, -Ia, -np.ones_like(Ia)]
+22:47:40 /home/lvelho/rd/foveal-motion/motion/matcher.py:297: RuntimeWarning: invalid value encountered in multiply
+22:47:40   cols.insert(1, alpha[:, None] * dI * u)
+22:47:41 /home/lvelho/rd/foveal-motion/motion/matcher.py:317: RuntimeWarning: invalid value encountered in subtract
+22:47:41   r = Ib - alpha[:, None] * Ia - beta[:, None]
+22:47:41 /home/lvelho/rd/foveal-motion/motion/matcher.py:318: RuntimeWarning: invalid value encountered in multiply
+22:47:41   cols = [alpha[:, None] * dI, -Ia, -np.ones_like(Ia)]
+22:47:41 /home/lvelho/rd/foveal-motion/motion/matcher.py:320: RuntimeWarning: invalid value encountered in multiply
+22:47:41   cols.insert(1, alpha[:, None] * dI * u)
+22:47:46 [m4] held-out r 5: M4 usable 0.436, M3 usable 0.143
+22:48:00 /home/lvelho/rd/foveal-motion/motion/matcher.py:248: RuntimeWarning: invalid value encountered in subtract
+22:48:00   r = Ib - alpha[:, None] * Ia - beta[:, None]
+22:48:00 /home/lvelho/rd/foveal-motion/motion/matcher.py:249: RuntimeWarning: invalid value encountered in multiply
+22:48:00   J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
+22:48:01 [m4] held-out r 6: M4 usable 0.434, M3 usable 0.143
+22:48:16 [m4] held-out r 7: M4 usable 0.431, M3 usable 0.143
+22:48:31 [m4] held-out r 8: M4 usable 0.434, M3 usable 0.143
+22:48:46 [m4] held-out r 9: M4 usable 0.439, M3 usable 0.148
+22:49:01 [m4] held-out r 10: M4 usable 0.437, M3 usable 0.146
+22:49:16 [m4] held-out r 11: M4 usable 0.436, M3 usable 0.155
+22:49:32 [m4] held-out r 12: M4 usable 0.443, M3 usable 0.156
+22:49:47 [m4] held-out r 13: M4 usable 0.444, M3 usable 0.160
+22:50:02 [m4] held-out r 14: M4 usable 0.442, M3 usable 0.164
+22:50:17 [m4] held-out r 15: M4 usable 0.436, M3 usable 0.176
+22:50:32 [m4] held-out r 16: M4 usable 0.445, M3 usable 0.179
+22:50:47 [m4] held-out r 17: M4 usable 0.447, M3 usable 0.185
+22:51:02 [m4] held-out r 18: M4 usable 0.453, M3 usable 0.200
+22:51:18 [m4] held-out r 19: M4 usable 0.453, M3 usable 0.201
+22:51:33 [m4] held-out r 20: M4 usable 0.461, M3 usable 0.210
+22:51:48 [m4] held-out r 21: M4 usable 0.462, M3 usable 0.211
+22:52:03 [m4] held-out r 22: M4 usable 0.476, M3 usable 0.217
+22:52:18 [m4] held-out r 23: M4 usable 0.480, M3 usable 0.219
+22:52:33 [m4] held-out r 24: M4 usable 0.482, M3 usable 0.213
+22:52:48 [m4] held-out r 25: M4 usable 0.485, M3 usable 0.207
+22:53:03 [m4] held-out r 26: M4 usable 0.485, M3 usable 0.215
+22:53:19 [m4] held-out r 27: M4 usable 0.492, M3 usable 0.212
+22:53:34 [m4] held-out r 28: M4 usable 0.499, M3 usable 0.214
+22:53:49 [m4] held-out r 29: M4 usable 0.504, M3 usable 0.210
+22:54:04 [m4] held-out r 30: M4 usable 0.492, M3 usable 0.217
+22:54:19 [m4] held-out r 31: M4 usable 0.486, M3 usable 0.223
+22:54:34 [m4] held-out r 32: M4 usable 0.486, M3 usable 0.240
+22:54:49 [m4] held-out r 33: M4 usable 0.480, M3 usable 0.244
+22:55:04 [m4] held-out r 34: M4 usable 0.479, M3 usable 0.250
+22:55:20 [m4] held-out r 35: M4 usable 0.475, M3 usable 0.246
+22:55:35 [m4] held-out r 36: M4 usable 0.476, M3 usable 0.233
+22:55:50 [m4] held-out r 37: M4 usable 0.486, M3 usable 0.239
+22:56:06 [m4] held-out r 38: M4 usable 0.497, M3 usable 0.240
+22:56:21 [m4] held-out r 39: M4 usable 0.484, M3 usable 0.241
+22:56:36 [m4] held-out r 40: M4 usable 0.491, M3 usable 0.257
+22:56:52 [m4] held-out r 41: M4 usable 0.500, M3 usable 0.265
+22:57:07 [m4] held-out r 5: M4 usable 0.432, M3 usable 0.139
+22:57:22 [m4] held-out r 6: M4 usable 0.433, M3 usable 0.141
+22:57:37 [m4] held-out r 7: M4 usable 0.430, M3 usable 0.143
+22:57:52 [m4] held-out r 8: M4 usable 0.434, M3 usable 0.146
+22:58:07 [m4] held-out r 9: M4 usable 0.435, M3 usable 0.154
+22:58:23 [m4] held-out r 10: M4 usable 0.431, M3 usable 0.148
+22:58:38 [m4] held-out r 11: M4 usable 0.435, M3 usable 0.158
+22:58:53 [m4] held-out r 12: M4 usable 0.438, M3 usable 0.157
+22:59:08 [m4] held-out r 13: M4 usable 0.441, M3 usable 0.162
+22:59:24 [m4] held-out r 14: M4 usable 0.441, M3 usable 0.163
+22:59:39 [m4] held-out r 15: M4 usable 0.441, M3 usable 0.176
+22:59:54 [m4] held-out r 16: M4 usable 0.442, M3 usable 0.183
+23:00:09 [m4] held-out r 17: M4 usable 0.446, M3 usable 0.188
+23:00:25 [m4] held-out r 18: M4 usable 0.446, M3 usable 0.207
+23:00:40 [m4] held-out r 19: M4 usable 0.455, M3 usable 0.202
+23:00:55 [m4] held-out r 20: M4 usable 0.464, M3 usable 0.211
+23:01:10 [m4] held-out r 21: M4 usable 0.463, M3 usable 0.211
+23:01:25 [m4] held-out r 22: M4 usable 0.473, M3 usable 0.214
+23:01:40 [m4] held-out r 23: M4 usable 0.481, M3 usable 0.220
+23:01:56 [m4] held-out r 24: M4 usable 0.478, M3 usable 0.213
+23:02:11 [m4] held-out r 25: M4 usable 0.480, M3 usable 0.209
+23:02:27 [m4] held-out r 26: M4 usable 0.482, M3 usable 0.207
+23:02:43 [m4] held-out r 27: M4 usable 0.491, M3 usable 0.209
+23:02:58 [m4] held-out r 28: M4 usable 0.499, M3 usable 0.214
+23:03:14 [m4] held-out r 29: M4 usable 0.502, M3 usable 0.213
+23:03:29 [m4] held-out r 30: M4 usable 0.488, M3 usable 0.219
+23:03:44 [m4] held-out r 31: M4 usable 0.486, M3 usable 0.231
+23:03:59 [m4] held-out r 32: M4 usable 0.483, M3 usable 0.238
+23:04:14 [m4] held-out r 33: M4 usable 0.476, M3 usable 0.249
+23:04:29 [m4] held-out r 34: M4 usable 0.470, M3 usable 0.244
+23:04:45 [m4] held-out r 35: M4 usable 0.471, M3 usable 0.239
+23:05:00 [m4] held-out r 36: M4 usable 0.476, M3 usable 0.237
+23:05:15 [m4] held-out r 37: M4 usable 0.479, M3 usable 0.235
+23:05:30 [m4] held-out r 38: M4 usable 0.493, M3 usable 0.233
+23:05:45 [m4] held-out r 39: M4 usable 0.486, M3 usable 0.243
+23:06:01 [m4] held-out r 40: M4 usable 0.495, M3 usable 0.257
+23:06:16 [m4] held-out r 5: M4 usable 0.429, M3 usable 0.141
+23:06:31 [m4] held-out r 6: M4 usable 0.435, M3 usable 0.142
+23:06:46 [m4] held-out r 7: M4 usable 0.432, M3 usable 0.143
+23:07:01 [m4] held-out r 8: M4 usable 0.433, M3 usable 0.147
+23:07:16 [m4] held-out r 9: M4 usable 0.431, M3 usable 0.148
+23:07:31 [m4] held-out r 10: M4 usable 0.431, M3 usable 0.154
+23:07:46 [m4] held-out r 11: M4 usable 0.433, M3 usable 0.155
+23:08:01 [m4] held-out r 12: M4 usable 0.437, M3 usable 0.161
+23:08:16 [m4] held-out r 13: M4 usable 0.441, M3 usable 0.162
+23:08:32 [m4] held-out r 14: M4 usable 0.441, M3 usable 0.168
+23:08:47 [m4] held-out r 15: M4 usable 0.440, M3 usable 0.176
+23:09:02 [m4] held-out r 16: M4 usable 0.441, M3 usable 0.182
+23:09:17 [m4] held-out r 17: M4 usable 0.451, M3 usable 0.192
+23:09:32 [m4] held-out r 18: M4 usable 0.449, M3 usable 0.202
+23:09:47 [m4] held-out r 19: M4 usable 0.457, M3 usable 0.206
+23:10:02 [m4] held-out r 20: M4 usable 0.465, M3 usable 0.208
+23:10:17 [m4] held-out r 21: M4 usable 0.471, M3 usable 0.217
+23:10:32 [m4] held-out r 22: M4 usable 0.474, M3 usable 0.215
+23:10:48 [m4] held-out r 23: M4 usable 0.482, M3 usable 0.216
+23:11:03 [m4] held-out r 24: M4 usable 0.482, M3 usable 0.211
+23:11:18 [m4] held-out r 25: M4 usable 0.481, M3 usable 0.207
+23:11:33 [m4] held-out r 26: M4 usable 0.487, M3 usable 0.209
+23:11:48 [m4] held-out r 27: M4 usable 0.496, M3 usable 0.211
+23:12:03 [m4] held-out r 28: M4 usable 0.498, M3 usable 0.212
+23:12:18 [m4] held-out r 29: M4 usable 0.495, M3 usable 0.213
+23:12:33 [m4] held-out r 30: M4 usable 0.490, M3 usable 0.216
+23:12:49 [m4] held-out r 31: M4 usable 0.486, M3 usable 0.234
+23:13:04 [m4] held-out r 32: M4 usable 0.477, M3 usable 0.242
+23:13:19 [m4] held-out r 33: M4 usable 0.475, M3 usable 0.250
+23:13:34 [m4] held-out r 34: M4 usable 0.474, M3 usable 0.250
+23:13:50 [m4] held-out r 35: M4 usable 0.472, M3 usable 0.244
+23:14:05 [m4] held-out r 36: M4 usable 0.476, M3 usable 0.238
+23:14:20 [m4] held-out r 37: M4 usable 0.488, M3 usable 0.242
+23:14:36 [m4] held-out r 38: M4 usable 0.486, M3 usable 0.240
+23:14:51 [m4] held-out r 39: M4 usable 0.485, M3 usable 0.250
+23:15:06 [m4] held-out r 40: M4 usable 0.493, M3 usable 0.264
+23:15:22 [m4] held-out r 5: M4 usable 0.412, M3 usable 0.179
+23:15:38 [m4] held-out r 6: M4 usable 0.412, M3 usable 0.185
+23:15:54 [m4] held-out r 7: M4 usable 0.416, M3 usable 0.185
+23:16:10 [m4] held-out r 8: M4 usable 0.413, M3 usable 0.186
+23:16:26 [m4] held-out r 9: M4 usable 0.420, M3 usable 0.186
+23:16:42 [m4] held-out r 10: M4 usable 0.428, M3 usable 0.187
+23:16:58 [m4] held-out r 11: M4 usable 0.422, M3 usable 0.189
+23:17:14 [m4] held-out r 12: M4 usable 0.419, M3 usable 0.190
+23:17:30 [m4] held-out r 13: M4 usable 0.421, M3 usable 0.187
+23:17:46 [m4] held-out r 14: M4 usable 0.425, M3 usable 0.188
+23:18:03 [m4] held-out r 15: M4 usable 0.430, M3 usable 0.190
+23:18:19 [m4] held-out r 16: M4 usable 0.426, M3 usable 0.195
+23:18:35 [m4] held-out r 17: M4 usable 0.420, M3 usable 0.193
+23:18:52 [m4] held-out r 18: M4 usable 0.407, M3 usable 0.188
+23:19:08 [m4] held-out r 19: M4 usable 0.406, M3 usable 0.189
+23:19:24 [m4] held-out r 20: M4 usable 0.401, M3 usable 0.186
+23:19:41 [m4] held-out r 21: M4 usable 0.388, M3 usable 0.186
+23:19:57 [m4] held-out r 22: M4 usable 0.384, M3 usable 0.181
+23:20:13 [m4] held-out r 5: M4 usable 0.412, M3 usable 0.182
+23:20:29 [m4] held-out r 6: M4 usable 0.409, M3 usable 0.181
+23:20:46 [m4] held-out r 7: M4 usable 0.413, M3 usable 0.190
+23:21:01 [m4] held-out r 8: M4 usable 0.417, M3 usable 0.187
+23:21:18 [m4] held-out r 9: M4 usable 0.426, M3 usable 0.190
+23:21:34 [m4] held-out r 10: M4 usable 0.427, M3 usable 0.182
+23:21:50 [m4] held-out r 11: M4 usable 0.427, M3 usable 0.190
+23:22:05 [m4] held-out r 12: M4 usable 0.428, M3 usable 0.194
+23:22:21 [m4] held-out r 13: M4 usable 0.429, M3 usable 0.191
+23:22:37 [m4] held-out r 14: M4 usable 0.426, M3 usable 0.186
+23:22:53 [m4] held-out r 15: M4 usable 0.427, M3 usable 0.190
+23:23:10 [m4] held-out r 16: M4 usable 0.428, M3 usable 0.196
+23:23:26 [m4] held-out r 17: M4 usable 0.416, M3 usable 0.191
+23:23:42 [m4] held-out r 18: M4 usable 0.414, M3 usable 0.193
+23:23:59 [m4] held-out r 19: M4 usable 0.398, M3 usable 0.191
+23:24:15 [m4] held-out r 20: M4 usable 0.398, M3 usable 0.188
+23:24:31 [m4] held-out r 21: M4 usable 0.389, M3 usable 0.185
+23:24:48 [m4] held-out r 5: M4 usable 0.408, M3 usable 0.185
+23:25:04 [m4] held-out r 6: M4 usable 0.403, M3 usable 0.181
+23:25:20 [m4] held-out r 7: M4 usable 0.408, M3 usable 0.181
+23:25:36 [m4] held-out r 8: M4 usable 0.415, M3 usable 0.189
+23:25:52 [m4] held-out r 9: M4 usable 0.420, M3 usable 0.185
+23:26:08 [m4] held-out r 10: M4 usable 0.423, M3 usable 0.185
+23:26:24 [m4] held-out r 11: M4 usable 0.423, M3 usable 0.182
+23:26:40 [m4] held-out r 12: M4 usable 0.423, M3 usable 0.189
+23:26:56 [m4] held-out r 13: M4 usable 0.427, M3 usable 0.189
+23:27:12 [m4] held-out r 14: M4 usable 0.427, M3 usable 0.188
+23:27:28 [m4] held-out r 15: M4 usable 0.428, M3 usable 0.192
+23:27:44 [m4] held-out r 16: M4 usable 0.420, M3 usable 0.189
+23:28:00 [m4] held-out r 17: M4 usable 0.416, M3 usable 0.189
+23:28:16 [m4] held-out r 18: M4 usable 0.411, M3 usable 0.196
+23:28:32 [m4] held-out r 19: M4 usable 0.402, M3 usable 0.186
+23:28:48 [m4] held-out r 20: M4 usable 0.391, M3 usable 0.188
+23:29:05 [m4] held-out r 21: M4 usable 0.383, M3 usable 0.180

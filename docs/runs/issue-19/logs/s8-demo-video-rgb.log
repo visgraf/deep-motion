@@ -1,0 +1,2 @@
+23:29:05 $ .venv/bin/python -m motion.dolly demo-video --out runs/d1-classroom --color rgb --best
+23:41:13 [demo] 496 frames, 20.7 s -> runs/d1-classroom/video/d1_tour_classroom_L_rgb.mp4
