@@ -22,15 +22,16 @@ CELL = 0.02
 STEP = 0.025
 PIECES = (("line", 0.30, 0.0), ("arc", 0.30, 1.0 / 1.6), ("line", 0.30, 0.0))
 SEG_NAMES = ("line A", "arc", "line B")
+PATHS = {"composed": PIECES, "straight": (("line", 0.90, 0.0),)}   # straight: the same length, for comparison
 
 
 def composed_path(pieces=PIECES, p0=(0.0, 0.0), phi0=np.pi / 2, h=1.6):
     return pr.Path([pr.Piece(k, L, kap) for k, L, kap in pieces], p0, phi0, h)
 
 
-def path_poses(path=None, step=STEP):
+def path_poses(path=None, step=STEP, kind="composed"):
     """[(s, c, R, piece)] every `step` of arc length over the whole path, joins included once."""
-    path = path or composed_path()
+    path = path or composed_path(PATHS[kind])
     total = sum(pc.length for pc in path.pieces)
     out = []
     for s in np.arange(0.0, total + 1e-9, step):
@@ -173,15 +174,15 @@ def progress(P, vis, looks, fan, seg, sigma_px=0.5):
     return frac, first_seg
 
 
-def selftest(run_dirs, fan=None, cell=CELL, seed=7):
+def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind="composed"):
     looks = load_looks(run_dirs)
     fan = fan or sn.SlitFan(width=int(json.loads((Path(run_dirs[0]) / "run.json").read_text())["carrier"]["width"]))
     s = np.array([lk[3] for lk in looks])
-    ends = np.cumsum([L for _, L, _ in PIECES])
+    ends = np.cumsum([L for _, L, _ in PATHS[kind]])
     seg = np.searchsorted(ends - 1e-9, s)        # a join belongs to the piece it ends, as in path_poses
     P = cells(looks, cell)
     rng = np.random.default_rng(seed)
-    res, num = [], {"cells": int(len(P)), "looks": len(looks), "cell_m": cell}
+    res, num = [], {"path": kind, "cells": int(len(P)), "looks": len(looks), "cell_m": cell}
     X0, H, vis = fuse(looks, P, fan)
     seen2 = vis.sum(1) >= 2
     rmin = np.min(np.where(vis, np.stack([np.linalg.norm(P - lk[1], axis=-1) for lk in looks], 1), np.inf), 1)
@@ -232,6 +233,7 @@ def selftest(run_dirs, fan=None, cell=CELL, seed=7):
     frac, fseg = progress(P[sub], vis[sub], looks, fan, seg, 0.5)
     num["progress_cells"] = int(len(sub))
     num["progress_0.5px"] = {"s_m": s.tolist(), "usable": frac}
-    num["first_usable_segment_0.5px"] = {SEG_NAMES[i]: float(np.mean(fseg == i)) for i in range(len(SEG_NAMES))}
+    names = SEG_NAMES if kind == "composed" else ("line",)
+    num["first_usable_segment_0.5px"] = {names[i]: float(np.mean(fseg == i)) for i in range(len(names))}
     num["first_usable_segment_0.5px"]["never"] = float(np.mean(fseg < 0))
     return res, num, {"P": P, "vis": vis, "H": H, "sub": sub, "first_seg": fseg, "seg": seg, "s": s}
