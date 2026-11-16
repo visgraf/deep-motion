@@ -426,6 +426,14 @@ def m6_selftest(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def m6_figures(a) -> int:
+    """M6 T0 figures (#22): #21's information model from the poses alone."""
+    from . import m6_figures
+    for f in m6_figures.all_figures(a.out):
+        print(f"{PREFIX} M6 figure {f}")
+    return 0
+
+
 def _m4_log(m):
     print(m, flush=True)
 
@@ -648,6 +656,8 @@ def main(argv=None) -> int:
     sub.add_parser("m4-selftest")
     p = sub.add_parser("m6-selftest", help="M6 T0: derotation and the generalised law (numpy)")
     p.add_argument("--out", default=None, help="write t0_selftest.json here")
+    p = sub.add_parser("m6-figures", help="M6 T0 figures: #21's information model on the Foveated raster")
+    p.add_argument("--out", required=True)
     p = sub.add_parser("m4-fixtures")
     p.add_argument("--out", required=True)
     p = sub.add_parser("m4-calibration", help="M4 Stage 5 protocol: calibrate, freeze, estimate held-out, evaluate")
@@ -703,7 +713,7 @@ def main(argv=None) -> int:
             "flow-depth": flow_depth_cmd, "flow-depth-fixtures": flow_depth_fixtures,
             "flow-depth-calibrate": flow_depth_calibrate, "flow-depth-evaluate": flow_depth_evaluate,
             "flow-depth-preview": flow_depth_preview, "flow-depth-figures": flow_depth_figures,
-            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
+            "m4-selftest": m4_selftest, "m6-selftest": m6_selftest, "m6-figures": m6_figures, "m4-fixtures": m4_fixtures, "m4-figures": m4_figures,
             "m4-calibration": m4_calibration, "m4-classroom": m4_classroom, "m4-freeze": m4_freeze,
             "m4-oracle": m4_oracle}[a.cmd](a)
 
