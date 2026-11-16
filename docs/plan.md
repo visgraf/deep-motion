@@ -133,6 +133,15 @@ All taken by Luiz in Chat on 2026-11-16.
 8. **Where.** The work continues in this repository, visgraf/deep-motion, forked from foveal-motion at `08db383`
    (foveal-motion's M-D19).
 
+Later decisions, numbered P-D1, P-D2, …:
+
+- **P-D1** (Luiz, 2026-11-16, in Chat; #4). The slit fan is rendered on fov-render's existing Panorama sensor.
+  Columns are slits, and per-slit time sampling is emulated by decimating dense looks. A `SlitFan` sensor in
+  fov-render only if cost bites.
+- **P-D2** (Luiz, 2026-11-16, in Chat; #4). Stage 5 is split. 5a (Chat) builds the oracle evaluation on short windows
+  in the sandbox: a line, an arc and a pivot. 5b (Code) runs the full windows and a composed path at the design
+  resolution on the GPU.
+
 ## The plan
 
 Each stage ships checks with controls that must fail, as in M3 to M6a. Chat does the numpy and calibration-room work;
