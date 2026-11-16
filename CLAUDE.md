@@ -1,4 +1,4 @@
-# How we work on foveal-motion
+# How we work on deep-motion
 
 The same light N-Surface method as [fov-render](https://github.com/visgraf/fov-render/blob/main/CLAUDE.md): one file
 of rules, GitHub Issues between Chat and Code. If something here gets in the way, say so in an issue.
@@ -21,7 +21,7 @@ of rules, GitHub Issues between Chat and Code. If something here gets in the way
 3. **Report** in a comment: the commit, the commands, the numbers (where each comes from, rule 1), what failed. Long
    output goes in a file in the repo; link it.
 4. **Decisions** go to Luiz (`for-luiz`): the question, the options, a recommendation. His answer in the issue is the
-   record; decisions that matter go to `docs/motion.md`.
+   record; decisions that matter go to `docs/plan.md` (deep-motion's) — `docs/motion.md` is foveal-motion's record, closed at M-D19.
 5. **Done** when Luiz closes the issue. Commits and PRs say `Refs #n` or `Fixes #n`.
 
 ## Rules
@@ -35,14 +35,19 @@ of rules, GitHub Issues between Chat and Code. If something here gets in the way
 5. **When unsure, ask** (`for-luiz`).
 6. **fov-render is a dependency, not a workspace.** It is pinned as the submodule `external/fov-render`. Something
    fov-render should do differently is an issue in fov-render; this repository moves its pin when Luiz accepts.
-7. **The playground stays the reference.** `tools/` and the playground's docs are left as imported; new work goes in
-   `motion/`, `paths/` and `docs/motion.md`.
+7. **foveal-motion stays the reference.** What came from foveal-motion (and, through it, the playground) is left as
+   imported: `motion/`, `tools/`, `docs/motion.md`, `docs/runs/`, the playground's docs. M4 is the frozen baseline. New
+   work goes in `deep/`, `paths/` and `docs/plan.md`.
 
 ## Project facts
 
 - Metres, world +Z up. Heads come from a path spec (`paths/*.json`): level, facing `facing_w`; the head axes follow
   fov-render (`HeadPose`: +X right, +Y up, −Z forward). A look's head is its request's, the scene's `EYE` is only the
   session's default.
-- The eye is fov-render's cyclopean `C`, at the head origin. The sensor is `Foveated` (E2 2°, e_max 45°).
+- Sensors are designed per experiment (`docs/plan.md`: any design that does the job, sampling in space and time
+  included). fov-render's cyclopean `C`, at the head origin, with its `Foveated` sensor (E2 2°, e_max 45°), remains
+  available and is M4's.
+- Paths are compositions of primitives: lines, arcs and pivots (curvature 0, finite, infinite). Depth is estimated in
+  the primitive's invariant and reported and gated in world 3D and range along the ray.
 - Runs and figures are not committed (`runs/`, `visuals/` are ignored); the command and the run record are.
 - Cost: interactive under ~10 s, batch under ~5 min, overnight only when the issue says so.
