@@ -252,7 +252,9 @@ def analyze(run_dir, out=None, log=print) -> dict:
     checks.append({"id": "T1.2", "oracle": True, "ok": bool(surf_ok), "control_fails": bool(surf_ctrl_ok),
                    "numbers": {"min_agree": min(p["T1.2_agree_fraction"] for p in per),
                                "min_control_lost_e_k_below_5deg": min(p["T1.2_control_lost_e_k_below_5deg"] for p in per)}})
+    from . import dolly
     res = {"schema": "foveal-motion-m6-t1-v1", "run": run["_dir"], "run_git": run["git"], "spp": run["spp"],
+           "computed_by": {"foveal-motion": dolly._git(dolly.REPO), "fov-render": dolly._git(dolly.FOV_RENDER)},
            "checks": checks, "per_look": per}
     for c in checks:
         log(f"{PREFIX} {c['id']} {'PASS' if c['ok'] else 'FAIL'} (control {'fails' if c['control_fails'] else 'DOES NOT FAIL'}) "
