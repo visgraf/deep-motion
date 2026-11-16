@@ -25,7 +25,10 @@ SEG_NAMES = ("line A", "arc", "line B")
 PATHS = {"composed": PIECES, "straight": (("line", 0.90, 0.0),),   # straight: the same length, for comparison
          # #7 (Luiz agreed to a real turn): 90 deg left; R = 1 m, since at R = 1.6 m the arc runs into a board of the
          # calibration room (0.8 cm clearance from its surface points; R = 1 m: 18 cm)
-         "turn90": (("line", 0.30, 0.0), ("arc", 1.0 * np.pi / 2, 1.0), ("line", 0.30, 0.0))}
+         "turn90": (("line", 0.30, 0.0), ("arc", 1.0 * np.pi / 2, 1.0), ("line", 0.30, 0.0)),
+         # a straight path as long as turn90 (2.17 m), to separate turning from length; in the calibration room it fits
+         # only from further back (--start 0,-2,90)
+         "straight_long": (("line", 0.60 + 1.0 * np.pi / 2, 0.0),)}
 START = {"p0": (0.0, 0.0), "heading_deg": 90.0, "h": 1.6}          # the calibration room's EYE, heading +Y
 
 

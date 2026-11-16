@@ -186,11 +186,11 @@ def main(argv=None) -> int:
     p.add_argument("--width", type=int, default=720)
     p.add_argument("--spp", type=int, default=16)
     p.add_argument("--seed-base", type=int, default=10000)
-    p.add_argument("--path", default="composed", choices=["composed", "straight", "turn90"])
+    p.add_argument("--path", default="composed", choices=["composed", "straight", "turn90", "straight_long"])
     p.add_argument("--device", default="CPU")
     p = sub.add_parser("stage5b2", help="stage 5b.2: the fusion and checks F1-F3 on the composed path's runs")
     p.add_argument("runs", nargs="+")
-    p.add_argument("--path", default=None, choices=["composed", "straight", "turn90"],
+    p.add_argument("--path", default=None, choices=["composed", "straight", "turn90", "straight_long"],
                    help="default: from run.json (composed for runs before it was recorded)")
     p.add_argument("--cell", type=float, default=0.02)
     p.add_argument("--hit-stride", type=int, default=1, help="bin every n-th hit of a look (memory at 3600 wide)")
