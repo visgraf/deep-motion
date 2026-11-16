@@ -467,7 +467,7 @@ def coarse_curves_v(Jr, Js, maps, zetas, grid: VGrid, rows, s):
     return total, count
 
 
-def match_reference(img_r, imgs, poses, model, settings=None, dev=None, rectify=True):
+def match_reference(img_r, imgs, poses, model, settings=None, dev=None, rectify=False):
     """As multibaseline.match_reference, with poses [(A_k, T_k)] (relative_poses) instead of signed steps. With rectify
     (#22, option A), everything is laid out about the window's mean epipole: a virtual eye frame V (virtual -> r) whose
     axis is that epipole; zeta is then the inverse depth along it, and the anchors' e, phi, q are virtual (e_ref is r's
