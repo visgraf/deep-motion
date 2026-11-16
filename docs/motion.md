@@ -29,6 +29,7 @@ Decisions (Luiz, 2026-11-12, in Chat):
 | M-D16 | M4 accepted; the merge; torch; the device record; next, depth edges (Luiz, 2026-11-15, in Chat; #11) | M4 is accepted and #11 closed: 5 frames each side passes #5's Classroom gate, held out. `experiment/m4a-multibaseline` merges into `main` by PR. `requirements.txt` lists `torch==2.15.0`; each machine picks the CPU or CUDA build. The M4 commands write `env_<command>.json` beside each result (device, torch and CUDA build), in `dolly.py`, leaving the frozen estimator's files untouched. The next milestone (M5) is depth edges: about 27 % of the anchors with both5 are rejected as depth edges |
 | M-D17 | D1, a demonstration (Luiz, 2026-11-15, in Chat; #17) | the frozen M4 (`docs/runs/issue-10/frozen.json`, `both5`, its five-step delay accepted) on an **L-shaped tour** of the Classroom: from the back straight toward the board, a **turn in place** toward the front door, straight to the door; gaze `ahead` throughout. Turns in place keep the estimator inside its gated geometry; smooth arcs with the rotation removed are a later milestone (M6). Each leg is rendered at 0.033 m per look as three interleaved 0.099 m paths, each run unchanged; the pivot is display-only. #5's metrics on leg B are reported, not gated; the ~40 min estimation is OK'd; the error-coloured second video is part of D1. Split: D1a (Chat, calibration room) builds, D1b (Code, Classroom) runs |
 | M-D18 | M6, rotation removal (Luiz, 2026-11-16, in Chat; #21) | **any gaze, any smooth path**: the known poses remove the rotation between a window's frames, and each frame is matched about its own epipole, so the estimator no longer dictates where the eye looks. The first framing, "keep the focus of expansion at the fovea", is dropped: on a curved path the epipoles spread whatever the sensor's orientation, and the FOE is the fovea's worst place for depth. Low-parallax masking lives in the estimator (cones about the epipoles, from the poses), reported in M6, not gated. #21's four recommendations: sweep Δψ = 1–4° per step; measure the resolution loss before compensating; physical gaze stabilisation later, as a gaze policy to compare; M6b's optional fixation leg on M2's side target, if T2b passes. Split: M6a (Chat, calibration room, T0–T4, freeze), M6b (Code, Classroom arc tour) |
+| M-D19 | M6 reformulated; M6a closed (Luiz, 2026-11-16, in Chat; #22) | M6a's T0–T2 stand as findings: the geometry of an off-centre epipole gains as predicted, but M4's matcher, extended or rectified about the epipole, does not collect the gain. M6 continues in a **new repository, visgraf/deep-motion**, forked from this one. There, depth from motion along a curved path is built on coordinates adapted to the motion's symmetry: paths composed of lines, arcs and pivots (curvature 0, finite, infinite); 1-D search over the primitive's depth invariant (distance from the path line, or from the turn axis); trace-scans for the temporal reading; any sensor design (a heading-locked slit fan is the first candidate), with sampling in time per region. It is estimated in the invariant and reported and gated in world 3D and range. Order: formulation first, judged with an oracle; real matching last. T2c is dropped. M4 stays the frozen baseline; T2b–T4 and M6b (#23) are not run here |
 
 ## Experiment M1, the dolly
 
@@ -1176,3 +1177,19 @@ The motion-direction effect is still real when anchors are binned by their angle
 So the T2 diagnosis stands: matching fails where the motion crosses M4's windows, at any distance from the epipole.
 Rectification v1 does not cure it, so the cause lies elsewhere in the matcher as well. Rectification stays in the code,
 off by default (`36a39c9`), so T2's records reproduce.
+
+
+### M6a closed (M-D19, 2026-11-16)
+
+After T2, Luiz and Chat reconsidered the method in a brainstorm (in Chat, 2026-11-16). Its conclusions:
+- **Biology transfers as hypotheses, not as methods.** Every borrowing is kept in a ledger: the feature, its claimed
+  computational benefit, and the evidence for it. Log-polar matching suited forward motion. It is not a principle.
+- **The representation should follow the motion.** For forward motion log-polar makes the flow a shift. For a line it
+  is the epipolar-plane pencil, whose traces are straight. For an arc it is concentric mosaics, whose traces are
+  time-shifts for one depth. Paths are composed of these primitives.
+- **Correspondence is the hardest problem.** As in the project's binocular work, the formulation is judged with an
+  oracle first, and real matching comes last.
+
+The work continues in visgraf/deep-motion. Its plan document carries the brainstorm, the decisions and the stages.
+What stays here: M6a's geometry (`motion/derotate.py`), its matcher (`motion/m6_matcher.py`, rectification off by
+default), the T0–T2 records (`docs/runs/issue-22/`), and the crab paths.
