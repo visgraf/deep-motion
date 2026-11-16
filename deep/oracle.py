@@ -26,6 +26,10 @@ USABLE_REL = 0.10
 TOL_PX = 2.0
 SIGMAS_PX = (0.25, 0.5, 1.0)
 SECTORS = {"heading ±15°": (0.0, 15.0), "lateral 60–120°": (60.0, 120.0), "behind ≥165°": (165.0, 180.1), "all": (0.0, 180.1)}
+EYE_BAND_DEG = 10.0
+# Sectors are reported three ways (#5 named the sectors, not the angle): by psi, the 3-D angle between the anchor's
+# ray and the heading (the line's blind cone is psi -> 0); by bearing at eye height (|lat| < 10 deg, stage 3's atlas);
+# and by bearing over all elevations (floor and ceiling anchors straight ahead are far from the heading in 3-D).
 
 
 def run_poses(kind, n=21, ds=0.01, dang=np.radians(1.0), R=1.6, p0=(0.0, 0.0), phi0=np.pi / 2, h=1.6):
@@ -59,7 +63,7 @@ def load(run_dir):
     run = json.loads((Path(run_dir) / "run.json").read_text())
     looks = []
     for lk in run["looks"]:
-        rec = SampleRecord.load(Path(run_dir) / lk["out_dir"] / "record_C.npz")
+        rec = SampleRecord.load(Path(run_dir) / lk["out_dir"] / "record_C.npz", access="oracle")
         looks.append((rec, np.asarray(lk["c"], float), np.asarray(lk["R"], float), lk["s"]))
     return run, looks
 
@@ -113,7 +117,8 @@ def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12)
         _, _, dlon, dlat = lonlat_and_derivs(c_r, u, rtrue, looks[k][1], looks[k][2])
         I += np.where(vis[:, j], dlon ** 2 + dlat ** 2, 0.0)
     res_px = fan.res
-    out = {"rtrue": rtrue, "b_ref": b_ref, "lat_ref": lat_ref, "nvis": vis.sum(1), "I": I, "pix": pix, "fits": {}}
+    psi3 = np.arccos(np.clip(np.cos(lat_ref) * np.cos(b_ref), -1, 1))
+    out = {"rtrue": rtrue, "b_ref": b_ref, "lat_ref": lat_ref, "psi3": psi3, "nvis": vis.sum(1), "I": I, "pix": pix, "fits": {}}
     rng = np.random.default_rng(seed)
     for sg in (0.0,) + tuple(sigmas):
         nz = [(o[0] + rng.normal(size=len(P)) * sg * res_px, o[1] + rng.normal(size=len(P)) * sg * res_px) for o in obs]
@@ -138,14 +143,20 @@ def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12)
 
 
 def sector_table(ev, sigmas=SIGMAS_PX):
+    """Usable fraction per sector and rung, three ways (see SECTORS), and the 95 % coverage of the usable anchors."""
     absb = np.degrees(np.abs(ev["b_ref"]))
+    eye = np.abs(np.degrees(ev["lat_ref"])) < EYE_BAND_DEG
+    ways = {"psi_3d": (np.degrees(ev["psi3"]), np.ones_like(eye)), "bearing_eye_height": (absb, eye),
+            "bearing_all_elevations": (absb, np.ones_like(eye))}
     tab = {}
     for sg in sigmas:
         f = ev["fits"][sg]
         row = {}
-        for name, (lo, hi) in SECTORS.items():
-            m = (absb >= lo) & (absb < hi)
-            row[name] = float(f["usable"][m].mean()) if m.any() else None
+        for way, (ang, sel) in ways.items():
+            row[way] = {}
+            for name, (lo, hi) in SECTORS.items():
+                m = sel & (ang >= lo) & (ang < hi)
+                row[way][name] = float(f["usable"][m].mean()) if m.any() else None
         u = f["usable"]
         row["coverage_of_usable"] = float(f["cover"][u].mean()) if u.any() else None
         tab[f"{sg:g}"] = row

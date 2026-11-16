@@ -81,7 +81,8 @@ def stage5a(a) -> int:
                "computed_by": {"deep-motion": _git(REPO)}}
         (out / "stage5a.json").write_text(json.dumps(rec, indent=1, default=float))
         np.savez_compressed(out / "stage5a_maps.npz", **{f"{k}_{f}": v for k, e in ev.items()
-                            for f, v in (("pix", e["pix"]), ("rtrue", e["rtrue"]), ("I", e["I"]), ("nvis", e["nvis"]))})
+                            for f, v in (("pix", e["pix"]), ("rtrue", e["rtrue"]), ("I", e["I"]), ("nvis", e["nvis"]),
+                                         ("b_ref", e["b_ref"]), ("lat_ref", e["lat_ref"]))})
     return 0 if all(ok for _, ok in res) else 1
 
 
