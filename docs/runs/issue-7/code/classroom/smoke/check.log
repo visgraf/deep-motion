@@ -1,0 +1,8 @@
+$ .venv/bin/python docs/runs/issue-7/code/classroom/smoke_check.py runs/s5b2-smoke-classroom (at 0b125a5, script uncommitted)
+device OPTIX blend scenes/classroom/classroom_eye.blend width 3600
+0 c [0.897 0.459 1.6  ] files ['meta.json', 'record_C.npz', 'request.json'] n 6480000 hit 0.9756 dist min/med/max 0.913 1.881 6.972 instances 265 cycles s 2.295361857046373 wall 15.22
+   misses: 0.0244 of rays, distance_m [inf], instance_id [0], bearing -149.2..-45.4 deg (+ left), elevation -12.8..19.8 deg
+1 c [0.897 0.469 1.6  ] files ['meta.json', 'record_C.npz', 'request.json'] n 6480000 hit 0.9757 dist min/med/max 0.914 1.882 6.983 instances 267 cycles s 1.7210035280440934 wall 14.66
+   misses: 0.0243 of rays, distance_m [inf], instance_id [0], bearing -149.2..-45.6 deg (+ left), elevation -12.8..19.8 deg
+2 c [0.897 0.479 1.6  ] files ['meta.json', 'record_C.npz', 'request.json'] n 6480000 hit 0.9756 dist min/med/max 0.915 1.882 6.985 instances 257 cycles s 1.6174977300106548 wall 14.49
+   misses: 0.0244 of rays, distance_m [inf], instance_id [0], bearing -149.2..-45.6 deg (+ left), elevation -12.8..19.8 deg

@@ -1,0 +1,32 @@
+2026-11-17T00:04:55-03:00 $ .venv/bin/python -m deep stage5b2 runs/s5b2c-slong --hit-stride 23 --max-cells 200000 --out docs/runs/issue-7/code (at 0b125a5)
+[deep] stage 5b.2 PASS F1 no noise: the fused points are the true points, every cell seen by two looks (<= 1e-9 of range)
+[deep] stage 5b.2 PASS F1 control: the looks after the first join moved 1 cm (median >= 1e-3)
+[deep] stage 5b.2 PASS F2 the fused sigma is honest: std of along-ray error / Fisher sigma within 3 % of 1
+[deep] stage 5b.2 PASS F2 control: each look counted twice (>= 20 % off)
+[deep] stage 5b.2 PASS F3 the usable cells' 95 % intervals cover the truth at 95 +/- 1 % (0.25, 0.5, 1 px)
+[deep] stage 5b.2 PASS F3 control: sigma halved covers <= 85 % on every rung
+[deep] {"path": "straight_long", "start": {"p0": [0.0, -2.0], "heading_deg": 90.0, "h": 1.6}, "cells_binned": 446103, "cells": 200000, "looks": 218, "cell_m": 0.02, "hit_stride": 23, "max_cells": 200000, "seen_by_two": 0.99997, "F1_max_rel": 6.8539659097446745e-15, "F1_max_rel_all_seen_by_two": 1.0261741416074181e-13, "F1_control_median_rel": 0.0031465550049607745, "F2_std_z": 0.9985464152208172, "F2_control_std_z": 1.4121578830643156, "rungs": {"0.25": {"usable": 0.998685, "coverage": 0.949583702568878, "coverage_sigma_halved": 0.6732302978416618, "median_3d_error_m": 0.0005335090196531495, "p95_3d_error_m": 0.010159171962463591}, "0.5": {"usable": 0.9971, "coverage": 0.950050145421723, "coverage_sigma_halved": 0.6737538862701835, "median_3d_error_m": 0.0010593383169045108, "p95_3d_error_m": 0.01992941060250031}, "1": {"usable": 0.993645, "coverage": 0.9496802177840175, "coverage_sigma_halved": 0.671748964670481, "median_3d_error_m": 0.0021103745537328863, "p95_3d_error_m": 0.038042161980351395}}, "progress_cells": 20000, "first_usable_segment_0.5px": {"line": 0.9972, "never": 0.0028}}
+	Command being timed: ".venv/bin/python -m deep stage5b2 runs/s5b2c-slong --hit-stride 23 --max-cells 200000 --out docs/runs/issue-7/code"
+	User time (seconds): 2968.74
+	System time (seconds): 44.23
+	Percent of CPU this job got: 305%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 16:26.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1283268
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2966098
+	Voluntary context switches: 37177
+	Involuntary context switches: 61118
+	Swaps: 0
+	File system inputs: 59234104
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-17T00:21:21-03:00 exit 0

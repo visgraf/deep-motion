@@ -1,0 +1,50 @@
+2026-11-17T01:11:09-03:00 $ .venv/bin/python docs/runs/issue-7/code/f1/f1_diag.py analyse runs/s5b2c-turn runs/s5b2-f1diag/turn.npz (at 0b125a5, script uncommitted)
+{
+ "cells": 200000,
+ "seen_by_two": 199991,
+ "well": 199746,
+ "F1_max_rel_well": 0.026240843769502493,
+ "F1_max_rel_seen2": 0.026240843769502493,
+ "bad_seen2": 1,
+ "bad_well": 1,
+ "e0_quantiles_seen2": {
+  "0.5": 0.0,
+  "0.99": 5.189052350717966e-16,
+  "0.9999": 1.7685333725403163e-14,
+  "1.0": 0.026240843769502493
+ }
+}
+{"i": 63642, "P": [-0.0385, 0.5574, 0.0], "X0": [-0.0418, 0.586, 0.0306], "err_rel": 0.026240843769502493, "well": true, "worst_ref": 0.000346134812487236, "n_seeing": 210, "segments_seeing": [30, 150, 30], "k_range": [0, 217], "rmin_m": 1.6000286954445044, "abs_lat_max_deg": 89.65685247421284, "lon_deg_range": [-174.48483393222494, -3.949945286398759], "cond_H": 2090.0391555240126}
+{
+ "traced_cells": 1,
+ "traced_reproduces_fuse": 1.0966963419702797e-05,
+ "gave_up_at_some_iteration": 0,
+ "first_give_up_iteration_quantiles": null,
+ "err_rel_after_600_iterations_max": 0.026251736399782358,
+ "converged_with_600_iterations": 0
+}
+[f1] wrote runs/s5b2-f1diag/turn.json
+	Command being timed: ".venv/bin/python docs/runs/issue-7/code/f1/f1_diag.py analyse runs/s5b2c-turn runs/s5b2-f1diag/turn.npz"
+	User time (seconds): 106.31
+	System time (seconds): 0.65
+	Percent of CPU this job got: 102%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:44.42
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2820960
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 74257
+	Voluntary context switches: 38
+	Involuntary context switches: 1712
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 32
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-17T01:12:54-03:00 exit 0

@@ -1,0 +1,171 @@
+{
+ "command": "stage5b2",
+ "runs": [
+  "runs/s5b2c-slong"
+ ],
+ "checks": [
+  {
+   "name": "F1 no noise: the fused points are the true points, every cell seen by two looks (<= 1e-9 of range)",
+   "ok": true
+  },
+  {
+   "name": "F1 control: the looks after the first join moved 1 cm (median >= 1e-3)",
+   "ok": true
+  },
+  {
+   "name": "F2 the fused sigma is honest: std of along-ray error / Fisher sigma within 3 % of 1",
+   "ok": true
+  },
+  {
+   "name": "F2 control: each look counted twice (>= 20 % off)",
+   "ok": true
+  },
+  {
+   "name": "F3 the usable cells' 95 % intervals cover the truth at 95 +/- 1 % (0.25, 0.5, 1 px)",
+   "ok": true
+  },
+  {
+   "name": "F3 control: sigma halved covers <= 85 % on every rung",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "path": "straight_long",
+  "start": {
+   "p0": [
+    0.0,
+    -2.0
+   ],
+   "heading_deg": 90.0,
+   "h": 1.6
+  },
+  "cells_binned": 446103,
+  "cells": 200000,
+  "looks": 218,
+  "cell_m": 0.02,
+  "hit_stride": 23,
+  "max_cells": 200000,
+  "seen_by_two": 0.99997,
+  "F1_max_rel": 6.8539659097446745e-15,
+  "F1_max_rel_all_seen_by_two": 1.0261741416074181e-13,
+  "F1_control_median_rel": 0.0031465550049607745,
+  "F2_std_z": 0.9985464152208172,
+  "F2_control_std_z": 1.4121578830643156,
+  "rungs": {
+   "0.25": {
+    "usable": 0.998685,
+    "coverage": 0.949583702568878,
+    "coverage_sigma_halved": 0.6732302978416618,
+    "median_3d_error_m": 0.0005335090196531495,
+    "p95_3d_error_m": 0.010159171962463591
+   },
+   "0.5": {
+    "usable": 0.9971,
+    "coverage": 0.950050145421723,
+    "coverage_sigma_halved": 0.6737538862701835,
+    "median_3d_error_m": 0.0010593383169045108,
+    "p95_3d_error_m": 0.01992941060250031
+   },
+   "1": {
+    "usable": 0.993645,
+    "coverage": 0.9496802177840175,
+    "coverage_sigma_halved": 0.671748964670481,
+    "median_3d_error_m": 0.0021103745537328863,
+    "p95_3d_error_m": 0.038042161980351395
+   }
+  },
+  "progress_cells": 20000,
+  "progress_0.5px": {
+   "s_m": [
+    0.0,
+    0.06,
+    0.12,
+    0.18,
+    0.24,
+    0.3,
+    0.36,
+    0.42,
+    0.48,
+    0.54,
+    0.6,
+    0.66,
+    0.72,
+    0.78,
+    0.84,
+    0.9,
+    0.96,
+    1.02,
+    1.08,
+    1.1400000000000001,
+    1.2,
+    1.26,
+    1.32,
+    1.3800000000000001,
+    1.44,
+    1.5,
+    1.56,
+    1.62,
+    1.68,
+    1.74,
+    1.8,
+    1.86,
+    1.92,
+    1.98,
+    2.04,
+    2.1,
+    2.16,
+    2.17
+   ],
+   "usable": [
+    0.0,
+    0.2696,
+    0.54685,
+    0.73355,
+    0.84585,
+    0.89645,
+    0.9142,
+    0.9266,
+    0.9335,
+    0.9375,
+    0.9406,
+    0.94345,
+    0.9452,
+    0.9473,
+    0.94905,
+    0.95115,
+    0.9533,
+    0.95525,
+    0.95675,
+    0.959,
+    0.96065,
+    0.96345,
+    0.96555,
+    0.96805,
+    0.97005,
+    0.97225,
+    0.97495,
+    0.9781,
+    0.9809,
+    0.98325,
+    0.98535,
+    0.9879,
+    0.9905,
+    0.9926,
+    0.9941,
+    0.99565,
+    0.99705,
+    0.9972
+   ]
+  },
+  "first_usable_segment_0.5px": {
+   "line": 0.9972,
+   "never": 0.0028
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "0b125a5c1a96bbb1a05db574b472717aa3befb4d",
+   "clean": true
+  }
+ }
+}
