@@ -1,0 +1,27 @@
+2026-11-16T20:37:38-03:00 $ .venv/bin/python -m deep stage5a-table line=runs/s5b-line arc=runs/s5b-arc --stride 7 --out docs/runs/issue-6/stride-7 (at 6b0a87b)
+[deep] line: {"0.25": {"psi_3d": {"heading ±15°": 0.9989136875370334, "lateral 60–120°": 1.0, "behind ≥165°": 0.9990122481232714, "all": 0.9999762345862387}, "bearing_eye_height": {"heading ±15°": 0.9987166024967915, "lateral 60–120°": 1.0, "behind ≥165°": 0.9988332749970832, "all": 0.9997958330497682}, "bearing_all_elevations": {"heading ±15°": 0.9998444447325098, "lateral 60–120°": 1.0, "behind ≥165°": 0.9998703722907809, "all": 0.9999762345862387}, "heading_fine_psi_3d": {"0–2°": 0.9388888888888889, "2–5°": 1.0, "5–15°": 1.0}, "coverage_of_usable": 0.9497911294565261}, "0.5": {"psi_3d": {"heading ±15°": 0.9928895911514912, "lateral 60–120°": 1.0, "behind ≥165°": 0.9962465428684314, "all": 0.9998790124390337}, "bearing_eye_height": {"heading ±15°": 0.991599579978999, "lateral 60–120°": 1.0, "behind ≥165°": 0.9955664449889161, "all": 0.998930554070214}, "bearing_all_elevations": {"heading ±15°": 0.9990407425171435, "lateral 60–120°": 1.0, "behind ≥165°": 0.9995074147049673, "all": 0.9998790124390337}, "heading_fine_psi_3d": {"0–2°": 0.6, "2–5°": 1.0, "5–15°": 1.0}, "coverage_of_usable": 0.9496857724099858}, "1": {"psi_3d": {"heading ±15°": 0.9599051945486865, "lateral 60–120°": 1.0, "behind ≥165°": 0.9850849466613987, "all": 0.9993918214569278}, "bearing_eye_height": {"heading ±15°": 0.9526309648815774, "lateral 60–120°": 1.0, "behind ≥165°": 0.9823824524559561, "all": 0.9945847147009926}, "bearing_all_elevations": {"heading ±15°": 0.9946592691495015, "lateral 60–120°": 1.0, "behind ≥165°": 0.9980426215907913, "all": 0.9993918214569278}, "heading_fine_psi_3d": {"0–2°": 0.016666666666666666, "2–5°": 0.7648936170212766, "5–15°": 0.9991117033089052}, "coverage_of_usable": 0.9497941959807685}}
+[deep] arc: {"0.25": {"psi_3d": {"heading ±15°": 1.0, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 1.0}, "bearing_eye_height": {"heading ±15°": 1.0, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 1.0}, "bearing_all_elevations": {"heading ±15°": 1.0, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 1.0}, "heading_fine_psi_3d": {"0–2°": 1.0, "2–5°": 1.0, "5–15°": 1.0}, "coverage_of_usable": 0.9500677854415236}, "0.5": {"psi_3d": {"heading ±15°": 0.9943709263282638, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9999384259734367}, "bearing_eye_height": {"heading ±15°": 0.9933496674833742, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9994458325636564}, "bearing_all_elevations": {"heading ±15°": 0.9992611124794213, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9999384259734367}, "heading_fine_psi_3d": {"0–2°": 1.0, "2–5°": 1.0, "5–15°": 0.9936708860759493}, "coverage_of_usable": 0.9495677669290385}, "1": {"psi_3d": {"heading ±15°": 0.9772861939561525, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9997450619251066}, "bearing_eye_height": {"heading ±15°": 0.9731653249329133, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9977638857831747}, "bearing_all_elevations": {"heading ±15°": 0.9970055611008127, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9997450619251066}, "heading_fine_psi_3d": {"0–2°": 1.0, "2–5°": 1.0, "5–15°": 0.9744614701310238}, "coverage_of_usable": 0.9499902212800074}}
+	Command being timed: ".venv/bin/python -m deep stage5a-table line=runs/s5b-line arc=runs/s5b-arc --stride 7 --out docs/runs/issue-6/stride-7"
+	User time (seconds): 27558.25
+	System time (seconds): 53.37
+	Percent of CPU this job got: 2106%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 21:51.07
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 61107780
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 9691162
+	Voluntary context switches: 294319
+	Involuntary context switches: 5333294
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 32
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-16T20:59:30-03:00 exit 0
