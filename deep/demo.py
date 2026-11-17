@@ -41,6 +41,7 @@ ACCENT = (235, 104, 52)
 INK, MUTED, RULE, PAPER, NIGHT = (34, 34, 34), (110, 110, 105), (200, 200, 195), (247, 247, 245), (24, 24, 26)
 LIGHT = (235, 235, 230)
 ERR_MAX = 0.01
+CEILING_CLIP = 2.4          # the 3-D views leave out cells above this height (m): the ceiling would hide the room
 HOLD_START, HOLD_END, ORBIT_S = 1.0, 1.5, 8.0
 _STOPS = np.stack([np.array([int(h[i:i + 2], 16) for i in (1, 3, 5)], float) for h in BLUE])
 
@@ -314,7 +315,7 @@ def cloud_panel(sc, st, colours, az, size=(CLOUD[2], CLOUD[3]), title=True, spla
     im = Image.new("RGB", (w, h), PAPER)
     a = np.asarray(im).copy()
     eye, B = _view(sc, az)
-    sel = st.usable
+    sel = st.usable & (st.X[:, 2] <= CEILING_CLIP)
     if sel.any():
         q = (st.X[sel] - eye) @ B.T
         ok = q[:, 2] > 0.1
@@ -337,7 +338,7 @@ def cloud_panel(sc, st, colours, az, size=(CLOUD[2], CLOUD[3]), title=True, spla
         if len(pts) > 1:
             d.line(pts, fill=ACCENT, width=3)
     if title:
-        _text(d, (16, 10), "3-D: the usable cells", 20)
+        _text(d, (16, 10), f"3-D: the usable cells (below {CEILING_CLIP:g} m)", 20)
     return im
 
 
@@ -498,5 +499,5 @@ def end_card(sc, st, cols, i, n, kind):
     d = ImageDraw.Draw(im)
     what = "relative error along the ray" if kind == "error" else "height"
     _text(d, (24, 16), f"The tour's fused surface: {int(st.usable.sum()):,} usable cells, coloured by {what} "
-                       f"(oracle depth, 0.5 px)", 24)
+                       f"(oracle depth, 0.5 px; cells above {CEILING_CLIP:g} m left out of this view)", 24)
     return im
