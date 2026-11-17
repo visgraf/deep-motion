@@ -300,11 +300,18 @@ def stage5b2(runs: dict, out, sigma_px=0.5, hit_stride=1) -> list:
         for (k, p), col, ls in zip(recs.items(), (ACCENT, BLUE[3], BLUE[1]), ("-", "--", ":")):
             pr_ = _json.loads(p.read_text())["numbers"]["progress_0.5px"]
             ax.plot(pr_["s_m"], 100 * np.asarray(pr_["usable"]), ls, color=col, lw=2, label=f"{k} path")
-        for x in (0.3, 0.6):
-            ax.axvline(x, color=GRID, lw=1)
-        ax.text(0.15, 3, "line", ha="center", color=INK2, fontsize=9)
-        ax.text(0.45, 3, "arc (composed)", ha="center", color=INK2, fontsize=9)
-        ax.text(0.75, 3, "line", ha="center", color=INK2, fontsize=9)
+        # the joins of the first path with more than one piece (#7, Code: the composed path's were drawn on the turn's)
+        kinds = [_json.loads(p.read_text())["numbers"].get("path", k) for k, p in recs.items()]
+        multi = [k for k in kinds if len(fu.PATHS.get(k, ())) > 1]
+        if multi:
+            ends = np.cumsum([L for _, L, _ in fu.PATHS[multi[0]]])
+            a = 0.0
+            for (kind, _, _), b in zip(fu.PATHS[multi[0]], ends):
+                ax.text(0.5 * (a + b), 3, f"{kind} ({multi[0]})" if kind == "arc" else kind, ha="center", color=INK2,
+                        fontsize=9)
+                if b < ends[-1]:
+                    ax.axvline(b, color=GRID, lw=1)
+                a = b
         ax.set_xlabel("arc length travelled, m")
         ax.set_ylabel("cells usable at 0.5 px, %")
         ax.set_title("Fused surface: usable fraction as the path is travelled (records of the checks)", loc="left")
