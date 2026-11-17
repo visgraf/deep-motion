@@ -114,7 +114,30 @@ def _derivs(X, c, R):
     return lon, lat, g_lon @ R.T, g_lat @ R.T
 
 
-def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None):
+def rays_start(obs, vis, poses):
+    """Each cell's least-squares intersection of the rays it is observed along (its lon, lat in every look that sees
+    it): the point nearest all of them. A weak pull (1e-9) toward the first look's centre keeps A invertible when the
+    rays are almost parallel. #7: starting 5 % beyond the truth along one ray, a cell under the arc stalled on a
+    look's nadir, where lon is undefined; from here it converges."""
+    N = len(vis)
+    A = np.zeros((N, 3, 3))
+    b = np.zeros((N, 3))
+    for k, (c, R) in enumerate(poses):
+        lon, lat = obs[k]
+        v = np.stack([np.sin(lon) * np.cos(lat), np.sin(lat), -np.cos(lon) * np.cos(lat)], -1)
+        d = v @ R.T                                     # world direction: X - c = R v
+        M = np.eye(3) - d[:, :, None] * d[:, None, :]
+        w = vis[:, k][:, None, None]
+        A += w * M
+        b += (w * M) @ c
+    first = np.argmax(vis, 1)
+    c0 = np.stack([c for c, _ in poses])[first]
+    A += 1e-9 * np.eye(3)
+    b += 1e-9 * c0
+    return np.linalg.solve(A, b[..., None])[..., 0]
+
+
+def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None, start="rays"):
     """Joint fit of each cell's 3-D point. poses: [(c, R)] the fit believes (default: the looks' own; a control may
     move them); the observations always come from the true poses.
     Returns X (N, 3), H (N, 3, 3) at the truth, vis (N, K)."""
@@ -134,9 +157,12 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None):
         _, _, gl, gt = _derivs(P, *poses[k])
         w = vis[:, k][:, None, None]
         H += w * (gl[:, :, None] * gl[:, None, :] + gt[:, :, None] * gt[:, None, :])
-    first = np.argmax(vis, 1)
-    c0 = np.stack([poses[k][0] for k in range(K)])[first]
-    X = c0 + 1.05 * (P - c0)
+    if start == "rays":
+        X = rays_start(obs, vis, poses)
+    else:                                               # "ray5": 5 % beyond the truth along the first look's ray
+        first = np.argmax(vis, 1)                       # (the start until #7; kept as F1b's control)
+        c0 = np.stack([poses[k][0] for k in range(K)])[first]
+        X = c0 + 1.05 * (P - c0)
     act = np.flatnonzero(vis.sum(1) >= 2)
 
     def cost(Xa, idx):
@@ -220,6 +246,28 @@ def progress(P, vis, looks, fan, seg, sigma_px=0.5, points=40):
     return frac, first_seg, at
 
 
+def pole_check(n_rep=40, seed=0):
+    """F1b's cells and both starts; returns its numbers."""
+    fan = sn.SlitFan(width=3600)
+    ps = path_poses(kind="turn90", step=0.01)
+    looks = [(None, c, R, s) for s, c, R, _ in ps]
+    C = np.stack([lk[1] for lk in looks])
+    rng = np.random.default_rng(seed)
+    P = np.concatenate([C[40:90, :2] + rng.normal(scale=0.01, size=(50, 2)) for _ in range(n_rep)])
+    P = np.c_[P, np.zeros(len(P))]
+    vis = np.ones((len(P), len(looks)), bool)
+    for i in range(len(P)):
+        vis[i, rng.choice(len(looks), size=8, replace=False)] = False
+    rmin = np.min(np.linalg.norm(P[:, None] - C[None], axis=-1), 1)
+    out = {}
+    for st, key in (("rays", "F1b"), ("ray5", "F1b_control")):
+        X, _, _ = fuse(looks, P, fan, vis=vis, start=st)
+        e = np.linalg.norm(X - P, axis=-1) / rmin
+        out[f"{key}_failures"], out[f"{key}_max_rel"] = int((e > 1e-9).sum()), float(e.max())
+    out["F1b_cells"] = int(len(P))
+    return out
+
+
 def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind=None, hit_stride=1, max_cells=None):
     looks = load_looks(run_dirs)
     k_meta, start, width = run_meta(run_dirs)
@@ -251,6 +299,14 @@ def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind=None, hit_stride=1, max
     res.append(("F1 no noise: the fused points are the true points, every cell seen by two looks (<= 1e-9 of range)",
                 num["F1_max_rel_all_seen_by_two"] <= 1e-9))
     res.append(("F1 control: the looks after the first join moved 1 cm (median >= 1e-3)", num["F1_control_median_rel"] >= 1e-3))
+    # F1b the solver near a look's pole (#7, Code: a floor cell under the arc stalled on a look's nadir at 3600 wide).
+    # Synthetic, independent of the runs: 2000 floor cells within ~1 cm of the turn90 path's looks 40-89 (1 cm steps),
+    # each missed by 8 random looks; no noise. Control: the start used until #7 (5 % along the first ray) stalls.
+    num.update(pole_check())
+    res.append(("F1b no noise, floor cells under the turn's looks (a look's nadir): every cell recovered (<= 1e-9)",
+                num["F1b_failures"] == 0 and num["F1b_max_rel"] <= 1e-9))
+    res.append(("F1b control: the earlier start (5 % along the first ray) stalls on at least one cell",
+                num["F1b_control_failures"] >= 1))
     # F2 honest sigma: 30 draws at 0.5 px on 2000 usable cells
     idx = rng.choice(np.flatnonzero(well), size=min(2000, int(well.sum())), replace=False)
     Ps, Hs, vs = P[idx], H[idx], vis[idx]
@@ -291,13 +347,13 @@ def selftest(run_dirs, fan=None, cell=CELL, seed=7, kind=None, hit_stride=1, max
     return res, num, {"P": P, "vis": vis, "H": H, "sub": sub, "first_seg": fseg, "seg": seg, "s": s}
 
 
-def usable_map(run_dirs, sigma_px=0.5, cell=CELL):
+def usable_map(run_dirs, sigma_px=0.5, cell=CELL, hit_stride=1):
     """The Fisher gate only (no fit): cells, usable at sigma_px, and their bearing from the path's middle look
     relative to the start heading, for the figure and the cone summary."""
     looks = load_looks(run_dirs)
     _, start, width = run_meta(run_dirs)
     fan = sn.SlitFan(width=width)
-    P = cells(looks, cell)
+    P = cells(looks, cell, hit_stride)
     vis = visibility(looks, P, fan)
     H = np.zeros((len(P), 3, 3))
     for lk, k in zip(looks, range(len(looks))):

@@ -268,7 +268,7 @@ def stage5a(runs: dict, out, stride=1) -> list:
     return [f1, f2]
 
 
-def stage5b2(runs: dict, out, sigma_px=0.5) -> list:
+def stage5b2(runs: dict, out, sigma_px=0.5, hit_stride=1) -> list:
     """stage5b2_topdown.png: the cells from above, usable at sigma_px (dark) or not (orange), per path, with the path;
     stage5b2_progress.png: usable fraction against arc length (from the checks' records); stage5b2_cones.json."""
     import json as _json
@@ -276,7 +276,7 @@ def stage5b2(runs: dict, out, sigma_px=0.5) -> list:
     plt = _plt()
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
-    maps = {k: fu.usable_map(v, sigma_px) for k, v in runs.items()}
+    maps = {k: fu.usable_map(v, sigma_px, hit_stride=hit_stride) for k, v in runs.items()}
     fig, axs = plt.subplots(1, len(maps), figsize=(6.2 * len(maps), 6.4), gridspec_kw={"wspace": 0.15})
     for ax, (k, m) in zip(np.atleast_1d(axs), maps.items()):
         P, u = m["P"], m["usable"]
@@ -292,10 +292,12 @@ def stage5b2(runs: dict, out, sigma_px=0.5) -> list:
     f1 = out / "stage5b2_topdown.png"
     fig.savefig(f1, dpi=120, bbox_inches="tight")
     plt.close(fig)
-    recs = {"composed": out.parent / "stage5b2.json", "straight": out.parent / "stage5b2_straight.json"}
+    # the checks' records beside the figures' folder: stage5b2.json for the composed path, stage5b2_<path>.json else
+    # (#7, Code: the turn's and the long straight's records were not found under the first two names)
+    recs = {k: out.parent / ("stage5b2.json" if k == "composed" else f"stage5b2_{k}.json") for k in runs}
     if all(p.exists() for p in recs.values()):
         fig, ax = plt.subplots(figsize=(7.2, 4.2))
-        for (k, p), col, ls in zip(recs.items(), (ACCENT, BLUE[3]), ("-", "--")):
+        for (k, p), col, ls in zip(recs.items(), (ACCENT, BLUE[3], BLUE[1]), ("-", "--", ":")):
             pr_ = _json.loads(p.read_text())["numbers"]["progress_0.5px"]
             ax.plot(pr_["s_m"], 100 * np.asarray(pr_["usable"]), ls, color=col, lw=2, label=f"{k} path")
         for x in (0.3, 0.6):

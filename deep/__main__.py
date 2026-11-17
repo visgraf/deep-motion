@@ -48,7 +48,8 @@ def figures(a) -> int:
     from . import figures as fg
     fn = {"2": fg.stage2, "3": fg.stage3, "4": lambda o: fg.stage4(a.run, o),
           "5a": lambda o: fg.stage5a(dict(r.split("=", 1) for r in a.runs), o, stride=a.stride),
-          "5b2": lambda o: fg.stage5b2({k: v.split(",") for k, v in (r.split("=", 1) for r in a.runs)}, o)}[a.stage]
+          "5b2": lambda o: fg.stage5b2({k: v.split(",") for k, v in (r.split("=", 1) for r in a.runs)}, o,
+                                       hit_stride=a.stride)}[a.stage]
     for f in fn(a.out):
         print(f"{PREFIX} figure {f}")
     return 0
@@ -149,7 +150,7 @@ def main(argv=None) -> int:
     p.add_argument("--stage", default="2", choices=["2", "3", "4", "5a", "5b2"])
     p.add_argument("--run", default=None, help="stage 4: the rendered run")
     p.add_argument("--runs", nargs="*", default=[], help="stage 5a: name=DIR ...")
-    p.add_argument("--stride", type=int, default=1, help="stage 5a: keep every n-th reference anchor")
+    p.add_argument("--stride", type=int, default=1, help="stage 5a: keep every n-th reference anchor; stage 5b2: bin a random 1/n of each look's hits")
     p.add_argument("--out", required=True)
     p = sub.add_parser("stage4-render", help="stage 4: three Panorama looks on an arc in the calibration room (CPU)")
     p.add_argument("--run", required=True)
