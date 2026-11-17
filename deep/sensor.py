@@ -84,7 +84,7 @@ def arc_run_poses(R=1.6, s_list=(0.0, 0.01, 0.10), p0=(0.0, 0.0), phi0=np.pi / 2
 
 
 def render(out, fan: SlitFan, poses, spp=16, seed_base=9000, device="CPU", launcher="auto", git=None, blend=None,
-           meta=None) -> int:
+           meta=None, drop_exr=False) -> int:
     from fov_render import HeadPose, RenderConfig, Rig, Session, sensors
     from fov_render.checks.step1 import calib_room
     from motion import paths
@@ -99,6 +99,7 @@ def render(out, fan: SlitFan, poses, spp=16, seed_base=9000, device="CPU", launc
            "carrier": {"sensor": "panorama", "width": fan.width}, "spp": spp, "device_requested": device,
            "seeds": f"seed_base {seed_base} + k", "blend": str(blend), "git": git, "command": sys.argv, "looks": []}
     rec.update(meta or {})
+    rec["exr_dropped"] = bool(drop_exr)
     t0 = time.perf_counter()
     with Session(Path(blend), RenderConfig(profile="full", device=device), Rig(), access="oracle", launcher=launcher,
                  workdir=rd / "session", prepare=sensors.Panorama(width=fan.width)) as sess:
@@ -107,6 +108,12 @@ def render(out, fan: SlitFan, poses, spp=16, seed_base=9000, device="CPU", launc
             t1 = time.perf_counter()
             sess.look(sensors.Panorama(width=fan.width), ("C",), g, head=HeadPose(R, c), spp=spp,
                       seeds={"C": seed_base + k}, out_dir=o, outputs=("exr", "records"))
+            if drop_exr:
+                # fov-render always writes the EXR (the record is built from it); deep's oracle reads only the record,
+                # so the EXR may go once the record exists (#6: 207 MB per look at 3600 wide). Disk, not time.
+                if not (o / "record_C.npz").exists():
+                    raise RuntimeError(f"no record in {o}; the EXR is kept")
+                (o / "raw_C.exr").unlink()
             rec["looks"].append({"k": k, "s": float(s), "c": c.tolist(), "R": R.tolist(), "out_dir": o.name,
                                  "wall_seconds": round(time.perf_counter() - t1, 2)})
             print(f"[deep] stage 4 look {k} s = {s:.3f} m: {rec['looks'][-1]['wall_seconds']} s", flush=True)

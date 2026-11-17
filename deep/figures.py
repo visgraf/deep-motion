@@ -198,7 +198,14 @@ def stage5a(runs: dict, out, stride=1) -> list:
     cmap.set_bad(GRID)
     evs = {k: orc.evaluate(d, sigmas=(0.25,), stride=stride) for k, d in runs.items()}
     fig, axs = plt.subplots(len(evs), 1, figsize=(10.5, 2.9 * len(evs)), gridspec_kw={"hspace": 0.45})
-    norm = LogNorm(0.005, 2.0)
+    # the floor follows the runs (#6: at 0.1 deg/px most of the sphere sat below the fixed 0.005): the 2nd percentile
+    floors = []
+    for e in evs.values():
+        with np.errstate(divide="ignore"):
+            c = orc.Z95 * 0.25 * e["res"] / np.sqrt(e["I"]) / e["rtrue"]
+        floors.append(np.percentile(c[np.isfinite(c)], 2))
+    lo = min(floors)
+    norm = LogNorm(0.005 if lo >= 0.005 else 10 ** np.floor(np.log10(lo)), 2.0)
     for ax, (k, e) in zip(np.atleast_1d(axs), evs.items()):
         W, H = e["width"], e["width"] // 2
         img = np.full(H * W, np.nan)

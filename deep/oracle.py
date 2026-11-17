@@ -58,13 +58,17 @@ def lonlat_and_derivs(c_ref, u, r, c_k, R_k):
     return lon, lat, dlon, dlat
 
 
-def load(run_dir):
+def record(path):
     from fov_render.record import SampleRecord
+    return SampleRecord.load(path, access="oracle")
+
+
+def load(run_dir):
+    """The run and its looks [(record path, c, R, s)]; records are loaded one at a time by their users (#6: holding
+    101 records at 3600 wide took ~60 GB)."""
     run = json.loads((Path(run_dir) / "run.json").read_text())
-    looks = []
-    for lk in run["looks"]:
-        rec = SampleRecord.load(Path(run_dir) / lk["out_dir"] / "record_C.npz", access="oracle")
-        looks.append((rec, np.asarray(lk["c"], float), np.asarray(lk["R"], float), lk["s"]))
+    looks = [(Path(run_dir) / lk["out_dir"] / "record_C.npz", np.asarray(lk["c"], float), np.asarray(lk["R"], float),
+              lk["s"]) for lk in run["looks"]]
     return run, looks
 
 
@@ -97,7 +101,8 @@ def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12,
     run, looks = load(run_dir)
     fan = fan or sn.SlitFan(width=int(run["carrier"]["width"]))
     iref = len(looks) // 2
-    rec_r, c_r, R_r, _ = looks[iref]
+    path_r, c_r, R_r, _ = looks[iref]
+    rec_r = record(path_r)
     hit = np.isfinite(rec_r.distance_m)
     if stride > 1:
         keep = np.zeros_like(hit)
@@ -111,7 +116,8 @@ def evaluate(run_dir, fan=None, sigmas=SIGMAS_PX, seed=5, offset=None, iters=12,
     b_ref = -np.arctan2(loc[:, 0], -loc[:, 2])
     lat_ref = np.arcsin(np.clip(loc[:, 1], -1, 1))
     others = [k for k in range(len(looks)) if k != iref]
-    vis = np.stack([visible(looks[k][0], looks[k][1], looks[k][2], P, fan) for k in others], 1)
+    del rec_r
+    vis = np.stack([visible(record(looks[k][0]), looks[k][1], looks[k][2], P, fan) for k in others], 1)
     obs = []
     for j, k in enumerate(others):
         c_k = looks[k][1] + (offset if offset is not None else 0.0)

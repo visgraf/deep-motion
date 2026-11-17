@@ -64,8 +64,7 @@ def load_looks(run_dirs):
 
 
 def _record(path):
-    from fov_render.record import SampleRecord
-    return SampleRecord.load(path, access="oracle")
+    return orc.record(path)
 
 
 def run_meta(run_dirs):
@@ -75,13 +74,17 @@ def run_meta(run_dirs):
 
 
 def cells(looks, cell=CELL, hit_stride=1):
-    """Representative true points, one per voxel of `cell` m, the first hit wins (looks in order); every
-    hit_stride-th hit of a look is binned (memory at the design resolution)."""
-    keys, Ps = [], []
+    """Representative true points, one per voxel of `cell` m, the first hit wins (looks in order). With hit_stride > 1,
+    a random 1/hit_stride of each look's hits is binned (seeded by the look's index): a regular stride would fall on
+    fixed columns whenever it divides the width (#6)."""
+    Ps = []
     seen = np.empty((0, 3), dtype=np.int64)
-    for lk in looks:
+    for i, lk in enumerate(looks):
         rec = _record(lk[0])
-        P = rec.position_w[np.isfinite(rec.distance_m)][::hit_stride].astype(np.float64)
+        P = rec.position_w[np.isfinite(rec.distance_m)]
+        if hit_stride > 1:
+            P = P[np.sort(np.random.default_rng(1000 + i).choice(len(P), size=len(P) // hit_stride, replace=False))]
+        P = P.astype(np.float64)
         key = np.floor(P / cell).astype(np.int64)
         _, first = np.unique(key, axis=0, return_index=True)
         first = np.sort(first)

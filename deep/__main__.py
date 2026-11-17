@@ -65,7 +65,7 @@ def stage5a_render(a) -> int:
     from . import oracle, sensor
     poses = oracle.run_poses(a.kind, n=a.n, ds=a.ds)
     return sensor.render(a.run, sensor.SlitFan(width=a.width), poses, spp=a.spp, seed_base=a.seed_base, device=a.device,
-                         git={"deep-motion": _git(REPO)})
+                         git={"deep-motion": _git(REPO)}, drop_exr=a.drop_exr)
 
 
 def stage5a(a) -> int:
@@ -104,7 +104,7 @@ def stage5b2_render(a) -> int:
             "looks_of_path": [a.first, last, len(allp)]}
     return sensor.render(a.run, sensor.SlitFan(width=a.width), [(s, c, R) for s, c, R, _ in poses], spp=a.spp,
                          seed_base=a.seed_base + a.first, device=a.device, git={"deep-motion": _git(REPO)},
-                         blend=a.blend, meta=meta)
+                         blend=a.blend, meta=meta, drop_exr=a.drop_exr)
 
 
 def stage5b2(a) -> int:
@@ -164,6 +164,7 @@ def main(argv=None) -> int:
     p.add_argument("--spp", type=int, default=16)
     p.add_argument("--seed-base", type=int, default=9100)
     p.add_argument("--n", type=int, default=21, help="looks")
+    p.add_argument("--drop-exr", action="store_true", help="delete each look's EXR once its record exists (disk)")
     p.add_argument("--ds", type=float, default=0.01, help="step, m (line, arc)")
     p.add_argument("--device", default="CPU")
     p = sub.add_parser("stage5a", help="stage 5a: the oracle evaluation and its checks on the three runs")
@@ -183,6 +184,7 @@ def main(argv=None) -> int:
     p.add_argument("--blend", default=None, help="a scene .blend (default: the calibration room)")
     p.add_argument("--start", default=None, help="x,y,heading_deg of the path's start (default: the room's EYE, 0,0,90)")
     p.add_argument("--height", type=float, default=None, help="head height, m (default 1.6)")
+    p.add_argument("--drop-exr", action="store_true", help="delete each look's EXR once its record exists (disk)")
     p.add_argument("--width", type=int, default=720)
     p.add_argument("--spp", type=int, default=16)
     p.add_argument("--seed-base", type=int, default=10000)
@@ -193,7 +195,7 @@ def main(argv=None) -> int:
     p.add_argument("--path", default=None, choices=["composed", "straight", "turn90", "straight_long"],
                    help="default: from run.json (composed for runs before it was recorded)")
     p.add_argument("--cell", type=float, default=0.02)
-    p.add_argument("--hit-stride", type=int, default=1, help="bin every n-th hit of a look (memory at 3600 wide)")
+    p.add_argument("--hit-stride", type=int, default=1, help="bin a random 1/n of each look's hits (memory at 3600 wide)")
     p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
     a = ap.parse_args(argv)
