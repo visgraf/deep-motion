@@ -160,17 +160,23 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None, 
     first = np.argmax(vis, 1)                           # "ray5": 5 % beyond the truth along the first look's ray
     c0 = np.stack([poses[k][0] for k in range(K)])[first]   # (the start until #7; F1b's control)
     X = c0 + 1.05 * (P - c0)
-    if start == "rays":
-        X = rays_start(obs, vis, poses, X)
     act = np.flatnonzero(vis.sum(1) >= 2)
 
     def cost(Xa, idx):
         c = np.zeros(len(idx))
-        for k in range(K):
-            lon, lat, _, _ = _derivs(Xa, *poses[k])
-            rl = np.angle(np.exp(1j * (obs[k][0][idx] - lon)))
-            c += np.where(vis[idx, k], rl ** 2 + (obs[k][1][idx] - lat) ** 2, 0.0)
-        return c
+        with np.errstate(invalid="ignore", divide="ignore"):
+            for k in range(K):
+                lon, lat, _, _ = _derivs(Xa, *poses[k])
+                rl = np.angle(np.exp(1j * (obs[k][0][idx] - lon)))
+                c += np.where(vis[idx, k], rl ** 2 + (obs[k][1][idx] - lat) ** 2, 0.0)
+        return np.where(np.isfinite(c), c, np.inf)
+
+    if start == "rays":
+        # the rays' point or the earlier start, whichever fits the observations better: with noisy, almost parallel
+        # rays the rays' point can land anywhere along them, even on a look's centre (#7, Chat sandbox, 1 px)
+        Xr = rays_start(obs, vis, poses, X)
+        better = cost(Xr[act], act) <= cost(X[act], act)
+        X[act[better]] = Xr[act[better]]
 
     for _ in range(iters):
         # only the cells still moving; a step that raises the cost is halved (near a look's pole lon is singular
@@ -187,7 +193,10 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None, 
         Hx += 1e-12 * np.eye(3)
         bad = ~(np.isfinite(Hx).all((1, 2)) & np.isfinite(g).all(1))
         Hx[bad], g[bad] = np.eye(3), 0.0                # a cell on a look's centre or pole: no step; reported by F1
-        dX = np.linalg.solve(Hx, g[..., None])[..., 0]
+        try:
+            dX = np.linalg.solve(Hx, g[..., None])[..., 0]
+        except np.linalg.LinAlgError:                   # numerically singular (huge gradients near a look's centre)
+            dX = (np.linalg.pinv(Hx) @ g[..., None])[..., 0]
         c0 = cost(Xa, act)
         lam = np.ones(len(act))
         todo = np.arange(len(act))
