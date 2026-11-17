@@ -1,0 +1,76 @@
+{
+ "command": "selftest",
+ "checks": [
+  {
+   "name": "analytic d b/d r equals the numerical derivative, line and arcs (max error <= 1e-6 of its median size)",
+   "ok": true
+  },
+  {
+   "name": "control: steps 2 % longer change it (median >= 1e-3 of its median size)",
+   "ok": true
+  },
+  {
+   "name": "line, 10 steps of 0.1 m: the atlas equals T0's Fisher bound (derotate) (<= 1e-6 relative)",
+   "ok": true
+  },
+  {
+   "name": "control: T0's bound with steps 20 % longer differs (median >= 5 %)",
+   "ok": true
+  },
+  {
+   "name": "an arc with R = 1e7 m is the line (<= 1e-5 relative)",
+   "ok": true
+  },
+  {
+   "name": "control: R = 20 m differs (max >= 1e-3)",
+   "ok": true
+  },
+  {
+   "name": "line: no information on the path line (I <= 1e-20)",
+   "ok": true
+  },
+  {
+   "name": "control: 1 cm off it carries information (I >= 1e-8)",
+   "ok": true
+  },
+  {
+   "name": "arcs: no blind cell on the atlas grid, and the turn axis's range carries information (I >= 1e-3)",
+   "ok": true
+  },
+  {
+   "name": "control: the line's grid has blind cells (the heading and its opposite)",
+   "ok": true
+  },
+  {
+   "name": "time step: the parallax spread equals |sin psi| (1/r_lo - 1/r_hi), line and arcs (<= 1e-3 relative)",
+   "ok": true
+  },
+  {
+   "name": "control: on the arcs, the near point's rate with the rotation left in is not it (>= 5 %)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "deriv_err_over_median": 4.153620343490931e-08,
+  "deriv_control_median_over_median": 0.018891291177808092,
+  "t0_line_rel_max": 2.886579864025407e-15,
+  "t0_line_control_median": 0.2101408935251875,
+  "arc_to_line_rel_max": 1.0104353687090395e-07,
+  "arc20_vs_line_rel_max": 0.05237044003004132,
+  "blind_line_I": 1.879943152952091e-33,
+  "blind_line_control_I": 1.3927213122559573e-06,
+  "axis_I": 1.2841195636420262,
+  "arc_blind_cells": 0,
+  "line_blind_cells": 60,
+  "ds_closed_form_rel_max": 3.46264164008403e-08,
+  "ds_control_rel_min": 0.1025641137822958
+ },
+ "numpy": "2.2.6",
+ "python": "3.13.18",
+ "computed_by": {
+  "deep-motion": {
+   "commit": "ea67d0e17eea578e7f35e8cbfbe51ac1c0505724",
+   "clean": true
+  }
+ }
+}

@@ -1,0 +1,28 @@
+2026-11-16T23:46:04-03:00 $ .venv/bin/python -m deep stage5b2-render --path turn90 --first 0 --last 2 --step 0.01 --width 3600 --device OPTIX --drop-exr --blend scenes/classroom/classroom_eye.blend --start 0.897,0.459,90 --height 1.6 --run runs/s5b2-smoke-classroom --seed-base 16000 (at 0b125a5, docs/runs/issue-7/code/classroom uncommitted)
+[deep] stage 4 look 0 s = 0.000 m: 15.22 s
+[deep] stage 4 look 1 s = 0.010 m: 14.66 s
+[deep] stage 4 look 2 s = 0.020 m: 14.49 s
+	Command being timed: ".venv/bin/python -m deep stage5b2-render --path turn90 --first 0 --last 2 --step 0.01 --width 3600 --device OPTIX --drop-exr --blend scenes/classroom/classroom_eye.blend --start 0.897,0.459,90 --height 1.6 --run runs/s5b2-smoke-classroom --seed-base 16000"
+	User time (seconds): 54.86
+	System time (seconds): 3.91
+	Percent of CPU this job got: 130%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:45.17
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2932088
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 3
+	Minor (reclaiming a frame) page faults: 1739046
+	Voluntary context switches: 54852
+	Involuntary context switches: 14192
+	Swaps: 0
+	File system inputs: 111200
+	File system outputs: 3349272
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-16T23:46:49-03:00 exit 0

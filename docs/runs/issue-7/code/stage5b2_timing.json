@@ -1,0 +1,68 @@
+{
+ "s5b2c-turn": {
+  "device": "OPTIX",
+  "width": 3600,
+  "spp": 16,
+  "looks": 218,
+  "run_seconds": 2730.53,
+  "wall_seconds_per_look": {
+   "n": 218,
+   "median": 12.67,
+   "min": 12.01,
+   "max": 12.8,
+   "sum": 2729.71
+  },
+  "render_seconds_per_look": {
+   "n": 218,
+   "median": 1.5977487769850995,
+   "min": 1.569856921036262,
+   "max": 1.8448518369696103,
+   "sum": 348.60229013999924
+  },
+  "disk_GB": 42.42
+ },
+ "s5b2c-slong": {
+  "device": "OPTIX",
+  "width": 3600,
+  "spp": 16,
+  "looks": 218,
+  "run_seconds": 2593.08,
+  "wall_seconds_per_look": {
+   "n": 218,
+   "median": 11.93,
+   "min": 11.65,
+   "max": 12.17,
+   "sum": 2592.54
+  },
+  "render_seconds_per_look": {
+   "n": 218,
+   "median": 1.5777271179831587,
+   "min": 1.5459009230253287,
+   "max": 1.8339237800100818,
+   "sum": 344.9475928454194
+  },
+  "disk_GB": 39.92
+ },
+ "s5b2-smoke-classroom": {
+  "device": "OPTIX",
+  "width": 3600,
+  "spp": 16,
+  "looks": 3,
+  "run_seconds": 45.03,
+  "wall_seconds_per_look": {
+   "n": 3,
+   "median": 14.66,
+   "min": 14.49,
+   "max": 15.22,
+   "sum": 44.370000000000005
+  },
+  "render_seconds_per_look": {
+   "n": 3,
+   "median": 1.7210035280440934,
+   "min": 1.6174977300106548,
+   "max": 2.295361857046373,
+   "sum": 5.633863115101121
+  },
+  "disk_GB": 0.7
+ }
+}

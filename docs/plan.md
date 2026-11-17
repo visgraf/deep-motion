@@ -71,7 +71,7 @@ tangent, is the orbit of a one-parameter group of rigid motions. One family cove
 | Primitive | κ | Group | Canonical coordinates | Depth invariant | Blind set |
 | --- | --- | --- | --- | --- | --- |
 | Line | 0 | translation | epipolar-plane pencil about the path line: plane angle ω, u = cot ψ | D, distance from the path line | the path line (focus of expansion and its opposite) |
-| Arc | between 0 and ∞ | rotation about an axis offset by R | concentric mosaics: arc position θ, slit angle β to the tangent | ρ, distance from the turn axis | the turn's vertical axis |
+| Arc | between 0 and ∞ | rotation about an axis offset by R | concentric mosaics: arc position θ, slit angle β to the tangent | ρ, distance from the turn axis | none for range (stage 3): the turn axis is stationary in the head, but every other range along its ray moves |
 | Pivot | ∞ | rotation about the eye | azimuth relative to the heading | none: no parallax | everything |
 
 **What the coordinates give.**
@@ -133,6 +133,20 @@ All taken by Luiz in Chat on 2026-11-16.
 8. **Where.** The work continues in this repository, visgraf/deep-motion, forked from foveal-motion at `08db383`
    (foveal-motion's M-D19).
 
+Later decisions, numbered P-D1, P-D2, …:
+
+- **P-D1** (Luiz, 2026-11-16, in Chat; #4). The slit fan is rendered on fov-render's existing Panorama sensor.
+  Columns are slits, and per-slit time sampling is emulated by decimating dense looks. A `SlitFan` sensor in
+  fov-render only if cost bites.
+- **P-D2** (Luiz, 2026-11-16, in Chat; #4). Stage 5 is split. 5a (Chat) builds the oracle evaluation on short windows
+  in the sandbox: a line, an arc and a pivot. 5b (Code) runs the full windows and a composed path at the design
+  resolution on the GPU.
+- **P-D3** (Luiz, 2026-11-16, in Chat; #5). 5b is split in two. **5b.1** (Code, #6, now): 5a's line, arc and pivot at
+  the design resolution (0.1°/px), 1 m windows at 1 cm steps, with 5a's commands. **5b.2** (#7): Chat first builds
+  and tests the composed path (line, arc, line; the reference look sliding along it) and the fusion into world 3D,
+  gated in range, at 0.5°/px in the calibration room; then Code runs it at the design resolution in the calibration
+  room and the Classroom.
+
 ## The plan
 
 Each stage ships checks with controls that must fail, as in M3 to M6a. Chat does the numpy and calibration-room work;
@@ -172,3 +186,489 @@ Code does the GPU and Classroom work.
 - [ ] **Planar paths first?** Lines, arcs and pivots in a horizontal plane before anything in 3D.
 - [ ] **Literature search** on concentric mosaics, crossed-slits and EPI analysis for depth along composed paths,
   before any claim of novelty.
+
+## Results
+
+### Stage 2: the geometry of the primitives (#2; Chat sandbox)
+
+`python -m deep selftest --out docs/runs/issue-2` at `0b04866` (clean), numpy 2.2.6, Python 3.13, about 1 s. Record:
+[`stage2_selftest.json`](runs/issue-2/stage2_selftest.json). Module: [`deep/primitives.py`](../deep/primitives.py).
+8 checks PASS; each of the 8 controls fails as it must:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| head axes are `motion.paths.head_axes` | 1.1e-16 | right flipped | ≥ 1.42 |
+| line: u = (x_P − s)/D, ω constant, against exact projection | 6.8e-14 | path line turned 1° | median ≥ 0.046 |
+| arc: slit β sees P at θ = φ_P − δ(β, ρ), v = dz cos β /(ρ sin δ), against exact projection (2,800 sightings, both branches) | 3.1e-15 | radius 2 % wrong | ≥ 2.1e-4 rad |
+| same orbit, same trace shifted in time (line along f, arc about the axis), exact projection | 7.8e-16 | the moved point 5 % farther | median ≥ 4.1e-3 |
+| blind sets: the path line and the turn axis keep their head direction | 2.2e-16 | 1 cm off | ≥ 3.2e-4 |
+| pivot: rotation alone, at any depth | 3.3e-16 | pivot 5 cm behind the eye | ≥ 3.8e-3 |
+| line with the gaze along it: −ln(u(s+t)/u(s)) is M4's d_k(ζ) | 3.6e-15 | head 1° off the path line | median ≥ 2.6e-4 |
+| composition (line, arc, pivot, line) joins continuously | 0 | an arc 1 % short | 0.015 m gap |
+
+Figure ([`stage2_primitives.png`](runs/issue-2/figures/stage2_primitives.png), `python -m deep figures`):
+- **Line.** Traces in (u, s) are straight, with slope −1/D.
+- **Arc.** θ − φ_P against β: one curve per ρ, the same for every point at that radius.
+- **A composed path** from above, with the turn axis marked.
+
+**An observation for stage 3.** On an arc, the traces of all radii converge as the slit turns sideways (β → ±90°).
+For R = 1.6 m, the crossing angle's sensitivity to ρ at ρ = 3.1 m falls with cos β:
+
+| β | 0° | 30° | 60° | 80° | 89° |
+|---|---|---|---|---|---|
+| ∂δ/∂ρ (deg per m) | 11.1 | 9.2 | 4.9 | 1.7 | 0.17 |
+
+The sideways (radial) directions point at the turn axis, the arc's blind set. On an arc, the blind directions are
+therefore the lateral ones, as the heading is on a line. The plan's "lateral slits carry the most depth per metre"
+holds for lines; for arcs, the slits near the tangent carry the depth. Stage 3's atlas measures this properly, before
+the sensor is designed.
+
+**Correction (stage 3).** The observation above is wrong. It measured the sensitivity of a slit's *absolute* crossing
+angle, which depends on the point's unknown angle φ_P. What carries range is the difference between slits, and at
+β → ±90° the curves converge with different slopes (dθ/dβ = −(1 + R/ρ)). Stage 3's Fisher atlas shows that on an arc
+the lateral directions are the most precise, as on a line, and that no direction is blind.
+
+### Stage 3: the information atlas (#3; Chat sandbox)
+
+`python -m deep selftest --stage 3 --out docs/runs/issue-3` at `ea67d0e` (clean). Records:
+[`stage3_selftest.json`](runs/issue-3/stage3_selftest.json), [`stage3_atlas_summary.json`](runs/issue-3/stage3_atlas_summary.json).
+Module: [`deep/atlas.py`](../deep/atlas.py). 6 checks PASS; each of the 6 controls fails as it must.
+
+**The model** (a design model, not a measurement):
+- an anchor ray at the window's centre, with the point on it at eye height;
+- its bearing measured every 1 cm over a 1 m window, with 0.1° noise (a proposed angular resolution), the anchor's own
+  bearing exact;
+- known poses, so the arc's rotation is predicted;
+- σ_r is Fisher's bound on range along the ray.
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| analytic d b/d r equals the numerical derivative | 4.2e-8 of its median size | steps 2 % longer | 1.9e-2 |
+| line, 10 steps of 0.1 m: equals T0's Fisher bound (`motion/derotate.py`) | 2.9e-15 relative | T0's bound with steps 20 % longer | median 21 % |
+| an arc with R = 1e7 m is the line | 1.0e-7 relative | R = 20 m | 5.2 % |
+| line: no information on the path line | I = 1.9e-33 | 1 cm off | I = 1.4e-6 |
+| arcs: no blind cell on the grid; the turn axis's range carries information | 0 blind cells; I = 1.28 | the line's grid | 60 blind cells |
+| time step: the parallax spread is \|sin ψ\| (1/r_lo − 1/r_hi) | 3.5e-8 relative | arcs with the rotation left in | ≥ 10 % off |
+
+Three checks were corrected on their first run. No threshold moved, and the reasons are in the code and the commit:
+- Check 1's error was first measured relative to the derivative, which is undefined where the derivative crosses zero.
+  It is now measured against the derivative's median size.
+- Check 1's control, a constant yaw, cannot change d b/d r. It now lengthens the steps by 2 %.
+- Check 4 declared the turn axis blind (I ≤ 1e-20) and **failed at I = 1.28**. That is how the arc's lack of a blind
+  direction was found. The check now states what is true, and the line's blind cells are its control.
+
+**σ_r / r at 3 m, by bearing from the heading** (1 m window, 1 cm steps, 0.1°):
+
+| bearing | 1° | 10° | 30° | 90° | 150° | 179° |
+|---|---|---|---|---|---|---|
+| line | 0.097 | 0.0097 | 0.0035 | 0.0019 | 0.0035 | 0.097 |
+| arc R = 4 m | 0.038 | 0.011 | 0.0036 | 0.0018 | 0.0036 | 0.038 |
+| arc R = 1.6 m | 0.015 | 0.011 | 0.0037 | 0.0018 | 0.0037 | 0.015 |
+
+Exactly on the heading, the line is blind; the arcs give 0.034 (R = 4 m) and 0.014 (R = 1.6 m).
+
+**The largest time step** that keeps the unpredicted parallax within one resolution element (0.1°), in cm:
+
+| angle from travel ψ | 5° | 10° | 30° | 60° | 90° |
+|---|---|---|---|---|---|
+| prior band, 0.5–20 m | 1.0 | 0.52 | 0.18 | 0.10 | 0.09 |
+| converged ±10 % at 3 m | 30 | 15 | 5.2 | 3.0 | 2.6 |
+
+Figures: [`stage3_atlas.png`](runs/issue-3/figures/stage3_atlas.png) (precision around the head, polar),
+[`stage3_profiles.png`](runs/issue-3/figures/stage3_profiles.png) (the 3 m profile and the time steps).
+
+**Reading:**
+- **Arcs have no blind direction.** Curving the path fills the line's blind cone at the heading: tighter turns fill
+  it more. Elsewhere, lines and arcs agree within about 10 % (at 10° from the heading the arcs are slightly worse). Lateral directions are the most precise
+  on both, at about 0.2 % at 3 m.
+- **Time sampling should be driven by uncertainty, not fixed.** Before a point's range is known, lateral rays need
+  sub-millimetre steps to stay within a resolution element. Once range is within ±10 %, 2.6 cm suffices laterally and
+  30 cm near the heading. Sampling can start fine and coarsen as each point converges: coarse-to-fine in time,
+  per direction and per point.
+- **For the sensor (stage 4).** Lateral slits deserve the finest angular resolution and the densest time sampling. On
+  arcs, slits near the heading also carry range, which a line never gives. M4's windows of 10 cm steps sit far
+  outside the tracking regime for lateral rays: one 10 cm step moves a lateral point at 3 m by about 1.9°, about
+  19 resolution elements.
+
+### Stage 4: the sensor, a slit fan on fov-render's Panorama (#4; Chat sandbox)
+
+**Rendering path** (proposed on #4; a decision for Luiz, reversible). fov-render's existing **Panorama** sensor
+(head-locked, equirectangular) carries the slit fan, so fov-render needs no change.
+- With the head locked to the tangent, each column is a vertical slit at bearing −lon from the heading, and each row an
+  elevation. That is exactly the arc's concentric-mosaic (β, v = tan lat); the line's pencil coordinates come from the
+  same rays.
+- Per-slit time sampling is emulated by rendering dense looks and keeping each slit's samples at its own rate.
+- A `SlitFan` sensor in fov-render (rendering only the needed columns, per look) is worth it only if cost bites.
+- Cost (Chat sandbox, calibration room, width 720 = 0.5°/px): 10.1–10.3 s per look at 16 spp; 39 s at 64 spp in a
+  first, untracked trial (one look, not in the repo). The design resolution of 0.1° (width 3600) is Code's, on the GPU.
+
+**The schedule is solved exactly.** Stage 3's ds_max is the first-order step. Over a finite step a near point gets
+closer and its parallax grows. S4.3's first run caught this: at 10° from travel, a point at 0.5 m overshot one pixel
+by 5.5 %. `SlitFan.step` now solves the straight step exactly by bisection on the bearings of the band's two ends.
+
+**Run** (`runs/stage4-arc`, record [`run.json`](runs/issue-4/run.json)): `python -m deep stage4-render --run
+runs/stage4-arc` at `e7d821a` (clean). Three looks on a left-turning arc (R = 1.6 m) from the calibration room's
+EYE, heading +Y, at s = 0, 1 and 10 cm; width 720, 16 spp, seeds 9000 + k, CPU, 31 s.
+
+**Checks** (`python -m deep selftest --stage 4 --run runs/stage4-arc` at `e7d821a`, clean; record
+[`stage4_selftest.json`](runs/issue-4/stage4_selftest.json)). 3 checks PASS; each control fails as it must:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| S4.1 the carrier's pixel rays have the designed slit coordinates (bearing = −lon, v = tan lat) | 5.9e-16 | bearing sign flipped | median 1.61 rad |
+| S4.2 every rendered ray is the designed ray R_head d_local; its bearing is its column's | 6.4e-15°, bearing 2.5e-14° | designed head yawed 0.5° | median 0.43° |
+| S4.3 each slit at its scheduled step: unpredicted parallax within one pixel (line and arc, 7 slits, band 0.5–20 m) | ≤ 1.002 px | twice the step | ≥ 1.93 px |
+
+**The schedule at 0.5°/px**, largest step per slit in cm, while 0.5–20 m uncertain / once ±10 % at 3 m (figure
+[`stage4_slit_fan.png`](runs/issue-4/figures/stage4_slit_fan.png), at `efbc768`):
+
+| angle from travel | 12° | 30° | 60° | 90° | 120° | 150° |
+|---|---|---|---|---|---|---|
+| uncertain, 0.5–20 m | 2.1 | 0.88 | 0.51 | 0.45 | 0.52 | 0.91 |
+| converged, ±10 % at 3 m | 45 | 23 | 14 | 13 | 16 | 31 |
+
+At the design resolution of 0.1° the steps are five times shorter (stage 3's table).
+
+**Reading.** The sensor exists without new code in fov-render: a panorama is a slit fan whose columns can each be kept
+at their own rate. What it does not give for free is cost: the dense looks that the uncertain phase needs (sub-cm
+laterally) are many renders. That is the case for Code's GPU, and later perhaps for a `SlitFan` sensor that renders
+only the slits due at each look.
+
+### Stage 5a: the oracle on renders, short windows (#5; Chat sandbox)
+
+**What it is.** [`deep/oracle.py`](../deep/oracle.py): a perfect matcher, as M4's O-M. Every hit of the reference look
+(a window's middle) has its true point P from Position. P is projected into every other look and kept where that look
+sees the same surface (M1.3's agreement, 2 px at the range). There its bearing and elevation are exact or carry
+Gaussian noise of σ ∈ {0.25, 0.5, 1} px (0.5°/px). Range along the anchor ray is fitted by Gauss–Newton through the
+known poses, with analytic derivatives. Usable: a 95 % interval within ±10 % (as M4).
+
+**Runs** (calibration room, from the EYE heading +Y, Panorama 720 × 360, 16 spp, CPU; records in
+[`runs/issue-5/runs/`](runs/issue-5/runs)):
+
+| run | looks | window | rendered at | seconds |
+|---|---|---|---|---|
+| line20 (`s5a-line`) | 21 | 20 cm, 1 cm steps | `5ec7a6f` | 222 |
+| arc20 (`s5a-arc`), R = 1.6 m, left | 21 | 20 cm, 1 cm steps | `5ec7a6f` | 225 |
+| pivot (`s5a-pivot`) | 21 | 20°, 1° steps | `5ec7a6f` | 221 |
+| line50 (`s5a-line50`), addendum | 21 | 50 cm, 2.5 cm steps | `43e6177` | 234 |
+| arc50 (`s5a-arc50`), R = 1.6 m, addendum | 21 | 50 cm, 2.5 cm steps | `43e6177` | 236 |
+
+Commands: `python -m deep stage5a-render --kind {line,arc,pivot} --run runs/s5a-K --seed-base 9200|9300|9400`, and for
+the addendum `--ds 0.025 --seed-base 9500|9600`.
+
+Three departures from #5, said here:
+- The pivot has 21 looks over 20°, not 11 over 10°; `run_poses` shares the look count, and a longer pivot is the
+  harder control.
+- #5 named the sectors but not the angle they are measured in. The first report used bearing over all elevations,
+  where floor and ceiling anchors straight ahead sit far from the heading in 3-D and hide the line's blind cone. The
+  tables now give three ways: the 3-D angle ψ from the heading (primary), bearing at eye height (|lat| < 10°, stage 3's
+  setting), and bearing over all elevations. The checks did not change.
+- The 50 cm windows are an addendum, with tables only and no checks. The 20 cm windows cannot show the arc's heading
+  gain; the atlas predicted that, and the addendum tests it.
+
+**Checks** (`python -m deep stage5a --line runs/s5a-line --arc runs/s5a-arc --pivot runs/s5a-pivot --out
+docs/runs/issue-5` at `60dd9cb`, clean; record [`stage5a.json`](runs/issue-5/stage5a.json)). 3 checks PASS; each control
+fails as it must:
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| O5.1 no noise: the fit recovers the true range on every anchor seen by another look | 1.4e-13 | the looks' centres off by 1 cm | median 2.8 % |
+| O5.2 eye height, every look sees it: the oracle's Fisher equals stage 3's atlas (line and arc; 2232 and 2316 anchors) | median 9.4e-5 | the atlas over a window twice as long | median 100 % |
+| O5.3 the pivot carries no range | I ≤ 9.8e-24 of the line's; none usable | the line is usable | 90.9 % |
+
+**Usable fraction, %, by the 3-D angle from the heading** (`python -m deep stage5a-table line20=… arc20=… line50=…
+arc50=… pivot=… --out docs/runs/issue-5` at `594c7cc`, clean; record [`stage5a_table.json`](runs/issue-5/stage5a_table.json)):
+
+| run | σ | heading ψ < 15° | lateral 60–120° | behind ψ ≥ 165° | all |
+|---|---|---|---|---|---|
+| line20 | 0.25 px | 0 | 100 | 0 | 90.9 |
+| | 0.5 px | 0 | 90.9 | 0 | 69.0 |
+| | 1 px | 0 | 62.5 | 0 | 39.4 |
+| arc20 | 0.25 / 0.5 / 1 px | 0 / 0 / 0 | 99.9 / 90.9 / 62.6 | 0 / 0 / 0 | 90.9 / 68.8 / 39.4 |
+| line50 | 0.25 px | 27.8 | 100 | 59.1 | 98.3 |
+| | 0.5 px | 16.6 | 100 | 0 | 93.5 |
+| | 1 px | 0 | 99.8 | 0 | 78.3 |
+| arc50 | 0.25 px | 16.2 | 100 | 63.2 | 98.2 |
+| | 0.5 px | 5.8 | 100 | 0 | 93.4 |
+| | 1 px | 0 | 98.8 | 0 | 78.0 |
+| pivot | every rung | 0 | 0 | 0 | 0 |
+
+At eye height (the walls, 1.7–5 m), the lateral sector is usable at 99.8 / 50.3 / 1.2 % (line20, 0.25 / 0.5 / 1 px)
+and 100 / 99.9 / 98.9 % (line50); arcs within a point of the lines, except arc50 at 1 px (92.5 %). The usable anchors'
+95 % intervals cover the truth 94.9–95.0 % of the time on every run and rung.
+
+**Near the heading** (median 95 % half-interval / range at 0.25 px, by ψ; the profile in the same record and figure):
+
+| ψ | 0–2° | 2–5° | 5–10° | 175–178° | 178–180° |
+|---|---|---|---|---|---|
+| median range, m | 4.8 | 4.8 | 4.8 | 2.7 | 2.7 |
+| line20 / arc20 | 3.33 / 1.88 | 1.01 / 0.95 | 0.49 / 0.52 | 0.60 / 0.56 | 1.57 / 1.14 |
+| line50 / arc50 | 1.14 / 0.44 | 0.39 / 0.30 | 0.18 / 0.19 | 0.25 / 0.19 | 0.65 / 0.25 |
+
+Figures (at `60dd9cb`): [`stage5a_maps.png`](runs/issue-5/figures/stage5a_maps.png) (the half-interval over each
+reference panorama, the ±10 % contour) and [`stage5a_profile.png`](runs/issue-5/figures/stage5a_profile.png) (its
+median against ψ).
+
+**Reading:**
+- **The oracle works on renders and agrees with the atlas.** It recovers range exactly without noise, its Fisher bound
+  is stage 3's to 1e-4, the pivot carries nothing, and its intervals are calibrated (95.0 % coverage).
+- **The calibration room does not test visibility.** Over windows up to 50 cm, every anchor is seen by another look
+  (≥ 99.999 %). Occlusion is the Classroom's question (5b, stage 6).
+- **Window length and pixel noise set precision.** At 0.5°/px, 20 cm windows give the walls only at 0.25 px; 50 cm
+  windows give the lateral walls at 1 px. Precision near the heading and behind grows fastest with the window.
+- **The arc's heading gain is real on renders but small at these lengths.** At 20 cm, arc and line are the same
+  everywhere but the innermost cone. At 50 cm the arc's median interval in the 2° cone is 2.6 times narrower than the line's
+  (±44 % against ±114 %), and behind it is also better. The wall ahead is at 4.8 m, and neither reaches
+  ±10 % there; the atlas puts the arc at ±10 % at 1.5 m with a 50 cm window and 0.25 px. Between 5° and 15° the arc is
+  slightly worse than the line, as stage 3 found, so the ±15° sector counts fewer usable anchors on arc50 than on
+  line50. The gain needs longer windows, nearer surfaces or finer pixels (the design's 0.1° is five times finer):
+  that is 5b's question.
+
+### Stage 5b.1: 5a's windows at the design resolution (#6; Code, RTX 4090)
+
+**What Code ran.** 5a's commands with `--width 3600 --n 101 --ds 0.01 --device OPTIX`: 1 m windows at 1 cm steps, and
+the pivot at 21 looks. Renders were at `b36d8c6`; the tables at `b36d8c6` (stride 25) and `6b0a87b` (stride 7).
+Records, logs and timing are in [`runs/issue-6/`](runs/issue-6). The measured numbers are Code's, on the workstation;
+the full report is on #6.
+
+- **Cost.** About 12.2–12.8 s per look. Of that, 1.55 s is Cycles; the other ~10.6 s is fov-render writing the EXR
+  (207 MB) and the record (183 MB). About 40 GB per 101-look run. The oracle evaluation peaks at 58–61 GB, because it
+  holds every record at once.
+- **Departures.**
+  - `deep/figures.py` (`6b0a87b`): at a stride, each map pixel takes its nearest anchor along its row. The profile's
+    pixel angle now comes from the run.
+  - A stride-7 addendum. Stride 25 divides 3600, which puts the whole 2° cone on one column.
+
+**Results** (σ = 0.25 / 0.5 / 1 px, at 0.1°/px; stride 7):
+
+| run | ψ 0–2° usable | 2–5° | 5–15° | median 95 % half-interval, 0–2° / 178–180° (0.25 px) |
+|---|---|---|---|---|
+| line | 93.9 / 60.0 / 1.7 % | 100 / 100 / 76.5 % | 100 / 100 / 99.9 % | ±4.6 % / ±3.3 % |
+| arc, R = 1.6 m | 100 / 100 / 100 % | 100 / 100 / 100 % | 100 / 99.4 / 97.4 % | ±1.1 % / ±0.7 % |
+| pivot (stride 25) | 0 everywhere | | | |
+
+Everywhere else, line and arc are usable at every rung. Coverage is 94.8–95.1 %. Every anchor is seen by another look.
+
+**Chat's review.**
+- The tables match the records.
+- The arc's median in the 2° cone (±1.08 %, wall at 4.7 m) matches stage 3's atlas for a 1 m window at 0.025°:
+  ±1.10–1.14 % at bearings 0.25–1.5° and 4.7 m (Chat sandbox, `deep/atlas.py`).
+- Code's figure change is correct for a scene where every pixel is a hit, as its comment says.
+
+**Reading.**
+- With 1 m windows and 0.1° pixels, **the arc makes the heading usable**: ±1.1 % at 4.7 m in the 2° cone, against ±4.6 %
+  on the line. In 5a it was ±44 % against ±114 %.
+- Between 5° and 15° the arc remains slightly worse at 1 px (97.4 % against 99.9 %), as stage 3 predicted.
+- **Two costs to cut for longer paths.** The EXR write is unneeded by the oracle. The oracle's evaluation holds every
+  record at once: `deep/fusion.py` (5b.2) loads them one at a time; `deep/oracle.py` should too.
+- **Done at `981f361`** (Chat):
+  - `deep/oracle.py` loads records one at a time. Stage 5a's checks reproduce their record exactly.
+  - `--hit-stride` bins a random share of each look's hits, so it no longer falls on fixed columns.
+  - `--drop-exr` deletes each EXR once its record exists. That saves disk only: fov-render always writes the EXR,
+    because it builds the record from it. Saving the write time would be an fov-render issue.
+  - The map's colour floor follows the runs.
+### Stage 5b.2, Chat part: the composed path and the fusion in world 3D (#7; Chat sandbox)
+
+**What it is.** [`deep/fusion.py`](../deep/fusion.py). The design and the checks were declared on #7 before the code
+was written.
+- **Why not windows.** Sliding windows share looks. Merging their estimates would count the same measurement several
+  times. So the oracle's fusion is a joint fit.
+- **Cells.** Surface cells are 2 cm voxels of the true points.
+- **The fit.** Each cell's 3-D point is fitted by Gauss–Newton to its bearing and elevation in every look that sees it
+  (M1.3's agreement), each look counted once. A step that raises the cost is halved.
+- **Covariance.** σ² × the pixel angle² × H⁻¹.
+- **Usable.** The 95 % interval along the ray is within ±10 % of range from every look that sees the cell.
+
+**Runs** (calibration room, from the EYE heading +Y, Panorama 720 × 360, 16 spp, CPU, 37 looks every 2.5 cm). Each
+path is rendered as two runs (looks 0–18 and 19–36). Records are in [`runs/issue-7/runs/`](runs/issue-7/runs).
+- **composed:** 30 cm line, then a 30 cm left arc (R = 1.6 m, 10.7°), then a 30 cm line. Rendered at `5d34b5f`,
+  194 + 187 s.
+- **straight:** a 90 cm line, for comparison. Rendered at `f5dfa76`, 191 + 181 s.
+
+Commands: `python -m deep stage5b2-render [--path straight] --run runs/s5b2-{a,b,sa,sb} --first 0|19 --last 18|36
+[--seed-base 11000]`.
+
+**Checks** (`python -m deep stage5b2 runs/s5b2-a runs/s5b2-b --out docs/runs/issue-7` at `b8300e9`, clean; record
+[`stage5b2.json`](runs/issue-7/stage5b2.json)). 3 checks PASS; each control fails as it must. The straight path passes
+the same checks at `f5dfa76` ([`stage5b2_straight.json`](runs/issue-7/stage5b2_straight.json)). There, the F1 control
+moves every look, since a straight path has no join.
+
+| check | result | control (must fail) | control result |
+|---|---|---|---|
+| F1 no noise: the fused points are the true points (432 633 cells, 99.95 % seen by two looks) | 7.4e-14 of range | looks after the first join moved 1 cm | median 1.0e-2 |
+| F2 the fused σ is honest: std of along-ray error / Fisher σ (30 draws, 0.5 px, 2000 usable cells) | 0.9993 | each look counted twice (the window-overlap mistake) | 1.413 |
+| F3 the usable cells' 95 % intervals cover the truth (0.25, 0.5, 1 px) | 95.0, 94.9, 94.9 % | σ halved | ≤ 67.4 % |
+
+**F1 failed on its first run, at `5d34b5f`** (record kept:
+[`stage5b2_first_run_F1_fail.json`](runs/issue-7/stage5b2_first_run_F1_fail.json)).
+- **The failure.** Two cells were off by up to 2.3e5 of range: one on the ceiling straight above the path, one on the
+  floor straight below. Both are seen at up to 89.8° elevation, where lon is singular, and a full Gauss–Newton step
+  threw them away.
+- **The fix.** The fit now halves such steps. No threshold moved.
+- **Also changed.** A dry run on 5a's line50 run (not a record) had found one such cell still moving after 15 steps,
+  so the fit now iterates to convergence.
+
+**Results** (from the same records):
+
+| path | σ | usable cells | coverage | median / 95th-percentile 3-D error |
+|---|---|---|---|---|
+| composed | 0.25 px | 96.7 % | 95.0 % | 1.3 / 10.1 cm |
+| | 0.5 px | 91.5 % | 94.9 % | 2.5 / 15.9 cm |
+| | 1 px | 77.0 % | 94.9 % | 4.1 / 20.4 cm |
+| straight | 0.25 / 0.5 / 1 px | 96.7 / 91.6 / 76.7 % | 95.0 / 95.0 / 95.0 % | 1.3 / 2.5 / 4.1 cm median |
+
+**By bearing from the path's middle, relative to the start heading** (Fisher gate at 0.5 px;
+[`stage5b2_cones.json`](runs/issue-7/figures/stage5b2_cones.json), at `db65ef7`):
+
+| path | ahead < 15° | ahead 15–30° | lateral 60–120° | behind > 165° |
+|---|---|---|---|---|
+| composed | 65.6 % | 78.5 % | 100 % | 91.0 % |
+| straight | 61.7 % | 82.2 % | 100 % | 90.7 % |
+
+Figures (at `db65ef7`): [`stage5b2_topdown.png`](runs/issue-7/figures/stage5b2_topdown.png) (the cells from above,
+usable or not, with each path) and [`stage5b2_progress.png`](runs/issue-7/figures/stage5b2_progress.png) (the usable
+fraction as the path is travelled).
+
+**Reading:**
+- **Joint fusion is right, and window fusion would not be.** The fused σ is honest to 0.1 %. Counting each look twice
+  (what merging overlapping windows does) makes σ too small by √2, and F2's control shows it at 1.413.
+- **A 90 cm path in the calibration room fuses most of the room at 0.5°/px.** 91.5 % of the visible surface is usable
+  at 0.5 px, and 77 % at 1 px.
+- **A short arc changes almost nothing overall.** A 10.7° turn moves the totals by under half a point, and the
+  progress curves lie on each other. It shifts precision between neighbouring directions: more ahead within 15° of the
+  start heading (65.6 against 61.7 %), less at 15–30° (78.5 against 82.2 %). Stage 3 predicted that trade.
+- **What is not usable off the heading is mostly what few looks see.** Off the heading, cells that fail are seen by a
+  median of 13 of the 37 looks, against 37 for those that pass. If every look saw them, only 0.5 % would fail (a
+  diagnostic, not in the records). They are surfaces at grazing incidence, where M1.3's 2 px agreement rejects most
+  looks, or cells occluded behind the boards; this run does not separate the two.
+- **Cost.** The checks take 5.7 min in the Chat sandbox, just over the ~5 min batch rule. On Code's machine, at
+  3600 wide, the cells stay the same (2 cm voxels), but each look has 25× the samples to load and bin. Code may need to
+  subsample the hits before binning, and should say how.
+
+**Addendum: a 90° turn** (Luiz agreed on #7 to a real turn, 2026-11-16, in Chat).
+- **The path.** 30 cm line, then a left arc of 90° at **R = 1 m**, then a 30 cm line. The turn was proposed at
+  R = 1.6 m, but at 1.6 m the arc runs into a board of the calibration room: 0.8 cm from its surface points, against
+  18 cm at 1 m.
+- **The run.** `python -m deep stage5b2-render --path turn90 --step 0.1 --run runs/s5b2-turn --seed-base 12000` at
+  `4892e22` (clean). 22 looks every 10 cm, ending at 2.1 m of the path's 2.17 m; 240 s. Record:
+  [`runs/issue-7/runs/s5b2-turn`](runs/issue-7/runs/s5b2-turn).
+- **What else changed.** `run.json` now records the path, its start and its step. Records are loaded one at a time.
+  `--hit-stride` and `--max-cells` bound memory and time for Code. The refactored fusion reproduces the composed
+  path's record exactly (cells, F1–F3, rungs, progress).
+
+**Checks** (`python -m deep stage5b2 runs/s5b2-turn --out docs/runs/issue-7` at `4892e22`, clean; record
+[`stage5b2_turn90.json`](runs/issue-7/stage5b2_turn90.json)). All pass: F1 3.2e-14 (control 4.2e-3); F2 1.0018
+(control 1.417); F3 95.0 / 95.0 / 94.9 % (σ halved ≤ 67.3 %).
+
+| path | length | looks | usable at 0.25 / 0.5 / 1 px | median 3-D error at 0.5 px |
+|---|---|---|---|---|
+| straight | 0.9 m | 37 | 96.7 / 91.6 / 76.7 % | 2.5 cm |
+| turn90 | 2.1 m | 22 | 99.5 / 98.4 / 92.8 % | 1.6 cm |
+
+By bearing from the path's middle, relative to the start heading, at 0.5 px
+([`turn90/stage5b2_cones.json`](runs/issue-7/figures/turn90/stage5b2_cones.json)):
+- turn90: ahead < 15° 98.6 %, 15–30° 98.0 %, behind 100 %;
+- straight: 61.7 %, 82.2 % and 90.7 %.
+
+On the turn, 92.8 % of the cells first become usable on the arc, 5.4 % on the first line and 0.3 % on the last. 1.5 %
+never do. Figure: [`turn90/stage5b2_topdown.png`](runs/issue-7/figures/turn90/stage5b2_topdown.png).
+
+**Reading:**
+- **A real turn closes the line's blind cone and most of the grazing losses.** As the heading sweeps, the wall ahead
+  and the boards seen edge-on from the straight path come into view from other directions.
+- **Turning, not only length** (an equal-length straight path, added after the first reading). `straight_long` is a
+  2.17 m line from 2 m further back (`--start 0,-2,90`, so it clears the box ahead), 22 looks every 10 cm, rendered at
+  `ff7f8ee`; checks at `ff7f8ee`, all pass ([`stage5b2_straight_long.json`](runs/issue-7/stage5b2_straight_long.json)).
+  The figures are in [`turn90_vs_long/`](runs/issue-7/figures/turn90_vs_long).
+
+  | path | usable at 0.25 / 0.5 / 1 px | median 3-D error at 0.5 px | ahead < 15° | ahead 15–30° |
+  |---|---|---|---|---|
+  | turn90 | 99.5 / 98.4 / 92.8 % | 1.6 cm | 98.6 % | 98.0 % |
+  | straight_long | 98.0 / 94.2 / 85.3 % | 1.3 cm | 74.3 % | 89.9 % |
+
+  At equal length and sampling, the turn fuses 4 to 7 points more of the room, and it closes the cone ahead (98.6 %
+  against 74.3 %). The straight path's median error is smaller: it sees more of the room from the side, at longer
+  baselines. The starts differ by 2 m, so the scene each path sees is not quite the same.
+- **Subsampling hits changes the cell set.** With `--hit-stride 5 --max-cells 50000` (a smoke test of the options,
+  Chat sandbox, not a record), the turn gives 99.1 % at 0.5 px. Paths compared against each other must use the same
+  stride and cell settings.
+
+### Stage 5b.2, Code part 1: the calibration room at the design resolution (#7; Code, RTX 4090)
+
+**What Code ran.** The 90° turn and the equal-length straight path at 3600 wide, 1 cm steps (218 looks each), with
+`--drop-exr`. Renders were at `0b125a5`. Checks used `--cell 0.02 --hit-stride 23 --max-cells 200000`; records are at
+`53b81c8` and `1fd9b3d`, in [`runs/issue-7/code/`](runs/issue-7/code). The numbers are Code's, measured on the
+workstation; the full report is on #7.
+
+**Cost.** About 12–13 s a look (1.6 s of it Cycles): 45 and 43 min per path. Each fusion check took about 17 min.
+
+**Results.**
+- `straight_long` passes every check.
+- `turn90` passes F2, F3 and every control.
+- Usable at 0.25 / 0.5 / 1 px: turn 99.95 / 99.87 / 99.75 %, straight 99.87 / 99.71 / 99.36 %.
+- The 3-D error at 0.5 px has a median of 1.1 mm on both paths. Its 95th percentile is 7.4 mm on the turn and 19.9 mm
+  on the straight.
+- Ahead within 15°: 99.63 % on the turn against 98.19 % on the straight. From about 0.66 m the turn pulls ahead,
+  reaching 95 % of the cells at about 0.68 m against about 0.87 m.
+
+**F1 failed on the turn: one cell of 199,991, at 2.6 % of range.** Code traced it to `fuse`.
+- **The cause.** The cell is a floor point 0.34° from a look's nadir, under the arc. Starting 5 % beyond the truth
+  along one ray, the fit stalled on another look's nadir, where lon is undefined.
+- **Reproduced in the Chat sandbox without renders.** 5 of 2000 synthetic floor cells under the turn's looks stall
+  the same way.
+- **The fix** (Code's option a, `5a00828` → `3edf1ac`). Each cell starts from the least-squares intersection of its
+  observed rays, or from the earlier start, whichever fits the observations better. A numerically singular step falls
+  back to the pseudo-inverse. Two intermediate versions crashed on noisy, almost parallel rays in the sandbox (see the
+  commits).
+- **New check F1b.** No noise; the 2000 floor cells under the turn's looks are all recovered (7.6e-16). Its control,
+  the earlier start, stalls on 5.
+- **Sandbox reruns at `3edf1ac`** ([`runs/issue-7/rays/`](runs/issue-7/rays)). The composed, turn90 and straight_long
+  paths pass F1, F1b, F2, F3 and every control. Usable fractions and coverage are unchanged to four decimals.
+- **The estimator and every threshold are unchanged.**
+
+**The Classroom.** Code's smoke test renders `scenes/classroom/classroom_eye.blend` with `sensor.render` as it stands:
+97.6 % of rays hit, and the window band carries `inf`, which the oracle and the fusion already skip. Chat accepted
+Code's recommended start poses (2026-11-17, #7):
+- the turn from `0.897,0.459,90` (up the aisle at x = 0.897; the arc ends toward the front-door side);
+- the straight from `0.897,-1.541,90`, 2 m behind the turn's start, as in the room.
+
+### Stage 5b.2, Code part 2: the room after the F1 fix, and the Classroom (#7; Code, RTX 4090)
+
+Every step ran at `3d82252` with `deep/` clean. Records are at `28e3ac2`, in [`runs/issue-7/code/rays/`](runs/issue-7/code/rays)
+and [`runs/issue-7/code/classroom/`](runs/issue-7/code/classroom). The numbers are Code's, measured on the
+workstation; the report is on #7. Chat checked them against the records.
+
+**The room again.** Both paths pass F1, F1b, F2, F3 and every control. F1 on the turn went from 0.026 to 6.5e-14 of
+range, and every other number is part 1's.
+
+**The Classroom** (`classroom_eye.blend`; turn from `0.897,0.459,90`, straight from `0.897,-1.541,90`; 218 looks each
+at 1 cm, 3600 wide, about 14.5 s a look; `--cell 0.02 --hit-stride 23 --max-cells 200000`). Every check passes on
+both paths.
+
+| | turn90 | straight_long |
+|---|---|---|
+| seen by two looks | 99.978 % | 99.959 % |
+| usable at 0.25 / 0.5 / 1 px | 99.71 / 99.23 / 98.33 % | 99.64 / 99.28 / 98.59 % |
+| median / p95 3-D error at 0.5 px | 1.5 / 25.4 mm | 1.4 / 21.6 mm |
+| coverage at 0.25 / 0.5 / 1 px | 94.96 / 95.03 / 94.99 % | 95.06 / 94.96 / 94.96 % |
+| 95 % of cells usable at | 1.35 m | 1.36 m |
+
+- **The window band's edge** (Code's diagnosis, no check changed). Cells within 2 px of a missed ray (7–8 %) are exact
+  under F1, at least as usable as the rest, and their coverage stays within 95 ± 1 %. Of the cells seen by fewer than
+  two looks, 3 of 44 (turn) and 7 of 82 (straight) are at the band.
+- **Cells outside the room.** The map holds some: through the front door, through an opening in the left wall, and
+  beyond the right-hand windows.
+
+**Reading (Chat).**
+- **With perfect correspondences at the design resolution, both paths saturate.** About 99 % of the surface is usable
+  at 0.5 px in both scenes, so the ±10 % gate no longer separates paths.
+- **The geometry shows only at the margins, and the margins depend on the scene.**
+  - The room: the turn reaches 95 % sooner (0.68 against 0.87 m) and has the smaller error tail (p95 7.4 against
+    19.9 mm).
+  - The Classroom, mostly near desks and chairs: the curves coincide, and the straight path's tail is smaller (21.6
+    against 25.4 mm).
+- **The comparison is of paths with their own surroundings.** The starts are 2 m apart, so each path sees a different
+  cell set.
+- **What decides the result from here is matching, not the path.** Under the oracle, a smooth path with a real turn
+  costs nothing and closes the line's blind cone (5b.1: the heading becomes usable). The open question is which
+  correspondences a real matcher can deliver along such a path: stage 7.

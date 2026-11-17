@@ -1,0 +1,26 @@
+$ .venv/bin/python docs/runs/issue-7/code/classroom/clearance.py poses /home/lvelho/tmp/claude-2002/-home-lvelho-rd-deep-motion/c67262ce-575d-4538-90bc-767cdfcd9ca4/scratchpad/cand_poses.json (at 0b125a5, script uncommitted)
+$ blender -b scenes/classroom/classroom_eye.blend --python-exit-code 1 -P docs/runs/issue-7/code/classroom/clearance.py -- /home/lvelho/tmp/claude-2002/-home-lvelho-rd-deep-motion/c67262ce-575d-4538-90bc-767cdfcd9ca4/scratchpad/cand_poses.json docs/runs/issue-7/code/classroom/clearance.json
+[clearance] turn90 @ 0.897,0.459,90: min 0.698 m at s = 2.17 m (Circle.006); per piece 0: 0.912 (Plane.003), 1: 0.786 (Circle.006), 2: 0.698 (Circle.006)
+[clearance] turn90 @ 0.897,0.259,90: min 0.642 m at s = 2.17 m (Circle.006); per piece 0: 0.902 (Plane.003), 1: 0.745 (Circle.006), 2: 0.642 (Circle.006)
+[clearance] turn90 @ 0.897,0.659,90: min 0.782 m at s = 2.17 m (Circle.006); per piece 0: 0.948 (Plane.003), 1: 0.871 (Circle.006), 2: 0.782 (Circle.006)
+[clearance] straight_long @ 0.897,-1.412,90: min 0.801 m at s = 0.14 m (Box280.002); per piece 0: 0.801 (Box280.002)
+[clearance] straight_long @ 0.897,0.459,90: min 0.570 m at s = 2.17 m (blackBoardLamp); per piece 0: 0.570 (blackBoardLamp)
+$ .venv/bin/python docs/runs/issue-7/code/classroom/clearance.py plot /home/lvelho/tmp/claude-2002/-home-lvelho-rd-deep-motion/c67262ce-575d-4538-90bc-767cdfcd9ca4/scratchpad/cand_poses.json docs/runs/issue-7/code/classroom/clearance.json docs/runs/issue-7/code/classroom/classroom_plan.png
+# cand_poses.json above was written to the scratchpad; the same file is copied here as docs/runs/issue-7/code/classroom/cand_poses.json
+
+# rerun with a sixth candidate (the room's 2.0 m offset), at 53b81c8 with clearance.py changed (uncommitted); cand_poses.json now written here
+$ .venv/bin/python docs/runs/issue-7/code/classroom/clearance.py poses docs/runs/issue-7/code/classroom/cand_poses.json
+exit 0
+$ blender -b scenes/classroom/classroom_eye.blend --python-exit-code 1 -P docs/runs/issue-7/code/classroom/clearance.py -- docs/runs/issue-7/code/classroom/cand_poses.json docs/runs/issue-7/code/classroom/clearance.json
+[clearance] turn90 @ 0.897,0.459,90: min 0.698 m at s = 2.17 m (Circle.006); per piece 0: 0.912 (Plane.003), 1: 0.786 (Circle.006), 2: 0.698 (Circle.006)
+[clearance] turn90 @ 0.897,0.259,90: min 0.642 m at s = 2.17 m (Circle.006); per piece 0: 0.902 (Plane.003), 1: 0.745 (Circle.006), 2: 0.642 (Circle.006)
+[clearance] turn90 @ 0.897,0.659,90: min 0.782 m at s = 2.17 m (Circle.006); per piece 0: 0.948 (Plane.003), 1: 0.871 (Circle.006), 2: 0.782 (Circle.006)
+[clearance] straight_long @ 0.897,-1.412,90: min 0.801 m at s = 0.14 m (Box280.002); per piece 0: 0.801 (Box280.002)
+[clearance] straight_long @ 0.897,0.459,90: min 0.570 m at s = 2.17 m (blackBoardLamp); per piece 0: 0.570 (blackBoardLamp)
+[clearance] straight_long @ 0.897,-1.541,90: min 0.801 m at s = 0.26 m (Box280.002); per piece 0: 0.801 (Box280.002)
+exit 0
+$ .venv/bin/python docs/runs/issue-7/code/classroom/clearance.py plot docs/runs/issue-7/code/classroom/cand_poses.json docs/runs/issue-7/code/classroom/clearance.json docs/runs/issue-7/code/classroom/classroom_plan.png
+exit 0
+# the plot again, the sixth candidate drawn
+$ .venv/bin/python docs/runs/issue-7/code/classroom/clearance.py plot docs/runs/issue-7/code/classroom/cand_poses.json docs/runs/issue-7/code/classroom/clearance.json docs/runs/issue-7/code/classroom/classroom_plan.png
+exit 0

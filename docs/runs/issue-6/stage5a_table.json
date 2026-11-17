@@ -1,0 +1,812 @@
+{
+ "command": "stage5a-table",
+ "runs": {
+  "line": {
+   "run": "runs/s5b-line",
+   "anchors": 259200,
+   "seen_by_another": 1.0,
+   "table": {
+    "0.25": {
+     "psi_3d": {
+      "heading ±15°": 0.9978479196556671,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.996413199426112,
+      "all": 0.9999382716049383
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.9975,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.9958333333333333,
+      "all": 0.9994444444444445
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.9997222222222222,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.999537037037037,
+      "all": 0.9999382716049383
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 0.85,
+      "2–5°": 1.0,
+      "5–15°": 1.0
+     },
+     "coverage_of_usable": 0.950116519538243
+    },
+    "0.5": {
+     "psi_3d": {
+      "heading ±15°": 0.9921090387374462,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.9935437589670014,
+      "all": 0.9998456790123457
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.9908333333333333,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.9925,
+      "all": 0.9986111111111111
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.9989814814814815,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.9991666666666666,
+      "all": 0.9998456790123457
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 0.45,
+      "2–5°": 1.0,
+      "5–15°": 1.0
+     },
+     "coverage_of_usable": 0.95
+    },
+    "1": {
+     "psi_3d": {
+      "heading ±15°": 0.9763271162123386,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.9870875179340028,
+      "all": 0.9995833333333334
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.9725,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.985,
+      "all": 0.9964583333333333
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.9966666666666667,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 0.9983333333333333,
+      "all": 0.9995833333333334
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 0.025,
+      "2–5°": 0.8911290322580645,
+      "5–15°": 1.0
+     },
+     "coverage_of_usable": 0.9484005681379587
+    }
+   },
+   "profile_0.25px": [
+    {
+     "psi_deg": [
+      0,
+      2
+     ],
+     "n": 40,
+     "median_half_interval": 0.051496807961302335,
+     "median_range_m": 4.500620339161676
+    },
+    {
+     "psi_deg": [
+      2,
+      5
+     ],
+     "n": 248,
+     "median_half_interval": 0.01686771195388334,
+     "median_range_m": 4.506562511960501
+    },
+    {
+     "psi_deg": [
+      5,
+      10
+     ],
+     "n": 932,
+     "median_half_interval": 0.009257916731369206,
+     "median_range_m": 4.525707307236807
+    },
+    {
+     "psi_deg": [
+      10,
+      15
+     ],
+     "n": 1568,
+     "median_half_interval": 0.0062657564812254405,
+     "median_range_m": 4.596574776654298
+    },
+    {
+     "psi_deg": [
+      15,
+      25
+     ],
+     "n": 5070,
+     "median_half_interval": 0.003789634597091308,
+     "median_range_m": 4.7295739852722205
+    },
+    {
+     "psi_deg": [
+      25,
+      35
+     ],
+     "n": 7716,
+     "median_half_interval": 0.0017942192097317304,
+     "median_range_m": 3.2937020381364466
+    },
+    {
+     "psi_deg": [
+      35,
+      45
+     ],
+     "n": 10524,
+     "median_half_interval": 0.001633894837641019,
+     "median_range_m": 3.1293156504532567
+    },
+    {
+     "psi_deg": [
+      45,
+      60
+     ],
+     "n": 21679,
+     "median_half_interval": 0.0006043070572589392,
+     "median_range_m": 2.1513242974271027
+    },
+    {
+     "psi_deg": [
+      60,
+      75
+     ],
+     "n": 30669,
+     "median_half_interval": 0.0004417953098311812,
+     "median_range_m": 2.0318167765593698
+    },
+    {
+     "psi_deg": [
+      75,
+      90
+     ],
+     "n": 51154,
+     "median_half_interval": 0.00024284646646243445,
+     "median_range_m": 1.6906747744891857
+    },
+    {
+     "psi_deg": [
+      90,
+      105
+     ],
+     "n": 51154,
+     "median_half_interval": 0.000242846617519686,
+     "median_range_m": 1.6896709992765646
+    },
+    {
+     "psi_deg": [
+      105,
+      120
+     ],
+     "n": 30669,
+     "median_half_interval": 0.00044130853264491137,
+     "median_range_m": 2.0318133773545926
+    },
+    {
+     "psi_deg": [
+      120,
+      135
+     ],
+     "n": 21679,
+     "median_half_interval": 0.0008067996777869093,
+     "median_range_m": 2.561795056530455
+    },
+    {
+     "psi_deg": [
+      135,
+      145
+     ],
+     "n": 10524,
+     "median_half_interval": 0.0013580042840685082,
+     "median_range_m": 3.305475371488316
+    },
+    {
+     "psi_deg": [
+      145,
+      155
+     ],
+     "n": 7716,
+     "median_half_interval": 0.0018593909339502139,
+     "median_range_m": 3.4002418710727023
+    },
+    {
+     "psi_deg": [
+      155,
+      165
+     ],
+     "n": 5070,
+     "median_half_interval": 0.002487204468228729,
+     "median_range_m": 3.2019623087220954
+    },
+    {
+     "psi_deg": [
+      165,
+      170
+     ],
+     "n": 1568,
+     "median_half_interval": 0.0037978821139146067,
+     "median_range_m": 3.0744895102125147
+    },
+    {
+     "psi_deg": [
+      170,
+      175
+     ],
+     "n": 932,
+     "median_half_interval": 0.006060559924756147,
+     "median_range_m": 3.0274675685741084
+    },
+    {
+     "psi_deg": [
+      175,
+      178
+     ],
+     "n": 248,
+     "median_half_interval": 0.01338136275925108,
+     "median_range_m": 3.0054699609483073
+    },
+    {
+     "psi_deg": [
+      178,
+      180.0
+     ],
+     "n": 40,
+     "median_half_interval": 0.046201422840780354,
+     "median_range_m": 3.000459264173731
+    }
+   ]
+  },
+  "arc": {
+   "run": "runs/s5b-arc",
+   "anchors": 259200,
+   "seen_by_another": 1.0,
+   "table": {
+    "0.25": {
+     "psi_3d": {
+      "heading ±15°": 1.0,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 1.0
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 1.0,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 1.0
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 1.0,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 1.0
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 1.0,
+      "2–5°": 1.0,
+      "5–15°": 1.0
+     },
+     "coverage_of_usable": 0.9501890432098765
+    },
+    "0.5": {
+     "psi_3d": {
+      "heading ±15°": 1.0,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 0.9999922839506172
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 1.0,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 1.0
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 1.0,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 0.9999922839506172
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 1.0,
+      "2–5°": 1.0,
+      "5–15°": 1.0
+     },
+     "coverage_of_usable": 0.950701780106328
+    },
+    "1": {
+     "psi_3d": {
+      "heading ±15°": 0.9978479196556671,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 0.9999652777777778
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.9975,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 0.9997916666666666
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.9997222222222222,
+      "lateral 60–120°": 1.0,
+      "behind ≥165°": 1.0,
+      "all": 0.9999652777777778
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 1.0,
+      "2–5°": 1.0,
+      "5–15°": 0.9976
+     },
+     "coverage_of_usable": 0.948744362265665
+    }
+   },
+   "profile_0.25px": [
+    {
+     "psi_deg": [
+      0,
+      2
+     ],
+     "n": 40,
+     "median_half_interval": 0.010810834573452027,
+     "median_range_m": 4.736935828850777
+    },
+    {
+     "psi_deg": [
+      2,
+      5
+     ],
+     "n": 248,
+     "median_half_interval": 0.00991101670571615,
+     "median_range_m": 4.7472075771411415
+    },
+    {
+     "psi_deg": [
+      5,
+      10
+     ],
+     "n": 932,
+     "median_half_interval": 0.007027235363508011,
+     "median_range_m": 4.708096094491516
+    },
+    {
+     "psi_deg": [
+      10,
+      15
+     ],
+     "n": 1568,
+     "median_half_interval": 0.005341893221910019,
+     "median_range_m": 4.734435953665828
+    },
+    {
+     "psi_deg": [
+      15,
+      25
+     ],
+     "n": 5070,
+     "median_half_interval": 0.003831234088624204,
+     "median_range_m": 4.598531819632305
+    },
+    {
+     "psi_deg": [
+      25,
+      35
+     ],
+     "n": 7716,
+     "median_half_interval": 0.002148448907164577,
+     "median_range_m": 3.6175420064839345
+    },
+    {
+     "psi_deg": [
+      35,
+      45
+     ],
+     "n": 10524,
+     "median_half_interval": 0.0012649663696885163,
+     "median_range_m": 2.850208814214797
+    },
+    {
+     "psi_deg": [
+      45,
+      60
+     ],
+     "n": 21679,
+     "median_half_interval": 0.0007850205316775926,
+     "median_range_m": 2.4218345446373206
+    },
+    {
+     "psi_deg": [
+      60,
+      75
+     ],
+     "n": 30669,
+     "median_half_interval": 0.00045019987282188094,
+     "median_range_m": 1.9288154707212657
+    },
+    {
+     "psi_deg": [
+      75,
+      90
+     ],
+     "n": 51154,
+     "median_half_interval": 0.0002428310901107136,
+     "median_range_m": 1.6906747751258813
+    },
+    {
+     "psi_deg": [
+      90,
+      105
+     ],
+     "n": 51154,
+     "median_half_interval": 0.0002440049059880562,
+     "median_range_m": 1.6906748064246804
+    },
+    {
+     "psi_deg": [
+      105,
+      120
+     ],
+     "n": 30669,
+     "median_half_interval": 0.00044510115197322496,
+     "median_range_m": 2.0318135002554105
+    },
+    {
+     "psi_deg": [
+      120,
+      135
+     ],
+     "n": 21679,
+     "median_half_interval": 0.0008036918367022028,
+     "median_range_m": 2.556226060214029
+    },
+    {
+     "psi_deg": [
+      135,
+      145
+     ],
+     "n": 10524,
+     "median_half_interval": 0.0013466747433520325,
+     "median_range_m": 3.1869144378928014
+    },
+    {
+     "psi_deg": [
+      145,
+      155
+     ],
+     "n": 7716,
+     "median_half_interval": 0.0018942934162448659,
+     "median_range_m": 3.320313301825432
+    },
+    {
+     "psi_deg": [
+      155,
+      165
+     ],
+     "n": 5070,
+     "median_half_interval": 0.0025625360147299827,
+     "median_range_m": 3.352756194661274
+    },
+    {
+     "psi_deg": [
+      165,
+      170
+     ],
+     "n": 1568,
+     "median_half_interval": 0.00357873035849399,
+     "median_range_m": 3.2221269941038004
+    },
+    {
+     "psi_deg": [
+      170,
+      175
+     ],
+     "n": 932,
+     "median_half_interval": 0.004841918713454365,
+     "median_range_m": 3.17189634369627
+    },
+    {
+     "psi_deg": [
+      175,
+      178
+     ],
+     "n": 248,
+     "median_half_interval": 0.0060908464689346875,
+     "median_range_m": 3.1505918713039467
+    },
+    {
+     "psi_deg": [
+      178,
+      180.0
+     ],
+     "n": 40,
+     "median_half_interval": 0.00687232632134009,
+     "median_range_m": 3.143774809712548
+    }
+   ]
+  },
+  "pivot": {
+   "run": "runs/s5b-pivot",
+   "anchors": 259200,
+   "seen_by_another": 1.0,
+   "table": {
+    "0.25": {
+     "psi_3d": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 0.0,
+      "2–5°": 0.0,
+      "5–15°": 0.0
+     },
+     "coverage_of_usable": null
+    },
+    "0.5": {
+     "psi_3d": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 0.0,
+      "2–5°": 0.0,
+      "5–15°": 0.0
+     },
+     "coverage_of_usable": null
+    },
+    "1": {
+     "psi_3d": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "bearing_eye_height": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "bearing_all_elevations": {
+      "heading ±15°": 0.0,
+      "lateral 60–120°": 0.0,
+      "behind ≥165°": 0.0,
+      "all": 0.0
+     },
+     "heading_fine_psi_3d": {
+      "0–2°": 0.0,
+      "2–5°": 0.0,
+      "5–15°": 0.0
+     },
+     "coverage_of_usable": null
+    }
+   },
+   "profile_0.25px": [
+    {
+     "psi_deg": [
+      0,
+      2
+     ],
+     "n": 40,
+     "median_half_interval": 11448937740755.092,
+     "median_range_m": 5.077128276079572
+    },
+    {
+     "psi_deg": [
+      2,
+      5
+     ],
+     "n": 248,
+     "median_half_interval": 9768167275200.32,
+     "median_range_m": 5.05614710262918
+    },
+    {
+     "psi_deg": [
+      5,
+      10
+     ],
+     "n": 932,
+     "median_half_interval": 7726840871763.241,
+     "median_range_m": 5.07100330283184
+    },
+    {
+     "psi_deg": [
+      10,
+      15
+     ],
+     "n": 1568,
+     "median_half_interval": 5798684425220.806,
+     "median_range_m": 5.143572390583625
+    },
+    {
+     "psi_deg": [
+      15,
+      25
+     ],
+     "n": 5070,
+     "median_half_interval": 3992167484454.5356,
+     "median_range_m": 5.068790865651052
+    },
+    {
+     "psi_deg": [
+      25,
+      35
+     ],
+     "n": 7716,
+     "median_half_interval": 2821576267247.996,
+     "median_range_m": 3.542511199791094
+    },
+    {
+     "psi_deg": [
+      35,
+      45
+     ],
+     "n": 10524,
+     "median_half_interval": 2239330834329.184,
+     "median_range_m": 3.040593763003693
+    },
+    {
+     "psi_deg": [
+      45,
+      60
+     ],
+     "n": 21679,
+     "median_half_interval": 1840615101431.2634,
+     "median_range_m": 2.402826607062224
+    },
+    {
+     "psi_deg": [
+      60,
+      75
+     ],
+     "n": 30669,
+     "median_half_interval": 1512004032507.51,
+     "median_range_m": 1.9840156321792541
+    },
+    {
+     "psi_deg": [
+      75,
+      90
+     ],
+     "n": 51154,
+     "median_half_interval": 908192314271.0853,
+     "median_range_m": 1.6896710505681258
+    },
+    {
+     "psi_deg": [
+      90,
+      105
+     ],
+     "n": 51154,
+     "median_half_interval": 905236537403.1127,
+     "median_range_m": 1.690674827435782
+    },
+    {
+     "psi_deg": [
+      105,
+      120
+     ],
+     "n": 30669,
+     "median_half_interval": 1519474080213.3518,
+     "median_range_m": 2.0318168035050066
+    },
+    {
+     "psi_deg": [
+      120,
+      135
+     ],
+     "n": 21679,
+     "median_half_interval": 1830749489802.4316,
+     "median_range_m": 2.5617954571442616
+    },
+    {
+     "psi_deg": [
+      135,
+      145
+     ],
+     "n": 10524,
+     "median_half_interval": 2194280112729.6052,
+     "median_range_m": 2.9172046267635503
+    },
+    {
+     "psi_deg": [
+      145,
+      155
+     ],
+     "n": 7716,
+     "median_half_interval": 2814521649134.4033,
+     "median_range_m": 2.9146896655813057
+    },
+    {
+     "psi_deg": [
+      155,
+      165
+     ],
+     "n": 5070,
+     "median_half_interval": 3975496103583.336,
+     "median_range_m": 2.705531481958235
+    },
+    {
+     "psi_deg": [
+      165,
+      170
+     ],
+     "n": 1568,
+     "median_half_interval": 5745113055222.168,
+     "median_range_m": 2.6015247397791854
+    },
+    {
+     "psi_deg": [
+      170,
+      175
+     ],
+     "n": 932,
+     "median_half_interval": 7620875322444.786,
+     "median_range_m": 2.5612719411466087
+    },
+    {
+     "psi_deg": [
+      175,
+      178
+     ],
+     "n": 248,
+     "median_half_interval": 9757444179400.143,
+     "median_range_m": 2.544068827608446
+    },
+    {
+     "psi_deg": [
+      178,
+      180.0
+     ],
+     "n": 40,
+     "median_half_interval": 10982416445351.207,
+     "median_range_m": 2.5385641876959424
+    }
+   ]
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "b36d8c614a9cb9a44694910351018c024f95b8fe",
+   "clean": true
+  }
+ }
+}

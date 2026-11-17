@@ -1,0 +1,303 @@
+{
+ "command": "stage5a",
+ "runs": {
+  "line": "runs/s5a-line",
+  "arc": "runs/s5a-arc",
+  "pivot": "runs/s5a-pivot"
+ },
+ "checks": [
+  {
+   "name": "O5.1 no noise: the fit recovers the true range on every anchor seen by another look (<= 1e-9)",
+   "ok": true
+  },
+  {
+   "name": "O5.1 control: the looks' centres off by 1 cm (median >= 1e-3)",
+   "ok": true
+  },
+  {
+   "name": "O5.2 eye height, seen by every look: the oracle's Fisher bound equals stage 3's atlas (median within 1 %)",
+   "ok": true
+  },
+  {
+   "name": "O5.2 control: the atlas with a window twice as long (median >= 10 % off)",
+   "ok": true
+  },
+  {
+   "name": "O5.3 the pivot carries no range: information <= 1e-20 of the line's, no anchor usable",
+   "ok": true
+  },
+  {
+   "name": "O5.3 control: the line's anchors are usable (> 0)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "O5.1_max_rel": 1.3711254354120683e-13,
+  "O5.1_control_median_rel": 0.027951348167725376,
+  "O5.2_line_anchors": 2232,
+  "O5.2_arc_anchors": 2316,
+  "O5.2_median_rel": 9.393461560924798e-05,
+  "O5.2_control_median_rel": 1.001372264922651,
+  "O5.3_pivot_I_over_line_median": 9.759271002237136e-24,
+  "O5.3_pivot_usable": 0.0,
+  "O5.3_line_usable": 0.9092013888888889,
+  "tables": {
+   "line": {
+    "0.25": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.9998898462743562,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.9092013888888889
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.998125,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.6496180555555555
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.7030555555555555,
+      "lateral 60\u2013120\u00b0": 0.9997916666666666,
+      "behind \u2265165\u00b0": 0.725925925925926,
+      "all": 0.9092013888888889
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": 0.9501962531559629
+    },
+    "0.5": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.9091782532066973,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.6896064814814815
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.5028125,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.20121527777777778
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.5555555555555556,
+      "lateral 60\u2013120\u00b0": 0.8463773148148148,
+      "behind \u2265165\u00b0": 0.515,
+      "all": 0.6896064814814815
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": 0.9495149541807929
+    },
+    "1": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.624681778125918,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.39381944444444444
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.012083333333333333,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.004027777777777778
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.19462962962962962,
+      "lateral 60\u2013120\u00b0": 0.4938425925925926,
+      "behind \u2265165\u00b0": 0.19462962962962962,
+      "all": 0.39381944444444444
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": 0.9488528380258234
+    }
+   },
+   "arc": {
+    "0.25": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.9991371291491237,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.9086728395061728
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.004166666666666667,
+      "lateral 60\u2013120\u00b0": 0.9986458333333333,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.6475694444444444
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.7122222222222222,
+      "lateral 60\u2013120\u00b0": 0.999849537037037,
+      "behind \u2265165\u00b0": 0.7256481481481482,
+      "all": 0.9086728395061728
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": 0.9502139872966272
+    },
+    "0.5": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.9087009203955743,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.6883757716049382
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.49677083333333333,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.19465277777777779
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.5543518518518519,
+      "lateral 60\u2013120\u00b0": 0.8454050925925926,
+      "behind \u2265165\u00b0": 0.5152777777777777,
+      "all": 0.6883757716049382
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": 0.9495479944178852
+    },
+    "1": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.6255385293253696,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.39435956790123455
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.011354166666666667,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0037847222222222223
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.19712962962962963,
+      "lateral 60\u2013120\u00b0": 0.4939351851851852,
+      "behind \u2265165\u00b0": 0.19712962962962963,
+      "all": 0.39435956790123455
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": 0.9490011543955077
+    }
+   },
+   "pivot": {
+    "0.25": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": null
+    },
+    "0.5": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": null
+    },
+    "1": {
+     "psi_3d": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "bearing_eye_height": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "bearing_all_elevations": {
+      "heading \u00b115\u00b0": 0.0,
+      "lateral 60\u2013120\u00b0": 0.0,
+      "behind \u2265165\u00b0": 0.0,
+      "all": 0.0
+     },
+     "heading_fine_psi_3d": {
+      "0\u20132\u00b0": 0.0,
+      "2\u20135\u00b0": 0.0,
+      "5\u201315\u00b0": 0.0
+     },
+     "coverage_of_usable": null
+    }
+   }
+  },
+  "anchors": {
+   "line": 259200,
+   "arc": 259200,
+   "pivot": 259200
+  },
+  "seen_by_another": {
+   "line": 1.0,
+   "arc": 0.9999961419753086,
+   "pivot": 1.0
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "60dd9cba774073e0488a7b65d79fa486b3ba396d",
+   "clean": true
+  }
+ }
+}

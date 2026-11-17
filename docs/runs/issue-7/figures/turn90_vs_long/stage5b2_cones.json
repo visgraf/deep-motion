@@ -1,0 +1,49 @@
+{
+ "sigma_px": 0.5,
+ "runs": {
+  "turn90": [
+   "runs/s5b2-turn"
+  ],
+  "straight_long": [
+   "runs/s5b2-slong"
+  ]
+ },
+ "cones": {
+  "turn90": {
+   "ahead |b| < 15°": {
+    "cells": 38263,
+    "usable": 0.9859132843739382
+   },
+   "ahead 15–30°": {
+    "cells": 43249,
+    "usable": 0.9802538787023978
+   },
+   "lateral 60–120°": {
+    "cells": 110683,
+    "usable": 0.9958530216925815
+   },
+   "behind |b| > 165°": {
+    "cells": 31537,
+    "usable": 1.0
+   }
+  },
+  "straight_long": {
+   "ahead |b| < 15°": {
+    "cells": 60344,
+    "usable": 0.7430564762031022
+   },
+   "ahead 15–30°": {
+    "cells": 66455,
+    "usable": 0.8990896095101949
+   },
+   "lateral 60–120°": {
+    "cells": 108412,
+    "usable": 0.999981551857728
+   },
+   "behind |b| > 165°": {
+    "cells": 10227,
+    "usable": 0.9955998826635377
+   }
+  }
+ }
+}

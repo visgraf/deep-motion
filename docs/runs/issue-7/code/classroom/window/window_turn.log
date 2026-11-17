@@ -1,0 +1,134 @@
+2026-11-17T12:28:44-03:00 $ .venv/bin/python docs/runs/issue-7/code/classroom/window/window_band.py runs/s5b2k-turn docs/runs/issue-7/code/classroom/window/window_turn.json (at 3d82252, deep/ clean, script uncommitted)
+{
+ "run": "runs/s5b2k-turn",
+ "edge_px": 2,
+ "cells_binned": 555427,
+ "cells": 200000,
+ "missed_rays_share_per_look": {
+  "min": 0.013784567901234567,
+  "median": 0.02085077160493827,
+  "max": 0.024418981481481482
+ },
+ "groups": {
+  "at the band's edge": {
+   "cells": 15313,
+   "seen_by_two": 0.9998040880297786,
+   "seen_by_one_or_none": 3,
+   "F1_max_rel": 2.7147016048598717e-14,
+   "rungs": {
+    "0.25": {
+     "usable": 0.9994122640893358,
+     "usable_cells": 15304,
+     "coverage": 0.9487062205959227,
+     "coverage_sigma_halved": 0.6679299529534762
+    },
+    "0.5": {
+     "usable": 0.9984327042382289,
+     "usable_cells": 15289,
+     "coverage": 0.9485250833932893,
+     "coverage_sigma_halved": 0.6702858264111453
+    },
+    "1": {
+     "usable": 0.9979755763077124,
+     "usable_cells": 15282,
+     "coverage": 0.9509226541028661,
+     "coverage_sigma_halved": 0.6739301138594425
+    }
+   }
+  },
+  "elsewhere": {
+   "cells": 184687,
+   "seen_by_two": 0.999778002783087,
+   "seen_by_one_or_none": 41,
+   "F1_max_rel": 2.2303323989231842e-13,
+   "rungs": {
+    "0.25": {
+     "usable": 0.9968920389632189,
+     "usable_cells": 184113,
+     "coverage": 0.9496070348101437,
+     "coverage_sigma_halved": 0.6735483100052685
+    },
+    "0.5": {
+     "usable": 0.9918077612392859,
+     "usable_cells": 183174,
+     "coverage": 0.949790909190169,
+     "coverage_sigma_halved": 0.6716291613438589
+    },
+    "1": {
+     "usable": 0.9820994439240445,
+     "usable_cells": 181381,
+     "coverage": 0.949233932991879,
+     "coverage_sigma_halved": 0.6724408841058325
+    }
+   }
+  },
+  "all": {
+   "cells": 200000,
+   "seen_by_two": 0.99978,
+   "seen_by_one_or_none": 44,
+   "F1_max_rel": 2.2303323989231842e-13,
+   "rungs": {
+    "0.25": {
+     "usable": 0.997085,
+     "usable_cells": 199417,
+     "coverage": 0.9495379029872077,
+     "coverage_sigma_halved": 0.6731171364527598
+    },
+    "0.5": {
+     "usable": 0.992315,
+     "usable_cells": 198463,
+     "coverage": 0.9496933937308214,
+     "coverage_sigma_halved": 0.671525674810922
+    },
+    "1": {
+     "usable": 0.983315,
+     "usable_cells": 196663,
+     "coverage": 0.9493651576554817,
+     "coverage_sigma_halved": 0.6725566069875879
+    }
+   }
+  }
+ },
+ "seen_by_fewer_than_two": {
+  "cells": 44,
+  "at_the_band_edge": 3,
+  "z_m_quantiles": [
+   -7.369827699221787e-07,
+   2.434563398361206,
+   2.905052423477173
+  ],
+  "x_m_quantiles": [
+   -5.468269348144531,
+   -0.06451139971613884,
+   3.698277473449707
+  ]
+ },
+ "seconds": {
+  "cells_and_pass": 681.8,
+  "total": 1068.4
+ }
+}
+	Command being timed: ".venv/bin/python docs/runs/issue-7/code/classroom/window/window_band.py runs/s5b2k-turn docs/runs/issue-7/code/classroom/window/window_turn.json"
+	User time (seconds): 2948.21
+	System time (seconds): 72.76
+	Percent of CPU this job got: 282%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 17:48.49
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3530312
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7087459
+	Voluntary context switches: 143772
+	Involuntary context switches: 148995
+	Swaps: 0
+	File system inputs: 202623144
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-17T12:46:32-03:00 exit 0

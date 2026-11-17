@@ -1,0 +1,102 @@
+{
+ "command": "selftest",
+ "checks": [
+  {
+   "name": "head axes equal motion.paths.head_axes (<= 1e-15)",
+   "ok": true
+  },
+  {
+   "name": "control: right flipped differs (>= 0.5)",
+   "ok": true
+  },
+  {
+   "name": "line: u = (x_P - s)/D and omega constant, against exact projection (<= 1e-12)",
+   "ok": true
+  },
+  {
+   "name": "control: a path line turned 1 deg breaks it (median >= 1e-3)",
+   "ok": true
+  },
+  {
+   "name": "arc: the point is in slit beta at theta = phi_P - delta(beta, rho), with v = dz cos(beta)/(rho sin(delta)), against exact projection (<= 1e-11)",
+   "ok": true
+  },
+  {
+   "name": "control: a radius 2 % wrong misplaces every point (min slit error >= 1e-5 rad)",
+   "ok": true
+  },
+  {
+   "name": "same orbit, same trace shifted in time: line (along f) and arc (about the turn axis), exact projection (<= 1e-12)",
+   "ok": true
+  },
+  {
+   "name": "control: the moved point 5 % farther from the path line or the turn axis (median >= 1e-4)",
+   "ok": true
+  },
+  {
+   "name": "blind sets: path line and turn axis keep their head direction (<= 1e-12)",
+   "ok": true
+  },
+  {
+   "name": "control: 1 cm off either does not (>= 1e-5)",
+   "ok": true
+  },
+  {
+   "name": "pivot: rotation about the eye moves every direction by the rotation alone (<= 1e-12)",
+   "ok": true
+  },
+  {
+   "name": "control: a pivot 5 cm behind the eye adds depth-dependent motion (>= 1e-4)",
+   "ok": true
+  },
+  {
+   "name": "line with gaze along it: -ln(u(s+t)/u(s)) is M4's d_k(zeta) (<= 1e-12)",
+   "ok": true
+  },
+  {
+   "name": "control: the head 1 deg off the path line breaks it (median >= 1e-4)",
+   "ok": true
+  },
+  {
+   "name": "composition: pieces join continuously in position and heading (<= 1e-12)",
+   "ok": true
+  },
+  {
+   "name": "control: an arc 1 % short leaves a gap (>= 1e-3)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "head_axes_max": 1.1102230246251565e-16,
+  "head_axes_control_min": 1.4205678381316154,
+  "line_u_max": 6.750155989720952e-14,
+  "line_omega_max": 4.884981308350689e-15,
+  "line_control_median_min": 0.0461151714726481,
+  "arc_R": 1.2852149262740946,
+  "arc_checked": 2800,
+  "arc_beta_max": 2.6645352591003757e-15,
+  "arc_v_max": 3.1086244689504383e-15,
+  "arc_control_min_beta_err": 0.00021234168450923185,
+  "shift_max": 7.771561172376096e-16,
+  "shift_control_median_min": 0.00409528635991311,
+  "blind_line": 2.220446049250313e-16,
+  "blind_line_control": 0.00031745954560710547,
+  "blind_axis": 2.220446049250313e-16,
+  "blind_axis_control": 0.003770953585200132,
+  "pivot_max": 3.3306690738754696e-16,
+  "pivot_control_min": 0.00859638066444779,
+  "m4_reduction_max": 3.587408148320037e-15,
+  "m4_control_median_min": 0.00026497503986894905,
+  "composition_max_jump": 0.0,
+  "composition_control_jump": 0.014577175366231154,
+  "composition_poses": 47
+ },
+ "numpy": "2.2.6",
+ "python": "3.13.18",
+ "computed_by": {
+  "deep-motion": {
+   "commit": "0b04866b204ad26504e0949abbd1ce4fe45c56d9",
+   "clean": true
+  }
+ }
+}

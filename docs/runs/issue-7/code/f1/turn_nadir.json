@@ -1,0 +1,19 @@
+{
+ "within 0.5 deg of a seeing look's pole": {
+  "cells": 64,
+  "miss_F1": 1
+ },
+ "within 1.0 deg of a seeing look's pole": {
+  "cells": 241,
+  "miss_F1": 1
+ },
+ "within 2.0 deg of a seeing look's pole": {
+  "cells": 555,
+  "miss_F1": 1
+ },
+ "within 5.0 deg of a seeing look's pole": {
+  "cells": 1502,
+  "miss_F1": 1
+ },
+ "failing cell's distance from a pole, deg": 0.3431475257871597
+}

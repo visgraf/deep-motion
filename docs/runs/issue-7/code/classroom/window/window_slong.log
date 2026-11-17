@@ -1,0 +1,134 @@
+2026-11-17T12:28:44-03:00 $ .venv/bin/python docs/runs/issue-7/code/classroom/window/window_band.py runs/s5b2k-slong docs/runs/issue-7/code/classroom/window/window_slong.json (at 3d82252, deep/ clean, script uncommitted)
+{
+ "run": "runs/s5b2k-slong",
+ "edge_px": 2,
+ "cells_binned": 590025,
+ "cells": 200000,
+ "missed_rays_share_per_look": {
+  "min": 0.022432716049382715,
+  "median": 0.023776543209876544,
+  "max": 0.024452932098765433
+ },
+ "groups": {
+  "at the band's edge": {
+   "cells": 14065,
+   "seen_by_two": 0.9995023107003199,
+   "seen_by_one_or_none": 7,
+   "F1_max_rel": 1.8740698131385754e-14,
+   "rungs": {
+    "0.25": {
+     "usable": 0.9988624244578742,
+     "usable_cells": 14049,
+     "coverage": 0.9518115168339384,
+     "coverage_sigma_halved": 0.6776994803900633
+    },
+    "0.5": {
+     "usable": 0.9987913259864913,
+     "usable_cells": 14048,
+     "coverage": 0.9488895216400911,
+     "coverage_sigma_halved": 0.6768935079726651
+    },
+    "1": {
+     "usable": 0.9983647351581941,
+     "usable_cells": 14042,
+     "coverage": 0.9464463751602336,
+     "coverage_sigma_halved": 0.672696197122917
+    }
+   }
+  },
+  "elsewhere": {
+   "cells": 185935,
+   "seen_by_two": 0.9995966332320435,
+   "seen_by_one_or_none": 75,
+   "F1_max_rel": 2.2776852069711435e-13,
+   "rungs": {
+    "0.25": {
+     "usable": 0.996176083039772,
+     "usable_cells": 185224,
+     "coverage": 0.9496177601174793,
+     "coverage_sigma_halved": 0.6732442879972358
+    },
+    "0.5": {
+     "usable": 0.9923414096323984,
+     "usable_cells": 184511,
+     "coverage": 0.9495748220973276,
+     "coverage_sigma_halved": 0.671748567836064
+    },
+    "1": {
+     "usable": 0.9849947562320166,
+     "usable_cells": 183145,
+     "coverage": 0.9503562750825848,
+     "coverage_sigma_halved": 0.6740506156324224
+    }
+   }
+  },
+  "all": {
+   "cells": 200000,
+   "seen_by_two": 0.99959,
+   "seen_by_one_or_none": 82,
+   "F1_max_rel": 2.2776852069711435e-13,
+   "rungs": {
+    "0.25": {
+     "usable": 0.996365,
+     "usable_cells": 199273,
+     "coverage": 0.9497724227567207,
+     "coverage_sigma_halved": 0.6735583847284881
+    },
+    "0.5": {
+     "usable": 0.992795,
+     "usable_cells": 198559,
+     "coverage": 0.9495263372599579,
+     "coverage_sigma_halved": 0.6721125710745924
+    },
+    "1": {
+     "usable": 0.985935,
+     "usable_cells": 197187,
+     "coverage": 0.9500778448883547,
+     "coverage_sigma_halved": 0.6739541653354431
+    }
+   }
+  }
+ },
+ "seen_by_fewer_than_two": {
+  "cells": 82,
+  "at_the_band_edge": 7,
+  "z_m_quantiles": [
+   -6.99079123478441e-07,
+   0.5802378952503204,
+   2.895589590072632
+  ],
+  "x_m_quantiles": [
+   -5.468269348144531,
+   2.216666102409363,
+   3.709770917892456
+  ]
+ },
+ "seconds": {
+  "cells_and_pass": 684.1,
+  "total": 1065.4
+ }
+}
+	Command being timed: ".venv/bin/python docs/runs/issue-7/code/classroom/window/window_band.py runs/s5b2k-slong docs/runs/issue-7/code/classroom/window/window_slong.json"
+	User time (seconds): 2920.14
+	System time (seconds): 72.21
+	Percent of CPU this job got: 280%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 17:45.54
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3524208
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7307905
+	Voluntary context switches: 146405
+	Involuntary context switches: 216448
+	Swaps: 0
+	File system inputs: 198204376
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-17T12:46:29-03:00 exit 0

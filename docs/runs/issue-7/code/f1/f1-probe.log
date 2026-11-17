@@ -1,0 +1,74 @@
+2026-11-17T01:13:46-03:00 $ .venv/bin/python docs/runs/issue-7/code/f1/f1_diag.py probe runs/s5b2c-turn runs/s5b2-f1diag/turn.npz (at 0b125a5, script uncommitted)
+{
+ "cell": 63642,
+ "P": [
+  -0.03848922252655029,
+  0.5574191808700562,
+  0.0
+ ],
+ "X0_fused": [
+  -0.04175612340312697,
+  0.5859522242592571,
+  0.030627204259358633
+ ],
+ "err_rel": 0.026240843769502493,
+ "looks_seeing": 210,
+ "looks_with_lon_residual_over_0.1_rad": [
+  {
+   "k": 53,
+   "s_m": 0.53,
+   "lat_true_deg": -88.85952349412166,
+   "lat_fused_deg": -87.81087174158044,
+   "lon_residual_rad": -0.13155292314792166
+  },
+  {
+   "k": 55,
+   "s_m": 0.55,
+   "lat_true_deg": -89.5540518365262,
+   "lat_fused_deg": -88.54006495608051,
+   "lon_residual_rad": -0.36644941735214215
+  },
+  {
+   "k": 57,
+   "s_m": 0.5700000000000001,
+   "lat_true_deg": -89.65685247421284,
+   "lat_fused_deg": -89.26987749184404,
+   "lon_residual_rad": -2.623492842903615
+  },
+  {
+   "k": 59,
+   "s_m": 0.59,
+   "lat_true_deg": -88.97167060025942,
+   "lat_fused_deg": -90.0,
+   "lon_residual_rad": 0.79441616389064
+  },
+  {
+   "k": 61,
+   "s_m": 0.61,
+   "lat_true_deg": -88.26320427640545,
+   "lat_fused_deg": -89.26987741006069,
+   "lon_residual_rad": 0.10969247102783798
+  }
+ ],
+ "sum_sq_lon_residual_of_those": 7.677435523483893,
+ "nadir_closest_look": {
+  "k": 57,
+  "s_m": 0.5700000000000001,
+  "lat_true_deg": -89.65685247421284,
+  "lat_fused_deg": -89.26987749184404,
+  "lon_residual_rad": -2.623492842903615,
+  "lat_residual_rad": -0.006753987565182529
+ },
+ "from truth + 1 mm": {
+  "start_err_rel": 0.0006249887910430198,
+  "end_err_rel": 2.8881509815337886e-17,
+  "end_cost": 0.0
+ },
+ "from rays' least-squares point": {
+  "start_err_rel": 1.0835530113867471e-15,
+  "end_err_rel": 2.0816308378449373e-16,
+  "end_cost": 4.9192873011516533e-29
+ }
+}
+[f1] wrote runs/s5b2-f1diag/turn_probe.json
+2026-11-17T01:13:56-03:00 exit 0
