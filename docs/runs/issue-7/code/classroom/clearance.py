@@ -24,6 +24,8 @@ def host(out):
         "turn90 @ 0.897,0.659,90": ("turn90", (0.897, 0.659), 90.0),
         "straight_long @ 0.897,-1.412,90": ("straight_long", (0.897, -1.412), 90.0),
         "straight_long @ 0.897,0.459,90": ("straight_long", (0.897, 0.459), 90.0),
+        # the calibration room's pairing: the straight starts 2.0 m behind the turn (#7's commands: 0,-2 and 0,0)
+        "straight_long @ 0.897,-1.541,90": ("straight_long", (0.897, -1.541), 90.0),
     }
     rec = {}
     for name, (kind, p0, hd) in cands.items():
@@ -96,11 +98,12 @@ def plot(cands_json, result_json, png):
             ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc="#d9d6cf", ec="#9a958a", lw=0.3))
         elif z0 > 1.85 and (x1 - x0) < 4 and (y1 - y0) < 4:
             ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fc="none", ec="#c9c4ba", lw=0.3, ls=":"))
-    cols = {"turn90 @ 0.897,0.459,90": "#e8590c", "straight_long @ 0.897,-1.412,90": "#1c5fb8",
-            "straight_long @ 0.897,0.459,90": "#7aa6e0"}
-    for name, col in cols.items():
+    # the straights share the aisle's line; drawn thinner in turn so each one's span and start dot show
+    cols = {"turn90 @ 0.897,0.459,90": ("#e8590c", 2.4), "straight_long @ 0.897,0.459,90": ("#7aa6e0", 4.0),
+            "straight_long @ 0.897,-1.412,90": ("#1c5fb8", 2.6), "straight_long @ 0.897,-1.541,90": ("#2bb3a3", 1.0)}
+    for name, (col, lw) in cols.items():
         c = cands[name]["c"]
-        ax.plot([p[0] for p in c], [p[1] for p in c], color=col, lw=2.4,
+        ax.plot([p[0] for p in c], [p[1] for p in c], color=col, lw=lw,
                 label=f"{name} (min clearance {res[name]['min_clearance_m']:.2f} m)")
         ax.plot(c[0][0], c[0][1], "o", color=col, ms=5)
     ax.set_aspect("equal")
