@@ -114,11 +114,12 @@ def _derivs(X, c, R):
     return lon, lat, g_lon @ R.T, g_lat @ R.T
 
 
-def rays_start(obs, vis, poses):
+def rays_start(obs, vis, poses, X_fallback):
     """Each cell's least-squares intersection of the rays it is observed along (its lon, lat in every look that sees
-    it): the point nearest all of them. A weak pull (1e-9) toward the first look's centre keeps A invertible when the
-    rays are almost parallel. #7: starting 5 % beyond the truth along one ray, a cell under the arc stalled on a
-    look's nadir, where lon is undefined; from here it converges."""
+    it): the point nearest all of them. A weak pull (1e-6 of A's mean eigenvalue) toward X_fallback (the earlier
+    start) settles the directions the rays leave free when they are almost parallel. #7: starting 5 % beyond the
+    truth along one ray, a cell under the arc stalled on a look's nadir, where lon is undefined; from here it
+    converges."""
     N = len(vis)
     A = np.zeros((N, 3, 3))
     b = np.zeros((N, 3))
@@ -130,10 +131,9 @@ def rays_start(obs, vis, poses):
         w = vis[:, k][:, None, None]
         A += w * M
         b += (w * M) @ c
-    first = np.argmax(vis, 1)
-    c0 = np.stack([c for c, _ in poses])[first]
-    A += 1e-9 * np.eye(3)
-    b += 1e-9 * c0
+    lam = 1e-6 * np.trace(A, axis1=1, axis2=2)[:, None, None] / 3 + 1e-12
+    A += lam * np.eye(3)
+    b += lam[:, :, 0] * X_fallback
     return np.linalg.solve(A, b[..., None])[..., 0]
 
 
@@ -157,12 +157,11 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None, 
         _, _, gl, gt = _derivs(P, *poses[k])
         w = vis[:, k][:, None, None]
         H += w * (gl[:, :, None] * gl[:, None, :] + gt[:, :, None] * gt[:, None, :])
+    first = np.argmax(vis, 1)                           # "ray5": 5 % beyond the truth along the first look's ray
+    c0 = np.stack([poses[k][0] for k in range(K)])[first]   # (the start until #7; F1b's control)
+    X = c0 + 1.05 * (P - c0)
     if start == "rays":
-        X = rays_start(obs, vis, poses)
-    else:                                               # "ray5": 5 % beyond the truth along the first look's ray
-        first = np.argmax(vis, 1)                       # (the start until #7; kept as F1b's control)
-        c0 = np.stack([poses[k][0] for k in range(K)])[first]
-        X = c0 + 1.05 * (P - c0)
+        X = rays_start(obs, vis, poses, X)
     act = np.flatnonzero(vis.sum(1) >= 2)
 
     def cost(Xa, idx):
@@ -186,6 +185,8 @@ def fuse(looks, P, fan, sigma_px=0.0, rng=None, poses=None, iters=60, vis=None, 
             Hx += w[:, :, None] * (gl[:, :, None] * gl[:, None, :] + gt[:, :, None] * gt[:, None, :])
             g += w * (gl * rl[:, None] + gt * rt[:, None])
         Hx += 1e-12 * np.eye(3)
+        bad = ~(np.isfinite(Hx).all((1, 2)) & np.isfinite(g).all(1))
+        Hx[bad], g[bad] = np.eye(3), 0.0                # a cell on a look's centre or pole: no step; reported by F1
         dX = np.linalg.solve(Hx, g[..., None])[..., 0]
         c0 = cost(Xa, act)
         lam = np.ones(len(act))
