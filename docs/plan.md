@@ -592,3 +592,42 @@ never do. Figure: [`turn90/stage5b2_topdown.png`](runs/issue-7/figures/turn90/st
 - **Subsampling hits changes the cell set.** With `--hit-stride 5 --max-cells 50000` (a smoke test of the options,
   Chat sandbox, not a record), the turn gives 99.1 % at 0.5 px. Paths compared against each other must use the same
   stride and cell settings.
+
+### Stage 5b.2, Code part 1: the calibration room at the design resolution (#7; Code, RTX 4090)
+
+**What Code ran.** The 90° turn and the equal-length straight path at 3600 wide, 1 cm steps (218 looks each), with
+`--drop-exr`. Renders were at `0b125a5`. Checks used `--cell 0.02 --hit-stride 23 --max-cells 200000`; records are at
+`53b81c8` and `1fd9b3d`, in [`runs/issue-7/code/`](runs/issue-7/code). The numbers are Code's, measured on the
+workstation; the full report is on #7.
+
+**Cost.** About 12–13 s a look (1.6 s of it Cycles): 45 and 43 min per path. Each fusion check took about 17 min.
+
+**Results.**
+- `straight_long` passes every check.
+- `turn90` passes F2, F3 and every control.
+- Usable at 0.25 / 0.5 / 1 px: turn 99.95 / 99.87 / 99.75 %, straight 99.87 / 99.71 / 99.36 %.
+- The 3-D error at 0.5 px has a median of 1.1 mm on both paths. Its 95th percentile is 7.4 mm on the turn and 19.9 mm
+  on the straight.
+- Ahead within 15°: 99.63 % on the turn against 98.19 % on the straight. From about 0.66 m the turn pulls ahead,
+  reaching 95 % of the cells at about 0.68 m against about 0.87 m.
+
+**F1 failed on the turn: one cell of 199,991, at 2.6 % of range.** Code traced it to `fuse`.
+- **The cause.** The cell is a floor point 0.34° from a look's nadir, under the arc. Starting 5 % beyond the truth
+  along one ray, the fit stalled on another look's nadir, where lon is undefined.
+- **Reproduced in the Chat sandbox without renders.** 5 of 2000 synthetic floor cells under the turn's looks stall
+  the same way.
+- **The fix** (Code's option a, `5a00828` → `3edf1ac`). Each cell starts from the least-squares intersection of its
+  observed rays, or from the earlier start, whichever fits the observations better. A numerically singular step falls
+  back to the pseudo-inverse. Two intermediate versions crashed on noisy, almost parallel rays in the sandbox (see the
+  commits).
+- **New check F1b.** No noise; the 2000 floor cells under the turn's looks are all recovered (7.6e-16). Its control,
+  the earlier start, stalls on 5.
+- **Sandbox reruns at `3edf1ac`** ([`runs/issue-7/rays/`](runs/issue-7/rays)). The composed, turn90 and straight_long
+  paths pass F1, F1b, F2, F3 and every control. Usable fractions and coverage are unchanged to four decimals.
+- **The estimator and every threshold are unchanged.**
+
+**The Classroom.** Code's smoke test renders `scenes/classroom/classroom_eye.blend` with `sensor.render` as it stands:
+97.6 % of rays hit, and the window band carries `inf`, which the oracle and the fusion already skip. Chat accepted
+Code's recommended start poses (2026-11-17, #7):
+- the turn from `0.897,0.459,90` (up the aisle at x = 0.897; the arc ends toward the front-door side);
+- the straight from `0.897,-1.541,90`, 2 m behind the turn's start, as in the room.
