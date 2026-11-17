@@ -533,9 +533,19 @@ never do. Figure: [`turn90/stage5b2_topdown.png`](runs/issue-7/figures/turn90/st
 **Reading:**
 - **A real turn closes the line's blind cone and most of the grazing losses.** As the heading sweeps, the wall ahead
   and the boards seen edge-on from the straight path come into view from other directions.
-- **This comparison confounds turning with length.** The turn is 2.3× longer and the looks are 4× sparser. A straight
-  path of 2.1 m in this room would run into the box ahead. Separating the two needs a larger scene (the Classroom) or
-  a turn and a straight path of equal length; that is for Code.
+- **Turning, not only length** (an equal-length straight path, added after the first reading). `straight_long` is a
+  2.17 m line from 2 m further back (`--start 0,-2,90`, so it clears the box ahead), 22 looks every 10 cm, rendered at
+  `ff7f8ee`; checks at `ff7f8ee`, all pass ([`stage5b2_straight_long.json`](runs/issue-7/stage5b2_straight_long.json)).
+  The figures are in [`turn90_vs_long/`](runs/issue-7/figures/turn90_vs_long).
+
+  | path | usable at 0.25 / 0.5 / 1 px | median 3-D error at 0.5 px | ahead < 15° | ahead 15–30° |
+  |---|---|---|---|---|
+  | turn90 | 99.5 / 98.4 / 92.8 % | 1.6 cm | 98.6 % | 98.0 % |
+  | straight_long | 98.0 / 94.2 / 85.3 % | 1.3 cm | 74.3 % | 89.9 % |
+
+  At equal length and sampling, the turn fuses 4 to 7 points more of the room, and it closes the cone ahead (98.6 %
+  against 74.3 %). The straight path's median error is smaller: it sees more of the room from the side, at longer
+  baselines. The starts differ by 2 m, so the scene each path sees is not quite the same.
 - **Subsampling hits changes the cell set.** With `--hit-stride 5 --max-cells 50000` (a smoke test of the options,
   Chat sandbox, not a record), the turn gives 99.1 % at 0.5 px. Paths compared against each other must use the same
   stride and cell settings.
