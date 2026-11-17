@@ -1,0 +1,68 @@
+{
+ "s5b-line": {
+  "device": "OPTIX",
+  "width": 3600,
+  "spp": 16,
+  "looks": 101,
+  "run_seconds": 1229.51,
+  "wall_seconds_per_look": {
+   "n": 101,
+   "median": 12.16,
+   "min": 12.01,
+   "max": 12.27,
+   "sum": 1228.9900000000002
+  },
+  "render_seconds_per_look": {
+   "n": 101,
+   "median": 1.5452524549909867,
+   "min": 1.5253220800077543,
+   "max": 1.7792433470021933,
+   "sum": 156.43484903825447
+  },
+  "disk_GB": 39.71
+ },
+ "s5b-arc": {
+  "device": "OPTIX",
+  "width": 3600,
+  "spp": 16,
+  "looks": 101,
+  "run_seconds": 1288.11,
+  "wall_seconds_per_look": {
+   "n": 101,
+   "median": 12.77,
+   "min": 11.98,
+   "max": 12.92,
+   "sum": 1287.57
+  },
+  "render_seconds_per_look": {
+   "n": 101,
+   "median": 1.546751354006119,
+   "min": 1.5277821060153656,
+   "max": 1.7707695050048642,
+   "sum": 156.63070230081212
+  },
+  "disk_GB": 40.63
+ },
+ "s5b-pivot": {
+  "device": "OPTIX",
+  "width": 3600,
+  "spp": 16,
+  "looks": 21,
+  "run_seconds": 252.8,
+  "wall_seconds_per_look": {
+   "n": 21,
+   "median": 12.04,
+   "min": 11.89,
+   "max": 12.12,
+   "sum": 252.21999999999997
+  },
+  "render_seconds_per_look": {
+   "n": 21,
+   "median": 1.5705541830393486,
+   "min": 1.5521186530240811,
+   "max": 1.7803372800117359,
+   "sum": 33.191788759082556
+  },
+  "disk_GB": 8.23
+ }
+}
