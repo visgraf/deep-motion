@@ -423,3 +423,41 @@ median against ψ).
   slightly worse than the line, as stage 3 found, so the ±15° sector counts fewer usable anchors on arc50 than on
   line50. The gain needs longer windows, nearer surfaces or finer pixels (the design's 0.1° is five times finer):
   that is 5b's question.
+
+### Stage 5b.1: 5a's windows at the design resolution (#6; Code, RTX 4090)
+
+**What Code ran.** 5a's commands with `--width 3600 --n 101 --ds 0.01 --device OPTIX`: 1 m windows at 1 cm steps, and
+the pivot at 21 looks. Renders were at `b36d8c6`; the tables at `b36d8c6` (stride 25) and `6b0a87b` (stride 7).
+Records, logs and timing are in [`runs/issue-6/`](runs/issue-6). The measured numbers are Code's, on the workstation;
+the full report is on #6.
+
+- **Cost.** About 12.2–12.8 s per look. Of that, 1.55 s is Cycles; the other ~10.6 s is fov-render writing the EXR
+  (207 MB) and the record (183 MB). About 40 GB per 101-look run. The oracle evaluation peaks at 58–61 GB, because it
+  holds every record at once.
+- **Departures.**
+  - `deep/figures.py` (`6b0a87b`): at a stride, each map pixel takes its nearest anchor along its row. The profile's
+    pixel angle now comes from the run.
+  - A stride-7 addendum. Stride 25 divides 3600, which puts the whole 2° cone on one column.
+
+**Results** (σ = 0.25 / 0.5 / 1 px, at 0.1°/px; stride 7):
+
+| run | ψ 0–2° usable | 2–5° | 5–15° | median 95 % half-interval, 0–2° / 178–180° (0.25 px) |
+|---|---|---|---|---|
+| line | 93.9 / 60.0 / 1.7 % | 100 / 100 / 76.5 % | 100 / 100 / 99.9 % | ±4.6 % / ±3.3 % |
+| arc, R = 1.6 m | 100 / 100 / 100 % | 100 / 100 / 100 % | 100 / 99.4 / 97.4 % | ±1.1 % / ±0.7 % |
+| pivot (stride 25) | 0 everywhere | | | |
+
+Everywhere else, line and arc are usable at every rung. Coverage is 94.8–95.1 %. Every anchor is seen by another look.
+
+**Chat's review.**
+- The tables match the records.
+- The arc's median in the 2° cone (±1.08 %, wall at 4.7 m) matches stage 3's atlas for a 1 m window at 0.025°:
+  ±1.10–1.14 % at bearings 0.25–1.5° and 4.7 m (Chat sandbox, `deep/atlas.py`).
+- Code's figure change is correct for a scene where every pixel is a hit, as its comment says.
+
+**Reading.**
+- With 1 m windows and 0.1° pixels, **the arc makes the heading usable**: ±1.1 % at 4.7 m in the 2° cone, against ±4.6 %
+  on the line. In 5a it was ±44 % against ±114 %.
+- Between 5° and 15° the arc remains slightly worse at 1 px (97.4 % against 99.9 %), as stage 3 predicted.
+- **Two costs to cut for longer paths.** The EXR write is unneeded by the oracle. The oracle's evaluation holds every
+  record at once: `deep/fusion.py` (5b.2) loads them one at a time; `deep/oracle.py` should too.
