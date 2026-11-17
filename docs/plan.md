@@ -461,6 +461,12 @@ Everywhere else, line and arc are usable at every rung. Coverage is 94.8–95.1 
 - Between 5° and 15° the arc remains slightly worse at 1 px (97.4 % against 99.9 %), as stage 3 predicted.
 - **Two costs to cut for longer paths.** The EXR write is unneeded by the oracle. The oracle's evaluation holds every
   record at once: `deep/fusion.py` (5b.2) loads them one at a time; `deep/oracle.py` should too.
+- **Done at `981f361`** (Chat):
+  - `deep/oracle.py` loads records one at a time. Stage 5a's checks reproduce their record exactly.
+  - `--hit-stride` bins a random share of each look's hits, so it no longer falls on fixed columns.
+  - `--drop-exr` deletes each EXR once its record exists. That saves disk only: fov-render always writes the EXR,
+    because it builds the record from it. Saving the write time would be an fov-render issue.
+  - The map's colour floor follows the runs.
 ### Stage 5b.2, Chat part: the composed path and the fusion in world 3D (#7; Chat sandbox)
 
 **What it is.** [`deep/fusion.py`](../deep/fusion.py). The design and the checks were declared on #7 before the code
