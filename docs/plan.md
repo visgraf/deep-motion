@@ -631,3 +631,44 @@ workstation; the full report is on #7.
 Code's recommended start poses (2026-11-17, #7):
 - the turn from `0.897,0.459,90` (up the aisle at x = 0.897; the arc ends toward the front-door side);
 - the straight from `0.897,-1.541,90`, 2 m behind the turn's start, as in the room.
+
+### Stage 5b.2, Code part 2: the room after the F1 fix, and the Classroom (#7; Code, RTX 4090)
+
+Every step ran at `3d82252` with `deep/` clean. Records are at `28e3ac2`, in [`runs/issue-7/code/rays/`](runs/issue-7/code/rays)
+and [`runs/issue-7/code/classroom/`](runs/issue-7/code/classroom). The numbers are Code's, measured on the
+workstation; the report is on #7. Chat checked them against the records.
+
+**The room again.** Both paths pass F1, F1b, F2, F3 and every control. F1 on the turn went from 0.026 to 6.5e-14 of
+range, and every other number is part 1's.
+
+**The Classroom** (`classroom_eye.blend`; turn from `0.897,0.459,90`, straight from `0.897,-1.541,90`; 218 looks each
+at 1 cm, 3600 wide, about 14.5 s a look; `--cell 0.02 --hit-stride 23 --max-cells 200000`). Every check passes on
+both paths.
+
+| | turn90 | straight_long |
+|---|---|---|
+| seen by two looks | 99.978 % | 99.959 % |
+| usable at 0.25 / 0.5 / 1 px | 99.71 / 99.23 / 98.33 % | 99.64 / 99.28 / 98.59 % |
+| median / p95 3-D error at 0.5 px | 1.5 / 25.4 mm | 1.4 / 21.6 mm |
+| coverage at 0.25 / 0.5 / 1 px | 94.96 / 95.03 / 94.99 % | 95.06 / 94.96 / 94.96 % |
+| 95 % of cells usable at | 1.35 m | 1.36 m |
+
+- **The window band's edge** (Code's diagnosis, no check changed). Cells within 2 px of a missed ray (7–8 %) are exact
+  under F1, at least as usable as the rest, and their coverage stays within 95 ± 1 %. Of the cells seen by fewer than
+  two looks, 3 of 44 (turn) and 7 of 82 (straight) are at the band.
+- **Cells outside the room.** The map holds some: through the front door, through an opening in the left wall, and
+  beyond the right-hand windows.
+
+**Reading (Chat).**
+- **With perfect correspondences at the design resolution, both paths saturate.** About 99 % of the surface is usable
+  at 0.5 px in both scenes, so the ±10 % gate no longer separates paths.
+- **The geometry shows only at the margins, and the margins depend on the scene.**
+  - The room: the turn reaches 95 % sooner (0.68 against 0.87 m) and has the smaller error tail (p95 7.4 against
+    19.9 mm).
+  - The Classroom, mostly near desks and chairs: the curves coincide, and the straight path's tail is smaller (21.6
+    against 25.4 mm).
+- **The comparison is of paths with their own surroundings.** The starts are 2 m apart, so each path sees a different
+  cell set.
+- **What decides the result from here is matching, not the path.** Under the oracle, a smooth path with a real turn
+  costs nothing and closes the line's blind cone (5b.1: the heading becomes usable). The open question is which
+  correspondences a real matcher can deliver along such a path: stage 7.
