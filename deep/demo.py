@@ -221,6 +221,7 @@ class Scene:
         self.centre = np.array([*(0.5 * (lo + hi)), 0.5 * (self.zlo + self.zhi)])
         self.extent = float(np.max(hi - lo))
         self.exposure = None
+        self.fits = {}
 
 
 def pano_panel(sc, rec, m, st, colours):
@@ -310,8 +311,32 @@ def _view(sc, az_deg, el_deg=40.0, dist=1.6):
     return eye, np.stack([r, u, f])
 
 
-def cloud_panel(sc, st, colours, az, size=(CLOUD[2], CLOUD[3]), title=True, splat=2, m=None):
+def _fit(sc, azs, w, h, margin=0.05):
+    """Where the 3-D views put the cloud: for each azimuth, the projected cells' 0.2-99.8 percentile box centred in
+    the w x h area; one scale for all the azimuths given, so an orbit keeps its size. From the true points of the
+    cells drawn (below the clip), so the framing holds still while the cloud grows.
+    #9, Code: in the Classroom 13 % of the cells lie outside the room (seen through the doors and the windows), and the
+    fixed 55-degree framing about the cells' bounding box put the room off-centre and cut its near side."""
+    key = (tuple(azs), w, h)
+    if key not in sc.fits:
+        Q = sc.P[sc.P[:, 2] <= CEILING_CLIP]
+        boxes = {}
+        for az in azs:
+            eye, B = _view(sc, az)
+            q = (Q - eye) @ B.T
+            q = q[q[:, 2] > 0.1]
+            x0, x1 = np.percentile(q[:, 0] / q[:, 2], [0.2, 99.8])
+            y0, y1 = np.percentile(q[:, 1] / q[:, 2], [0.2, 99.8])
+            boxes[az] = (x0, x1, y0, y1)
+        k = min(min((1 - 2 * margin) * w / (b[1] - b[0]), (1 - 2 * margin) * h / (b[3] - b[2])) for b in boxes.values())
+        sc.fits[key] = {az: (k, 0.5 * (b[0] + b[1]), 0.5 * (b[2] + b[3])) for az, b in boxes.items()}
+    return sc.fits[key]
+
+
+def cloud_panel(sc, st, colours, az, size=(CLOUD[2], CLOUD[3]), title=True, splat=2, m=None, azs=None):
     w, h = size
+    top = 40 if title else 0                                       # the title's band
+    k, xc, yc = _fit(sc, azs or (az,), w, h - top)[az]
     im = Image.new("RGB", (w, h), PAPER)
     a = np.asarray(im).copy()
     eye, B = _view(sc, az)
@@ -319,9 +344,8 @@ def cloud_panel(sc, st, colours, az, size=(CLOUD[2], CLOUD[3]), title=True, spla
     if sel.any():
         q = (st.X[sel] - eye) @ B.T
         ok = q[:, 2] > 0.1
-        f = 0.5 * w / math.tan(math.radians(55) / 2)
-        px = (w / 2 + f * q[ok, 0] / q[ok, 2]).astype(int)
-        py = (h / 2 - f * q[ok, 1] / q[ok, 2]).astype(int)
+        px = (w / 2 + k * (q[ok, 0] / q[ok, 2] - xc)).astype(int)
+        py = (top + (h - top) / 2 - k * (q[ok, 1] / q[ok, 2] - yc)).astype(int)
         col = colours[sel][ok]
         o = np.argsort(-q[ok, 2])                                 # far first
         px, py, col = px[o], py[o], col[o]
@@ -333,8 +357,7 @@ def cloud_panel(sc, st, colours, az, size=(CLOUD[2], CLOUD[3]), title=True, spla
     d = ImageDraw.Draw(im)
     if m is not None:
         q = (sc.C[: m + 1] - eye) @ B.T
-        f = 0.5 * w / math.tan(math.radians(55) / 2)
-        pts = [(w / 2 + f * x / z, h / 2 - f * y / z) for x, y, z in q if z > 0.1]
+        pts = [(w / 2 + k * (x / z - xc), top + (h - top) / 2 - k * (y / z - yc)) for x, y, z in q if z > 0.1]
         if len(pts) > 1:
             d.line(pts, fill=ACCENT, width=3)
     if title:
@@ -494,8 +517,9 @@ def frame_two(sc, m, st, cols, hist, total_s, kind, note):
 
 def end_card(sc, st, cols, i, n, kind):
     im = Image.new("RGB", (W, H), PAPER)
-    az = -115.0 + 360.0 * i / n
-    im.paste(cloud_panel(sc, st, cols, az=az, size=(W, H - 60), title=False, splat=2, m=len(sc.T) - 1), (0, 60))
+    azs = tuple(-115.0 + 360.0 * j / n for j in range(n))
+    im.paste(cloud_panel(sc, st, cols, az=azs[i], size=(W, H - 60), title=False, splat=2, m=len(sc.T) - 1, azs=azs),
+             (0, 60))
     d = ImageDraw.Draw(im)
     what = "relative error along the ray" if kind == "error" else "height"
     _text(d, (24, 16), f"The tour's fused surface: {int(st.usable.sum()):,} usable cells, coloured by {what} "

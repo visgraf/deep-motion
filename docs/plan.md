@@ -672,3 +672,24 @@ both paths.
 - **What decides the result from here is matching, not the path.** Under the oracle, a smooth path with a real turn
   costs nothing and closes the line's blind cone (5b.1: the heading becomes usable). The open question is which
   correspondences a real matcher can deliver along such a path: stage 7.
+
+### Demo: the Classroom tour (#9; Chat, then Code)
+
+**The tour.** The straight path up the aisle to the turn's start (2.00 m), then the 90° turn: 418 looks at 1 cm,
+4.17 m. It reuses #7's renders (3600 wide).
+
+**What it shows.** `deep/demo.py`, after D1, draws two videos: range and error. Each frame has the panorama, a top
+view, a 3-D view and the progress curve. The depth is the oracle's at 0.5 px (DERIVED: a display).
+
+**Checks.**
+- Chat sandbox at `06153e1`: V1 (the video's first-order points equal `fusion.fuse`, median 0.0014 σ) and V2 (the tour
+  is the planned curve, 5e-16) pass, and their controls fail.
+- Code, Classroom at `2213227`: V1 0.00013 σ and V2 6.7e-16 pass, and their controls fail. 99.3 % of the cells are
+  usable at the end. The run took 37 min at 1.4 GB.
+- Records: [`runs/issue-9/`](runs/issue-9).
+
+**Code's one change** (`2213227`, display only): the 3-D views fit the projected cells per azimuth with one scale for
+the orbit. Cells seen outside the room (door, opening, windows) had pulled the fixed framing off the room.
+
+**Where the videos are.** On the workstation, 2 × about 140 MB, 27.9 s each, with sha256 sums in the records. Luiz
+decided (2026-11-18, in Chat) that they stay on the workstation only: not attached to the issue, not a release asset.
