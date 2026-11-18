@@ -691,5 +691,5 @@ view, a 3-D view and the progress curve. The depth is the oracle's at 0.5 px (DE
 **Code's one change** (`2213227`, display only): the 3-D views fit the projected cells per azimuth with one scale for
 the orbit. Cells seen outside the room (door, opening, windows) had pulled the fixed framing off the room.
 
-**Where the videos are.** On the workstation, 2 × about 140 MB, 27.9 s each, with sha256 sums in the records. Where to
-publish them is Luiz's call: the repo is public.
+**Where the videos are.** On the workstation, 2 × about 140 MB, 27.9 s each, with sha256 sums in the records. Luiz
+decided (2026-11-18, in Chat) that they stay on the workstation only: not attached to the issue, not a release asset.
