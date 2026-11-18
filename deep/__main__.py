@@ -122,6 +122,13 @@ def stage5b2(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def compare(a) -> int:
+    from . import compare as cp
+    for f in cp.run(a.out):
+        print(f"{PREFIX} wrote {f}")
+    return 0
+
+
 def demo(a) -> int:
     from . import demo as dm
     return dm.run(a.straight, a.turn, a.out, sigma_px=a.sigma, cell=a.cell, hit_stride=a.hit_stride,
@@ -205,6 +212,8 @@ def main(argv=None) -> int:
     p.add_argument("--hit-stride", type=int, default=1, help="bin a random 1/n of each look's hits (memory at 3600 wide)")
     p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("compare", help="#11: the representations side by side (figures, Chat sandbox)")
+    p.add_argument("--out", required=True)
     p = sub.add_parser("demo", help="#9: the tour (the straight to the turn's start, then the turn) as two videos")
     p.add_argument("--straight", nargs="+", required=True, help="the straight path's run(s)")
     p.add_argument("--turn", nargs="+", required=True, help="the turn's run(s)")
@@ -216,7 +225,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
