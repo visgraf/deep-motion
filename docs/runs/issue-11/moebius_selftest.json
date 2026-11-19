@@ -1,0 +1,55 @@
+{
+ "command": "moebius",
+ "checks": [
+  {
+   "name": "M1 translation: dl/dt = 1/r for every direction and range (rel 1e-5), omega fixed (1e-6 rad/m)",
+   "ok": true
+  },
+  {
+   "name": "M1 control: the unweighted hyperbolic field, dl/dt = 1 (>= 10 % off)",
+   "ok": true
+  },
+  {
+   "name": "M2 u = cot psi = -sinh l, and a finite translation shifts sinh l by t/D (1e-9)",
+   "ok": true
+  },
+  {
+   "name": "M2 control: a finite translation as one shift of l for all points (>= 0.1 off)",
+   "ok": true
+  },
+  {
+   "name": "M3 a rotation of the eye preserves the cross-ratio of any four directions (rel 1e-9): a Moebius map",
+   "ok": true
+  },
+  {
+   "name": "M3 control: a translation does not (every trial changes it by >= 1e-4)",
+   "ok": true
+  },
+  {
+   "name": "M4 the arc's image motion = elliptic (turn, depth-free) + hyperbolic weighted by 1/r (1e-5)",
+   "ok": true
+  },
+  {
+   "name": "M4 control: without the turn's elliptic part (median >= 0.1 rad/m)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "M1_max_rel_err_dl_vs_1_over_r": 7.572428172286649e-07,
+  "M1_max_d_omega_dt": 5.706135411226278e-10,
+  "M1_control_unweighted_max_rel_err": 1.3859200112275047,
+  "M2_max_identity_err": 7.105427357601002e-15,
+  "M2_max_finite_err": 1.3085532657441945e-11,
+  "M2_control_uniform_shift_err": 0.9160516172093874,
+  "M3_rotation_max_rel_change": 3.973213390861723e-15,
+  "M3_control_translation_min_rel_change": 0.0017715387622793857,
+  "M4_max_err": 4.123305378026367e-06,
+  "M4_control_without_turn": 0.8479995009616126
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "c7d755d4643a1360291c32b7ca3db190042429ac",
+   "clean": true
+  }
+ }
+}

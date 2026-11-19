@@ -86,6 +86,28 @@ tangent, is the orbit of a one-parameter group of rigid motions. One family cove
 - *Trace-scan:* the slit-scan generalises to sampling the space-time volume along the trace a hypothesis predicts. The
   right hypothesis is the one along which appearance stays constant.
 
+**On the Riemann sphere** (Luiz's question, 2026-11-19, in Chat; checks M1–M4 with controls in
+[`deep/moebius.py`](../deep/moebius.py), all passing at `c7d755d`, Chat sandbox,
+[record](runs/issue-11/moebius_selftest.json)). Project the viewing sphere stereographically with the focus of
+expansion at z = 0 and its opposite at ∞, and write ℓ = ln |z| = ln tan(ψ/2).
+
+- *Rotations of the eye are Möbius maps:* SO(3) sits inside PSL(2, ℂ) as its unitary part, and a rotation preserves the
+  cross-ratio of any four directions at any depths (M3). The pivot is an elliptic Möbius flow about the vertical, which
+  is why it carries no depth.
+- *Translation is not a Möbius map, but follows the hyperbolic ones.* The hyperbolic maps z ↦ kz fixing the focus of
+  expansion and its opposite move every point along a meridian, the line's epipolar great circle, by the same shift
+  in ℓ. A unit-speed translation moves each point along the same meridian at dℓ/dt = 1/r (M1). It is the hyperbolic
+  generator weighted pointwise by inverse range, and depth is exactly what breaks the Möbius structure.
+- *The line's coordinate is ℓ's sinh:* u = cot ψ = −sinh ℓ. A finite translation shifts sinh ℓ by t/D: the straight
+  trace u′ = u − t/D (M2). M4's q = ln tan ψ ≈ ℓ + ln 2 near the focus of expansion, which is why log-tangent behaved
+  as a shift in the fovea and less so towards 45°.
+- *The arc is their sum:* at each instant, the turn's elliptic field (depth-free) plus the translation's 1/r-weighted
+  hyperbolic field about the tangent (M4). Depth on an arc is a trace's departure from the turn-in-place diagonal.
+- *Echoes to check in the literature:* PSL(2, ℂ) is the Lorentz group acting on the celestial sphere, where a boost is a
+  hyperbolic Möbius map (aberration; Penrose 1959). Log-polar coordinates, w = log z, turn the hyperbolic and
+  elliptic maps about the same fixed points into translations, which is the usual reading of Schwartz's retino-cortical
+  log-polar map.
+
 **General paths.** A general path is approximated by a sequence of (κ, length) pieces, joined by clothoids later if
 curvature continuity matters. With known poses, a hypothesis's trace is exact on any path. The symmetry buys
 uniformity and legibility, not correctness. The integration window lives inside one piece, which reconciles the action
