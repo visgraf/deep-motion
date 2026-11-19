@@ -104,6 +104,14 @@ def _blur(img):
         return np.where(w > 4, s / w, np.nan).astype(np.float32)
 
 
+def _sample_nearest(img, rc):
+    H, W = img.shape
+    r = np.rint(rc[:, 0]).astype(np.int64)
+    c = np.rint(rc[:, 1]).astype(np.int64) % W
+    ok = (r >= 0) & (r < H)
+    return np.where(ok, img[np.clip(r, 0, H - 1), c], np.nan)
+
+
 def _sample(img, rc):
     """Bilinear sample of img (H, W; columns wrap) at rc (N, 2); nan outside rows or on a nan neighbour."""
     H, W = img.shape
@@ -160,10 +168,10 @@ def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0, sigma=0.0):
 
 
 def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, coarse_every=10, keep=3,
-          fine=9, mirror=False, sigma=0.0):
+          fine=9, mirror=False, sigma=0.0, halves=False, nearest=False):
     """B on the anchors (px, u) of look m. mirror: pair image k with the pose of look 2m - k (the control).
     Returns r_est, confidence, cost curves' best values."""
-    blurred = [_gauss(lk[3], sigma) for lk in looks]
+    blurred = [lk[3] if sigma < 0 else _gauss(lk[3], sigma) for lk in looks]     # sigma < 0: the raw images
     K = len(looks)
     ref = blurred[m][px[:, 0], px[:, 1]]
     c_m = looks[m][1]
@@ -184,13 +192,23 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
             if pk is None:
                 continue
             rc, _ = fan.model().pixel_of(((X - pk[1]) @ pk[2]).reshape(-1, 3))
-            v = _sample(blurred[k], rc).reshape(N, Z)
+            v = (_sample_nearest if nearest else _sample)(blurred[k], rc).reshape(N, Z)
             d = np.minimum((v - rf[:, None]) ** 2, tau ** 2)
             f = np.isfinite(d)
             acc += np.where(f, d, 0.0)
             cnt += f
         with np.errstate(invalid="ignore", divide="ignore"):
             return np.where(cnt >= max(2, 0.3 * len(ks)), acc / cnt, np.inf)
+
+    if halves:
+        base = cost
+
+        def cost(zv, ks, sl):
+            """Occlusion-robust: the best of the whole window, the looks before the reference and the looks after."""
+            b = [k for k in ks if k < m]
+            a = [k for k in ks if k > m]
+            parts = [base(zv, ks, sl)] + [base(zv, h, sl) for h in (b, a) if len(h) >= 3]
+            return np.minimum.reduce(parts)
 
     N = len(px)
     coarse_ks = list(range(0, K, coarse_every)) + [K - 1]
