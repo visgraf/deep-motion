@@ -122,6 +122,20 @@ def stage5b2(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def stage7a(a) -> int:
+    from . import match as mt
+    res, num = mt.selftest_b(max_n=a.max_anchors)
+    for name, ok in res:
+        print(f"{PREFIX} stage 7a {'PASS' if ok else 'FAIL'} {name}")
+    print(f"{PREFIX} " + json.dumps(num))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage7a", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "stage7a_b.json").write_text(json.dumps(rec, indent=1))
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -232,6 +246,9 @@ def main(argv=None) -> int:
     p.add_argument("--hit-stride", type=int, default=1, help="bin a random 1/n of each look's hits (memory at 3600 wide)")
     p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage7a", help="#14: the trace sweep B on R0 (line, arc), checks K1-K2")
+    p.add_argument("--max-anchors", type=int, default=20000)
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -249,7 +266,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

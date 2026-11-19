@@ -73,6 +73,25 @@ def r0_run(kind, n=101, ds=0.01, R=1.6):
 
 # ------------------------------------------------------------------------------------------------- the sweep (B)
 
+def _gauss(img, sigma):
+    """Separable Gaussian blur (columns wrap, rows clamp), normalised over valid pixels; nan where support is thin."""
+    if sigma <= 0:
+        return _blur(img)
+    rad = int(np.ceil(3 * sigma))
+    x = np.arange(-rad, rad + 1)
+    k = np.exp(-0.5 * (x / sigma) ** 2)
+    k /= k.sum()
+    a = np.nan_to_num(img, nan=0.0).astype(np.float64)
+    m = np.isfinite(img).astype(np.float64)
+    def conv(z):
+        z = sum(w * np.roll(z, -o, 1) for w, o in zip(k, x))
+        zp = np.pad(z, ((rad, rad), (0, 0)), mode="edge")
+        return sum(w * zp[rad + o:rad + o + z.shape[0]] for w, o in zip(k, x))
+    s, w = conv(a), conv(m)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return np.where(w > 0.5, s / w, np.nan).astype(np.float32)
+
+
 def _blur(img):
     a = np.nan_to_num(img, nan=0.0)
     m = np.isfinite(img).astype(np.float32)
@@ -111,7 +130,7 @@ def trace_direction(c_m, R_m, c_n, R_n, u, fan, r_probe=2.0):
     return d / np.maximum(np.linalg.norm(d, axis=1, keepdims=True), 1e-12)
 
 
-def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0):
+def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0, sigma=0.0):
     """Pixels of the reference look with a strong gradient along their trace direction: the top `frac` of those with a
     valid value and |elevation| < 70 deg, at most max_n (random). Returns pixel (row, col), ray u (world), the index."""
     s, c, R, img, idx = looks[m]
@@ -119,7 +138,7 @@ def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0):
     rows, cols = np.mgrid[0:H, 0:W]
     lat = (0.5 - (rows + 0.5) / H) * np.pi
     ok = np.isfinite(img) & (idx >= 0) & (np.abs(lat) < np.radians(70))
-    bl = _blur(img)
+    bl = _gauss(img, sigma)
     gr = (np.vstack([bl[1:], bl[-1:]]) - np.vstack([bl[:1], bl[:-1]])) / 2
     gc = (np.roll(bl, -1, 1) - np.roll(bl, 1, 1)) / 2
     pr, pc = rows[ok], cols[ok]
@@ -141,22 +160,23 @@ def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0):
 
 
 def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, coarse_every=10, keep=3,
-          fine=9, mirror=False):
+          fine=9, mirror=False, sigma=0.0):
     """B on the anchors (px, u) of look m. mirror: pair image k with the pose of look 2m - k (the control).
     Returns r_est, confidence, cost curves' best values."""
-    blurred = [_blur(lk[3]) for lk in looks]
+    blurred = [_gauss(lk[3], sigma) for lk in looks]
     K = len(looks)
     ref = blurred[m][px[:, 0], px[:, 1]]
     c_m = looks[m][1]
     pose = (lambda k: looks[2 * m - k] if 0 <= 2 * m - k < K else None) if mirror else (lambda k: looks[k])
     zs = np.linspace(z_lo, z_hi, nz)
 
-    def cost(zv, ks):
-        """zv (N, Z) inverse ranges; cost (N, Z) over looks ks."""
+    def cost(zv, ks, sl):
+        """zv (n, Z) inverse ranges for the anchors in slice sl; cost (n, Z) over looks ks."""
         N, Z = zv.shape
         acc = np.zeros((N, Z))
         cnt = np.zeros((N, Z))
-        X = c_m[None, None, :] + u[:, None, :] / zv[:, :, None]
+        rf = ref[sl]
+        X = c_m[None, None, :] + u[sl][:, None, :] / zv[:, :, None]
         for k in ks:
             if k == m:
                 continue
@@ -165,7 +185,7 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
                 continue
             rc, _ = fan.model().pixel_of(((X - pk[1]) @ pk[2]).reshape(-1, 3))
             v = _sample(blurred[k], rc).reshape(N, Z)
-            d = np.minimum((v - ref[:, None]) ** 2, tau ** 2)
+            d = np.minimum((v - rf[:, None]) ** 2, tau ** 2)
             f = np.isfinite(d)
             acc += np.where(f, d, 0.0)
             cnt += f
@@ -176,7 +196,8 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
     coarse_ks = list(range(0, K, coarse_every)) + [K - 1]
     C = np.full((N, nz), np.inf)
     for a in range(0, N, 2000):
-        C[a:a + 2000] = cost(np.broadcast_to(zs, (min(2000, N - a), nz)).copy(), coarse_ks)
+        sl = slice(a, min(a + 2000, N))
+        C[sl] = cost(np.broadcast_to(zs, (sl.stop - a, nz)).copy(), coarse_ks, sl)
     # the best `keep` separated minima, refined on all looks
     order = np.argsort(C, axis=1)
     cands = np.full((N, keep), -1)
@@ -202,7 +223,8 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
         zv = np.clip(zq[:, None] + off[None, :], z_lo, z_hi)
         Cf = np.full(zv.shape, np.inf)
         for a in range(0, N, 1000):
-            Cf[a:a + 1000] = cost(zv[a:a + 1000], allks)
+            sl = slice(a, min(a + 1000, N))
+            Cf[sl] = cost(zv[sl], allks, sl)
         Cf[~ok] = np.inf
         j = np.argmin(Cf, axis=1)
         cj = Cf[np.arange(N), j]
@@ -234,3 +256,46 @@ def evaluate_b(kind, n=101, ds=0.01, R=1.6, max_n=20000, mirror=False, looks_wor
     return {"rel": rel, "conf": conf, "best": best, "psi": psi, "r_true": r_true, "px": px,
             "median": float(np.nanmedian(rel)), "within10": float(np.mean(rel <= 0.10)), "n": int(len(rel))}, \
         (looks, P, g, fan)
+
+
+def depth_edge(looks, m, P, px, ratio=1.10, rad=2):
+    """Anchors within rad pixels of a depth discontinuity in the reference look (max/min range > ratio): a
+    diagnostic for reports, using the truth, never used by the matcher."""
+    c, idx = looks[m][1], looks[m][4]
+    rng = np.where(idx >= 0, np.linalg.norm(P[np.maximum(idx, 0)] - c, axis=-1), np.nan)
+    H, W = rng.shape
+    mx, mn = np.zeros(len(px)), np.full(len(px), np.inf)
+    for dr in range(-rad, rad + 1):
+        for dc in range(-rad, rad + 1):
+            v = rng[np.clip(px[:, 0] + dr, 0, H - 1), (px[:, 1] + dc) % W]
+            mx, mn = np.fmax(mx, v), np.fmin(mn, v)
+    return (mx / mn) > ratio
+
+
+SECTORS = {"0-15": (0, 15), "15-60": (15, 60), "60-120": (60, 120), "120-165": (120, 165), "165-180": (165, 180.1)}
+
+
+def selftest_b(kinds=("line", "arc"), max_n=20000):
+    """K1 (line) and K2 (arc), as declared on #14, with the mirrored control; plus diagnostics by sector and by
+    depth edge (truth-based, for the report only)."""
+    res, num = [], {}
+    for kname, kind in (("K1", "line"), ("K2", "arc")):
+        if kind not in kinds:
+            continue
+        ev, world = evaluate_b(kind, max_n=max_n)
+        ctl, _ = evaluate_b(kind, max_n=max_n, mirror=True, looks_world=world)
+        looks, P, g, fan = world
+        m = len(looks) // 2
+        edge = depth_edge(looks, m, P, ev["px"])
+        rel, psi = ev["rel"], ev["psi"]
+        num[kname] = {"anchors": ev["n"], "median_rel": ev["median"], "within10": ev["within10"],
+                      "control_median_rel": ctl["median"],
+                      "by_sector_within10": {k: float(np.mean(rel[(psi >= a) & (psi < b)] <= 0.1))
+                                             for k, (a, b) in SECTORS.items() if ((psi >= a) & (psi < b)).any()},
+                      "depth_edge_fraction": float(edge.mean()),
+                      "within10_at_depth_edges": float(np.mean(rel[edge] <= 0.1)),
+                      "within10_off_depth_edges": float(np.mean(rel[~edge] <= 0.1))}
+        res.append((f"{kname} B on noise-free R0 ({kind}): median |error| <= 2 % and >= 90 % within +/-10 %",
+                    ev["median"] <= 0.02 and ev["within10"] >= 0.90))
+        res.append((f"{kname} control: the path traversed backwards (median >= 20 %)", ctl["median"] >= 0.20))
+    return res, num
