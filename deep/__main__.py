@@ -122,6 +122,13 @@ def stage5b2(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def note_figs(a) -> int:
+    from . import note_figs as nf
+    for f in nf.run(a.out):
+        print(f"{PREFIX} wrote {f}")
+    return 0
+
+
 def moebius(a) -> int:
     from . import moebius as mb
     res, num = mb.selftest()
@@ -225,6 +232,8 @@ def main(argv=None) -> int:
     p.add_argument("--hit-stride", type=int, default=1, help="bin a random 1/n of each look's hits (memory at 3600 wide)")
     p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
+    p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
     p.add_argument("--out", default=None)
     p = sub.add_parser("compare", help="#11: the representations side by side (figures, Chat sandbox)")
@@ -240,7 +249,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
