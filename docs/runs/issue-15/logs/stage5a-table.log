@@ -1,0 +1,28 @@
+2026-11-19T20:51:40-03:00 $ .venv/bin/python -m deep stage5a-table line=runs/r1-line arc=runs/r1-arc pivot=runs/r1-pivot --out docs/runs/issue-15 (at a9fbfc0)
+[deep] line: {"0.25": {"psi_3d": {"heading ±15°": 0.9418194640338505, "lateral 60–120°": 1.0, "behind ≥165°": 0.9760225669957687, "all": 0.9990895061728395}, "bearing_eye_height": {"heading ±15°": 0.93125, "lateral 60–120°": 1.0, "behind ≥165°": 0.9716666666666667, "all": 0.9919097222222222}, "bearing_all_elevations": {"heading ±15°": 0.9922222222222222, "lateral 60–120°": 1.0, "behind ≥165°": 0.9968518518518519, "all": 0.9990895061728395}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.6060606060606061, "5–15°": 0.9964285714285714}, "coverage_of_usable": 0.9496339259510974}, "0.5": {"psi_3d": {"heading ±15°": 0.7016925246826516, "lateral 60–120°": 1.0, "behind ≥165°": 0.9055007052186178, "all": 0.9956288580246914}, "bearing_eye_height": {"heading ±15°": 0.6716666666666666, "lateral 60–120°": 1.0, "behind ≥165°": 0.8883333333333333, "all": 0.9633333333333334}, "bearing_all_elevations": {"heading ±15°": 0.9601388888888889, "lateral 60–120°": 1.0, "behind ≥165°": 0.9875925925925926, "all": 0.9956288580246914}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.24242424242424243, "5–15°": 0.7642857142857142}, "coverage_of_usable": 0.9502028542975274}, "1": {"psi_3d": {"heading ±15°": 0.23695345557122707, "lateral 60–120°": 1.0, "behind ≥165°": 0.6036671368124118, "all": 0.9839158950617284}, "bearing_eye_height": {"heading ±15°": 0.2816666666666667, "lateral 60–120°": 1.0, "behind ≥165°": 0.5316666666666666, "all": 0.8943055555555556}, "bearing_all_elevations": {"heading ±15°": 0.8797222222222222, "lateral 60–120°": 1.0, "behind ≥165°": 0.947962962962963, "all": 0.9839158950617284}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.12121212121212122, "5–15°": 0.25396825396825395}, "coverage_of_usable": 0.9487513282698966}}
+[deep] arc: {"0.25": {"psi_3d": {"heading ±15°": 0.9675599435825106, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9996373456790123}, "bearing_eye_height": {"heading ±15°": 0.9616666666666667, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9968055555555555}, "bearing_all_elevations": {"heading ±15°": 0.9956944444444444, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9996373456790123}, "heading_fine_psi_3d": {"0–2°": 1.0, "2–5°": 1.0, "5–15°": 0.9634920634920635}, "coverage_of_usable": 0.9495920588485022}, "0.5": {"psi_3d": {"heading ±15°": 0.8885754583921015, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9987538580246914}, "bearing_eye_height": {"heading ±15°": 0.8683333333333333, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9890277777777777}, "bearing_all_elevations": {"heading ±15°": 0.9851388888888889, "lateral 60–120°": 1.0, "behind ≥165°": 1.0, "all": 0.9987538580246914}, "heading_fine_psi_3d": {"0–2°": 0.07692307692307693, "2–5°": 0.553030303030303, "5–15°": 0.9404761904761905}, "coverage_of_usable": 0.9500959915326583}, "1": {"psi_3d": {"heading ±15°": 0.30148095909732014, "lateral 60–120°": 0.9997796925487125, "behind ≥165°": 0.7468265162200282, "all": 0.9850925925925926}, "bearing_eye_height": {"heading ±15°": 0.33708333333333335, "lateral 60–120°": 0.99625, "behind ≥165°": 0.7008333333333333, "all": 0.9019791666666667}, "bearing_all_elevations": {"heading ±15°": 0.8828703703703704, "lateral 60–120°": 0.9995833333333334, "behind ≥165°": 0.9667592592592592, "all": 0.9850925925925926}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.21212121212121213, "5–15°": 0.31706349206349205}, "coverage_of_usable": 0.9492942632452924}}
+[deep] pivot: {"0.25": {"psi_3d": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "bearing_eye_height": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "bearing_all_elevations": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.0, "5–15°": 0.0}, "coverage_of_usable": null}, "0.5": {"psi_3d": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "bearing_eye_height": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "bearing_all_elevations": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.0, "5–15°": 0.0}, "coverage_of_usable": null}, "1": {"psi_3d": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "bearing_eye_height": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "bearing_all_elevations": {"heading ±15°": 0.0, "lateral 60–120°": 0.0, "behind ≥165°": 0.0, "all": 0.0}, "heading_fine_psi_3d": {"0–2°": 0.0, "2–5°": 0.0, "5–15°": 0.0}, "coverage_of_usable": null}}
+	Command being timed: ".venv/bin/python -m deep stage5a-table line=runs/r1-line arc=runs/r1-arc pivot=runs/r1-pivot --out docs/runs/issue-15"
+	User time (seconds): 2013.66
+	System time (seconds): 2.63
+	Percent of CPU this job got: 790%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:15.12
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1384088
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 40
+	Minor (reclaiming a frame) page faults: 2441022
+	Voluntary context switches: 283
+	Involuntary context switches: 65836
+	Swaps: 0
+	File system inputs: 9232
+	File system outputs: 56
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-19T20:55:55-03:00 exit 0
