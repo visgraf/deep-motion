@@ -122,6 +122,19 @@ def stage5b2(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def moebius(a) -> int:
+    from . import moebius as mb
+    res, num = mb.selftest()
+    for name, ok in res:
+        print(f"{PREFIX} moebius {'PASS' if ok else 'FAIL'} {name}")
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "moebius", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "moebius_selftest.json").write_text(json.dumps(rec, indent=1))
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def compare(a) -> int:
     from . import compare as cp
     for f in cp.run(a.out):
@@ -212,6 +225,8 @@ def main(argv=None) -> int:
     p.add_argument("--hit-stride", type=int, default=1, help="bin a random 1/n of each look's hits (memory at 3600 wide)")
     p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
+    p.add_argument("--out", default=None)
     p = sub.add_parser("compare", help="#11: the representations side by side (figures, Chat sandbox)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("demo", help="#9: the tour (the straight to the turn's start, then the turn) as two videos")
@@ -225,7 +240,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
