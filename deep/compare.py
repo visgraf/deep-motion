@@ -408,7 +408,7 @@ def fig_invariants(out):
 
 def run(out):
     Path(out).mkdir(parents=True, exist_ok=True)
-    return [fig_straight(out), fig_primitives(out), fig_invariants(out), fig_mosaics(out)]
+    return [fig_straight(out), fig_primitives(out), fig_invariants(out), fig_mosaics(out), fig_pairs(out)]
 
 
 # ------------------------------------------------------------------------------------------------- slit-scan mosaics
@@ -432,7 +432,7 @@ def _fill_1d(img, max_gap, axis):
 
 
 def slit_mosaics(rec, kind, length, slits_deg=(90.0, 0.0, -90.0, 180.0), nt=300, nel=260, el_lim=65.0,
-                 band_deg=0.5, R=1.0):
+                 band_deg=0.5, R=1.0, start=None, keep_index=False):
     """For each slit (a bearing, + left, fixed in the head), the slit's column over the motion: an image with the
     path parameter across and elevation down (top = up). Re-projected from the first look's true points, nearest
     first per cell, gaps filled within a few cells (DERIVED)."""
@@ -441,6 +441,8 @@ def slit_mosaics(rec, kind, length, slits_deg=(90.0, 0.0, -90.0, 180.0), nt=300,
     Rwh = np.asarray(rec.head_R_wh, float)
     fwd = -Rwh[:, 2]
     phi0 = float(np.arctan2(fwd[1], fwd[0]))
+    if start is not None:                                     # a start pose other than the first look's: (x, y)
+        c0 = np.array([start[0], start[1], c0[2]])
     piece = pr.Piece(kind, length, 1.0 / R if kind == "arc" else 0.0)
     ss = np.linspace(0, length, nt)
     cols = tonemap(val, exposure_of(rec.value))
@@ -465,7 +467,7 @@ def slit_mosaics(rec, kind, length, slits_deg=(90.0, 0.0, -90.0, 180.0), nt=300,
             bst[row[j], i] = rng[j]
     for bs in slits_deg:
         img = _fill_1d(_fill_1d(imgs[bs], 4, 0), 3, 1)
-        out[bs] = colour(img, cols)
+        out[bs] = (colour(img, cols), imgs[bs]) if keep_index else colour(img, cols)
     return out, ss
 
 
@@ -497,5 +499,130 @@ def fig_mosaics(out):
                  fontsize=12)
     p = Path(out) / "compare_mosaics.png"
     fig.savefig(p, dpi=105, bbox_inches="tight")
+    plt.close(fig)
+    return p
+
+
+def crossing(Pk, piece, c0, phi0, slit_deg, ss):
+    """The path parameter(s) where point Pk is at bearing slit_deg, and its elevation there (deg); nan if none."""
+    b, el = [], []
+    for s in ss:
+        c, Rh, _, _ = piece.pose(c0[:2], phi0, c0[2], s)
+        v = (Pk - c) @ Rh
+        b.append(np.degrees(-np.arctan2(v[0], -v[2])))
+        el.append(np.degrees(np.arcsin(v[1] / np.linalg.norm(v))))
+    d = np.angle(np.exp(1j * np.radians(np.array(b) - slit_deg)))
+    k = np.flatnonzero((np.sign(d[:-1]) != np.sign(d[1:])) & (np.abs(d[:-1]) < 0.5))
+    if not len(k):
+        return np.nan, np.nan
+    i = k[0]
+    f = d[i] / (d[i] - d[i + 1])
+    return ss[i] + f * (ss[i + 1] - ss[i]), el[i] + f * (el[i + 1] - el[i])
+
+
+def fig_pairs(out, n_links=9, seed=4):
+    """Figure 5: two slit mosaics per motion, the same points linked across them; the time offset against the
+    invariant (arc: rho; line: D)."""
+    from matplotlib.patches import ConnectionPatch
+    from matplotlib.colors import LinearSegmentedColormap, Normalize
+    from .figures import _plt, BLUE, INK2, ACCENT, _clean
+    plt = _plt()
+    cmap = LinearSegmentedColormap.from_list("b", list(BLUE[::-1]))
+    rec, fan = pano_ref()
+    P, _ = points(rec)
+    c_ref = np.asarray(rec.head_origin_w, float)
+    fwd = -np.asarray(rec.head_R_wh, float)[:, 2]
+    phi0 = float(np.arctan2(fwd[1], fwd[0]))
+    cases = [
+        dict(kind="arc", L=np.pi / 2, start=None, slits=(-90.0, -60.0), R=1.0, xl="θ, deg", scale=180 / np.pi,
+             name="arc, R = 1 m, 90° left", inv="ρ, distance to the turn's centre (m)"),
+        dict(kind="line", L=3.0, start=(0.0, -2.0), slits=(-90.0, -60.0), R=1.0, xl="s, m", scale=1.0,
+             name="line, 3 m (from 2 m behind the first look)", inv="D, distance to the path line (m)")]
+    fig = plt.figure(figsize=(16, 12))
+    gs = fig.add_gridspec(3, 2, height_ratios=[1, 1, 0.9], hspace=0.42, wspace=0.16)
+    rng = np.random.default_rng(seed)
+    for col, cs in enumerate(cases):
+        c0 = c_ref.copy() if cs["start"] is None else np.array([cs["start"][0], cs["start"][1], c_ref[2]])
+        piece = pr.Piece(cs["kind"], cs["L"], 1.0 / cs["R"] if cs["kind"] == "arc" else 0.0)
+        mos, ss = slit_mosaics(rec, cs["kind"], cs["L"], cs["slits"], start=cs["start"], keep_index=True)
+        x1 = cs["L"] * cs["scale"]
+        axs = []
+        for r, b in enumerate(cs["slits"]):
+            ax = fig.add_subplot(gs[r, col])
+            ax.imshow(mos[b][0], aspect="auto", extent=(0, x1, -65, 65), interpolation="nearest")
+            what = "the radial slit: no distance in its timing" if cs["kind"] == "arc" else "the side slit: no distance in its timing"
+            ax.set_title(f"{cs['name']} · slit at bearing {b:+.0f}°" + (f" ({what})" if r == 0 else ""),
+                         loc="left", fontsize=10)
+            ax.set_xlabel(cs["xl"])
+            ax.set_ylabel("elevation, deg")
+            axs.append(ax)
+        # invariant of every right-side point near eye height, and its two crossings
+        side = P[(np.abs(P[:, 2] - c_ref[2]) < 1.2)]
+        if cs["kind"] == "arc":
+            centre = c0[:2] + cs["R"] * np.array([-np.sin(phi0), np.cos(phi0)])
+            inv_all = np.hypot(*(side[:, :2] - centre).T)
+        else:
+            f = np.array([np.cos(phi0), np.sin(phi0)])
+            inv_all = np.abs((side[:, :2] - c0[:2]) @ np.array([-f[1], f[0]]))
+        fine = np.linspace(0, cs["L"], 1500)
+        cand = rng.choice(len(side), size=min(1500, len(side)), replace=False)
+        rows = []
+        for k in cand:
+            t1, e1 = crossing(side[k], piece, c0, phi0, cs["slits"][0], fine)
+            t2, e2 = crossing(side[k], piece, c0, phi0, cs["slits"][1], fine)
+            if np.isfinite(t1) and np.isfinite(t2):
+                rows.append((k, t1, e1, t2, e2, inv_all[k]))
+        rows = np.array(rows)
+        # links: points spread in the invariant, visible in both mosaics (the mosaic cell holds a point within 3 cm)
+        idx_imgs = [mos[b][1] for b in cs["slits"]]
+        nt, nel = len(ss), idx_imgs[0].shape[0]
+        def seen(k, t, e, img):
+            i = int(np.clip(round(t / cs["L"] * (nt - 1)), 0, nt - 1))
+            r = int(np.floor((65 - e) / 130 * nel))
+            if not (0 <= r < nel):
+                return False
+            j = img[max(r - 1, 0):r + 2, max(i - 1, 0):i + 2].ravel()
+            j = j[j >= 0]
+            return bool(len(j)) and np.min(np.linalg.norm(P[j] - side[int(k)], axis=-1)) < 0.03
+        okv = np.array([seen(*rw[[0, 1, 2]], idx_imgs[0]) and seen(rw[0], rw[3], rw[4], idx_imgs[1]) for rw in rows])
+        vis = rows[okv]
+        norm = Normalize(0, 5)
+        if len(vis):
+            bins = np.linspace(vis[:, 5].min(), vis[:, 5].max(), n_links + 1)
+            for a, b_ in zip(bins[:-1], bins[1:]):
+                m = vis[(vis[:, 5] >= a) & (vis[:, 5] <= b_)]
+                if not len(m):
+                    continue
+                k, t1, e1, t2, e2, iv = m[rng.integers(len(m))]
+                colr = cmap(norm(iv))
+                for ax, t, e in ((axs[0], t1, e1), (axs[1], t2, e2)):
+                    ax.plot(t * cs["scale"], e, "o", ms=7, mfc=colr, mec="white", mew=1.2)
+                con = ConnectionPatch(xyA=(t1 * cs["scale"], e1), coordsA=axs[0].transData,
+                                      xyB=(t2 * cs["scale"], e2), coordsB=axs[1].transData, color=colr, lw=1.4)
+                fig.add_artist(con)
+                axs[1].annotate(f"{iv:.1f}", (t2 * cs["scale"], e2), xytext=(6, -12), textcoords="offset points",
+                                fontsize=8.5, color="white", fontweight="bold")
+        ax = fig.add_subplot(gs[2, col])
+        dt = (rows[:, 3] - rows[:, 1]) * cs["scale"]
+        ax.scatter(rows[:, 5], dt, s=5, c=rows[:, 5], cmap=cmap, norm=norm, lw=0)
+        xs = np.linspace(max(rows[:, 5].min(), 1e-3), rows[:, 5].max(), 200)
+        if cs["kind"] == "arc":
+            th = lambda r: np.degrees(np.arccos(np.clip(cs["R"] * np.cos(np.radians(-60.0)) / r, -1, 1))) - 60.0
+            ax.plot(xs, -np.array([th(r) for r in xs]) if np.median(dt) < 0 else [th(r) for r in xs],
+                    color=ACCENT, lw=1.6, label="concentric mosaics: δ = β ± arccos(R cos β / ρ)")
+            ax.set_ylabel("time offset between the slits, deg of θ")
+        else:
+            sgn = 1 if np.median(dt) > 0 else -1
+            ax.plot(xs, sgn * xs / np.tan(np.radians(60.0)), color=ACCENT, lw=1.6, label="Δs = D cot 60°")
+            ax.set_ylabel("time offset between the slits, m of s")
+        ax.set_xlabel(cs["inv"])
+        ax.legend(frameon=False, fontsize=9, loc="best")
+        ax.set_title("Every crossing point: the offset is a function of the invariant alone", loc="left", fontsize=10)
+        _clean(ax)
+    fig.suptitle("The same points in two slit mosaics: their time offset measures the invariant "
+                 "(re-projected from the first look's true points; dots on the target surfaces, numbers = ρ or D in m)",
+                 x=0.01, ha="left", fontsize=12)
+    p = Path(out) / "compare_pairs.png"
+    fig.savefig(p, dpi=100, bbox_inches="tight")
     plt.close(fig)
     return p
