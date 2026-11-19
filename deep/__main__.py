@@ -124,7 +124,7 @@ def stage5b2(a) -> int:
 
 def stage7a(a) -> int:
     from . import match as mt
-    res, num = mt.selftest_b(max_n=a.max_anchors)
+    res, num = (mt.selftest_k3 if a.k3 else mt.selftest_b)(max_n=a.max_anchors)
     for name, ok in res:
         print(f"{PREFIX} stage 7a {'PASS' if ok else 'FAIL'} {name}")
     print(f"{PREFIX} " + json.dumps(num))
@@ -132,7 +132,7 @@ def stage7a(a) -> int:
         Path(a.out).mkdir(parents=True, exist_ok=True)
         rec = {"command": "stage7a", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
                "computed_by": {"deep-motion": _git(REPO)}}
-        (Path(a.out) / "stage7a_b.json").write_text(json.dumps(rec, indent=1))
+        (Path(a.out) / ("stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
     return 0 if all(ok for _, ok in res) else 1
 
 
@@ -248,6 +248,7 @@ def main(argv=None) -> int:
     p.add_argument("--out", default=None)
     p = sub.add_parser("stage7a", help="#14: the trace sweep B on R0 (line, arc), checks K1-K2")
     p.add_argument("--max-anchors", type=int, default=20000)
+    p.add_argument("--k3", action="store_true", help="check K3: B's reliability marking")
     p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)

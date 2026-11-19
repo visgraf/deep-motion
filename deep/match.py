@@ -317,3 +317,50 @@ def selftest_b(kinds=("line", "arc"), max_n=20000):
                     ev["median"] <= 0.02 and ev["within10"] >= 0.90))
         res.append((f"{kname} control: the path traversed backwards (median >= 20 %)", ctl["median"] >= 0.20))
     return res, num
+
+
+TAU = 0.08
+RELIABLE_COST = TAU ** 2 / 4          # declared on #14 before the run
+RELIABLE_RATIO = 2.0
+
+
+def reliable(best, conf):
+    return (best <= RELIABLE_COST) & (conf >= RELIABLE_RATIO)
+
+
+def selftest_k3(max_n=20000, seed=11):
+    """K3 as declared on #14: on noise-free R0 (line, arc), the anchors B marks reliable are >= 95 % within +/-10 %,
+    with >= 50 % kept; control: the same number marked at random stays below 95 %. Also the accuracy-coverage
+    curve over the two thresholds, and the depth-edge anchors removed (truth-based, report only)."""
+    res, num = [], {}
+    rng = np.random.default_rng(seed)
+    for kind in ("line", "arc"):
+        ev, world = evaluate_b(kind, max_n=max_n)
+        looks, P, g, fan = world
+        m = len(looks) // 2
+        edge = depth_edge(looks, m, P, ev["px"])
+        rel, best, conf = ev["rel"], ev["best"], ev["conf"]
+        rel_ok = rel <= 0.10
+        mark = reliable(best, conf)
+        kept = float(mark.mean())
+        acc = float(rel_ok[mark].mean()) if mark.any() else 0.0
+        rnd = np.zeros(len(rel), bool)
+        rnd[rng.choice(len(rel), size=int(mark.sum()), replace=False)] = True
+        acc_rnd = float(rel_ok[rnd].mean())
+        curve = []
+        for cc in (TAU ** 2 / 16, TAU ** 2 / 8, TAU ** 2 / 4, TAU ** 2 / 2, TAU ** 2):
+            for rr in (1.0, 1.5, 2.0, 3.0, 5.0):
+                mk = (best <= cc) & (conf >= rr)
+                if mk.any():
+                    curve.append({"cost_max": cc, "ratio_min": rr, "kept": float(mk.mean()),
+                                  "within10": float(rel_ok[mk].mean())})
+        num[kind] = {"anchors": int(len(rel)), "kept": kept, "within10_reliable": acc,
+                     "within10_all": float(rel_ok.mean()), "control_within10_random": acc_rnd,
+                     "median_rel_reliable": float(np.median(rel[mark])) if mark.any() else None,
+                     "depth_edge_all": float(edge.mean()), "depth_edge_reliable": float(edge[mark].mean()) if mark.any() else None,
+                     "within10_unreliable": float(rel_ok[~mark].mean()) if (~mark).any() else None,
+                     "curve": curve}
+        res.append((f"K3 {kind}: the anchors B marks reliable are >= 95 % within +/-10 %, >= 50 % kept",
+                    acc >= 0.95 and kept >= 0.50))
+        res.append((f"K3 {kind} control: as many anchors marked at random (< 95 %)", acc_rnd < 0.95))
+    return res, num
