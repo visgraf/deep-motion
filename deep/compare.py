@@ -408,4 +408,94 @@ def fig_invariants(out):
 
 def run(out):
     Path(out).mkdir(parents=True, exist_ok=True)
-    return [fig_straight(out), fig_primitives(out), fig_invariants(out)]
+    return [fig_straight(out), fig_primitives(out), fig_invariants(out), fig_mosaics(out)]
+
+
+# ------------------------------------------------------------------------------------------------- slit-scan mosaics
+
+def _fill_1d(img, max_gap, axis):
+    """Nearest-fill the empty (-1) cells of an index image along one axis, within max_gap cells."""
+    a = np.moveaxis(img, axis, -1).copy()
+    n = a.shape[-1]
+    idx = np.arange(n)
+    for r in np.ndindex(a.shape[:-1]):
+        f = a[r] >= 0
+        if not f.any() or f.all():
+            continue
+        left = np.maximum.accumulate(np.where(f, idx, -10 ** 9))
+        right = np.minimum.accumulate(np.where(f, idx, 10 ** 9)[::-1])[::-1]
+        dl, dr = idx - left, right - idx
+        src = np.where(dl <= dr, left, right)
+        fill = ~f & (np.minimum(dl, dr) <= max_gap)
+        a[r][fill] = a[r][src[fill]]
+    return np.moveaxis(a, -1, axis)
+
+
+def slit_mosaics(rec, kind, length, slits_deg=(90.0, 0.0, -90.0, 180.0), nt=300, nel=260, el_lim=65.0,
+                 band_deg=0.5, R=1.0):
+    """For each slit (a bearing, + left, fixed in the head), the slit's column over the motion: an image with the
+    path parameter across and elevation down (top = up). Re-projected from the first look's true points, nearest
+    first per cell, gaps filled within a few cells (DERIVED)."""
+    P, val = points(rec)
+    c0 = np.asarray(rec.head_origin_w, float)
+    Rwh = np.asarray(rec.head_R_wh, float)
+    fwd = -Rwh[:, 2]
+    phi0 = float(np.arctan2(fwd[1], fwd[0]))
+    piece = pr.Piece(kind, length, 1.0 / R if kind == "arc" else 0.0)
+    ss = np.linspace(0, length, nt)
+    cols = tonemap(val, exposure_of(rec.value))
+    out = {}
+    imgs = {b: np.full((nel, nt), -1, np.int64) for b in slits_deg}
+    best = {b: np.full((nel, nt), np.inf) for b in slits_deg}
+    for i, s in enumerate(ss):
+        c, Rh, _, _ = piece.pose(c0[:2], phi0, c0[2], s)
+        v = (P - c) @ Rh
+        rng = np.linalg.norm(v, axis=-1)
+        b = np.degrees(-np.arctan2(v[:, 0], -v[:, 2]))
+        el = np.degrees(np.arcsin(np.clip(v[:, 1] / rng, -1, 1)))
+        row = np.floor((el_lim - el) / (2 * el_lim) * nel).astype(np.int64)
+        okr = (row >= 0) & (row < nel)
+        for bs in slits_deg:
+            db = np.abs(np.angle(np.exp(1j * np.radians(b - bs))))
+            m = okr & (db <= np.radians(band_deg))
+            j = np.flatnonzero(m)
+            j = j[np.argsort(-rng[j])]
+            img, bst = imgs[bs], best[bs]
+            img[row[j], i] = j
+            bst[row[j], i] = rng[j]
+    for bs in slits_deg:
+        img = _fill_1d(_fill_1d(imgs[bs], 4, 0), 3, 1)
+        out[bs] = colour(img, cols)
+    return out, ss
+
+
+def fig_mosaics(out):
+    """Figure 4: slit-scan mosaics, four slits fixed in the head, under a line, an arc and a pivot."""
+    from .figures import _plt
+    plt = _plt()
+    rec, fan = pano_ref()
+    runs = [("line", "line, 1.5 m", 1.5, "s, m"), ("arc", "arc, R = 1 m, 90° left", np.pi / 2, "θ, deg"),
+            ("pivot", "turn in place, 90° left", np.pi / 2, "turn, deg")]
+    slits = ((90.0, "left slit (bearing +90°)"), (0.0, "heading slit (0°)"), (-90.0, "right slit (−90°)"),
+             (180.0, "behind slit (180°)"))
+    fig, axs = plt.subplots(3, 4, figsize=(17, 10.2), gridspec_kw={"hspace": 0.42, "wspace": 0.12})
+    for r, (kind, name, L, xl) in enumerate(runs):
+        mos, ss = slit_mosaics(rec, kind, L, [b for b, _ in slits])
+        x1 = L if kind == "line" else np.degrees(L)
+        for c, (b, sl) in enumerate(slits):
+            ax = axs[r, c]
+            ax.imshow(mos[b], aspect="auto", extent=(0, x1, -65, 65), interpolation="nearest")
+            ax.set_title(f"{name} · {sl}", loc="left", fontsize=9.5)
+            ax.set_xlabel(xl, fontsize=9)
+            if c == 0:
+                ax.set_ylabel("elevation, deg")
+            else:
+                ax.set_yticklabels([])
+    fig.suptitle("Slit-scan mosaics: one slit (a column of the panorama, fixed in the head) recorded over the motion; "
+                 "re-projected from the first look's true points (calibration room).\nWhite: no re-projected sample "
+                 "(a surface magnified past the first look's sampling, or not seen by it).", x=0.01, ha="left",
+                 fontsize=12)
+    p = Path(out) / "compare_mosaics.png"
+    fig.savefig(p, dpi=105, bbox_inches="tight")
+    plt.close(fig)
+    return p
