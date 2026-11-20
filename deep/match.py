@@ -255,7 +255,8 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
         # parabolic refinement on the fine grid
         jl, jr = np.clip(j - 1, 0, fine - 1), np.clip(j + 1, 0, fine - 1)
         cl, cr = Cf[np.arange(N), jl], Cf[np.arange(N), jr]
-        den = cl - 2 * cj + cr
+        with np.errstate(invalid="ignore"):
+            den = cl - 2 * cj + cr
         with np.errstate(invalid="ignore", divide="ignore"):
             sh = np.where((j > 0) & (j < fine - 1) & np.isfinite(den) & (den > 0), 0.5 * (cl - cr) / den, 0.0)
         zr = zv[np.arange(N), j] + sh * (off[1] - off[0])
@@ -1033,7 +1034,8 @@ def seed_fill(looks, m, fan, seed_px, seed_u, seed_r, tgt_px, tgt_u, z_lo=1 / 25
     i = np.clip(np.argmin(Cf, axis=1), 1, fine - 2)
     rows = np.arange(len(i))
     cl, cj, cr = Cf[rows, i - 1], Cf[rows, i], Cf[rows, i + 1]
-    den = cl - 2 * cj + cr
+    with np.errstate(invalid="ignore"):
+        den = cl - 2 * cj + cr
     step = off[1] - off[0]
     with np.errstate(invalid="ignore", divide="ignore"):
         sh = np.where((den > 0) & np.isfinite(den), 0.5 * (cl - cr) / den, 0.0)
@@ -1137,7 +1139,8 @@ def _decide(blurred, looks, m, fan, ref, tu, zc, mode, z_lo=1 / 25.0, z_hi=1 / 0
         i = np.clip(np.argmin(Cf, axis=1), 1, fine - 2)
         rr = np.arange(len(i))
         cl, cj, cr = Cf[rr, i - 1], Cf[rr, i], Cf[rr, i + 1]
-        den = cl - 2 * cj + cr
+        with np.errstate(invalid="ignore"):
+            den = cl - 2 * cj + cr
         with np.errstate(invalid="ignore", divide="ignore"):
             sh = np.where((den > 0) & np.isfinite(den), 0.5 * (cl - cr) / den, 0.0)
         z[ii] = np.clip(zv[rr, i] + np.clip(sh, -1, 1) * (off[1] - off[0]), z_lo, z_hi)
