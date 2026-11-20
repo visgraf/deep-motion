@@ -790,3 +790,70 @@ def selftest_k9(kinds=("line", "arc"), max_n=20000, runs=None):
         for name in ("F_reversed", "F_no_ordering"):
             res.append((f"K9 {kind} control: {name} (< 70 % at edges)", out[name]["at_edges"]["within10"] < 0.70))
     return res, num
+
+
+# ----------------------------------------------------------------- (b): the surface metric for contour anchors
+
+def neighbourhood_ranges(looks, m, P, px, rad=1):
+    """True ranges of the (2 rad + 1)^2 pixels around each anchor in the reference look: (N, (2 rad + 1)^2)."""
+    c, idx = looks[m][1], looks[m][4]
+    rng = np.where(idx >= 0, np.linalg.norm(P[np.maximum(idx, 0)] - c, axis=-1), np.nan)
+    H, W = rng.shape
+    return np.stack([rng[np.clip(px[:, 0] + dr, 0, H - 1), (px[:, 1] + dc) % W]
+                     for dr in range(-rad, rad + 1) for dc in range(-rad, rad + 1)], -1)
+
+
+def surface_right(r_est, nb, tol=0.10):
+    """Declared on #14: right if within +/-tol of the true range at any pixel of the 3x3 neighbourhood."""
+    with np.errstate(invalid="ignore", divide="ignore"):
+        rel = np.abs(r_est[:, None] / nb - 1)
+    return np.nanmin(np.where(np.isfinite(rel), rel, np.inf), axis=1) <= tol
+
+
+def selftest_k10(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
+    """K10 as declared on #14 (R1, B): surface-right >= 70 % at true depth edges, off edges at most 1 point below the
+    old metric, overall >= 90 %; controls: the blend, off by 25 %, the mirrored path (each must miss 70 % at edges)."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    rnd = np.random.default_rng(seed)
+    for kind in kinds:
+        looks, P, _, fan = r1_run(runs[kind])
+        m = len(looks) // 2
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_true = np.linalg.norm(P[pidx] - looks[m][1], axis=-1)
+        tedge = depth_edge(looks, m, P, px)
+        nb = neighbourhood_ranges(looks, m, P, px)
+        r_b, conf, best = sweep(looks, m, px, u, fan)
+        r_a, cost, last, bnd = lagrange(looks, m, px, u, fan)
+        r_bm, _, _ = sweep(looks, m, px, u, fan, mirror=True)
+        zlo, zhi = 1 / np.nanmax(nb, 1), 1 / np.nanmin(nb, 1)
+        ests = {"B": r_b, "A2": r_a, "control_blend": 2 / (zlo + zhi), "control_off25": 1.25 * r_true,
+                "control_mirrored": r_bm}
+        out = {"anchors": int(len(px)), "true_edges": float(tedge.mean())}
+        for name, r in ests.items():
+            old = _relerr(r, r_true) <= 0.10
+            new = surface_right(r, nb)
+            o = {"old": {"all": float(old.mean()), "at_edges": float(old[tedge].mean()),
+                         "off_edges": float(old[~tedge].mean())},
+                 "surface": {"all": float(new.mean()), "at_edges": float(new[tedge].mean()),
+                             "off_edges": float(new[~tedge].mean())}}
+            if name in ("B", "A2"):
+                fail_e = tedge & ~old
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    between = (r > np.nanmin(nb, 1) * 1.1) & (r < np.nanmax(nb, 1) / 1.1)
+                o["old_failures_at_edges"] = {"n": int(fail_e.sum()), "converted": float(new[fail_e].mean()),
+                                              "still_wrong_between": float((~new & between)[fail_e].mean()),
+                                              "still_wrong_off": float((~new & ~between)[fail_e].mean())}
+                mk = reliable(best, conf) if name == "B" else reliable_a2(cost, last, bnd)
+                o["reliable"] = {"kept": float(mk.mean()), "old": float(old[mk].mean()), "surface": float(new[mk].mean())}
+            out[name] = o
+        num[kind] = out
+        B = out["B"]
+        res.append((f"K10 B on R1 ({kind}), surface metric: >= 70 % at true depth edges, off edges >= old - 1 pt, "
+                    f"overall >= 90 %",
+                    B["surface"]["at_edges"] >= 0.70 and B["surface"]["off_edges"] >= B["old"]["off_edges"] - 0.01
+                    and B["surface"]["all"] >= 0.90))
+        for name in ("control_blend", "control_off25", "control_mirrored"):
+            res.append((f"K10 {kind} control: {name[8:]} (< 70 % at edges, surface metric)",
+                        out[name]["surface"]["at_edges"] < 0.70))
+    return res, num
