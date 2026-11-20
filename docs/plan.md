@@ -872,3 +872,15 @@ The checks K1–K7 were declared on #14 before each was built.
 - **Coverage is set by the reach.** The 3×3 block of 10-px cells leaves a quarter of the targets with no seed nearby: the large walls without texture.
 - **Verification by the trace cost hurts slightly.** The unverified nearest seed is 1–1.5 points better overall, and 12–20 points better in the heading cone, where traces barely move and the cost cannot tell ranges apart. Yet the cost does carry information where traces move: shuffled seeds are rescued to 75–76 %, and laterally to 81–82 %.
 - **So the cost should decide only where it discriminates.** That is a declared change for a next method, not a retune of H.
+
+**Method H2, grown in rounds (K13, declared on #14; Chat sandbox, `971a45a`, record `docs/runs/issue-14/stage7a_k13.json`; diagnostic `diag_rounds.py`, `diag_rounds_line.txt`).**
+
+- **H2:** H's search in rounds, each round's filled targets seeding the next, with the trace cost used only where it discriminates.
+- **K13a and K13b fail on both runs.** The control fails, as it must.
+  - Coverage reaches 100 %, but H2 is 72.5 % (line) and 73.0 % (arc) surface-right, below B alone at 76.7 %.
+  - Round 1 is H's: 75 % of the targets, 88 % right. The later rounds are mostly wrong: 40–44 % in round 2, and 9–32 % after it.
+  - The gate seldom engages: H2 is within 0.3 points of "never verify." Always verifying gives 75.5–75.7 %.
+- **Where the later rounds land.** 90 % of the targets they fill lie above 30° of elevation, at a true height of 3.2 m: the ceiling, which has no texture.
+- **What it means.** Nothing in the images ranges the ceiling: there is no texture on it, so there is no trace to match. Carrying a constant range across it is a guess, and a wrong one, because a plane's range varies across the image.
+  - Filling it needs a prior: planes fitted to the reliable seeds, or a room model. That is reconstruction, not matching.
+  - The 95 % coverage bar of K12 and K13 was a guess that ignored this. It stays failed as declared.
