@@ -1,0 +1,83 @@
+{
+ "command": "demo2-ply",
+ "references": [
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160,
+  170,
+  180,
+  190,
+  200,
+  210,
+  220,
+  230,
+  240,
+  250,
+  260,
+  270,
+  280,
+  290,
+  300,
+  310,
+  320,
+  330,
+  340,
+  350,
+  360
+ ],
+ "computed_by": {
+  "commit": "bc9d84000804e9a4e85f83a74487c4bef96a40ea",
+  "clean": true
+ },
+ "files": {
+  "perfect": {
+   "path": "runs/demo2-classroom/classroom_perfect.ply",
+   "bytes": 13632594,
+   "points": 649153,
+   "right": 0.9997150132557348,
+   "colour_mean": [
+    115.91754486230519,
+    100.79950643376831,
+    86.95875702646372
+   ]
+  },
+  "real": {
+   "path": "runs/demo2-classroom/classroom_real.ply",
+   "bytes": 21179068,
+   "points": 1008509,
+   "right": 0.7364911964097495,
+   "colour_mean": [
+    118.17159589056716,
+    102.14340080257092,
+    87.65549737285438
+   ]
+  }
+ },
+ "checks": [
+  {
+   "name": "P1 perfect: the file read back holds exactly the final map",
+   "ok": true
+  },
+  {
+   "name": "P1 perfect control: the batch without the last reference differs",
+   "ok": true
+  },
+  {
+   "name": "P1 real: the file read back holds exactly the final map",
+   "ok": true
+  },
+  {
+   "name": "P1 real control: the batch without the last reference differs",
+   "ok": true
+  }
+ ]
+}
