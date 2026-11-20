@@ -192,10 +192,11 @@ def pano(looks, m, Xr, colours, fan, box=PANO_BOX):
         v = (Xr - c) @ R
         rc, _ = fan.model().pixel_of(v)
         rng = np.linalg.norm(v, axis=-1)
-        front = rng < 30
-        py = (rc[front, 0] * h / Hf).astype(int).clip(0, h - 2)
-        px = ((rc[front, 1] % Wf) * w / Wf).astype(int).clip(0, w - 2)
-        a[py, px] = colours[front]
+        o = np.argsort(-rng)                                       # far first: the nearest cell wins its pixel
+        o = o[rng[o] < 30]
+        py = (rc[o, 0] * h / Hf).astype(int).clip(0, h - 2)
+        px = ((rc[o, 1] % Wf) * w / Wf).astype(int).clip(0, w - 2)
+        a[py, px] = colours[o]
     im = Image.fromarray(a)
     d = ImageDraw.Draw(im)
     dm._text(d, (14, 8), "The current look (360° × 180°), with the real map's cells", 18, dm.LIGHT)
