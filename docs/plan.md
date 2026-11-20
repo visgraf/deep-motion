@@ -851,3 +851,24 @@ The checks K1–K7 were declared on #14 before each was built.
   - 98 % among the 76–78 % it marks reliable.
   
   The residual is blends, 80 % of them already marked unreliable.
+
+**Anchors without texture, method H (K12, declared on #14; Chat sandbox, `37bd5d8`, record `docs/runs/issue-14/stage7a_k12.json`).**
+
+- **H:** every pixel on a 2-px grid (50,400 targets) takes the best of its 8 nearest reliable seeds' ranges (15,100–15,500 seeds), verified by B's trace cost and refined.
+- **The checks:**
+  - **K12a fails on coverage:** 75.3 % of the targets, against the 95 % bar. The accuracy part holds: 86.2 % (line) and 87.0 % (arc) surface-right, against 85 %.
+  - **K12b passes.** In the least-textured third, H is surface-right 78.3 % and 78.2 %, against B alone at 63.1 % and 62.8 %: +15 points.
+  - **The shuffled-seed control fails, as it must:** 75.5 % and 76.4 %.
+
+| surface-right on the targets (line / arc) | coverage | all | least texture | at true edges | ψ 0–15° | ψ 60–120° |
+|---|---|---|---|---|---|---|
+| H | 75.3 % | 86.2 / 87.0 % | 78.3 / 78.2 % | 75.4 / 74.5 % | 54.0 / 60.6 % | 94.5 / 94.5 % |
+| the nearest seed, unverified | 75.3 % | 87.6 / 88.0 % | 80.9 / 79.3 % | 78.2 / 74.2 % | 73.9 / 72.1 % | 96.5 / 95.8 % |
+| B alone at every target | 100 % | 76.7 / 76.7 % | 63.1 / 62.8 % | 69.6 / 68.5 % | 44.3 / 53.2 % | 75.7 / 75.9 % |
+| control: shuffled seeds | 75.3 % | 75.5 / 76.4 % | 70.3 / 71.2 % | 60.5 / 57.4 % | 38.5 / 28.9 % | 82.4 / 81.3 % |
+
+**What it says:**
+- **Seeding is what helps:** +10 points over B alone overall, and +15 where texture is least.
+- **Coverage is set by the reach.** The 3×3 block of 10-px cells leaves a quarter of the targets with no seed nearby: the large walls without texture.
+- **Verification by the trace cost hurts slightly.** The unverified nearest seed is 1–1.5 points better overall, and 12–20 points better in the heading cone, where traces barely move and the cost cannot tell ranges apart. Yet the cost does carry information where traces move: shuffled seeds are rescued to 75–76 %, and laterally to 81–82 %.
+- **So the cost should decide only where it discriminates.** That is a declared change for a next method, not a retune of H.
