@@ -179,6 +179,21 @@ def stage8(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def demo2(a) -> int:
+    from . import demo2 as d2, demo as dm
+    import numpy as np
+    if a.r0:
+        T, looks, truth, vis, fan, refs = d2.r0_tour()
+        v2 = (d2.check_continuity_r0(T), d2.check_continuity_r0(T, shift=np.array([0.01, 0.0, 0.0])))
+    else:
+        T, looks, truth, vis, fan, refs = d2.render_tour(a.straight, a.turn)
+        step = float(np.median(np.diff([t[3] for t in T])))
+        v2 = (dm.check_continuity(T, step, [a.straight], [a.turn]),
+              dm.check_continuity(T, step, [a.straight], [a.turn], shift=np.array([0.01, 0.0, 0.0])))
+    return d2.run(T, looks, truth, vis, fan, refs, a.out, v2, limit=a.limit, best=a.best, git=_git(REPO),
+                  videos=not a.no_video)
+
+
 def assess(a) -> int:
     from . import assess as asx, e2e
     paths = {}
@@ -335,6 +350,14 @@ def main(argv=None) -> int:
     p.add_argument("--k8", action="store_true", help="check K8: method E at depth edges (R1; R0 reported)")
     p.add_argument("--kinds", nargs="+", default=["line", "arc"])
     p.add_argument("--out", default=None)
+    p = sub.add_parser("demo2", help="#23: demo D2, the perfect and the real matcher side by side along #9's tour")
+    p.add_argument("--straight", default=None, help="the straight path's run (R3)")
+    p.add_argument("--turn", default=None, help="the turn's run (R3)")
+    p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room")
+    p.add_argument("--out", required=True)
+    p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit (a preview)")
+    p.add_argument("--no-video", action="store_true", help="the record and the last frames only")
+    p.add_argument("--best", action="store_true", help="x264 preset slow")
     p = sub.add_parser("assess", help="#22: the perfect and the real matcher on the same runs, same pipeline (A1-A3)")
     p.add_argument("--runs", nargs="*", default=[], help="turn=DIR straight=DIR (render runs)")
     p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room, turn90 and straight_long")
@@ -361,7 +384,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

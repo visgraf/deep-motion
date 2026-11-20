@@ -88,6 +88,19 @@ def oracle_fit(looks, j, Pt, vis, rng, mirror=False):
     return c_r + u * r[:, None], usable
 
 
+def b_plus_h_points(m, fan):
+    """The real pipeline's points at one reference (match_reference's output m): B's reliable estimates, then H on
+    the 2-px grid seeded from them (amended on #22)."""
+    win = m["win"]
+    apx, au, aidx, _ = mt.anchors(win, e2e.HALF, fan, max_n=10 ** 9, frac=1.0)
+    g = (apx[:, 0] % GRID == 0) & (apx[:, 1] % GRID == 0)
+    tpx, tu = apx[g], au[g]
+    mk = m["mark"]
+    r_h, _, _ = mt.seed_fill(win, e2e.HALF, fan, m["px"][mk], m["u"][mk], m["r"][mk], tpx, tu)
+    f = np.isfinite(r_h)
+    return np.concatenate([m["c"] + m["u"][mk] * m["r"][mk][:, None], m["c"] + tu[f] * r_h[f][:, None]])
+
+
 # --------------------------------------------------------------------------------------------------- surface
 
 def surface(per_ref, truth):
@@ -182,14 +195,7 @@ def assess_path(looks, truth, fan, refs, vis_fn, seed=22):
     # 2-px grid as the perfect matcher's points; reported, not gated
     hx, href = [], []
     for j, m in per_ref.items():
-        win = m["win"]
-        apx, au, aidx, _ = mt.anchors(win, e2e.HALF, fan, max_n=10 ** 9, frac=1.0)
-        g = (apx[:, 0] % GRID == 0) & (apx[:, 1] % GRID == 0)
-        tpx, tu = apx[g], au[g]
-        mk = m["mark"]
-        r_h, _, _ = mt.seed_fill(win, e2e.HALF, fan, m["px"][mk], m["u"][mk], m["r"][mk], tpx, tu)
-        f = np.isfinite(r_h)
-        hx.append(np.concatenate([m["c"] + m["u"][mk] * m["r"][mk][:, None], m["c"] + tu[f] * r_h[f][:, None]]))
+        hx.append(b_plus_h_points(m, fan))
         href.append(np.full(len(hx[-1]), j))
     realh = fuse_and_judge(hx, href, per_ref, truth, fan)
     X, ref, Xf, nref, dom, right, cell_of = real
