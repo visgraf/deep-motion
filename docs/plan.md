@@ -828,3 +828,26 @@ The checks K1–K7 were declared on #14 before each was built.
   - only 18–21 % of it is marked reliable.
   
   So the residual is chiefly blends at big discontinuities: (a)'s target.
+
+**(a), method G, two layers per contour anchor (K11, declared on #14; Chat sandbox, `aa67307`, record `docs/runs/issue-14/stage7a_k11.json`; diagnostic `diag_g.py`, `diag_g_line.txt`).**
+
+- **G:** the flanks at ±3 px are the candidate layers.
+  - Each flank is ranged as the near layer on the whole window.
+  - Each is ranged as the far layer on each half-window, restricted by the ordering and scored against the flank's own value.
+  - A far layer counts as found when B's mark passes it. Pixel coverage then decides near or far.
+- **K11 fails, and G does harm.** On the old metric:
+  - overall 65.3 % (line) and 67.1 % (arc), against B's 87.1 % and 86.9 %;
+  - at edges 48.9 % and 52.7 %;
+  - off edges 69.8 % and 70.6 %, against B's 96.9 % and 95.5 %.
+  
+  Both controls fail as they must.
+- **Why.** G finds a "far layer" for 64–65 % of the anchors off depth edges. The diagnostic (line, + flank, the half-window after the reference) traces this to texture:
+  - false far layers depend on the flank's texture: 66 % where the flank's gradient along the trace is under a tenth of the anchor's, 29 % where it is over half;
+  - they are not a bound effect (0.1 % at the bound).
+  
+  A half-window fit on a flank with little texture passes B's mark at a wrong range. The flank is not an anchor, and B's mark was calibrated on anchors.
+- **Where the edge work stands.** Three ways to model edges (E, F, G) have failed: per-anchor layer decisions are fragile. What does work is B with its mark, judged in 3-D:
+  - 92 % surface-right overall;
+  - 98 % among the 76–78 % it marks reliable.
+  
+  The residual is blends, 80 % of them already marked unreliable.

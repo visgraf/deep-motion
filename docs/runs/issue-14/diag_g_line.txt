@@ -1,0 +1,10 @@
+line {
+ "found off edges (+ flank, after half)": 0.5200845665961945,
+ "found off edges by flank/anchor gradient": {
+  "0-0.1": 0.6648793565683646,
+  "0.1-0.25": 0.6024096385542169,
+  "0.25-0.5": 0.5186170212765957,
+  "0.5-99": 0.2854984894259819
+ },
+ "found off edges with the far range at its bound (within 2 %)": 0.0008130081300813008
+}
