@@ -1,0 +1,44 @@
+{
+ "line": {
+  "anchors": 20000,
+  "off_edges": 15742,
+  "B surface-right off edges": 0.9691907000381146,
+  "wrong, off edges": {
+   "n": 485,
+   "occluded (visible < 0.8)": 0.2309278350515464,
+   "photometric (cost over visible looks > tau^2/4)": 0.41030927835051545,
+   "ambiguous (another range fits better)": 0.33814432989690724,
+   "other": 0.020618556701030927,
+   "visible fraction, median": 1.0
+  },
+  "right, off edges": {
+   "n": 15257,
+   "occluded (visible < 0.8)": 0.009962640099626401,
+   "photometric (cost over visible looks > tau^2/4)": 0.0754407812807236,
+   "ambiguous (another range fits better)": 0.5502392344497608,
+   "other": 0.36435734416988924,
+   "visible fraction, median": 1.0
+  }
+ },
+ "arc": {
+  "anchors": 20000,
+  "off_edges": 16067,
+  "B surface-right off edges": 0.9561834816705047,
+  "wrong, off edges": {
+   "n": 704,
+   "occluded (visible < 0.8)": 0.24147727272727273,
+   "photometric (cost over visible looks > tau^2/4)": 0.3664772727272727,
+   "ambiguous (another range fits better)": 0.3721590909090909,
+   "other": 0.019886363636363636,
+   "visible fraction, median": 1.0
+  },
+  "right, off edges": {
+   "n": 15363,
+   "occluded (visible < 0.8)": 0.008526980407472498,
+   "photometric (cost over visible looks > tau^2/4)": 0.06782529453882705,
+   "ambiguous (another range fits better)": 0.5392176007290242,
+   "other": 0.38443012432467616,
+   "visible fraction, median": 1.0
+  }
+ }
+}

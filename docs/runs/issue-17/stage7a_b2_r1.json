@@ -1,0 +1,133 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K18 B2 on line: surface-right overall >= B's - 1 point",
+   "ok": true
+  },
+  {
+   "name": "K18 B2 on line: reliable anchors >= 95 % surface-right, >= 50 % kept",
+   "ok": true
+  },
+  {
+   "name": "K18 line control: the mirrored path (median >= 20 %)",
+   "ok": true
+  },
+  {
+   "name": "K18 line control: as many marked at random (< 95 %)",
+   "ok": true
+  },
+  {
+   "name": "K18 B2 on arc: surface-right overall >= B's - 1 point",
+   "ok": true
+  },
+  {
+   "name": "K18 B2 on arc: reliable anchors >= 95 % surface-right, >= 50 % kept",
+   "ok": true
+  },
+  {
+   "name": "K18 arc control: the mirrored path (median >= 20 %)",
+   "ok": true
+  },
+  {
+   "name": "K18 arc control: as many marked at random (< 95 %)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "line": {
+   "anchors": 20000,
+   "true_edges": 0.2129,
+   "seconds": {
+    "B": 13.988424301147461,
+    "B2": 230.16225337982178
+   },
+   "B": {
+    "surface": {
+     "all": 0.92385,
+     "at_edges": 0.7562235791451386,
+     "off_edges": 0.9691907000381146
+    },
+    "old": {
+     "all": 0.8711,
+     "at_edges": 0.5100986378581494,
+     "off_edges": 0.9687460297293864
+    },
+    "reliable_kept": 0.7763,
+    "reliable_surface": 0.9833183047790802
+   },
+   "B2": {
+    "surface": {
+     "all": 0.93245,
+     "at_edges": 0.7764208548614373,
+     "off_edges": 0.9746537924024902
+    },
+    "old": {
+     "all": 0.8704,
+     "at_edges": 0.4894316580554251,
+     "off_edges": 0.973446830135942
+    },
+    "reliable_kept": 0.72835,
+    "reliable_surface": 0.9829752179583992,
+    "control_mirrored_median_old": 0.75559294663035,
+    "control_random_marking_surface": 0.9341662662181643
+   },
+   "B_vs_B2_surface": {
+    "both": 0.9029,
+    "B_only": 0.02095,
+    "B2_only": 0.02955,
+    "neither": 0.0466
+   }
+  },
+  "arc": {
+   "anchors": 20000,
+   "true_edges": 0.19665,
+   "seconds": {
+    "B": 13.679990530014038,
+    "B2": 217.25190615653992
+   },
+   "B": {
+    "surface": {
+     "all": 0.9158,
+     "at_edges": 0.7508263412153572,
+     "off_edges": 0.9561834816705047
+    },
+    "old": {
+     "all": 0.8693,
+     "at_edges": 0.5199593185863208,
+     "off_edges": 0.9548142154727081
+    },
+    "reliable_kept": 0.75635,
+    "reliable_surface": 0.986051431215707
+   },
+   "B2": {
+    "surface": {
+     "all": 0.9461,
+     "at_edges": 0.8032036613272311,
+     "off_edges": 0.9810792307213543
+    },
+    "old": {
+     "all": 0.8895,
+     "at_edges": 0.52046783625731,
+     "off_edges": 0.9798344432688119
+    },
+    "reliable_kept": 0.69645,
+    "reliable_surface": 0.9867183573838754,
+    "control_mirrored_median_old": 0.789536502949024,
+    "control_random_marking_surface": 0.945006820302965
+   },
+   "B_vs_B2_surface": {
+    "both": 0.8999,
+    "B_only": 0.0159,
+    "B2_only": 0.0462,
+    "neither": 0.038
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "5237ca3a92c81a7ba64f1cbf169d1a69555f545b",
+   "clean": true
+  }
+ }
+}

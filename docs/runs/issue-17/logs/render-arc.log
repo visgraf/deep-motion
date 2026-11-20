@@ -1,0 +1,126 @@
+2026-11-20T09:44:13-03:00 $ .venv/bin/python -m deep stage5b2-render --path turn90 --start 0.897,0.459,90 --height 1.6 --blend scenes/classroom/classroom_eye.blend --step 0.01 --first 30 --last 130 --width 720 --spp 128 --device OPTIX --drop-exr --run runs/r2-arc --seed-base 24000 (at a0fc8a6)
+[deep] stage 4 look 0 s = 0.300 m: 1.44 s
+[deep] stage 4 look 1 s = 0.310 m: 0.96 s
+[deep] stage 4 look 2 s = 0.320 m: 0.98 s
+[deep] stage 4 look 3 s = 0.330 m: 0.95 s
+[deep] stage 4 look 4 s = 0.340 m: 1.01 s
+[deep] stage 4 look 5 s = 0.350 m: 0.94 s
+[deep] stage 4 look 6 s = 0.360 m: 0.97 s
+[deep] stage 4 look 7 s = 0.370 m: 0.96 s
+[deep] stage 4 look 8 s = 0.380 m: 0.97 s
+[deep] stage 4 look 9 s = 0.390 m: 0.98 s
+[deep] stage 4 look 10 s = 0.400 m: 0.98 s
+[deep] stage 4 look 11 s = 0.410 m: 0.97 s
+[deep] stage 4 look 12 s = 0.420 m: 0.97 s
+[deep] stage 4 look 13 s = 0.430 m: 0.97 s
+[deep] stage 4 look 14 s = 0.440 m: 0.99 s
+[deep] stage 4 look 15 s = 0.450 m: 0.96 s
+[deep] stage 4 look 16 s = 0.460 m: 0.97 s
+[deep] stage 4 look 17 s = 0.470 m: 0.96 s
+[deep] stage 4 look 18 s = 0.480 m: 0.98 s
+[deep] stage 4 look 19 s = 0.490 m: 0.96 s
+[deep] stage 4 look 20 s = 0.500 m: 0.98 s
+[deep] stage 4 look 21 s = 0.510 m: 0.99 s
+[deep] stage 4 look 22 s = 0.520 m: 0.98 s
+[deep] stage 4 look 23 s = 0.530 m: 0.96 s
+[deep] stage 4 look 24 s = 0.540 m: 0.95 s
+[deep] stage 4 look 25 s = 0.550 m: 0.95 s
+[deep] stage 4 look 26 s = 0.560 m: 0.97 s
+[deep] stage 4 look 27 s = 0.570 m: 0.96 s
+[deep] stage 4 look 28 s = 0.580 m: 0.96 s
+[deep] stage 4 look 29 s = 0.590 m: 0.96 s
+[deep] stage 4 look 30 s = 0.600 m: 0.95 s
+[deep] stage 4 look 31 s = 0.610 m: 0.94 s
+[deep] stage 4 look 32 s = 0.620 m: 0.94 s
+[deep] stage 4 look 33 s = 0.630 m: 0.98 s
+[deep] stage 4 look 34 s = 0.640 m: 0.95 s
+[deep] stage 4 look 35 s = 0.650 m: 0.97 s
+[deep] stage 4 look 36 s = 0.660 m: 0.97 s
+[deep] stage 4 look 37 s = 0.670 m: 0.96 s
+[deep] stage 4 look 38 s = 0.680 m: 0.96 s
+[deep] stage 4 look 39 s = 0.690 m: 0.96 s
+[deep] stage 4 look 40 s = 0.700 m: 0.96 s
+[deep] stage 4 look 41 s = 0.710 m: 0.96 s
+[deep] stage 4 look 42 s = 0.720 m: 0.95 s
+[deep] stage 4 look 43 s = 0.730 m: 0.96 s
+[deep] stage 4 look 44 s = 0.740 m: 0.96 s
+[deep] stage 4 look 45 s = 0.750 m: 0.96 s
+[deep] stage 4 look 46 s = 0.760 m: 0.96 s
+[deep] stage 4 look 47 s = 0.770 m: 0.96 s
+[deep] stage 4 look 48 s = 0.780 m: 0.95 s
+[deep] stage 4 look 49 s = 0.790 m: 0.96 s
+[deep] stage 4 look 50 s = 0.800 m: 0.94 s
+[deep] stage 4 look 51 s = 0.810 m: 0.94 s
+[deep] stage 4 look 52 s = 0.820 m: 0.96 s
+[deep] stage 4 look 53 s = 0.830 m: 0.94 s
+[deep] stage 4 look 54 s = 0.840 m: 0.94 s
+[deep] stage 4 look 55 s = 0.850 m: 0.93 s
+[deep] stage 4 look 56 s = 0.860 m: 0.95 s
+[deep] stage 4 look 57 s = 0.870 m: 0.97 s
+[deep] stage 4 look 58 s = 0.880 m: 0.96 s
+[deep] stage 4 look 59 s = 0.890 m: 0.96 s
+[deep] stage 4 look 60 s = 0.900 m: 0.98 s
+[deep] stage 4 look 61 s = 0.910 m: 0.96 s
+[deep] stage 4 look 62 s = 0.920 m: 0.96 s
+[deep] stage 4 look 63 s = 0.930 m: 0.95 s
+[deep] stage 4 look 64 s = 0.940 m: 0.96 s
+[deep] stage 4 look 65 s = 0.950 m: 0.97 s
+[deep] stage 4 look 66 s = 0.960 m: 0.96 s
+[deep] stage 4 look 67 s = 0.970 m: 0.93 s
+[deep] stage 4 look 68 s = 0.980 m: 0.96 s
+[deep] stage 4 look 69 s = 0.990 m: 0.95 s
+[deep] stage 4 look 70 s = 1.000 m: 0.94 s
+[deep] stage 4 look 71 s = 1.010 m: 0.95 s
+[deep] stage 4 look 72 s = 1.020 m: 0.94 s
+[deep] stage 4 look 73 s = 1.030 m: 0.96 s
+[deep] stage 4 look 74 s = 1.040 m: 0.97 s
+[deep] stage 4 look 75 s = 1.050 m: 0.97 s
+[deep] stage 4 look 76 s = 1.060 m: 0.96 s
+[deep] stage 4 look 77 s = 1.070 m: 0.92 s
+[deep] stage 4 look 78 s = 1.080 m: 0.95 s
+[deep] stage 4 look 79 s = 1.090 m: 0.98 s
+[deep] stage 4 look 80 s = 1.100 m: 0.97 s
+[deep] stage 4 look 81 s = 1.110 m: 0.97 s
+[deep] stage 4 look 82 s = 1.120 m: 0.94 s
+[deep] stage 4 look 83 s = 1.130 m: 0.94 s
+[deep] stage 4 look 84 s = 1.140 m: 0.94 s
+[deep] stage 4 look 85 s = 1.150 m: 0.98 s
+[deep] stage 4 look 86 s = 1.160 m: 0.95 s
+[deep] stage 4 look 87 s = 1.170 m: 0.96 s
+[deep] stage 4 look 88 s = 1.180 m: 0.96 s
+[deep] stage 4 look 89 s = 1.190 m: 0.95 s
+[deep] stage 4 look 90 s = 1.200 m: 0.96 s
+[deep] stage 4 look 91 s = 1.210 m: 0.94 s
+[deep] stage 4 look 92 s = 1.220 m: 0.95 s
+[deep] stage 4 look 93 s = 1.230 m: 0.95 s
+[deep] stage 4 look 94 s = 1.240 m: 0.97 s
+[deep] stage 4 look 95 s = 1.250 m: 0.95 s
+[deep] stage 4 look 96 s = 1.260 m: 0.94 s
+[deep] stage 4 look 97 s = 1.270 m: 0.95 s
+[deep] stage 4 look 98 s = 1.280 m: 0.94 s
+[deep] stage 4 look 99 s = 1.290 m: 0.93 s
+[deep] stage 4 look 100 s = 1.300 m: 0.94 s
+	Command being timed: ".venv/bin/python -m deep stage5b2-render --path turn90 --start 0.897,0.459,90 --height 1.6 --blend scenes/classroom/classroom_eye.blend --step 0.01 --first 30 --last 130 --width 720 --spp 128 --device OPTIX --drop-exr --run runs/r2-arc --seed-base 24000"
+	User time (seconds): 107.17
+	System time (seconds): 6.84
+	Percent of CPU this job got: 116%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:37.96
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1327056
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 760069
+	Voluntary context switches: 326363
+	Involuntary context switches: 37161
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 3565712
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-20T09:45:51-03:00 exit 0

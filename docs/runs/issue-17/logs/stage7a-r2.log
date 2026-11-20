@@ -1,0 +1,45 @@
+2026-11-20T09:45:51-03:00 $ .venv/bin/python -m deep stage7a --r2 line=runs/r2-line arc=runs/r2-arc --out docs/runs/issue-17 (at a0fc8a6)
+/home/lvelho/rd/deep-motion/deep/match.py:258: RuntimeWarning: invalid value encountered in subtract
+  den = cl - 2 * cj + cr
+/home/lvelho/rd/deep-motion/deep/match.py:1036: RuntimeWarning: invalid value encountered in add
+  den = cl - 2 * cj + cr
+/home/lvelho/rd/deep-motion/deep/match.py:1036: RuntimeWarning: invalid value encountered in subtract
+  den = cl - 2 * cj + cr
+[deep] stage 7a FAIL K15 B on line: reliable anchors >= 95 % surface-right, >= 50 % kept
+[deep] stage 7a PASS K15 line control: as many marked at random (< 95 %)
+[deep] stage 7a PASS K15 line control: the mirrored path (median >= 20 %)
+[deep] stage 7a FAIL K16 H on line: >= 85 % surface-right on what it fills
+[deep] stage 7a PASS K16 line control: shuffled seeds (< 85 %)
+[deep] stage 7a FAIL K17 line: least-textured third, H >= B alone + 10 points
+[deep] stage 7a FAIL K15 B on arc: reliable anchors >= 95 % surface-right, >= 50 % kept
+[deep] stage 7a PASS K15 arc control: as many marked at random (< 95 %)
+[deep] stage 7a PASS K15 arc control: the mirrored path (median >= 20 %)
+[deep] stage 7a FAIL K16 H on arc: >= 85 % surface-right on what it fills
+[deep] stage 7a PASS K16 arc control: shuffled seeds (< 85 %)
+[deep] stage 7a FAIL K17 arc: least-textured third, H >= B alone + 10 points
+[deep] {"line": {"looks": 101, "anchors": 20000, "true_edges": 0.4421, "B": {"old": {"all": 0.6967, "at_edges": 0.5265776973535399, "off_edges": 0.8315110234809105}, "surface": {"all": 0.8126, "at_edges": 0.7753901832164669, "off_edges": 0.8420863954113641}, "reliable": {"kept": 0.4592, "surface": 0.9537238675958188, "old": 0.8143510452961672}, "control_random_marking_surface": 0.8130444250871081, "control_mirrored_median_old": 0.8467338975076741}, "A2": {"old": {"all": 0.65335, "at_edges": 0.5149287491517757, "off_edges": 0.7630399713210253}, "surface": {"all": 0.77245, "at_edges": 0.7749377968785343, "off_edges": 0.770478580390751}}, "H": {"targets": 48373, "coverage": 0.7855415210964795, "surface": 0.7042290586594384, "surface_least_texture": 0.5951927061748861, "control_shuffled_seeds_surface": 0.5460692485792464}, "B_alone": {"surface": 0.6112914229012052, "surface_least_texture": 0.5326221781195734}, "P_reported": {"planes": 8, "fills_of_empty": 0.9109311740890689, "surface_of_filled": 0.8984126984126984}}, "arc": {"looks": 101, "anchors": 20000, "true_edges": 0.30605, "B": {"old": {"all": 0.72645, "at_edges": 0.49812122202254533, "off_edges": 0.8271489300381872}, "surface": {"all": 0.81515, "at_edges": 0.7601699068779612, "off_edges": 0.8393976511276029}, "reliable": {"kept": 0.45515, "surface": 0.959134351312754, "old": 0.8581786224321653}, "control_random_marking_surface": 0.811710425134571, "control_mirrored_median_old": 0.8271028005801884}, "A2": {"old": {"all": 0.66255, "at_edges": 0.4793334422479987, "off_edges": 0.7433532675264789}, "surface": {"all": 0.7486, "at_edges": 0.7374611991504656, "off_edges": 0.7535125009006413}}, "H": {"targets": 48429, "coverage": 0.727188254971195, "surface": 0.7843939006729704, "surface_least_texture": 0.7255050028317915, "control_shuffled_seeds_surface": 0.5879064752284207}, "B_alone": {"surface": 0.6877490759668794, "surface_least_texture": 0.6509942389890355}, "P_reported": {"planes": 8, "fills_of_empty": 0.981531940660006, "surface_of_filled": 0.34600555212831585}}}
+Command exited with non-zero status 1
+	Command being timed: ".venv/bin/python -m deep stage7a --r2 line=runs/r2-line arc=runs/r2-arc --out docs/runs/issue-17"
+	User time (seconds): 467.48
+	System time (seconds): 1.53
+	Percent of CPU this job got: 447%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:44.88
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 616656
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 22
+	Minor (reclaiming a frame) page faults: 1125816
+	Voluntary context switches: 365
+	Involuntary context switches: 56198
+	Swaps: 0
+	File system inputs: 3472
+	File system outputs: 280
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+2026-11-20T09:47:36-03:00 exit 1
