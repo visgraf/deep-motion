@@ -955,3 +955,153 @@ def selftest_k11(kinds=("line", "arc"), max_n=20000, runs=None):
             res.append((f"K11 {kind} control: {name} (< 70 % at edges, old metric)",
                         out[name]["old"]["at_edges"] < 0.70))
     return res, num
+
+
+# ------------------------------------------------------------- anchors without texture: method H (seed and verify)
+
+H_CELL, H_CANDIDATES, H_GRID = 10, 8, 2               # declared on #14 before the code
+
+
+def _trace_cost(blurred, looks, m, ref, u, zv, fan, tau=TAU, chunk=4000):
+    """B's cost (truncated mean squared difference to the reference value over all looks but m) at inverse ranges
+    zv (N, Z) for the pixels with values ref and rays u."""
+    N, Z = zv.shape
+    out = np.full((N, Z), np.inf)
+    c_m = looks[m][1]
+    model = fan.model()
+    for a in range(0, N, chunk):
+        sl = slice(a, min(a + chunk, N))
+        n = sl.stop - a
+        X = c_m[None, None, :] + u[sl][:, None, :] / zv[sl][:, :, None]
+        acc, cnt = np.zeros((n, Z)), np.zeros((n, Z))
+        for k in range(len(looks)):
+            if k == m:
+                continue
+            rc, _ = model.pixel_of(((X - looks[k][1]) @ looks[k][2]).reshape(-1, 3))
+            d = np.minimum((_sample(blurred[k], rc).reshape(n, Z) - ref[sl][:, None]) ** 2, tau ** 2)
+            f = np.isfinite(d)
+            acc += np.where(f, d, 0.0)
+            cnt += f
+        with np.errstate(invalid="ignore", divide="ignore"):
+            out[sl] = np.where(cnt >= max(2, 0.3 * (len(looks) - 1)), acc / cnt, np.inf)
+    return out
+
+
+def seed_candidates(seed_px, seed_u, tgt_px, tgt_u, W, H, cell=H_CELL, k=H_CANDIDATES):
+    """For each target, the indices of the k nearest seeds by angle among those in the 3x3 block of cells around it
+    (-1 where fewer)."""
+    nr, nc = int(np.ceil(H / cell)), int(np.ceil(W / cell))
+    scell = (seed_px[:, 0] // cell) * nc + seed_px[:, 1] // cell
+    order = np.argsort(scell, kind="stable")
+    starts = np.searchsorted(scell[order], np.arange(nr * nc + 1))
+    tcell_r, tcell_c = tgt_px[:, 0] // cell, tgt_px[:, 1] // cell
+    tcell = tcell_r * nc + tcell_c
+    out = np.full((len(tgt_px), k), -1)
+    for cid in np.unique(tcell):
+        r0, c0 = divmod(int(cid), nc)
+        block = [order[starts[rr * nc + cc]:starts[rr * nc + cc + 1]]
+                 for rr in range(max(r0 - 1, 0), min(r0 + 2, nr)) for cc in ((c0 - 1) % nc, c0, (c0 + 1) % nc)]
+        S = np.concatenate(block) if block else np.zeros(0, int)
+        if len(S) == 0:
+            continue
+        T = np.flatnonzero(tcell == cid)
+        dots = tgt_u[T] @ seed_u[S].T
+        kk = min(k, len(S))
+        top = np.argsort(-dots, axis=1)[:, :kk]
+        out[T, :kk] = S[top]
+    return out
+
+
+def seed_fill(looks, m, fan, seed_px, seed_u, seed_r, tgt_px, tgt_u, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, fine=9):
+    """Method H: each target takes the best-verified of its seeds' ranges, refined like B's last stage. Returns r
+    (nan where no candidate), its cost, and the nearest seed's range (the unverified reference)."""
+    H, W = looks[m][3].shape
+    blurred = [_blur(lk[3]) for lk in looks]
+    ref = blurred[m][tgt_px[:, 0], tgt_px[:, 1]]
+    cand = seed_candidates(seed_px, seed_u, tgt_px, tgt_u, W, H)
+    has = cand >= 0
+    zc = np.where(has, 1.0 / seed_r[np.maximum(cand, 0)], np.nan)
+    C = _trace_cost(blurred, looks, m, ref, tgt_u, np.where(has, zc, 1.0), fan)
+    C[~has] = np.inf
+    j = np.argmin(C, axis=1)
+    z0 = zc[np.arange(len(j)), j]
+    ok = has.any(axis=1) & np.isfinite(C[np.arange(len(j)), j])
+    dz = (z_hi - z_lo) / (nz - 1)
+    off = np.linspace(-2 * dz, 2 * dz, fine)
+    zv = np.clip(np.where(ok, z0, 1.0)[:, None] + off[None, :], z_lo, z_hi)
+    Cf = _trace_cost(blurred, looks, m, ref, tgt_u, zv, fan)
+    i = np.clip(np.argmin(Cf, axis=1), 1, fine - 2)
+    rows = np.arange(len(i))
+    cl, cj, cr = Cf[rows, i - 1], Cf[rows, i], Cf[rows, i + 1]
+    den = cl - 2 * cj + cr
+    step = off[1] - off[0]
+    with np.errstate(invalid="ignore", divide="ignore"):
+        sh = np.where((den > 0) & np.isfinite(den), 0.5 * (cl - cr) / den, 0.0)
+    z = np.clip(zv[rows, i] + np.clip(sh, -1, 1) * step, z_lo, z_hi)
+    r = np.where(ok, 1.0 / z, np.nan)
+    nearest = np.where(has[:, 0], seed_r[np.maximum(cand[:, 0], 0)], np.nan)
+    return r, np.where(ok, cj, np.inf), nearest
+
+
+def selftest_k12(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
+    """K12 as declared on #14 (R1, surface metric): H covers >= 95 % of the targets and is >= 85 % surface-right
+    (K12a); in the least-textured third it beats B alone by >= 10 points (K12b); control: shuffled seeds (< 85 %)."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    rnd = np.random.default_rng(seed)
+    for kind in kinds:
+        looks, P, _, fan = r1_run(runs[kind])
+        m = len(looks) // 2
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_b, conf, best = sweep(looks, m, px, u, fan)
+        mk = reliable(best, conf)
+        spx, su, sr = px[mk], u[mk], r_b[mk]
+        apx, au, aidx, ag = anchors(looks, m, fan, max_n=10 ** 9, frac=1.0)
+        grid = (apx[:, 0] % H_GRID == 0) & (apx[:, 1] % H_GRID == 0)
+        tpx, tu, tidx, tg = apx[grid], au[grid], aidx[grid], ag[grid]
+        r_true = np.linalg.norm(P[tidx] - looks[m][1], axis=-1)
+        nb = neighbourhood_ranges(looks, m, P, tpx)
+        tedge = depth_edge(looks, m, P, tpx)
+        W = looks[m][3].shape[1]
+        is_seed = np.isin(tpx[:, 0] * W + tpx[:, 1], spx[:, 0] * W + spx[:, 1])
+        seed_at = {int(a * W + b): float(r) for (a, b), r in zip(spx, sr)}
+        import time
+        t = time.time()
+        r_h, c_h, r_near = seed_fill(looks, m, fan, spx, su, sr, tpx, tu)
+        t_h = time.time() - t
+        r_h = np.where(is_seed, [seed_at.get(int(a * W + b), np.nan) for a, b in tpx], r_h)
+        r_sh, _, _ = seed_fill(looks, m, fan, spx, su, rnd.permutation(sr), tpx, tu)
+        t = time.time()
+        r_bt, _, _ = sweep(looks, m, tpx, tu, fan)
+        t_b = time.time() - t
+        lo3, hi3 = np.quantile(tg[np.isfinite(tg)], [1 / 3, 2 / 3])
+        thirds = {"least": tg < lo3, "middle": (tg >= lo3) & (tg < hi3), "most": tg >= hi3}
+        fwd = -looks[m][2][:, 2]
+        psi = np.degrees(np.arccos(np.clip(tu @ fwd, -1, 1)))
+
+        def score(r):
+            cov = np.isfinite(r)
+            old = cov & (_relerr(np.where(cov, r, 1.0), r_true) <= 0.10)
+            new = cov & surface_right(np.where(cov, r, np.nan), nb)
+            o = {"coverage": float(cov.mean()), "surface": float(new[cov].mean()) if cov.any() else None,
+                 "old": float(old[cov].mean()) if cov.any() else None}
+            for nm, msk in thirds.items():
+                o[f"surface_{nm}_texture"] = float(new[cov & msk].mean())
+            o["surface_at_edges"] = float(new[cov & tedge].mean())
+            o["surface_off_edges"] = float(new[cov & ~tedge].mean())
+            o["surface_by_sector"] = {k: float(new[cov & (psi >= a) & (psi < b)].mean())
+                                      for k, (a, b) in SECTORS.items() if (cov & (psi >= a) & (psi < b)).any()}
+            return o
+        out = {"seeds": int(mk.sum()), "targets": int(len(tpx)), "targets_that_are_seeds": int(is_seed.sum()),
+               "true_edges": float(tedge.mean()), "seconds": {"H": t_h, "B_alone": t_b},
+               "H": score(r_h), "control_shuffled_seeds": score(r_sh), "B_alone": score(r_bt),
+               "nearest_seed_unverified": score(r_near)}
+        num[kind] = out
+        Hs, Bs = out["H"], out["B_alone"]
+        res.append((f"K12a H on R1 ({kind}): covers >= 95 % of the targets, >= 85 % surface-right",
+                    Hs["coverage"] >= 0.95 and Hs["surface"] >= 0.85))
+        res.append((f"K12b {kind}: least-textured third, H >= B alone + 10 points (surface-right)",
+                    Hs["surface_least_texture"] >= Bs["surface_least_texture"] + 0.10))
+        res.append((f"K12 {kind} control: shuffled seeds (< 85 % surface-right)",
+                    out["control_shuffled_seeds"]["surface"] < 0.85))
+    return res, num
