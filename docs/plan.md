@@ -787,3 +787,16 @@ The checks K1–K7 were declared on #14 before each was built.
   - The fattening reaches beyond 2 px: over the 1 m window, the foreground's contour sweeps across the background next to it. A background point there is hidden in part of the window, and the contour's coherent motion wins the cost.
   
   An edge cannot be split in space alone. The far surface has to be scored only on the looks where the near one does not hide it.
+
+**Depth edges, method F (K9, declared on #14; Chat sandbox, `2ebef0a`, record `docs/runs/issue-14/stage7a_k9.json`).**
+
+- **F:** the occlusion ordering in time. A far hypothesis, at least 10 % beyond B's range, is scored on each half-window. It replaces B's estimate when its cost is under half of B's.
+- **K9 fails on both runs.**
+  - At true edges F reaches 49.3 % (line) and 49.9 % (arc), against B's 51.0 % and 52.0 % and the 70 % bar.
+  - Off edges it loses 5 points.
+  - Both controls fail as they must, but the ordering is barely better than its reversal (49.3 against 47.1 %).
+  - The far ranges taken (12 % of anchors, 26–28 % of the edge anchors) are right only 22–26 % of the time, with medians of 15–17 %.
+- **What E and F share, and why both fail.** Each scores the far surface against the anchor's own value. At a contour that value is a mixture of both surfaces, which no single surface reproduces. On a half-window, a wrong range at the far side then fits it better than the near trace does.
+- **What remains.** Two directions are left, and the choice between them is Luiz's:
+  - **A two-layer model per contour anchor:** value = α·near + (1 − α)·far, each moving on its own trace.
+  - **An evaluation that accepts what B does.** Most of B's wrong edge anchors sit at the near surface's range, on its silhouette, within a pixel. As 3-D points they lie on a true surface. Judging them by distance to the nearest true surface, rather than by range along the pixel centre's ray, would score them right. That changes the metric, so it is Luiz's decision.
