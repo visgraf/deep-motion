@@ -1105,3 +1105,132 @@ def selftest_k12(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
         res.append((f"K12 {kind} control: shuffled seeds (< 85 % surface-right)",
                     out["control_shuffled_seeds"]["surface"] < 0.85))
     return res, num
+
+
+# -------------------------------------------------------- method H2: grow in rounds, verify where it discriminates
+
+H2_ROUNDS = 20                                          # declared on #14 before the code
+
+
+def _decide(blurred, looks, m, fan, ref, tu, zc, mode, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, fine=9):
+    """One round's decision for targets with candidate inverse ranges zc (N, k; nan where none), nearest first.
+    mode 'gated' (H2): the lowest-cost candidate, refined, where the candidates' cost spread is >= tau^2/4, else the
+    nearest; 'always': the lowest-cost candidate, refined (H); 'never': the nearest."""
+    has = np.isfinite(zc)
+    nearest = zc[:, 0]
+    if mode == "never":
+        return 1.0 / nearest
+    C = _trace_cost(blurred, looks, m, ref, tu, np.where(has, zc, 1.0), fan)
+    C[~has] = np.inf
+    j = np.argmin(C, axis=1)
+    rows = np.arange(len(j))
+    cmin = C[rows, j]
+    cmax = np.max(np.where(np.isfinite(C), C, -np.inf), axis=1)
+    use = np.isfinite(cmin) if mode == "always" else (np.isfinite(cmin) & (cmax - cmin >= RELIABLE_COST))
+    dz = (z_hi - z_lo) / (nz - 1)
+    off = np.linspace(-2 * dz, 2 * dz, fine)
+    z = nearest.copy()
+    if use.any():
+        ii = np.flatnonzero(use)
+        zv = np.clip(zc[ii, j[ii]][:, None] + off[None, :], z_lo, z_hi)
+        Cf = _trace_cost(blurred, looks, m, ref[ii], tu[ii], zv, fan)
+        i = np.clip(np.argmin(Cf, axis=1), 1, fine - 2)
+        rr = np.arange(len(i))
+        cl, cj, cr = Cf[rr, i - 1], Cf[rr, i], Cf[rr, i + 1]
+        den = cl - 2 * cj + cr
+        with np.errstate(invalid="ignore", divide="ignore"):
+            sh = np.where((den > 0) & np.isfinite(den), 0.5 * (cl - cr) / den, 0.0)
+        z[ii] = np.clip(zv[rr, i] + np.clip(sh, -1, 1) * (off[1] - off[0]), z_lo, z_hi)
+    return 1.0 / z
+
+
+def seed_grow(looks, m, fan, seed_px, seed_u, seed_r, tgt_px, tgt_u, mode="gated", rounds=H2_ROUNDS):
+    """Method H2: H's candidate search in rounds, the targets filled in a round seeding the next. Returns r (nan where
+    never reached) and the round that filled each target (0: never)."""
+    H, W = looks[m][3].shape
+    blurred = [_blur(lk[3]) for lk in looks]
+    ref_all = blurred[m][tgt_px[:, 0], tgt_px[:, 1]]
+    r = np.full(len(tgt_px), np.nan)
+    rnd = np.zeros(len(tgt_px), int)
+    spx, su, sr = seed_px, seed_u, seed_r
+    for k in range(1, rounds + 1):
+        todo = np.flatnonzero(~np.isfinite(r))
+        if len(todo) == 0 or len(spx) == 0:
+            break
+        cand = seed_candidates(spx, su, tgt_px[todo], tgt_u[todo], W, H)
+        reach = cand[:, 0] >= 0
+        if not reach.any():
+            break
+        ii, cc = todo[reach], cand[reach]
+        zc = np.where(cc >= 0, 1.0 / sr[np.maximum(cc, 0)], np.nan)
+        r[ii] = _decide(blurred, looks, m, fan, ref_all[ii], tgt_u[ii], zc, mode)
+        rnd[ii] = k
+        spx, su, sr = tgt_px[ii], tgt_u[ii], r[ii]
+    return r, rnd
+
+
+def selftest_k13(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
+    """K13 as declared on #14 (R1, surface metric): H2 covers >= 95 % and is >= 85 % surface-right (K13a); least-
+    textured third >= B alone + 10 points (K13b); control: shuffled seeds grown the same way (< 85 %)."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    rng = np.random.default_rng(seed)
+    for kind in kinds:
+        looks, P, _, fan = r1_run(runs[kind])
+        m = len(looks) // 2
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_b, conf, best = sweep(looks, m, px, u, fan)
+        mk = reliable(best, conf)
+        spx, su, sr = px[mk], u[mk], r_b[mk]
+        apx, au, aidx, ag = anchors(looks, m, fan, max_n=10 ** 9, frac=1.0)
+        grid = (apx[:, 0] % H_GRID == 0) & (apx[:, 1] % H_GRID == 0)
+        tpx, tu, tidx, tg = apx[grid], au[grid], aidx[grid], ag[grid]
+        W = looks[m][3].shape[1]
+        r_true = np.linalg.norm(P[tidx] - looks[m][1], axis=-1)
+        nb = neighbourhood_ranges(looks, m, P, tpx)
+        tedge = depth_edge(looks, m, P, tpx)
+        key_t = tpx[:, 0] * W + tpx[:, 1]
+        seed_at = dict(zip((spx[:, 0] * W + spx[:, 1]).tolist(), sr.tolist()))
+        is_seed = np.isin(key_t, spx[:, 0] * W + spx[:, 1])
+        seed_r_t = np.array([seed_at.get(int(k), np.nan) for k in key_t])
+        r_bt, _, _ = sweep(looks, m, tpx, tu, fan)
+        lo3, hi3 = np.quantile(tg[np.isfinite(tg)], [1 / 3, 2 / 3])
+        thirds = {"least": tg < lo3, "middle": (tg >= lo3) & (tg < hi3), "most": tg >= hi3}
+        fwd = -looks[m][2][:, 2]
+        psi = np.degrees(np.arccos(np.clip(tu @ fwd, -1, 1)))
+
+        def score(r, rnd=None):
+            cov = np.isfinite(r)
+            new = cov & surface_right(np.where(cov, r, np.nan), nb)
+            old = cov & (_relerr(np.where(cov, r, 1.0), r_true) <= 0.10)
+            o = {"coverage": float(cov.mean()), "surface": float(new[cov].mean()), "old": float(old[cov].mean())}
+            for nm, msk in thirds.items():
+                o[f"surface_{nm}_texture"] = float(new[cov & msk].mean())
+            o["surface_at_edges"] = float(new[cov & tedge].mean())
+            o["surface_off_edges"] = float(new[cov & ~tedge].mean())
+            o["surface_by_sector"] = {k: float(new[cov & (psi >= a) & (psi < b)].mean())
+                                      for k, (a, b) in SECTORS.items() if (cov & (psi >= a) & (psi < b)).any()}
+            if rnd is not None:
+                o["by_round"] = {int(k): {"filled": float((rnd == k).mean()), "surface": float(new[rnd == k].mean())}
+                                 for k in np.unique(rnd[rnd > 0])}
+            return o
+        out = {"seeds": int(mk.sum()), "targets": int(len(tpx)), "targets_that_are_seeds": int(is_seed.sum())}
+        import time
+        for name, mode, seeds_r in (("H2", "gated", sr), ("H2_always_verify", "always", sr),
+                                    ("H2_never_verify", "never", sr),
+                                    ("control_shuffled_seeds", "gated", rng.permutation(sr))):
+            t = time.time()
+            r, rnd = seed_grow(looks, m, fan, spx, su, seeds_r, tpx, tu, mode=mode)
+            r = np.where(is_seed, seed_r_t if name != "control_shuffled_seeds" else r, r)
+            out[name] = score(r, rnd)
+            out[name]["seconds"] = time.time() - t
+        out["B_alone"] = score(r_bt)
+        num[kind] = out
+        H2, B = out["H2"], out["B_alone"]
+        res.append((f"K13a H2 on R1 ({kind}): covers >= 95 % of the targets, >= 85 % surface-right",
+                    H2["coverage"] >= 0.95 and H2["surface"] >= 0.85))
+        res.append((f"K13b {kind}: least-textured third, H2 >= B alone + 10 points (surface-right)",
+                    H2["surface_least_texture"] >= B["surface_least_texture"] + 0.10))
+        res.append((f"K13 {kind} control: shuffled seeds (< 85 % surface-right)",
+                    out["control_shuffled_seeds"]["surface"] < 0.85))
+    return res, num
