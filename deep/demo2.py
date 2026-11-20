@@ -340,8 +340,9 @@ def run(T, looks, truth, vis_fn, fan, refs, out, checks_v2, limit=None, best=Fal
             last[kind] = im
         if m % 20 == 0:
             print(f"[deep] demo2 look {m + 1}/{K}: references shown {len(rel)}", flush=True)
+    sfx = "" if T[0][0] is not None else "_r0"                  # R0's end frames keep their own names (Code, #23)
     for kind, im in last.items():
-        im.save(out / f"last_{kind}.png")
+        im.save(out / f"last_{kind}{sfx}.png")
         encs[kind].put(im, int(dm.HOLD_END * FPS))
         if not limit:
             n = int(dm.ORBIT_S * FPS)

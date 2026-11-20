@@ -1071,3 +1071,27 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **Coverage is the method's main shortfall with the real matcher, and it is a matching problem, not a geometric one:** the perfect matcher covers 80–86 %.
 - **The lever is texture:** the share of pixels that become anchors, and H's accuracy where it seeds.
 - **Resolution bears on two things:** the far range (where even the perfect matcher thins out at 720) and the heading cone (stage 8). Neither is the main shortfall.
+
+### Stage 10: demo D2, the perfect and the real matcher side by side along the Classroom tour (#23)
+
+**The demo** (Luiz, 2026-11-20, (ii)).
+- **The tour:** #9's L-tour from R3, the straight path's first 2 m and then the turn: 418 looks, 4.17 m.
+- **Both matchers, as in the assessment:** references every 10 looks (32 in all), each released when its window is complete (0.5 m behind the current look), fused into 2 cm cells and judged against the truth.
+- **The frame:** the current look, the curves of coverage and cells right, and the two 3-D maps side by side, with wrong cells in orange.
+- **Provenance:** Code ran it at `666851e` on the workstation (CPU, 25 min). Record [`demo2.json`](runs/dm-issue-23/demo2.json) and end frames ([`last_match.png`](runs/dm-issue-23/last_match.png), [`last_error.png`](runs/dm-issue-23/last_error.png)) at `d7dc3fd`.
+- **The dry run on R0** ([`demo2_r0.json`](runs/dm-issue-23/demo2_r0.json), [`last_match_r0.png`](runs/dm-issue-23/last_match_r0.png); Chat sandbox).
+- **The videos** (`demo2_match.mp4`, `demo2_error.mp4`) stay on the workstation, as for #9. `.gitignore` now keeps any `.mp4` under `docs/runs/` out of the repo.
+
+**The checks.** V2 (the tour is the planned curve), V3 (the map grown frame by frame ends at the batch fusion) and V4 (nothing is shown before its window is complete) pass. Every control fails, as it must.
+
+| end of the tour | cells | cells right | coverage of the surface |
+|---|---|---|---|
+| Classroom, perfect matcher | 649,153 | 99.97 % | 88.9 % |
+| Classroom, real matcher (B + H) | 1,008,509 | 73.6 % | 41.4 % |
+| calibration room (R0), perfect | 571,845 | 99.98 % | 98.7 % |
+| calibration room (R0), real | 901,548 | 88.0 % | 63.1 % |
+
+**What it shows:**
+- **Along the tour,** the perfect matcher's coverage rises to 65 % by the turn (2 m) and 89 % at the end. The real matcher's rises steadily to 21 % and 41 %, at a nearly constant 72–75 % right.
+- **In the Classroom, the real map's wrong cells gather in bands across the room:** the rows of desks and chairs, where clutter, repeated structure and occlusion meet (Code's reading from the end frames). That is where the assessment located the gap.
+- **Elsewhere,** the walls and the floor's open areas, the real map is mostly right.
