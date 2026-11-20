@@ -943,3 +943,23 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **So what is lacking is anchors that are confidently right,** not a better mark.
 - **About two-thirds of the wrong ones** (photometric and ambiguous) are failures of B's cost: a single pre-blurred pixel value compared with the reference value. It is too weak a descriptor to tell repeated structures apart, and it is not tolerant of shading or gloss.
 - **Temporal continuity does not help:** A2 is worse than B.
+
+**B2, a patch cost (declared on #17; Luiz, 2026-11-20).**
+- **What it is:** B's sweep, unchanged, with a different cost per look: 1 − ZNCC of a 5×5 patch translated to the predicted point, truncated at 1.
+- **Its mark:** B's rule, restated: mean cost ≤ 0.25 and ratio ≥ 2.
+
+**K18 passes on R1** (Chat sandbox, `5237ca3`, record `docs/runs/issue-17/stage7a_b2_r1.json`):
+
+| surface-right (line / arc) | all | off edges | at edges | reliable: kept, surface-right |
+|---|---|---|---|---|
+| B | 92.4 / 91.6 % | 96.9 / 95.6 % | 75.6 / 75.1 % | 77.6 / 75.6 %, 98.3 / 98.6 % |
+| **B2** | **93.2 / 94.6 %** | **97.5 / 98.1 %** | 77.6 / 80.3 % | 72.8 / 69.6 %, 98.3 / 98.7 % |
+
+- **The controls fail, as they must:**
+  - the mirrored path: median 76 % and 79 %;
+  - random marking: 93.4 % and 94.5 %. That is close to the bar on the arc, because B2 is mostly right on R1 anyway.
+- **B against B2 on the same anchors:**
+  - B2 only: 3.0 % and 4.6 %;
+  - B only: 2.1 % and 1.6 %;
+  - neither: 4.7 % and 3.8 %.
+- **Seconds:** B2 takes 217–230 s per path in the Chat sandbox, against B's 14 s (16 times as long).
