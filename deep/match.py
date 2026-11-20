@@ -857,3 +857,101 @@ def selftest_k10(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
             res.append((f"K10 {kind} control: {name[8:]} (< 70 % at edges, surface metric)",
                         out[name]["surface"]["at_edges"] < 0.70))
     return res, num
+
+
+# ------------------------------------------------------------------- (a): method G, two layers per contour anchor
+
+G_FLANK_PX = 3.0                                        # declared on #14 before the code
+
+
+def two_layer(looks, m, px, u, fan, r_b, rule="coverage", halves=True):
+    """Method G on B's estimates r_b. The flanks at +/-3 px along the trace are the candidate layers: each ranged as
+    the near layer on the whole window, and as the far layer on each half-window (halves=False: the whole window, the
+    'no time' control), the far fit restricted to >= 10 % farther than the opposite flank's near range. A far layer
+    exists when the best far fit is reliable by B's rule; the anchor then takes the near or far range by its pixel's
+    coverage (rule 'flipped': the control). Returns r, decision (0 kept, 1 near, 2 far), far-layer found."""
+    H, W = looks[m][3].shape
+    s, c, R = looks[m][:3]
+    k = m + 1 if m + 1 < len(looks) else m - 1
+    d = trace_direction(c, R, looks[k][1], looks[k][2], u, fan)
+    raw = looks[m][3]
+    q, uq, rn = {}, {}, {}
+    for sg in (+1, -1):
+        qq = np.rint(px + sg * G_FLANK_PX * d).astype(np.int64)
+        qq[:, 0] = np.clip(qq[:, 0], 0, H - 1)
+        qq[:, 1] %= W
+        q[sg], uq[sg] = qq, pixel_rays(qq, R, H, W)
+        rn[sg], _, _ = sweep(looks, m, qq, uq[sg], fan)
+    N = len(px)
+    best_c = np.full(N, np.inf)
+    best_r, best_conf = np.full(N, np.nan), np.zeros(N)
+    far_side = np.zeros(N, int)
+    windows = ((looks[:m + 1], m), (looks[m:], 0)) if halves else ((looks, m),)
+    for sg in (+1, -1):
+        zmax = (1.0 / rn[-sg]) / ORDER_MARGIN
+        for sub, mm in windows:
+            r, conf, cst = sweep(sub, mm, q[sg], uq[sg], fan, zmax=zmax)
+            better = cst < best_c
+            best_c = np.where(better, cst, best_c)
+            best_r = np.where(better, r, best_r)
+            best_conf = np.where(better, conf, best_conf)
+            far_side = np.where(better, sg, far_side)
+    found = np.isfinite(best_c) & reliable(best_c, best_conf)
+    near_side = -far_side
+    r_near = np.where(near_side == 1, rn[1], rn[-1])
+    I_n = np.where(near_side == 1, raw[q[1][:, 0], q[1][:, 1]], raw[q[-1][:, 0], q[-1][:, 1]])
+    I_f = np.where(far_side == 1, raw[q[1][:, 0], q[1][:, 1]], raw[q[-1][:, 0], q[-1][:, 1]])
+    I_a = raw[px[:, 0], px[:, 1]]
+    con = np.abs(I_n - I_f) >= TAU
+    with np.errstate(invalid="ignore", divide="ignore"):
+        alpha = (I_a - I_f) / (I_n - I_f)
+    go_near = alpha >= 0.5
+    if rule == "flipped":
+        go_near = ~go_near
+    act = found & con & np.isfinite(alpha) & np.isfinite(r_near)
+    dec = np.where(act, np.where(go_near, 1, 2), 0)
+    return np.where(dec == 1, r_near, np.where(dec == 2, best_r, r_b)), dec, found
+
+
+def selftest_k11(kinds=("line", "arc"), max_n=20000, runs=None):
+    """K11 as declared on #14 (R1, old metric): G at true depth edges >= 70 % within +/-10 %, off edges at most
+    1 point below B, overall >= 90 %; controls: the flipped coverage rule and 'no time' (each must miss 70 %)."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    for kind in kinds:
+        looks, P, _, fan = r1_run(runs[kind])
+        m = len(looks) // 2
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_true = np.linalg.norm(P[pidx] - looks[m][1], axis=-1)
+        tedge = depth_edge(looks, m, P, px)
+        nb = neighbourhood_ranges(looks, m, P, px)
+        r_b, _, _ = sweep(looks, m, px, u, fan)
+
+        def score(r):
+            old, new = _relerr(r, r_true) <= 0.10, surface_right(r, nb)
+            return {"old": {"all": float(old.mean()), "at_edges": float(old[tedge].mean()),
+                            "off_edges": float(old[~tedge].mean())},
+                    "surface": {"all": float(new.mean()), "at_edges": float(new[tedge].mean()),
+                                "off_edges": float(new[~tedge].mean())}}, old
+        out = {"anchors": int(len(px)), "true_edges": float(tedge.mean())}
+        out["B"], old_b = score(r_b)
+        for name, kw in (("G", {}), ("G_flipped", {"rule": "flipped"}), ("G_no_time", {"halves": False})):
+            r, dec, found = two_layer(looks, m, px, u, fan, r_b, **kw)
+            o, old = score(r)
+            o["far_layer_found"] = {"all": float(found.mean()), "at_edges": float(found[tedge].mean()),
+                                    "off_edges": float(found[~tedge].mean())}
+            o["decided"] = {"near": float((dec == 1).mean()), "far": float((dec == 2).mean())}
+            o["old_by_decision"] = {nm: (float(old[dec == v].mean()) if (dec == v).any() else None)
+                                    for nm, v in (("kept", 0), ("near", 1), ("far", 2))}
+            o["B_old_by_decision"] = {nm: (float(old_b[dec == v].mean()) if (dec == v).any() else None)
+                                      for nm, v in (("kept", 0), ("near", 1), ("far", 2))}
+            out[name] = o
+        num[kind] = out
+        G, B = out["G"]["old"], out["B"]["old"]
+        res.append((f"K11 G on R1 ({kind}), old metric: >= 70 % at true depth edges, off edges >= B - 1 pt, "
+                    f"overall >= 90 %",
+                    G["at_edges"] >= 0.70 and G["off_edges"] >= B["off_edges"] - 0.01 and G["all"] >= 0.90))
+        for name in ("G_flipped", "G_no_time"):
+            res.append((f"K11 {kind} control: {name} (< 70 % at edges, old metric)",
+                        out[name]["old"]["at_edges"] < 0.70))
+    return res, num

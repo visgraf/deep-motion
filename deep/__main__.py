@@ -124,7 +124,9 @@ def stage5b2(a) -> int:
 
 def stage7a(a) -> int:
     from . import match as mt
-    if a.k10:
+    if a.k11:
+        res, num = mt.selftest_k11(max_n=a.max_anchors)
+    elif a.k10:
         res, num = mt.selftest_k10(max_n=a.max_anchors)
     elif a.k9:
         res, num = mt.selftest_k9(max_n=a.max_anchors)
@@ -141,7 +143,7 @@ def stage7a(a) -> int:
         Path(a.out).mkdir(parents=True, exist_ok=True)
         rec = {"command": "stage7a", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
                "computed_by": {"deep-motion": _git(REPO)}}
-        (Path(a.out) / ("stage7a_k10.json" if a.k10 else "stage7a_k9.json" if a.k9 else "stage7a_k8.json" if a.k8 else f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
+        (Path(a.out) / ("stage7a_k11.json" if a.k11 else "stage7a_k10.json" if a.k10 else "stage7a_k9.json" if a.k9 else "stage7a_k8.json" if a.k8 else f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
     return 0 if all(ok for _, ok in res) else 1
 
 
@@ -260,6 +262,7 @@ def main(argv=None) -> int:
     p.add_argument("--k3", action="store_true", help="check K3: B's reliability marking")
     p.add_argument("--a", action="store_true", help="checks K4-K5 (rung r0) or K6-K7 (rung r1): A, and both on R1")
     p.add_argument("--rung", choices=["r0", "r1"], default="r0")
+    p.add_argument("--k11", action="store_true", help="check K11: method G, two layers per contour anchor (R1)")
     p.add_argument("--k10", action="store_true", help="check K10: the surface metric for contour anchors (R1)")
     p.add_argument("--k9", action="store_true", help="check K9: method F, occlusion ordering in time (R1)")
     p.add_argument("--k8", action="store_true", help="check K8: method E at depth edges (R1; R0 reported)")
