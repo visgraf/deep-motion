@@ -990,3 +990,45 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **The links.** This document's links point to the new paths. Commands quoted as they were run keep their `--out` paths, and so do the usage lines inside the moved scripts.
 - **From now on,** deep-motion's records go to `dm-issue-N/` (CLAUDE.md, project facts).
 - **Exceptions.** `issue-5`, `issue-9`, `issue-14`, `issue-15` and `issue-17` are deep-motion's alone, and stay.
+
+### Stage 8: end to end, B's reliable anchors fused along the Classroom's paths (#19)
+
+**The run.**
+- **Renders:** Code's, at `430f029`, R3. The Classroom's full `turn90` and `straight_long` paths: 218 looks each, 720 wide, 128 spp, from #7's starts.
+- **The stage:** run by Code at `aee1891`, CPU, 3 min, record [`stage8.json`](runs/dm-issue-19/stage8.json) at `3910b0a`.
+- **The method:**
+  - B, with its mark, at five reference looks per path (m = 50, 79, 108, 138, 167), each over its own ±50-look window, on 20,000 textured anchors.
+  - The reliable estimates are fused into 2 cm world cells keyed by the estimated point, with no truth used. A cell's point is the median of its estimates.
+  - A cell is judged right by K10's surface metric, seen from the reference that contributed most to it.
+- **The checks** were declared on #19, with two amendments made after the R0 dry run and before any Classroom data:
+  - E2's control: members moved 20 %, cells kept;
+  - E3's statistic: yield.
+- **The dry run** on R0's calibration room ([`stage8_r0.json`](runs/dm-issue-19/stage8_r0.json), Chat sandbox, not gated) had E1 and E2 passing, and E3 failing.
+
+| Classroom (Code, workstation) | turn | straight |
+|---|---|---|
+| reliable kept, surface-right, per reference | 42–46 %, 95.1–96.0 % | 46–51 %, 95.3–95.7 % |
+| **E1:** fused cells right (≥ 95 %) | **94.81 %, FAIL** (35,434) | **95.10 %** (37,452) |
+| E1 control: mirrored path | 4.3 % | 0.9 % |
+| **E2:** cells from ≥ 2 references right (≥ 97 %) | **98.66 %** (5,239) | **97.74 %** (5,405) |
+| E2 control: members moved 20 % | 36.3 % | 35.7 % |
+| **E3:** yield within 15° of the heading | **15.8 %** | **17.8 %** |
+| E3 control: yield at 60–120° | 50.2 % | 44.0 % |
+| coverage of the surface (2 cm cells) | 7.8 % | 6.5 % |
+
+**The checks:**
+- **E1 fails on the turn** by 0.19 points; it passes on the straight path.
+- **E2 passes on both.**
+- **E3 fails:** the turn's yield in the cone is 1.95 points *behind* the straight path's, against the +10 required.
+- **Every control fails, as it must.** No threshold was moved.
+
+**What it says:**
+- **Fusion along a path works with real matching. Agreement between references is the strong signal.**
+  - The cells that a single reference supports are 85 % of all cells, at about 94 % right.
+  - The cells that two or more references support are 97.5–100 % right, rising with their number.
+- **Coverage is the cost of sparse, cautious anchors:** 7–8 % of the surface's 2 cm cells, from five references of 20,000 anchors each.
+- **The turn's geometric advantage does not survive real matching.**
+  - Under the oracle at the same 720 wide (#15, calibration room), the arc's heading cone was 19 points more usable than the line's: 89 % against 70 % at σ = 0.5 px.
+  - With B in the Classroom, the turn is no better at the heading. It moves yield between sectors instead: +6 points at 60–120° and +12 at 165–180°, but −4 at 15–60° and −15 at 120–165°.
+  - **So in the cone, the matcher, not the geometry, is the limit at this resolution.**
+- **The Classroom gives far more yield at the heading than R0** (16–18 % against 1–2 %). Its ranges are short (median 1.8–2 m), so even near the heading the parallax is larger.
