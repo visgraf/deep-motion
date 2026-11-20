@@ -1234,3 +1234,135 @@ def selftest_k13(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
         res.append((f"K13 {kind} control: shuffled seeds (< 85 % surface-right)",
                     out["control_shuffled_seeds"]["surface"] < 0.85))
     return res, num
+
+
+# ------------------------------------------------ the planar prior, method P (reconstruction, after the matcher)
+
+P_MAX_PLANES, P_HYPOTHESES, P_INLIER, P_MIN_INLIERS, P_GROW = 8, 1000, 0.03, 500, 0.10   # declared on #14
+
+
+def _plane_basis(n):
+    a = np.array([0.0, 0.0, 1.0]) if abs(n[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
+    e1 = np.cross(n, a)
+    e1 /= np.linalg.norm(e1)
+    return e1, np.cross(n, e1)
+
+
+def fit_planes(X, seed=0):
+    """Sequential RANSAC: up to 8 planes n.x = d with >= 500 inliers within 3 cm, each refitted by least squares;
+    each with its support box (inliers in plane coordinates, grown by 10 cm)."""
+    rng = np.random.default_rng(seed)
+    pts = X[np.all(np.isfinite(X), axis=1)]
+    planes = []
+    for _ in range(P_MAX_PLANES):
+        if len(pts) < P_MIN_INLIERS:
+            break
+        best_n, best_d, best_cnt = None, None, -1
+        for _ in range(P_HYPOTHESES):
+            a, b, c = pts[rng.choice(len(pts), 3, replace=False)]
+            n = np.cross(b - a, c - a)
+            nn = np.linalg.norm(n)
+            if nn < 1e-9:
+                continue
+            n /= nn
+            d = n @ a
+            cnt = int(np.sum(np.abs(pts @ n - d) <= P_INLIER))
+            if cnt > best_cnt:
+                best_n, best_d, best_cnt = n, d, cnt
+        if best_cnt < P_MIN_INLIERS:
+            break
+        inl = np.abs(pts @ best_n - best_d) <= P_INLIER
+        cen = pts[inl].mean(0)
+        _, _, vt = np.linalg.svd(pts[inl] - cen, full_matrices=False)
+        n = vt[-1]
+        d = n @ cen
+        inl = np.abs(pts @ n - d) <= P_INLIER
+        if inl.sum() < P_MIN_INLIERS:
+            break
+        e1, e2 = _plane_basis(n)
+        q = np.stack([pts[inl] @ e1, pts[inl] @ e2], -1)
+        planes.append({"n": n, "d": float(d), "e1": e1, "e2": e2, "inliers": int(inl.sum()),
+                       "lo": q.min(0) - P_GROW, "hi": q.max(0) + P_GROW})
+        pts = pts[~inl]
+    return planes
+
+
+def plane_fill(c, U, planes):
+    """For rays U from c: the nearest positive intersection inside a plane's support (nan where none)."""
+    best = np.full(len(U), np.inf)
+    for p in planes:
+        nu = U @ p["n"]
+        with np.errstate(invalid="ignore", divide="ignore"):
+            t = (p["d"] - p["n"] @ c) / nu
+        Xh = c + U * t[:, None]
+        q1, q2 = Xh @ p["e1"], Xh @ p["e2"]
+        inside = (t > 0) & np.isfinite(t) & (q1 >= p["lo"][0]) & (q1 <= p["hi"][0]) \
+            & (q2 >= p["lo"][1]) & (q2 <= p["hi"][1])
+        best = np.where(inside & (t < best), t, best)
+    return np.where(np.isfinite(best), best, np.nan)
+
+
+def selftest_k14(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
+    """K14 as declared on #14 (R1, surface metric): of H's empty targets P fills >= 90 % at >= 85 % surface-right
+    (K14a); H + P cover >= 95 % at >= 85 % (K14b); control: planes from H's points with shuffled ranges (< 85 %)."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    rng = np.random.default_rng(seed)
+    for kind in kinds:
+        looks, P, _, fan = r1_run(runs[kind])
+        m = len(looks) // 2
+        c = looks[m][1]
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_b, conf, best = sweep(looks, m, px, u, fan)
+        mk = reliable(best, conf)
+        spx, su, sr = px[mk], u[mk], r_b[mk]
+        apx, au, aidx, ag = anchors(looks, m, fan, max_n=10 ** 9, frac=1.0)
+        grid = (apx[:, 0] % H_GRID == 0) & (apx[:, 1] % H_GRID == 0)
+        tpx, tu, tidx = apx[grid], au[grid], aidx[grid]
+        W = looks[m][3].shape[1]
+        r_h, _, _ = seed_fill(looks, m, fan, spx, su, sr, tpx, tu)
+        key_t = tpx[:, 0] * W + tpx[:, 1]
+        seed_at = dict(zip((spx[:, 0] * W + spx[:, 1]).tolist(), sr.tolist()))
+        is_seed = np.isin(key_t, spx[:, 0] * W + spx[:, 1])
+        r_h = np.where(is_seed, np.array([seed_at.get(int(k), np.nan) for k in key_t]), r_h)
+        nb = neighbourhood_ranges(looks, m, P, tpx)
+        r_true = np.linalg.norm(P[tidx] - c, axis=-1)
+        zt = P[tidx][:, 2]
+        bands = {"floor": zt < 0.05, "between": (zt >= 0.05) & (zt < 3.15), "ceiling": zt >= 3.15}
+        empty = ~np.isfinite(r_h)
+        fh = np.isfinite(r_h)
+        X = c + tu[fh] * r_h[fh][:, None]
+        out = {"targets": int(len(tpx)), "H_coverage": float(fh.mean())}
+
+        def run_p(Xpts, name):
+            planes = fit_planes(Xpts, seed=seed)
+            r_p = np.full(len(tpx), np.nan)
+            r_p[empty] = plane_fill(c, tu[empty], planes)
+            filled = empty & np.isfinite(r_p)
+            sr_ok = surface_right(np.where(filled, r_p, np.nan), nb)
+            old_ok = _relerr(np.where(filled, r_p, 1.0), r_true) <= 0.10
+            r_all = np.where(fh, r_h, r_p)
+            cov = np.isfinite(r_all)
+            all_ok = surface_right(np.where(cov, r_all, np.nan), nb)
+            o = {"planes": [{"n": [round(float(v), 4) for v in p["n"]], "d": round(p["d"], 4),
+                             "inliers": p["inliers"]} for p in planes],
+                 "fills_of_empty": float(filled.sum() / max(empty.sum(), 1)),
+                 "filled_surface": float(sr_ok[filled].mean()) if filled.any() else None,
+                 "filled_old": float(old_ok[filled].mean()) if filled.any() else None,
+                 "filled_by_band": {nm: {"filled": int((filled & b).sum()),
+                                         "surface": float(sr_ok[filled & b].mean()) if (filled & b).any() else None}
+                                    for nm, b in bands.items()},
+                 "combined_coverage": float(cov.mean()), "combined_surface": float(all_ok[cov].mean())}
+            out[name] = o
+            return o
+        Ph = run_p(X, "P")
+        Xs = c + tu[fh] * rng.permutation(r_h[fh])[:, None]
+        Pc = run_p(Xs, "control_shuffled")
+        num[kind] = out
+        res.append((f"K14a P on R1 ({kind}): fills >= 90 % of H's empty targets, >= 85 % surface-right",
+                    Ph["fills_of_empty"] >= 0.90 and (Ph["filled_surface"] or 0) >= 0.85))
+        res.append((f"K14b H + P on R1 ({kind}): coverage >= 95 %, >= 85 % surface-right",
+                    Ph["combined_coverage"] >= 0.95 and Ph["combined_surface"] >= 0.85))
+        res.append((f"K14 {kind} control: planes from shuffled ranges (< 85 % surface-right on what it fills)",
+                    (Pc["filled_surface"] if Pc["filled_surface"] is not None else 0.0) < 0.85))
+    return res, num

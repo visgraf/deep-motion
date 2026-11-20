@@ -124,7 +124,9 @@ def stage5b2(a) -> int:
 
 def stage7a(a) -> int:
     from . import match as mt
-    if a.k13:
+    if a.k14:
+        res, num = mt.selftest_k14(max_n=a.max_anchors)
+    elif a.k13:
         res, num = mt.selftest_k13(max_n=a.max_anchors)
     elif a.k12:
         res, num = mt.selftest_k12(max_n=a.max_anchors)
@@ -147,7 +149,7 @@ def stage7a(a) -> int:
         Path(a.out).mkdir(parents=True, exist_ok=True)
         rec = {"command": "stage7a", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
                "computed_by": {"deep-motion": _git(REPO)}}
-        (Path(a.out) / ("stage7a_k13.json" if a.k13 else "stage7a_k12.json" if a.k12 else "stage7a_k11.json" if a.k11 else "stage7a_k10.json" if a.k10 else "stage7a_k9.json" if a.k9 else "stage7a_k8.json" if a.k8 else f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
+        (Path(a.out) / ("stage7a_k14.json" if a.k14 else "stage7a_k13.json" if a.k13 else "stage7a_k12.json" if a.k12 else "stage7a_k11.json" if a.k11 else "stage7a_k10.json" if a.k10 else "stage7a_k9.json" if a.k9 else "stage7a_k8.json" if a.k8 else f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
     return 0 if all(ok for _, ok in res) else 1
 
 
@@ -266,6 +268,7 @@ def main(argv=None) -> int:
     p.add_argument("--k3", action="store_true", help="check K3: B's reliability marking")
     p.add_argument("--a", action="store_true", help="checks K4-K5 (rung r0) or K6-K7 (rung r1): A, and both on R1")
     p.add_argument("--rung", choices=["r0", "r1"], default="r0")
+    p.add_argument("--k14", action="store_true", help="check K14: the planar prior, method P (R1)")
     p.add_argument("--k13", action="store_true", help="check K13: method H2, grown in rounds (R1)")
     p.add_argument("--k12", action="store_true", help="check K12: method H, seeding the anchors without texture (R1)")
     p.add_argument("--k11", action="store_true", help="check K11: method G, two layers per contour anchor (R1)")
