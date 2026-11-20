@@ -910,3 +910,36 @@ The checks K1–K7 were declared on #14 before each was built.
 - **The matcher's output:** B's reliable anchors, 98 % surface-right on R1; then H, seeded from them, which covers 75 % of the pixels at 86–87 % surface-right.
 - **The ceiling of the calibration room** has no evidence to range it from, and a fitted plane cannot find it.
 - **Edges:** three ways of modelling them (E, F, G) failed. Half of the edge "failures" were the old metric, and K10's surface metric records it.
+
+### Stage 7c: R2, the matcher in the Classroom (#17; Code, RTX 4090)
+
+**The run.** 720 wide, 128 spp, 101 looks at 1 cm:
+- **line:** `straight_long` from (0.897, −1.541), looks 0–100;
+- **arc:** `turn90` from (0.897, 0.459), looks 30–130, R = 1 m.
+
+Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/runs/issue-17/`:
+- `stage7a_r2.json` at `922b117`;
+- `diag_r2.txt` at `1407393`.
+
+**The checks, declared on #17 before the data:**
+- **K15 fails on coverage only.** B's reliable anchors are 95.4 % (line) and 95.9 % (arc) surface-right, but 45.9 % and 45.5 % are kept, against 50 %.
+- **K16 fails.** H is 70.4 % and 78.4 % surface-right on what it fills.
+- **K17 fails.** Seeding gains 6.3 and 7.5 points where texture is least, against 10.
+- **Every control fails, as it must.**
+
+**Reported:**
+- **The Classroom's edges:** 44 % and 31 % of the anchors are at true depth edges, against about 20 % in R1.
+- **B off edges:** 84.2 % and 83.9 % surface-right, against 96.9 % and 95.6 %.
+- **A2 off edges:** 77.0 % and 75.4 %, worse than B.
+- **The planar prior P:** fills 91 % and 98 % of what H leaves empty, at 89.8 % (line) and 34.6 % (arc) surface-right. The arc is not diagnosed.
+
+**Why B drops off edges** (`diag_r2.py`; truth-based; Chat wrote it and ran it on R1, Code ran it on R2). B's wrong anchors off edges are 15.8 % and 16.1 % of the off-edge anchors, against 3.1 % and 4.4 % on R1. They divide among three causes, each of which grows two to five times as a share of the off-edge anchors:
+- **occluded:** 22 % and 15 % of the wrong ones;
+- **photometric** (the true trace is not consistent where it is seen): 38 % and 31 %;
+- **ambiguous** (consistent, but another range costs less): 36 % and 51 %.
+
+**What it says:**
+- **B's mark already excludes most of the wrong anchors.** Only about 2 % of all anchors are both marked reliable and wrong.
+- **So what is lacking is anchors that are confidently right,** not a better mark.
+- **About two-thirds of the wrong ones** (photometric and ambiguous) are failures of B's cost: a single pre-blurred pixel value compared with the reference value. It is too weak a descriptor to tell repeated structures apart, and it is not tolerant of shading or gloss.
+- **Temporal continuity does not help:** A2 is worse than B.
