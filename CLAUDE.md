@@ -50,4 +50,7 @@ of rules, GitHub Issues between Chat and Code. If something here gets in the way
 - Paths are compositions of primitives: lines, arcs and pivots (curvature 0, finite, infinite). Depth is estimated in
   the primitive's invariant and reported and gated in world 3D and range along the ray.
 - Runs and figures are not committed (`runs/`, `visuals/` are ignored); the command and the run record are.
+- deep-motion's run records go in `docs/runs/dm-issue-N/`, N its own issue number. `docs/runs/issue-N/` holds
+  foveal-motion's imported records, left as imported; deep-motion's records for #5, #9, #14, #15 and #17, from before
+  this rule, stay there (#20).
 - Cost: interactive under ~10 s, batch under ~5 min, overnight only when the issue says so.
