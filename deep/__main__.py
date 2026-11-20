@@ -124,7 +124,9 @@ def stage5b2(a) -> int:
 
 def stage7a(a) -> int:
     from . import match as mt
-    if a.a:
+    if a.k8:
+        res, num = mt.selftest_k8(max_n=a.max_anchors)
+    elif a.a:
         res, num = mt.selftest_a(rung=a.rung, kinds=tuple(a.kinds), max_n=a.max_anchors)
     else:
         res, num = (mt.selftest_k3 if a.k3 else mt.selftest_b)(max_n=a.max_anchors)
@@ -135,7 +137,7 @@ def stage7a(a) -> int:
         Path(a.out).mkdir(parents=True, exist_ok=True)
         rec = {"command": "stage7a", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
                "computed_by": {"deep-motion": _git(REPO)}}
-        (Path(a.out) / (f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
+        (Path(a.out) / ("stage7a_k8.json" if a.k8 else f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
     return 0 if all(ok for _, ok in res) else 1
 
 
@@ -254,6 +256,7 @@ def main(argv=None) -> int:
     p.add_argument("--k3", action="store_true", help="check K3: B's reliability marking")
     p.add_argument("--a", action="store_true", help="checks K4-K5 (rung r0) or K6-K7 (rung r1): A, and both on R1")
     p.add_argument("--rung", choices=["r0", "r1"], default="r0")
+    p.add_argument("--k8", action="store_true", help="check K8: method E at depth edges (R1; R0 reported)")
     p.add_argument("--kinds", nargs="+", default=["line", "arc"])
     p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")

@@ -623,3 +623,101 @@ def selftest_a(rung="r0", kinds=("line", "arc"), max_n=20000, seed=11, runs=None
             res.append((f"K7 {kind} control: mirrored (median >= 20 %)", ctl_a1["median"] >= 0.20))
         num[kind] = out
     return res, num
+
+
+# ------------------------------------------------------------------------------------- depth edges: method E
+
+def pixel_rays(px, R, H, W):
+    """World rays of pixel centres px (N, 2) for a look with head rotation R."""
+    lat = (0.5 - (px[:, 0] + 0.5) / H) * np.pi
+    lon = (px[:, 1] + 0.5) / W * 2 * np.pi - np.pi
+    v = np.stack([np.sin(lon) * np.cos(lat), np.sin(lat), -np.cos(lon) * np.cos(lat)], -1)
+    return v @ R.T
+
+
+EDGE_RATIO, FLANK_PX = 1.10, 2.0                 # declared on #14 before the code
+
+
+def two_depth(looks, m, px, u, fan, r_b, rule="coverage", seed=5):
+    """Method E on B's estimates r_b: flanks at +/-2 px along the trace, ranged by B; a detected edge when their ranges
+    differ by > 10 %; the anchor takes the near flank's range when the near surface covers >= half its pixel
+    (alpha from raw values), the far one otherwise; B stands without an edge or without contrast (< tau).
+    rule: 'coverage' (E), 'flipped' or 'coin' (the controls). Returns r, and the decision per anchor
+    (0 kept, 1 near, 2 far)."""
+    H, W = looks[m][3].shape
+    s, c, R = looks[m][:3]
+    k = m + 1 if m + 1 < len(looks) else m - 1
+    d = trace_direction(c, R, looks[k][1], looks[k][2], u, fan)
+    raw = looks[m][3]
+    fl = []
+    for sg in (+1, -1):
+        q = np.rint(px + sg * FLANK_PX * d).astype(np.int64)
+        q[:, 0] = np.clip(q[:, 0], 0, H - 1)
+        q[:, 1] %= W
+        fl.append(q)
+    rf = []
+    for q in fl:
+        r, _, _ = sweep(looks, m, q, pixel_rays(q, R, H, W), fan)
+        rf.append(r)
+    rp, rm = rf
+    lo, hi = np.fmin(rp, rm), np.fmax(rp, rm)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        edge = np.isfinite(lo) & np.isfinite(hi) & (hi / lo > EDGE_RATIO)
+    near_is_p = rp <= rm
+    Ip, Im = raw[fl[0][:, 0], fl[0][:, 1]], raw[fl[1][:, 0], fl[1][:, 1]]
+    In, If = np.where(near_is_p, Ip, Im), np.where(near_is_p, Im, Ip)
+    Ia = raw[px[:, 0], px[:, 1]]
+    con = np.abs(In - If) >= TAU
+    with np.errstate(invalid="ignore", divide="ignore"):
+        alpha = (Ia - If) / (In - If)
+    go_near = alpha >= 0.5
+    if rule == "flipped":
+        go_near = ~go_near
+    elif rule == "coin":
+        go_near = np.random.default_rng(seed).random(len(px)) < 0.5
+    act = edge & con & np.isfinite(alpha)
+    dec = np.where(act, np.where(go_near, 1, 2), 0)
+    r = np.where(dec == 1, lo, np.where(dec == 2, hi, r_b))
+    return r, dec, edge
+
+
+def selftest_k8(rungs=("r1", "r0"), kinds=("line", "arc"), max_n=20000, runs=None):
+    """K8 as declared on #14 (R1): E at true depth edges >= 70 % within +/-10 %, off edges at most 1 point below B,
+    overall >= 90 %; controls: the flipped rule and a coin, each must miss 70 % at edges. R0: reported only."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    for rung in rungs:
+        for kind in kinds:
+            looks, P, _, fan = r0_run(kind) if rung == "r0" else r1_run(runs[kind])
+            m = len(looks) // 2
+            px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+            r_true = np.linalg.norm(P[pidx] - looks[m][1], axis=-1)
+            tedge = depth_edge(looks, m, P, px)
+            r_b, _, _ = sweep(looks, m, px, u, fan)
+            eb = _relerr(r_b, r_true)
+            out = {"anchors": int(len(px)), "true_edges": float(tedge.mean()),
+                   "B": {"all": _summ(eb), "at_edges": _summ(eb, tedge), "off_edges": _summ(eb, ~tedge)}}
+            for rule in ("coverage", "flipped", "coin"):
+                r_e, dec, det = two_depth(looks, m, px, u, fan, r_b, rule=rule)
+                ee = _relerr(r_e, r_true)
+                o = {"all": _summ(ee), "at_edges": _summ(ee, tedge), "off_edges": _summ(ee, ~tedge)}
+                if rule == "coverage":
+                    o["detection"] = {"detected": float(det.mean()),
+                                      "precision": float(tedge[det].mean()) if det.any() else None,
+                                      "recall": float(det[tedge].mean()) if tedge.any() else None,
+                                      "decided_near": float((dec == 1).mean()), "decided_far": float((dec == 2).mean())}
+                    o["by_decision"] = {nm: _summ(ee, dec == v) for nm, v in (("kept", 0), ("near", 1), ("far", 2))}
+                    o["B_by_decision"] = {nm: _summ(eb, dec == v) for nm, v in (("kept", 0), ("near", 1), ("far", 2))}
+                out["E" if rule == "coverage" else f"E_{rule}"] = o
+            num[f"{rung}_{kind}"] = out
+            if rung == "r1":
+                E, B = out["E"], out["B"]
+                res.append((f"K8 E on R1 ({kind}): >= 70 % within +/-10 % at true depth edges, off edges >= B - 1 pt, "
+                            f"overall >= 90 %",
+                            E["at_edges"]["within10"] >= 0.70
+                            and E["off_edges"]["within10"] >= B["off_edges"]["within10"] - 0.01
+                            and E["all"]["within10"] >= 0.90))
+                for rule in ("flipped", "coin"):
+                    res.append((f"K8 {kind} control: the {rule} rule (< 70 % at edges)",
+                                out[f"E_{rule}"]["at_edges"]["within10"] < 0.70))
+    return res, num
