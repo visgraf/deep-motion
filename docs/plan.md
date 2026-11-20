@@ -963,3 +963,19 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
   - B only: 2.1 % and 1.6 %;
   - neither: 4.7 % and 3.8 %.
 - **Seconds:** B2 takes 217–230 s per path in the Chat sandbox, against B's 14 s (16 times as long).
+
+**K19 fails in the Classroom** (Code, workstation; `c2ae775`, record `docs/runs/issue-17/stage7a_b2_r2.json` at `88fc197`; run through `run_k19.py` because `--rung` lacked `r2`, which Chat fixed at `c4bde89`):
+
+| surface-right (line / arc) | off edges | at edges | reliable: kept, surface-right |
+|---|---|---|---|
+| B | 84.2 / 83.9 % | 77.5 / 76.0 % | 45.9 / 45.5 %, 95.4 / 95.9 % |
+| B2 | 78.1 / 82.2 % | 80.6 / 80.8 % | 28.8 / 30.7 %, 91.7 / 93.5 % |
+
+- **Both bars fail on both paths. The controls fail, as they must.**
+- **B2 changes which anchors are right more than how many.** About 8 % of the anchors are right only by B, and 8 % only by B2.
+- **H seeded from B2's anchors** covers 68.1 % and 60.5 %, at 66.0 % and 75.6 % surface-right.
+- **Why is not diagnosed.** Scale change over the window, or occlusion of the patch, are the candidates; `diag_b2.py` measures both and was not run.
+
+**Decision (Luiz, 2026-11-20, in Chat): B2 stops here.**
+- **B is the matcher.** Its reliable anchors are 95–96 % right in the Classroom, at 46 % kept.
+- **The next question is end to end:** what B's reliable anchors give once fused along a composed path, against the oracle.
