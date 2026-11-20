@@ -168,9 +168,10 @@ def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0, sigma=0.0):
 
 
 def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, coarse_every=10, keep=3,
-          fine=9, mirror=False, sigma=0.0, halves=False, nearest=False):
+          fine=9, mirror=False, sigma=0.0, halves=False, nearest=False, zmin=None, zmax=None):
     """B on the anchors (px, u) of look m. mirror: pair image k with the pose of look 2m - k (the control).
-    Returns r_est, confidence, cost curves' best values."""
+    zmin, zmax: optional per-anchor bounds on inverse range (method F's ordering). Returns r_est, confidence, cost
+    curves' best values."""
     blurred = [lk[3] if sigma < 0 else _gauss(lk[3], sigma) for lk in looks]     # sigma < 0: the raw images
     K = len(looks)
     ref = blurred[m][px[:, 0], px[:, 1]]
@@ -198,7 +199,12 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
             acc += np.where(f, d, 0.0)
             cnt += f
         with np.errstate(invalid="ignore", divide="ignore"):
-            return np.where(cnt >= max(2, 0.3 * len(ks)), acc / cnt, np.inf)
+            out = np.where(cnt >= max(2, 0.3 * len(ks)), acc / cnt, np.inf)
+        if zmin is not None:
+            out[zv < zmin[sl][:, None]] = np.inf
+        if zmax is not None:
+            out[zv > zmax[sl][:, None]] = np.inf
+        return out
 
     if halves:
         base = cost
@@ -720,4 +726,67 @@ def selftest_k8(rungs=("r1", "r0"), kinds=("line", "arc"), max_n=20000, runs=Non
                 for rule in ("flipped", "coin"):
                     res.append((f"K8 {kind} control: the {rule} rule (< 70 % at edges)",
                                 out[f"E_{rule}"]["at_edges"]["within10"] < 0.70))
+    return res, num
+
+
+# ------------------------------------------------------------------------- depth edges: method F (ordering)
+
+ORDER_MARGIN, ORDER_RATIO = 1.10, RELIABLE_RATIO          # declared on #14 before the code
+
+
+def ordered(looks, m, px, u, fan, r_b, c_b, mode="far"):
+    """Method F on B's (r_b, c_b): a hypothesis on each half-window (before, after the reference) by B's sweep,
+    restricted to >= 10 % farther than r_b (mode 'far', the ordering), >= 10 % nearer ('near', the reversed control)
+    or unrestricted ('any', the no-ordering control); the better half replaces r_b when its cost is below c_b / 2.
+    Returns r, whether the half was taken, and which half (-1 before, +1 after, 0 none)."""
+    z_b = 1.0 / r_b
+    zmin = zmax = None
+    if mode == "far":
+        zmax = z_b / ORDER_MARGIN
+    elif mode == "near":
+        zmin = z_b * ORDER_MARGIN
+    best_r = np.full(len(px), np.nan)
+    best_c = np.full(len(px), np.inf)
+    side = np.zeros(len(px), int)
+    for sg, sub, mm in ((-1, looks[:m + 1], m), (+1, looks[m:], 0)):
+        r, _, c = sweep(sub, mm, px, u, fan, zmin=zmin, zmax=zmax)
+        better = c < best_c
+        best_r, best_c, side = np.where(better, r, best_r), np.where(better, c, best_c), np.where(better, sg, side)
+    take = np.isfinite(best_c) & (best_c * ORDER_RATIO < c_b)
+    return np.where(take, best_r, r_b), take, np.where(take, side, 0)
+
+
+def selftest_k9(kinds=("line", "arc"), max_n=20000, runs=None):
+    """K9 as declared on #14 (R1): F at true depth edges >= 70 % within +/-10 %, off edges at most 1 point below B,
+    overall >= 90 %; controls: the ordering reversed and no ordering, each must miss 70 % at edges."""
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    res, num = [], {}
+    for kind in kinds:
+        looks, P, _, fan = r1_run(runs[kind])
+        m = len(looks) // 2
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_true = np.linalg.norm(P[pidx] - looks[m][1], axis=-1)
+        tedge = depth_edge(looks, m, P, px)
+        r_b, _, c_b = sweep(looks, m, px, u, fan)
+        eb = _relerr(r_b, r_true)
+        out = {"anchors": int(len(px)), "true_edges": float(tedge.mean()),
+               "B": {"all": _summ(eb), "at_edges": _summ(eb, tedge), "off_edges": _summ(eb, ~tedge)}}
+        for mode, name in (("far", "F"), ("near", "F_reversed"), ("any", "F_no_ordering")):
+            r, take, side = ordered(looks, m, px, u, fan, r_b, c_b, mode=mode)
+            e = _relerr(r, r_true)
+            o = {"all": _summ(e), "at_edges": _summ(e, tedge), "off_edges": _summ(e, ~tedge),
+                 "taken": float(take.mean()), "taken_at_edges": float(take[tedge].mean()),
+                 "taken_off_edges": float(take[~tedge].mean()),
+                 "taken_before": float((side == -1).mean()), "taken_after": float((side == 1).mean()),
+                 "by_decision": {"kept": _summ(e, ~take), "taken": _summ(e, take)},
+                 "B_on_taken": _summ(eb, take)}
+            out[name] = o
+        num[kind] = out
+        F, B = out["F"], out["B"]
+        res.append((f"K9 F on R1 ({kind}): >= 70 % within +/-10 % at true depth edges, off edges >= B - 1 pt, "
+                    f"overall >= 90 %",
+                    F["at_edges"]["within10"] >= 0.70 and F["off_edges"]["within10"] >= B["off_edges"]["within10"] - 0.01
+                    and F["all"]["within10"] >= 0.90))
+        for name in ("F_reversed", "F_no_ordering"):
+            res.append((f"K9 {kind} control: {name} (< 70 % at edges)", out[name]["at_edges"]["within10"] < 0.70))
     return res, num
