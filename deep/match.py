@@ -364,3 +364,262 @@ def selftest_k3(max_n=20000, seed=11):
                     acc >= 0.95 and kept >= 0.50))
         res.append((f"K3 {kind} control: as many anchors marked at random (< 95 %)", acc_rnd < 0.95))
     return res, num
+
+
+# ------------------------------------------------------------------------------------------------------------ R1
+
+def r1_run(run_dir):
+    """R1 looks from a stage-5a render run, in the same form as r0_run: [(s, c, R, img, idx)], P, None, fan.
+    img is luminance scaled by the reference look's 99th percentile; idx (reference look only) is the flat raster
+    index into P, the reference look's true positions (oracle access, for evaluation only)."""
+    _, L = orc.load(run_dir)
+    m = len(L) // 2
+    rec_m = orc.record(L[m][0])
+    H, W = (int(x) for x in rec_m.raster_shape)
+    hit = np.isfinite(rec_m.distance_m)
+    scale = float(np.quantile((rec_m.value[hit].astype(np.float64) @ LUM), 0.99))
+    P = rec_m.position_w.astype(np.float64)
+    fan = sn.SlitFan(width=W)
+    looks = []
+    for k, (path, c, R, s) in enumerate(L):
+        rec = rec_m if k == m else orc.record(path)
+        g = rec.value.astype(np.float64) @ LUM / scale
+        g[~np.isfinite(rec.distance_m)] = np.nan
+        idx = np.where(hit, np.arange(H * W), -1).reshape(H, W) if k == m else None
+        looks.append((float(s), np.asarray(c, float), np.asarray(R, float), g.reshape(H, W).astype(np.float32), idx))
+    return looks, P, None, fan
+
+
+# --------------------------------------------------------------------------------------- the differential (A)
+
+def _grad(img):
+    """Central differences (rows clamp, columns wrap): d/drow, d/dcol."""
+    gr = (np.vstack([img[1:], img[-1:]]) - np.vstack([img[:1], img[:-1]])) / 2
+    gc = (np.roll(img, -1, 1) - np.roll(img, 1, 1)) / 2
+    return gr, gc
+
+
+def _wrapd(d, W):
+    d = d.copy()
+    d[..., 1] = (d[..., 1] + W / 2) % W - W / 2
+    return d
+
+
+def _pose_fn(looks, m, mirror):
+    K = len(looks)
+    if mirror:
+        return lambda k: looks[2 * m - k] if 0 <= 2 * m - k < K else None
+    return lambda k: looks[k]
+
+
+A2_SCHEDULE = (1, 2, 4, 8, 16, 32, 50)      # declared on #14 before the code
+
+
+def lagrange(looks, m, px, u, fan, z0=0.5, schedule=A2_SCHEDULE, iters=3, tau=TAU, z_lo=1 / 25.0, z_hi=1 / 0.25,
+             mirror=False, grow=True):
+    """A2 on the anchors (px, u) of look m: inverse range by Gauss-Newton on brightness constancy against the anchor's
+    own value, over a window of looks that grows with the schedule (grow=False: the whole last window from the first
+    step, the K4b control). Returns r_est, the final mean truncated squared residual over the last window (B's cost
+    scale), the last step's relative change of z, and whether z ended at a bound."""
+    K, N, W = len(looks), len(px), fan.width
+    imgs = [_blur(lk[3]) for lk in looks]
+    grads = [_grad(im) for im in imgs]
+    ref = imgs[m][px[:, 0], px[:, 1]]
+    c_m = looks[m][1]
+    pose = _pose_fn(looks, m, mirror)
+    model = fan.model()
+    z = np.broadcast_to(np.asarray(z0, float), (N,)).copy()
+    last = np.zeros(N)
+    hs = list(schedule) if grow else [schedule[-1]] * len(schedule)
+
+    def project(k, zz):
+        pk = pose(k)
+        rc, _ = model.pixel_of((c_m + u / zz[:, None] - pk[1]) @ pk[2])
+        return rc
+
+    def window(h):
+        return [k for k in range(m - h, m + h + 1) if 0 <= k < K and k != m and pose(k) is not None]
+
+    for h in hs:
+        ks = window(h)
+        for _ in range(iters):
+            gJe, gJJ = np.zeros(N), np.zeros(N)
+            dmax = np.zeros(N)
+            for k in ks:
+                rc = project(k, z)
+                eps = 1e-4
+                drc = _wrapd(project(k, z * (1 + eps)) - rc, W) / (eps * z)[:, None]
+                v = _sample(imgs[k], rc)
+                J = _sample(grads[k][0], rc) * drc[:, 0] + _sample(grads[k][1], rc) * drc[:, 1]
+                e = v - ref
+                w = np.isfinite(e) & np.isfinite(J) & (np.abs(e) <= tau)
+                gJe += np.where(w, J * e, 0.0)
+                gJJ += np.where(w, J * J, 0.0)
+                dmax = np.maximum(dmax, np.linalg.norm(drc, axis=1))
+            with np.errstate(invalid="ignore", divide="ignore"):
+                dz = np.where(gJJ > 0, -gJe / gJJ, 0.0)
+                cap = np.where(dmax > 0, 1.0 / dmax, np.inf)          # at most 1 px in the farthest look
+            dz = np.clip(dz, -cap, cap)
+            zn = np.clip(z + dz, z_lo, z_hi)
+            last = np.abs(zn - z) / z
+            z = zn
+    acc, cnt = np.zeros(N), np.zeros(N)
+    for k in window(hs[-1]):
+        e = _sample(imgs[k], project(k, z)) - ref
+        f = np.isfinite(e)
+        acc += np.where(f, np.minimum(e * e, tau ** 2), 0.0)
+        cnt += f
+    with np.errstate(invalid="ignore", divide="ignore"):
+        cost = np.where(cnt > 0, acc / cnt, np.inf)
+    at_bound = (z <= z_lo * (1 + 1e-9)) | (z >= z_hi * (1 - 1e-9))
+    return 1.0 / z, cost, last, at_bound
+
+
+def reliable_a2(cost, last, at_bound):
+    """A2's mark, declared on #14: cost <= tau^2/4 (B's threshold), last step < 0.1 %, not at a bound."""
+    return (cost <= RELIABLE_COST) & (last < 1e-3) & ~at_bound
+
+
+def eulerian(looks, m, fan, px, sigma=1.0, half=2, mirror=False):
+    """A1: inverse range per pixel of look m from looks m-1, m, m+1: brightness constancy I_t + grad I . f = 0 with
+    the flow f = f_rot + z f_v known from the poses (first order in the baseline), least squares over a
+    (2 half + 1)^2 window. Returned at the pixels px: r_est (inf where z <= 0 or undetermined)."""
+    H, W = looks[m][3].shape
+    pose = _pose_fn(looks, m, mirror)
+    I = {k: _gauss(looks[k][3], sigma) for k in (m - 1, m, m + 1)}
+    It = (I[m + 1] - I[m - 1]) / 2
+    gr, gc = _grad(I[m])
+    rows, cols = np.mgrid[0:H, 0:W]
+    lat = (0.5 - (rows + 0.5) / H) * np.pi
+    lon = (cols + 0.5) / W * 2 * np.pi - np.pi
+    vloc = np.stack([np.sin(lon) * np.cos(lat), np.sin(lat), -np.cos(lon) * np.cos(lat)], -1).reshape(-1, 3)
+    c_m, R_m = looks[m][1], looks[m][2]
+    uw = vloc @ R_m.T
+    model = fan.model()
+
+    def flow(z):
+        out = []
+        for k in (m - 1, m + 1):
+            pk = pose(k)
+            X = (c_m + uw / z - pk[1]) if z > 0 else uw          # z = 0: the direction alone (the rotation part)
+            rc, _ = model.pixel_of((X @ pk[2]) if z > 0 else (uw @ pk[2]))
+            out.append(rc)
+        return _wrapd(out[1] - out[0], W) / 2
+
+    eps = 0.01
+    f0 = flow(0.0)
+    fv = (flow(eps) - f0) / eps
+    f0 = f0.reshape(H, W, 2)
+    fv = fv.reshape(H, W, 2)
+    a = gr * fv[..., 0] + gc * fv[..., 1]
+    b = It + gr * f0[..., 0] + gc * f0[..., 1]
+    ok = np.isfinite(a) & np.isfinite(b)
+    a, b = np.where(ok, a, 0.0), np.where(ok, b, 0.0)
+
+    def box(x):
+        s = sum(np.roll(x, o, 1) for o in range(-half, half + 1))
+        sp = np.pad(s, ((half, half), (0, 0)), mode="edge")
+        return sum(sp[half + o:half + o + H] for o in range(-half, half + 1))
+
+    Saa, Sab = box(a * a), box(a * b)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        z = np.where(Saa > 0, -Sab / Saa, np.nan)
+    zp = z[px[:, 0], px[:, 1]]
+    return np.where(np.isfinite(zp) & (zp > 0), 1.0 / zp, np.inf)
+
+
+def _relerr(r_est, r_true):
+    rel = np.abs(r_est / r_true - 1)
+    return np.where(np.isfinite(rel), rel, 1e3)
+
+
+def _summ(rel, mask=None):
+    if mask is not None:
+        rel = rel[mask]
+    if len(rel) == 0:
+        return {"n": 0}
+    return {"n": int(len(rel)), "median": float(np.median(rel)), "within10": float(np.mean(rel <= 0.10))}
+
+
+def selftest_a(rung="r0", kinds=("line", "arc"), max_n=20000, seed=11, runs=None):
+    """The checks declared on #14 for A and for R1. rung r0: K4 (A2), K4b (the hypothesis, with the no-schedule
+    control), K5 (A1). rung r1: K6 (B and A2 with their marks), K7 (A1). Every control as declared."""
+    import time
+    res, num = [], {}
+    rnd = np.random.default_rng(seed)
+    runs = runs or {"line": "runs/r1-line", "arc": "runs/r1-arc"}
+    for kind in kinds:
+        world = r0_run(kind) if rung == "r0" else r1_run(runs[kind])
+        looks, P, g, fan = world
+        m = len(looks) // 2
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_true = np.linalg.norm(P[pidx] - looks[m][1], axis=-1)
+        fwd = -looks[m][2][:, 2]
+        psi = np.degrees(np.arccos(np.clip(u @ fwd, -1, 1)))
+        edge = depth_edge(looks, m, P, px)
+        n = len(px)
+        out = {"anchors": n, "depth_edge_fraction": float(edge.mean())}
+        t = time.time(); rb, confb, bestb = sweep(looks, m, px, u, fan); tb = time.time() - t
+        t = time.time(); ra, costa, lasta, bnda = lagrange(looks, m, px, u, fan); ta = time.time() - t
+        t = time.time(); r1e = eulerian(looks, m, fan, px); t1 = time.time() - t
+        eb, ea, e1 = _relerr(rb, r_true), _relerr(ra, r_true), _relerr(r1e, r_true)
+        mb, ma = reliable(bestb, confb), reliable_a2(costa, lasta, bnda)
+        band = (psi >= 15) & (psi <= 165)
+        out["anchors_per_second"] = {"B": n / tb, "A2": n / ta, "A1": n / t1}
+        for name, e in (("B", eb), ("A2", ea), ("A1", e1)):
+            out[name] = {"all": _summ(e), "band_15_165": _summ(e, band), "off_edges": _summ(e, ~edge),
+                         "at_edges": _summ(e, edge),
+                         "by_sector_within10": {k: float(np.mean(e[(psi >= a) & (psi < b)] <= 0.1))
+                                                for k, (a, b) in SECTORS.items() if ((psi >= a) & (psi < b)).any()}}
+        for name, e, mk in (("B", eb, mb), ("A2", ea, ma)):
+            out[name]["reliable"] = {"kept": float(mk.mean()), **_summ(e, mk),
+                                     "depth_edge_share": float(edge[mk].mean()) if mk.any() else None}
+        okb, oka = eb <= 0.1, ea <= 0.1
+        out["A2_vs_B"] = {"both_right": float(np.mean(okb & oka)), "B_only": float(np.mean(okb & ~oka)),
+                          "A2_only": float(np.mean(~okb & oka)), "both_wrong": float(np.mean(~okb & ~oka))}
+        e1m = _relerr(eulerian(looks, m, fan, px, mirror=True), r_true)
+        ctl_a1 = _summ(e1m, band)
+        out["A1"]["control_mirrored_band"] = ctl_a1
+        a1 = out["A1"]["band_15_165"]
+        if rung == "r0":
+            ram, _, _, _ = lagrange(looks, m, px, u, fan, mirror=True)
+            ctl_a2 = _summ(_relerr(ram, r_true))
+            out["A2"]["control_mirrored"] = ctl_a2
+            hyp = ~mb & ~edge
+            rag, _, _, _ = lagrange(looks, m, px, u, fan, grow=False)
+            eag = _relerr(rag, r_true)
+            out["K4b"] = {"anchors": int(hyp.sum()), "B": _summ(eb, hyp), "A2": _summ(ea, hyp),
+                          "A2_no_schedule": _summ(eag, hyp), "A2_no_schedule_all": _summ(eag)}
+            a2 = out["A2"]["all"]
+            res.append((f"K4 A2 on noise-free R0 ({kind}): median |error| <= 2 % and >= 90 % within +/-10 %",
+                        a2["median"] <= 0.02 and a2["within10"] >= 0.90))
+            res.append((f"K4 {kind} control: the mirrored path (median >= 20 %)", ctl_a2["median"] >= 0.20))
+            k4b = out["K4b"]
+            res.append((f"K4b {kind}: on anchors off depth edges that B marks unreliable, A2 >= 90 % within +/-10 %",
+                        k4b["A2"]["within10"] >= 0.90))
+            res.append((f"K4b {kind} control: A2 without the schedule (< 90 % on the same anchors)",
+                        k4b["A2_no_schedule"]["within10"] < 0.90))
+            res.append((f"K5 A1 on noise-free R0 ({kind}), 15-165 deg: median <= 10 % and >= 50 % within +/-10 %",
+                        a1["median"] <= 0.10 and a1["within10"] >= 0.50))
+            res.append((f"K5 {kind} control: mirrored (median >= 20 %)", ctl_a1["median"] >= 0.20))
+        else:
+            rbm, _, _ = sweep(looks, m, px, u, fan, mirror=True)
+            ram, _, _, _ = lagrange(looks, m, px, u, fan, mirror=True)
+            out["B"]["control_mirrored"] = _summ(_relerr(rbm, r_true))
+            out["A2"]["control_mirrored"] = _summ(_relerr(ram, r_true))
+            for name, e, mk in (("B", eb, mb), ("A2", ea, ma)):
+                rs = np.zeros(n, bool)
+                rs[rnd.choice(n, size=int(mk.sum()), replace=False)] = True
+                out[name]["control_random_marking"] = _summ(e, rs)
+                rl = out[name]["reliable"]
+                res.append((f"K6 {name} on R1 ({kind}): reliable anchors >= 95 % within +/-10 %, >= 50 % kept",
+                            rl["n"] > 0 and rl["within10"] >= 0.95 and rl["kept"] >= 0.50))
+                res.append((f"K6 {name} {kind} control: the mirrored path (median >= 20 %)",
+                            out[name]["control_mirrored"]["median"] >= 0.20))
+                res.append((f"K6 {name} {kind} control: as many marked at random (< 95 %)",
+                            out[name]["control_random_marking"]["within10"] < 0.95))
+            res.append((f"K7 A1 on R1 ({kind}), 15-165 deg: median <= 10 % and >= 50 % within +/-10 %",
+                        a1["median"] <= 0.10 and a1["within10"] >= 0.50))
+            res.append((f"K7 {kind} control: mirrored (median >= 20 %)", ctl_a1["median"] >= 0.20))
+        num[kind] = out
+    return res, num
