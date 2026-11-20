@@ -800,3 +800,31 @@ The checks K1–K7 were declared on #14 before each was built.
 - **What remains.** Two directions are left, and the choice between them is Luiz's:
   - **A two-layer model per contour anchor:** value = α·near + (1 − α)·far, each moving on its own trace.
   - **An evaluation that accepts what B does.** Most of B's wrong edge anchors sit at the near surface's range, on its silhouette, within a pixel. As 3-D points they lie on a true surface. Judging them by distance to the nearest true surface, rather than by range along the pixel centre's ray, would score them right. That changes the metric, so it is Luiz's decision.
+
+**(b), the surface metric for contour anchors (K10, declared on #14; Chat sandbox, `c28a479`, record `docs/runs/issue-14/stage7a_k10.json`; residual diagnostic `diag_residual.py`, `diag_residual_{line,arc}.txt`).**
+
+- **The metric:** an estimate is surface-right if it is within ±10 % of the true range at any pixel of the anchor's 3×3 neighbourhood. The old metric stays beside it in every record.
+- **K10 passes on both runs** (B on R1):
+
+  | | line | arc |
+  |---|---|---|
+  | at true depth edges, surface-right (old metric) | 75.6 % (51.0 %) | 75.1 % (52.0 %) |
+  | overall, surface-right (old metric) | 92.4 % (87.1 %) | 91.6 % (86.9 %) |
+
+  Off edges nothing changes.
+- **The controls fail, as they must:**
+  - the blend between the neighbourhood's surfaces: 43–45 % at edges;
+  - off by 25 %: 2–3 %;
+  - the mirrored path: 5–7 %.
+- **The reliable marks under the new metric** (reported, not gated):
+  - B: 98.3 % and 98.6 %;
+  - A2: 97.3 % and 97.8 %.
+  
+  K6 stays failed: it was declared on the old metric.
+- **Half of B's old edge failures were the metric.** The rest, about a quarter of the edge anchors and 5 % of all anchors:
+  - mostly lies between the surfaces of its 5×5 neighbourhood (65–71 %), at large depth jumps (median ratio 2.8–3.0);
+  - 21–26 % lies in front of every surface;
+  - 36 % would count right within 2 px, and widening to 11×11 adds only 3 points;
+  - only 18–21 % of it is marked reliable.
+  
+  So the residual is chiefly blends at big discontinuities: (a)'s target.

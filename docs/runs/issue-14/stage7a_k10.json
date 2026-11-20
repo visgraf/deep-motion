@@ -1,0 +1,217 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K10 B on R1 (line), surface metric: >= 70 % at true depth edges, off edges >= old - 1 pt, overall >= 90 %",
+   "ok": true
+  },
+  {
+   "name": "K10 line control: blend (< 70 % at edges, surface metric)",
+   "ok": true
+  },
+  {
+   "name": "K10 line control: off25 (< 70 % at edges, surface metric)",
+   "ok": true
+  },
+  {
+   "name": "K10 line control: mirrored (< 70 % at edges, surface metric)",
+   "ok": true
+  },
+  {
+   "name": "K10 B on R1 (arc), surface metric: >= 70 % at true depth edges, off edges >= old - 1 pt, overall >= 90 %",
+   "ok": true
+  },
+  {
+   "name": "K10 arc control: blend (< 70 % at edges, surface metric)",
+   "ok": true
+  },
+  {
+   "name": "K10 arc control: off25 (< 70 % at edges, surface metric)",
+   "ok": true
+  },
+  {
+   "name": "K10 arc control: mirrored (< 70 % at edges, surface metric)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "line": {
+   "anchors": 20000,
+   "true_edges": 0.2129,
+   "B": {
+    "old": {
+     "all": 0.8711,
+     "at_edges": 0.5100986378581494,
+     "off_edges": 0.9687460297293864
+    },
+    "surface": {
+     "all": 0.92385,
+     "at_edges": 0.7562235791451386,
+     "off_edges": 0.9691907000381146
+    },
+    "old_failures_at_edges": {
+     "n": 2086,
+     "converted": 0.5023969319271333,
+     "still_wrong_between": 0.09683604985618409,
+     "still_wrong_off": 0.40076701821668265
+    },
+    "reliable": {
+     "kept": 0.7763,
+     "old": 0.9475718150199665,
+     "surface": 0.9833183047790802
+    }
+   },
+   "A2": {
+    "old": {
+     "all": 0.85635,
+     "at_edges": 0.48896195396899955,
+     "off_edges": 0.9557235421166307
+    },
+    "surface": {
+     "all": 0.9087,
+     "at_edges": 0.7320338186942227,
+     "off_edges": 0.9564858340744505
+    },
+    "old_failures_at_edges": {
+     "n": 2176,
+     "converted": 0.4756433823529412,
+     "still_wrong_between": 0.13373161764705882,
+     "still_wrong_off": 0.390625
+    },
+    "reliable": {
+     "kept": 0.79505,
+     "old": 0.935790201874096,
+     "surface": 0.9727061191120056
+    }
+   },
+   "control_blend": {
+    "old": {
+     "all": 0.8779,
+     "at_edges": 0.42649131047440114,
+     "off_edges": 1.0
+    },
+    "surface": {
+     "all": 0.87855,
+     "at_edges": 0.4295443870361672,
+     "off_edges": 1.0
+    }
+   },
+   "control_off25": {
+    "old": {
+     "all": 0.0,
+     "at_edges": 0.0,
+     "off_edges": 0.0
+    },
+    "surface": {
+     "all": 0.004,
+     "at_edges": 0.018788163457022077,
+     "off_edges": 0.0
+    }
+   },
+   "control_mirrored": {
+    "old": {
+     "all": 0.0947,
+     "at_edges": 0.05119774542038516,
+     "off_edges": 0.10646677677550502
+    },
+    "surface": {
+     "all": 0.10165,
+     "at_edges": 0.07162987317989666,
+     "off_edges": 0.10977004192605767
+    }
+   }
+  },
+  "arc": {
+   "anchors": 20000,
+   "true_edges": 0.19665,
+   "B": {
+    "old": {
+     "all": 0.8693,
+     "at_edges": 0.5199593185863208,
+     "off_edges": 0.9548142154727081
+    },
+    "surface": {
+     "all": 0.9158,
+     "at_edges": 0.7508263412153572,
+     "off_edges": 0.9561834816705047
+    },
+    "old_failures_at_edges": {
+     "n": 1888,
+     "converted": 0.4809322033898305,
+     "still_wrong_between": 0.09110169491525423,
+     "still_wrong_off": 0.4279661016949153
+    },
+    "reliable": {
+     "kept": 0.75635,
+     "old": 0.952270774112514,
+     "surface": 0.986051431215707
+    }
+   },
+   "A2": {
+    "old": {
+     "all": 0.84775,
+     "at_edges": 0.4800406814136791,
+     "off_edges": 0.9377606273728761
+    },
+    "surface": {
+     "all": 0.8967,
+     "at_edges": 0.7231121281464531,
+     "off_edges": 0.9391921329433
+    },
+    "old_failures_at_edges": {
+     "n": 2045,
+     "converted": 0.46748166259168705,
+     "still_wrong_between": 0.1388753056234719,
+     "still_wrong_off": 0.39364303178484106
+    },
+    "reliable": {
+     "kept": 0.76055,
+     "old": 0.9415554532903819,
+     "surface": 0.9775162711195845
+    }
+   },
+   "control_blend": {
+    "old": {
+     "all": 0.8903,
+     "at_edges": 0.4421561149249936,
+     "off_edges": 1.0
+    },
+    "surface": {
+     "all": 0.89135,
+     "at_edges": 0.44749555047037887,
+     "off_edges": 1.0
+    }
+   },
+   "control_off25": {
+    "old": {
+     "all": 0.0,
+     "at_edges": 0.0,
+     "off_edges": 0.0
+    },
+    "surface": {
+     "all": 0.00655,
+     "at_edges": 0.03330790744978388,
+     "off_edges": 0.0
+    }
+   },
+   "control_mirrored": {
+    "old": {
+     "all": 0.02875,
+     "at_edges": 0.032036613272311214,
+     "off_edges": 0.02794547830957864
+    },
+    "surface": {
+     "all": 0.0335,
+     "at_edges": 0.05008899059242309,
+     "off_edges": 0.029439223252629612
+    }
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "c28a4796c36679ce5fe7ae552c261e531061a111",
+   "clean": true
+  }
+ }
+}

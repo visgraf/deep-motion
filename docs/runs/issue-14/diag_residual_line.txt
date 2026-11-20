@@ -1,0 +1,12 @@
+line {
+ "edge_anchors": 4258,
+ "still_wrong": 1038,
+ "right within 5x5": 0.36608863198458574,
+ "right within 7x7": 0.3786127167630058,
+ "right within 11x11": 0.3921001926782274,
+ "in front of every 5x5 surface (< min/1.1)": 0.21001926782273603,
+ "behind every 5x5 surface (> max*1.1)": 0.0789980732177264,
+ "between 5x5 surfaces": 0.7109826589595376,
+ "marked reliable": 0.20520231213872833,
+ "depth ratio max/min in 5x5, median": 3.005223600961025
+}
