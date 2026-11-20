@@ -715,3 +715,56 @@ the orbit. Cells seen outside the room (door, opening, windows) had pulled the f
 
 **Where the videos are.** On the workstation, 2 × about 140 MB, 27.9 s each, with sha256 sums in the records. Luiz
 decided (2026-11-18, in Chat) that they stay on the workstation only: not attached to the issue, not a release asset.
+
+### Stage 7a: real matching on a Lambertian world (R0) and on renders (R1) (#14, #15; Chat sandbox)
+
+**The question.** Can traces be matched from images alone, now that their geometry is known? The test is on the anchors with texture along the trace: 20,000 per run, from the 15 % with the strongest gradient along the trace. The truth is the reference look's positions.
+
+**The data.**
+- **R0:** one clean 256-spp panorama of the room, re-projected to every pose. It is point-sampled: no noise, but pixels change in whole jumps.
+- **R1:** Code's renders (#15): the calibration room at 720 wide and 128 spp; 101 looks at 1 cm on a 1 m line and on a 1 m arc (R = 1.6 m). The release is `data-r1-calib-720`; the sha256 sums were checked in the Chat sandbox.
+
+**The three matchers** (`deep/match.py`):
+- **B, the trace sweep:** a global search over inverse range along each anchor's ray. It is scored by the truncated spread of the image along the predicted trace over the 101 looks, and it marks an anchor reliable when its best cost is low and twice as good as the second-best.
+- **A2, Lagrangian:** Gauss–Newton on inverse range from a 2 m start, with the window of looks doubling from ±1 to ±50. Temporal continuity takes the place of the search.
+- **A1, Eulerian:** the instantaneous flow at fixed pixels from three looks (2 cm), solved for inverse range with the flow's direction known.
+
+The checks K1–K7 were declared on #14 before each was built.
+
+**Results** (Chat sandbox; records `docs/runs/issue-14/stage7a_b.json` at `26bb99e`, `stage7a_k3.json` at `d1c0ba8`, `stage7a_a_r0.json` and `stage7a_a_r1.json` at `41b2177`). Each cell gives the anchors within ±10 %, with the median |error| in brackets.
+
+| | R0 line | R0 arc | R1 line | R1 arc |
+|---|---|---|---|---|
+| B, all anchors | 79.3 % (1.3 %) | 79.0 % (1.5 %) | 87.1 % (0.9 %) | 86.9 % (0.9 %) |
+| B, off depth edges | 92.8 % | 91.4 % | 96.9 % | 95.5 % |
+| B, at depth edges (about 21 % of anchors) | 32.1 % | 34.4 % | 51.0 % | 52.0 % |
+| B, marked reliable: kept, then within ±10 % | 51.9 %, 99.3 % | 49.5 %, 99.3 % | 77.6 %, 94.8 % | 75.6 %, 95.2 % |
+| A2, all anchors | 72.7 % (1.5 %) | 70.9 % (1.8 %) | 85.6 % (1.0 %) | 84.8 % (0.9 %) |
+| A2, marked reliable: kept, then within ±10 % | 59.0 %, 98.3 % | 54.6 %, 97.9 % | 79.5 %, 93.6 % | 76.1 %, 94.2 % |
+| A1, ψ 15–165° | 14.7 % (44 %) | 16.7 % (39 %) | 43.4 % (11.9 %) | 36.6 % (15.5 %) |
+| anchors per second, B / A2 / A1 | 1,507 / 3,364 / 134,133 | 1,509 / 3,267 / 138,044 | 1,556 / 3,762 / 134,119 | 1,537 / 3,774 / 137,155 |
+
+**The checks:**
+- **K1, K2 (B on R0) fail**, at 79 % against 90 %.
+- **K3 (B's mark on R0):** the line passes; the arc fails on coverage.
+- **K4 (A2 on R0) fails.**
+- **K4b, the hypothesis that temporal continuity recovers the anchors B refuses, fails.** On B's unreliable anchors off depth edges, A2 is 65.9 % (line) and 63.1 % (arc) within ±10 %, against B's own 79.3 % and 77.6 % there. The no-schedule control does fail (40.2 % and 37.7 %): the growing window matters to A2, but it does not beat the global sweep.
+- **K5 (A1 on R0) fails.**
+- **K6 (the marks on R1):** B on the arc passes. B on the line fails, at 94.8 % against 95 %. A2 fails on both.
+- **K7 (A1 on R1) fails.**
+- Every control fails, as it must: the mirrored path, random marking, and A2 without its schedule.
+
+**What it says:**
+- **Renders are easier than R0.** Area-sampled pixels make the traces smooth, so B and A2 both gain about 8 points. At depth edges they gain about 18 points.
+- **On R1, B and A2 nearly agree.** Both are right on 84 % of the anchors, only one of them on 4–5 %, and neither on 12 %. The failures are where both fail:
+  - depth edges (about half right);
+  - the heading cone at 0–15° (37–49 % right). At 720 wide the oracle is also weak there (#15: heading ±15° usable 70 % (line) and 89 % (arc) at σ = 0.5 px).
+
+  So what is left is in the data, not in the search.
+- **The search is not the bottleneck.** A2 reaches B's answers without sweeping, at 2.4 times B's speed.
+- **The repeated-texture reading of K3 is not supported.** B's unreliable anchors off depth edges are 78–79 % right, so its ratio test is cautious, not confused.
+- **The instantaneous flow is dense and fast** (90 times B), **but at 2 cm it carries too little baseline:** a median of 12–16 % on R1. Precision comes from the length of the trace, so the flow's use would be as a dense start for a filter, not as an estimate. This answers the note's §9 for now.
+
+**Next.**
+- Depth edges, about a fifth of the anchors and the larger part of the failures: the two-depth handling (one surface before the edge, another after).
+- Then the anchors without texture, seeded from the reliable ones.
