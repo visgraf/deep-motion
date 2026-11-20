@@ -271,7 +271,7 @@ def main(argv=None) -> int:
     p.add_argument("--max-anchors", type=int, default=20000)
     p.add_argument("--k3", action="store_true", help="check K3: B's reliability marking")
     p.add_argument("--a", action="store_true", help="checks K4-K5 (rung r0) or K6-K7 (rung r1): A, and both on R1")
-    p.add_argument("--rung", choices=["r0", "r1"], default="r0")
+    p.add_argument("--rung", choices=["r0", "r1", "r2"], default="r0")
     p.add_argument("--b2", nargs="+", default=None, metavar="KIND=RUN",
                    help="B2, the patch cost (#17): K18 with --rung r1, K19 with --rung r2, on render runs")
     p.add_argument("--r2", nargs="+", default=None, metavar="KIND=RUN",
