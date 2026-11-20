@@ -157,6 +157,71 @@ def stage7a(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def stage8(a) -> int:
+    from . import e2e
+    if a.r0:
+        paths = {"turn": e2e.r0_path("turn90"), "straight": e2e.r0_path("straight_long")}
+    else:
+        paths = {}
+        for kv in a.runs:
+            name, run_dir = kv.split("=", 1)
+            paths[name] = e2e.render_path(run_dir)
+    res, num = e2e.selftest(paths, max_n=a.max_anchors)
+    for name, ok in res:
+        print(f"{PREFIX} stage 8 {'PASS' if ok else 'FAIL'} {name}")
+    print(f"{PREFIX} " + json.dumps(num))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage8", "rung": "r0" if a.r0 else "render", "max_anchors": a.max_anchors,
+               "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / ("stage8_r0.json" if a.r0 else "stage8.json")).write_text(json.dumps(rec, indent=1))
+    return 0 if all(ok for _, ok in res) else 1
+
+
+def demo2(a) -> int:
+    from . import demo2 as d2, demo as dm
+    import numpy as np
+    if a.r0:
+        T, looks, truth, vis, fan, refs = d2.r0_tour()
+        v2 = (d2.check_continuity_r0(T), d2.check_continuity_r0(T, shift=np.array([0.01, 0.0, 0.0])))
+    else:
+        T, looks, truth, vis, fan, refs = d2.render_tour(a.straight, a.turn)
+        step = float(np.median(np.diff([t[3] for t in T])))
+        v2 = (dm.check_continuity(T, step, [a.straight], [a.turn]),
+              dm.check_continuity(T, step, [a.straight], [a.turn], shift=np.array([0.01, 0.0, 0.0])))
+    return d2.run(T, looks, truth, vis, fan, refs, a.out, v2, limit=a.limit, best=a.best, git=_git(REPO),
+                  videos=not a.no_video)
+
+
+def assess(a) -> int:
+    from . import assess as asx, e2e
+    paths = {}
+    if a.r0:
+        for name, kind in (("turn", "turn90"), ("straight", "straight_long")):
+            looks, truth, fan, _ = e2e.r0_path(kind, refs=asx.references(218))
+            paths[name] = (looks, truth, fan, asx.references(len(looks)), asx.r0_vis(kind, fan))
+    else:
+        for kv in a.runs:
+            name, run_dir = kv.split("=", 1)
+            from . import oracle as orc
+            _, L = orc.load(run_dir)
+            refs = asx.references(len(L))
+            looks, truth, fan, _ = e2e.render_path(run_dir, refs=refs)
+            paths[name] = (looks, truth, fan, refs, asx.render_vis(run_dir, fan))
+    res, num = asx.selftest(paths)
+    for name, ok in res:
+        print(f"{PREFIX} assess {'PASS' if ok else 'FAIL'} {name}")
+    print(f"{PREFIX} " + json.dumps(num))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "assess", "rung": "r0" if a.r0 else "render",
+               "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / ("assess_r0.json" if a.r0 else "assess.json")).write_text(json.dumps(rec, indent=1))
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -285,6 +350,23 @@ def main(argv=None) -> int:
     p.add_argument("--k8", action="store_true", help="check K8: method E at depth edges (R1; R0 reported)")
     p.add_argument("--kinds", nargs="+", default=["line", "arc"])
     p.add_argument("--out", default=None)
+    p = sub.add_parser("demo2", help="#23: demo D2, the perfect and the real matcher side by side along #9's tour")
+    p.add_argument("--straight", default=None, help="the straight path's run (R3)")
+    p.add_argument("--turn", default=None, help="the turn's run (R3)")
+    p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room")
+    p.add_argument("--out", required=True)
+    p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit (a preview)")
+    p.add_argument("--no-video", action="store_true", help="the record and the last frames only")
+    p.add_argument("--best", action="store_true", help="x264 preset slow")
+    p = sub.add_parser("assess", help="#22: the perfect and the real matcher on the same runs, same pipeline (A1-A3)")
+    p.add_argument("--runs", nargs="*", default=[], help="turn=DIR straight=DIR (render runs)")
+    p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room, turn90 and straight_long")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage8", help="#19: end to end, B's reliable estimates fused along a path (E1-E3)")
+    p.add_argument("--runs", nargs="*", default=[], help="turn=DIR straight=DIR (render runs)")
+    p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room, turn90 and straight_long")
+    p.add_argument("--max-anchors", type=int, default=20000)
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -302,7 +384,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

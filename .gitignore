@@ -13,3 +13,6 @@ scenes/classroom/*
 *.blend1
 *.exr
 *.zip
+
+# videos written by demo commands into docs/runs/ stay on the workstation (#9, #23)
+docs/runs/**/*.mp4

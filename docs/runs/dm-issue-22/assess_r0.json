@@ -1,0 +1,414 @@
+{
+ "command": "assess",
+ "rung": "r0",
+ "checks": [
+  {
+   "name": "A1 turn: the perfect matcher's fused cells >= 99 % right",
+   "ok": true
+  },
+  {
+   "name": "A1 turn control: its fit given the mirrored path's poses (< 99 %)",
+   "ok": true
+  },
+  {
+   "name": "A2 turn: the real matcher's fused cells >= 95 % right",
+   "ok": true
+  },
+  {
+   "name": "A2 turn control: the mirrored path (< 95 %)",
+   "ok": true
+  },
+  {
+   "name": "A3 turn: the real matcher's cells from >= 2 references >= 97 % right",
+   "ok": true
+  },
+  {
+   "name": "A3 turn control: their members moved 20 % along their rays (< 97 %)",
+   "ok": true
+  },
+  {
+   "name": "A1 straight: the perfect matcher's fused cells >= 99 % right",
+   "ok": true
+  },
+  {
+   "name": "A1 straight control: its fit given the mirrored path's poses (< 99 %)",
+   "ok": true
+  },
+  {
+   "name": "A2 straight: the real matcher's fused cells >= 95 % right",
+   "ok": true
+  },
+  {
+   "name": "A2 straight control: the mirrored path (< 95 %)",
+   "ok": true
+  },
+  {
+   "name": "A3 straight: the real matcher's cells from >= 2 references >= 97 % right",
+   "ok": true
+  },
+  {
+   "name": "A3 straight control: their members moved 20 % along their rays (< 97 %)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "turn": {
+   "references": [
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160
+   ],
+   "real": {
+    "per_reference_kept": {
+     "50": 0.48165106951871656,
+     "60": 0.4943378473739037,
+     "70": 0.5027010601661152,
+     "80": 0.4870543581401654,
+     "90": 0.47721553424471197,
+     "100": 0.4611575892094929,
+     "110": 0.44952394046677896,
+     "120": 0.42771271634366254,
+     "130": 0.4188996628783929,
+     "140": 0.39009103641456583,
+     "150": 0.37505269074048053,
+     "160": 0.3598890488395773
+    },
+    "anchors_per_reference": {
+     "50": 29920,
+     "60": 29759,
+     "70": 29618,
+     "80": 29508,
+     "90": 29406,
+     "100": 29285,
+     "110": 29093,
+     "120": 28947,
+     "130": 28773,
+     "140": 28560,
+     "150": 28468,
+     "160": 28481
+    },
+    "cells": 91664,
+    "right": 0.9933452609530459,
+    "by_references": {
+     "1": {
+      "cells": 63530,
+      "right": 0.990602864788289
+     },
+     "2": {
+      "cells": 15164,
+      "right": 0.9995383803745713
+     },
+     "3": {
+      "cells": 6159,
+      "right": 0.9995129079396006
+     },
+     "4+": {
+      "cells": 6811,
+      "right": 0.9995595360446337
+     }
+    },
+    "confirmed_right": 0.9995379256415725,
+    "coverage": 0.12283292316106098,
+    "control_mirrored_right": 0.033823529411764704,
+    "control_moved_20pc_right": 0.3169474656998649,
+    "control_moved_20pc_cells": 28134
+   },
+   "perfect": {
+    "usable_per_reference": {
+     "50": 0.9999200623513659,
+     "60": 0.9999598417765998,
+     "70": 0.9995967335416877,
+     "80": 0.9997572422722123,
+     "90": 0.9999797094391689,
+     "100": 1.0,
+     "110": 1.0,
+     "120": 1.0,
+     "130": 0.9998964760445567,
+     "140": 0.9999583124895781,
+     "150": 0.9998537370191605,
+     "160": 0.9998745452264459
+    },
+    "cells": 318154,
+    "right": 0.9999811412083457,
+    "by_references": {
+     "1": {
+      "cells": 197932,
+      "right": 0.9999696865590203
+     },
+     "2": {
+      "cells": 62915,
+      "right": 1.0
+     },
+     "3": {
+      "cells": 28569,
+      "right": 1.0
+     },
+     "4+": {
+      "cells": 28738,
+      "right": 1.0
+     }
+    },
+    "coverage": 0.8801544982225868,
+    "control_mirrored_right": 0.028037903091215902
+   },
+   "real_B_plus_H": {
+    "cells": 406526,
+    "right": 0.8695778375798842,
+    "by_references": {
+     "1": {
+      "cells": 333970,
+      "right": 0.8490852471778902
+     },
+     "2": {
+      "cells": 44518,
+      "right": 0.9530302349611394
+     },
+     "3": {
+      "cells": 14945,
+      "right": 0.9737035797925727
+     },
+     "4+": {
+      "cells": 13093,
+      "right": 0.9896891468723745
+     }
+    },
+    "coverage": 0.41218211648892533,
+    "covers_of_perfect": 0.4294635298138238
+   },
+   "surface_cells": 146280,
+   "real_over_perfect_coverage": 0.13955836550186798,
+   "real_covers_of_perfect": 0.12143006935976201,
+   "gap": {
+    "cells": 113115,
+    "share_of_surface": 0.7732772764561116,
+    "no anchor (not among the 15 % most textured)": 0.7573177739468683,
+    "anchors, none reliable": 0.1632409494761968,
+    "reliable, no right cell near": 0.07944127657693498
+   },
+   "by_range": {
+    "< 1 m": {
+     "surface_cells": 1653,
+     "perfect_coverage": 1.0,
+     "real_coverage": 0.02238354506957048
+    },
+    "1-2 m": {
+     "surface_cells": 30749,
+     "perfect_coverage": 0.9999674786171908,
+     "real_coverage": 0.08270187648378809
+    },
+    "2-3 m": {
+     "surface_cells": 49414,
+     "perfect_coverage": 0.9811187112963937,
+     "real_coverage": 0.11387461043428988
+    },
+    ">= 3 m": {
+     "surface_cells": 64464,
+     "perfect_coverage": 0.7425384710846363,
+     "real_coverage": 0.15141784561926036
+    }
+   },
+   "edges": {
+    "surface_cells_at_edges": 0.1474569319114028,
+    "perfect_coverage_at/off": [
+     0.911358368103848,
+     0.8747574372544302
+    ],
+    "real_coverage_at/off": [
+     0.062308762169680114,
+     0.13330125892069603
+    ]
+   }
+  },
+  "straight": {
+   "references": [
+    50,
+    60,
+    70,
+    80,
+    90,
+    100,
+    110,
+    120,
+    130,
+    140,
+    150,
+    160
+   ],
+   "real": {
+    "per_reference_kept": {
+     "50": 0.5205387880610983,
+     "60": 0.5297182814496066,
+     "70": 0.51164126651573,
+     "80": 0.49942243663790176,
+     "90": 0.4758103036506312,
+     "100": 0.46822902432358565,
+     "110": 0.4471871803614047,
+     "120": 0.4575201113336275,
+     "130": 0.44808539478143,
+     "140": 0.4413954117885904,
+     "150": 0.4252476938845234,
+     "160": 0.43024501503265716
+    },
+    "anchors_per_reference": {
+     "50": 29919,
+     "60": 29746,
+     "70": 29593,
+     "80": 29434,
+     "90": 29310,
+     "100": 29272,
+     "110": 29330,
+     "120": 29461,
+     "130": 29510,
+     "140": 29554,
+     "150": 29270,
+     "160": 28937
+    },
+    "cells": 85057,
+    "right": 0.9958733555145373,
+    "by_references": {
+     "1": {
+      "cells": 52035,
+      "right": 0.9936581147304698
+     },
+     "2": {
+      "cells": 16517,
+      "right": 0.9991523884482654
+     },
+     "3": {
+      "cells": 7725,
+      "right": 0.9994822006472492
+     },
+     "4+": {
+      "cells": 8780,
+      "right": 0.9996583143507972
+     }
+    },
+    "confirmed_right": 0.9993640603234207,
+    "coverage": 0.10035445735242896,
+    "control_mirrored_right": 0.014814814814814815,
+    "control_moved_20pc_right": 0.30128399248985527,
+    "control_moved_20pc_cells": 33022
+   },
+   "perfect": {
+    "usable_per_reference": {
+     "50": 0.9961829009952436,
+     "60": 0.9958027071534723,
+     "70": 0.9958238344059556,
+     "80": 0.995621769534813,
+     "90": 0.9958083223115272,
+     "100": 0.9959655235650101,
+     "110": 0.9960137485000712,
+     "120": 0.9956012324657423,
+     "130": 0.9957889622221322,
+     "140": 0.995541118553789,
+     "150": 0.9953350987981259,
+     "160": 0.9954568814883339
+    },
+    "cells": 315165,
+    "right": 0.999819142354005,
+    "by_references": {
+     "1": {
+      "cells": 197220,
+      "right": 0.9997109826589595
+     },
+     "2": {
+      "cells": 60608,
+      "right": 1.0
+     },
+     "3": {
+      "cells": 27729,
+      "right": 1.0
+     },
+     "4+": {
+      "cells": 29608,
+      "right": 1.0
+     }
+    },
+    "coverage": 0.861706995581235,
+    "control_mirrored_right": 0.0
+   },
+   "real_B_plus_H": {
+    "cells": 400809,
+    "right": 0.8598808908981584,
+    "by_references": {
+     "1": {
+      "cells": 322757,
+      "right": 0.8373389268087137
+     },
+     "2": {
+      "cells": 47165,
+      "right": 0.9391285911162939
+     },
+     "3": {
+      "cells": 16404,
+      "right": 0.962570104852475
+     },
+     "4+": {
+      "cells": 14483,
+      "right": 0.987847821583926
+     }
+    },
+    "coverage": 0.383688132166834,
+    "covers_of_perfect": 0.4028706844624798
+   },
+   "surface_cells": 146421,
+   "real_over_perfect_coverage": 0.11646007038011602,
+   "real_covers_of_perfect": 0.10020448276955267,
+   "gap": {
+    "cells": 113529,
+    "share_of_surface": 0.7753600917901121,
+    "no anchor (not among the 15 % most textured)": 0.7626245276537272,
+    "anchors, none reliable": 0.14159377780126664,
+    "reliable, no right cell near": 0.09578169454500612
+   },
+   "by_range": {
+    "< 1 m": {
+     "surface_cells": 1881,
+     "perfect_coverage": 1.0,
+     "real_coverage": 0.013290802764486975
+    },
+    "1-2 m": {
+     "surface_cells": 30141,
+     "perfect_coverage": 1.0,
+     "real_coverage": 0.06562489632062639
+    },
+    "2-3 m": {
+     "surface_cells": 38673,
+     "perfect_coverage": 0.9855454710004395,
+     "real_coverage": 0.05518061696791043
+    },
+    ">= 3 m": {
+     "surface_cells": 75726,
+     "perfect_coverage": 0.739983625174973,
+     "real_coverage": 0.13941050629902543
+    }
+   },
+   "edges": {
+    "surface_cells_at_edges": 0.12864957895383858,
+    "perfect_coverage_at/off": [
+     0.9129903912512608,
+     0.8541353147730123
+    ],
+    "real_coverage_at/off": [
+     0.08063916759568933,
+     0.10326529972410334
+    ]
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "b56958b14863f3fb44360e28680c0eaf2a0a8bdb",
+   "clean": true
+  }
+ }
+}

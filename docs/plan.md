@@ -990,3 +990,108 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **The links.** This document's links point to the new paths. Commands quoted as they were run keep their `--out` paths, and so do the usage lines inside the moved scripts.
 - **From now on,** deep-motion's records go to `dm-issue-N/` (CLAUDE.md, project facts).
 - **Exceptions.** `issue-5`, `issue-9`, `issue-14`, `issue-15` and `issue-17` are deep-motion's alone, and stay.
+
+### Stage 8: end to end, B's reliable anchors fused along the Classroom's paths (#19)
+
+**The run.**
+- **Renders:** Code's, at `430f029`, R3. The Classroom's full `turn90` and `straight_long` paths: 218 looks each, 720 wide, 128 spp, from #7's starts.
+- **The stage:** run by Code at `aee1891`, CPU, 3 min, record [`stage8.json`](runs/dm-issue-19/stage8.json) at `3910b0a`.
+- **The method:**
+  - B, with its mark, at five reference looks per path (m = 50, 79, 108, 138, 167), each over its own ±50-look window, on 20,000 textured anchors.
+  - The reliable estimates are fused into 2 cm world cells keyed by the estimated point, with no truth used. A cell's point is the median of its estimates.
+  - A cell is judged right by K10's surface metric, seen from the reference that contributed most to it.
+- **The checks** were declared on #19, with two amendments made after the R0 dry run and before any Classroom data:
+  - E2's control: members moved 20 %, cells kept;
+  - E3's statistic: yield.
+- **The dry run** on R0's calibration room ([`stage8_r0.json`](runs/dm-issue-19/stage8_r0.json), Chat sandbox, not gated) had E1 and E2 passing, and E3 failing.
+
+| Classroom (Code, workstation) | turn | straight |
+|---|---|---|
+| reliable kept, surface-right, per reference | 42–46 %, 95.1–96.0 % | 46–51 %, 95.3–95.7 % |
+| **E1:** fused cells right (≥ 95 %) | **94.81 %, FAIL** (35,434) | **95.10 %** (37,452) |
+| E1 control: mirrored path | 4.3 % | 0.9 % |
+| **E2:** cells from ≥ 2 references right (≥ 97 %) | **98.66 %** (5,239) | **97.74 %** (5,405) |
+| E2 control: members moved 20 % | 36.3 % | 35.7 % |
+| **E3:** yield within 15° of the heading | **15.8 %** | **17.8 %** |
+| E3 control: yield at 60–120° | 50.2 % | 44.0 % |
+| coverage of the surface (2 cm cells) | 7.8 % | 6.5 % |
+
+**The checks:**
+- **E1 fails on the turn** by 0.19 points; it passes on the straight path.
+- **E2 passes on both.**
+- **E3 fails:** the turn's yield in the cone is 1.95 points *behind* the straight path's, against the +10 required.
+- **Every control fails, as it must.** No threshold was moved.
+
+**What it says:**
+- **Fusion along a path works with real matching. Agreement between references is the strong signal.**
+  - The cells that a single reference supports are 85 % of all cells, at about 94 % right.
+  - The cells that two or more references support are 97.5–100 % right, rising with their number.
+- **Coverage is the cost of sparse, cautious anchors:** 7–8 % of the surface's 2 cm cells, from five references of 20,000 anchors each.
+- **The turn's geometric advantage does not survive real matching.**
+  - Under the oracle at the same 720 wide (#15, calibration room), the arc's heading cone was 19 points more usable than the line's: 89 % against 70 % at σ = 0.5 px.
+  - With B in the Classroom, the turn is no better at the heading. It moves yield between sectors instead: +6 points at 60–120° and +12 at 165–180°, but −4 at 15–60° and −15 at 120–165°.
+  - **So in the cone, the matcher, not the geometry, is the limit at this resolution.**
+- **The Classroom gives far more yield at the heading than R0** (16–18 % against 1–2 %). Its ranges are short (median 1.8–2 m), so even near the heading the parallax is larger.
+
+### Stage 9: the assessment. The perfect and the real matcher on the same data, through the same pipeline (#22)
+
+**The question** (Luiz, 2026-11-20, (i)): how good is the method with the real matcher?
+- **The setup:** both matchers ran on R3 (the Classroom, 720 wide, the full turn and straight paths) at the same 12 references per path (every 10 looks, ±50-look windows), through stage 8's fusion and metric.
+- **The perfect matcher** is stage 5a's oracle fit: every pixel on a 2-px grid, true bearings with noise of σ = 0.5 px, kept if usable.
+- **The real matcher** is assessed in two tiers: B alone, and B + H, as amended on #22 before any data.
+- **Provenance:** Code ran it at `e443110` on the workstation's CPU, in 16 min; record [`assess.json`](runs/dm-issue-22/assess.json) at `0792136`. The dry run on R0 is [`assess_r0.json`](runs/dm-issue-22/assess_r0.json) (Chat sandbox).
+
+| the Classroom (turn / straight) | cells right | coverage of the surface | covers, of the perfect matcher's coverage |
+|---|---|---|---|
+| perfect matcher | 99.99 / 99.98 % | 86.2 / 80.4 % | — |
+| real, B | 93.98 / 94.59 % | 10.6 / 8.8 % | 11.7 / 9.8 % |
+| real, B, cells from ≥ 2 references | 97.35 / 96.70 % | | |
+| real, B + H | 79.0 / 71.9 % | 34.9 / 26.5 % | 39.1 / 30.2 % |
+
+**The checks:**
+- **A1 passes.** Its control (mirrored poses) gives 2.9 % and 0.0 %.
+- **A2 fails on both paths,** about a point under the 95 % bar. Its control gives 1.5 % and 0.9 %.
+- **A3 passes on the turn and fails on the straight path,** by 0.3 points. Its control gives 32–33 %.
+- **No threshold was moved.**
+
+**The assessment:**
+1. **The geometry is not the limit.** With perfect correspondences, a 4 m walk in the Classroom recovers 80–86 % of the surface at 720 wide, essentially without error. What it misses lies beyond 3 m (61 % covered there), where the intervals widen at this resolution.
+2. **What the real matcher reports, it mostly gets right, but it reports little.**
+   - B's cells are 94–95 % right, and those from four or more references 97.5–98.9 %.
+   - B covers 9–11 % of the surface, about a ninth of what the perfect matcher covers.
+3. **The gap is texture first.** Of the cells the perfect matcher covers and B doesn't:
+   - **73–74 %** lie where B has no anchor (not among the 15 % most textured pixels);
+   - **15–18 %** have anchors but none marked reliable (the mark's caution);
+   - **9–12 %** are errors.
+4. **H triples B's reach, at a cost.** B + H covers 30–39 % of the perfect matcher's coverage, at 72–79 % right. Its cells from four or more references are 93–98 % right.
+5. **The scene matters.** In the calibration room (R0, dry run), the same pipeline gets B 99.3–99.6 % right, and B + H covers 40–43 % of the perfect matcher's coverage at 86–87 % right. The Classroom's clutter costs B about 5 points of accuracy and B + H about 10 points.
+6. **Agreement between nearby references is weaker evidence than it looks** (Code's reading). References 10 looks apart share 91 of their 101 looks. Against stage 8 (5 references, 29 looks apart), denser sampling raised B's coverage (7–8 → 9–11 %) and lowered its confirmed accuracy (98.7 / 97.7 → 97.4 / 96.7 %).
+
+**Where the open experiments stand against this:**
+- **Coverage is the method's main shortfall with the real matcher, and it is a matching problem, not a geometric one:** the perfect matcher covers 80–86 %.
+- **The lever is texture:** the share of pixels that become anchors, and H's accuracy where it seeds.
+- **Resolution bears on two things:** the far range (where even the perfect matcher thins out at 720) and the heading cone (stage 8). Neither is the main shortfall.
+
+### Stage 10: demo D2, the perfect and the real matcher side by side along the Classroom tour (#23)
+
+**The demo** (Luiz, 2026-11-20, (ii)).
+- **The tour:** #9's L-tour from R3, the straight path's first 2 m and then the turn: 418 looks, 4.17 m.
+- **Both matchers, as in the assessment:** references every 10 looks (32 in all), each released when its window is complete (0.5 m behind the current look), fused into 2 cm cells and judged against the truth.
+- **The frame:** the current look, the curves of coverage and cells right, and the two 3-D maps side by side, with wrong cells in orange.
+- **Provenance:** Code ran it at `666851e` on the workstation (CPU, 25 min). Record [`demo2.json`](runs/dm-issue-23/demo2.json) and end frames ([`last_match.png`](runs/dm-issue-23/last_match.png), [`last_error.png`](runs/dm-issue-23/last_error.png)) at `d7dc3fd`.
+- **The dry run on R0** ([`demo2_r0.json`](runs/dm-issue-23/demo2_r0.json), [`last_match_r0.png`](runs/dm-issue-23/last_match_r0.png); Chat sandbox).
+- **The videos** (`demo2_match.mp4`, `demo2_error.mp4`) stay on the workstation, as for #9. `.gitignore` now keeps any `.mp4` under `docs/runs/` out of the repo.
+
+**The checks.** V2 (the tour is the planned curve), V3 (the map grown frame by frame ends at the batch fusion) and V4 (nothing is shown before its window is complete) pass. Every control fails, as it must.
+
+| end of the tour | cells | cells right | coverage of the surface |
+|---|---|---|---|
+| Classroom, perfect matcher | 649,153 | 99.97 % | 88.9 % |
+| Classroom, real matcher (B + H) | 1,008,509 | 73.6 % | 41.4 % |
+| calibration room (R0), perfect | 571,845 | 99.98 % | 98.7 % |
+| calibration room (R0), real | 901,548 | 88.0 % | 63.1 % |
+
+**What it shows:**
+- **Along the tour,** the perfect matcher's coverage rises to 65 % by the turn (2 m) and 89 % at the end. The real matcher's rises steadily to 21 % and 41 %, at a nearly constant 72–75 % right.
+- **In the Classroom, the real map's wrong cells gather in bands across the room:** the rows of desks and chairs, where clutter, repeated structure and occlusion meet (Code's reading from the end frames). That is where the assessment located the gap.
+- **Elsewhere,** the walls and the floor's open areas, the real map is mostly right.

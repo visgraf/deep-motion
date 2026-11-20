@@ -1,0 +1,295 @@
+{
+ "command": "stage8",
+ "rung": "r0",
+ "max_anchors": 20000,
+ "checks": [
+  {
+   "name": "E1 turn: fused cells >= 95 % right",
+   "ok": true
+  },
+  {
+   "name": "E1 turn control: the mirrored path (< 95 %)",
+   "ok": true
+  },
+  {
+   "name": "E2 turn: cells from >= 2 references >= 97 % right",
+   "ok": true
+  },
+  {
+   "name": "E2 turn control: their members moved 20 % along their rays (< 97 %)",
+   "ok": true
+  },
+  {
+   "name": "E1 straight: fused cells >= 95 % right",
+   "ok": true
+  },
+  {
+   "name": "E1 straight control: the mirrored path (< 95 %)",
+   "ok": true
+  },
+  {
+   "name": "E2 straight: cells from >= 2 references >= 97 % right",
+   "ok": true
+  },
+  {
+   "name": "E2 straight control: their members moved 20 % along their rays (< 97 %)",
+   "ok": true
+  },
+  {
+   "name": "E3: within 15 deg of the heading, the turn's yield (reliable and right) >= the straight's + 10 points",
+   "ok": false
+  },
+  {
+   "name": "E3 control: the lateral sector 60-120 deg (< 10 points)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "turn": {
+   "references": {
+    "50": {
+     "s": 0.5,
+     "anchors": 20000,
+     "kept": 0.4789,
+     "reliable_surface_right": 0.9953017331384423,
+     "all_surface_right": 0.8071
+    },
+    "79": {
+     "s": 0.79,
+     "anchors": 20000,
+     "kept": 0.50955,
+     "reliable_surface_right": 0.9963693455009321,
+     "all_surface_right": 0.79355
+    },
+    "108": {
+     "s": 1.08,
+     "anchors": 20000,
+     "kept": 0.4506,
+     "reliable_surface_right": 0.9968930315135375,
+     "all_surface_right": 0.76665
+    },
+    "138": {
+     "s": 1.3800000000000001,
+     "anchors": 20000,
+     "kept": 0.3902,
+     "reliable_surface_right": 0.9946181445412609,
+     "all_surface_right": 0.73865
+    },
+    "167": {
+     "s": 1.67,
+     "anchors": 20000,
+     "kept": 0.35135,
+     "reliable_surface_right": 0.996299985769176,
+     "all_surface_right": 0.73495
+    }
+   },
+   "cells": 36244,
+   "fused_right": 0.9950888422911378,
+   "cells_by_references": {
+    "1": {
+     "cells": 31449,
+     "right": 0.9943718401221024
+    },
+    "2": {
+     "cells": 3863,
+     "right": 0.9997411338338079
+    },
+    "3": {
+     "cells": 782,
+     "right": 1.0
+    },
+    "4": {
+     "cells": 136,
+     "right": 1.0
+    },
+    "5": {
+     "cells": 14,
+     "right": 1.0
+    }
+   },
+   "confirmed_cells": 4795,
+   "confirmed_right": 0.9997914494264859,
+   "coverage": 0.08429690096200547,
+   "surface_cells": 117359,
+   "control_E2_perturbed_right": 0.39645464025026067,
+   "control_E2_confirmed_cells": 4795,
+   "control_E1_mirrored": {
+    "cells": 193,
+    "right": 0.04145077720207254,
+    "kept": 0.00223
+   },
+   "sectors_yield": {
+    "0-15": {
+     "anchors": 2929,
+     "yield": 0.019460566746329806
+    },
+    "15-60": {
+     "anchors": 25536,
+     "yield": 0.2613956766917293
+    },
+    "60-120": {
+     "anchors": 43396,
+     "yield": 0.48969951147571206
+    },
+    "120-165": {
+     "anchors": 25187,
+     "yield": 0.593877794100131
+    },
+    "165-180": {
+     "anchors": 2952,
+     "yield": 0.16700542005420055
+    }
+   },
+   "sectors_reliable_right": {
+    "0-15": {
+     "n": 72,
+     "right": 0.7916666666666666
+    },
+    "15-60": {
+     "n": 6722,
+     "right": 0.9930080333234157
+    },
+    "60-120": {
+     "n": 21284,
+     "right": 0.9984495395602331
+    },
+    "120-165": {
+     "n": 14991,
+     "right": 0.9977986792075245
+    },
+    "165-180": {
+     "n": 543,
+     "right": 0.9079189686924494
+    }
+   }
+  },
+  "straight": {
+   "references": {
+    "50": {
+     "s": 0.5,
+     "anchors": 20000,
+     "kept": 0.5194,
+     "reliable_surface_right": 0.9955718136311128,
+     "all_surface_right": 0.8281
+    },
+    "79": {
+     "s": 0.79,
+     "anchors": 20000,
+     "kept": 0.51155,
+     "reliable_surface_right": 0.9979474147199687,
+     "all_surface_right": 0.8133
+    },
+    "108": {
+     "s": 1.08,
+     "anchors": 20000,
+     "kept": 0.46125,
+     "reliable_surface_right": 0.9985907859078591,
+     "all_surface_right": 0.7642
+    },
+    "138": {
+     "s": 1.3800000000000001,
+     "anchors": 20000,
+     "kept": 0.42215,
+     "reliable_surface_right": 0.9989340281890323,
+     "all_surface_right": 0.73955
+    },
+    "167": {
+     "s": 1.67,
+     "anchors": 20000,
+     "kept": 0.4342,
+     "reliable_surface_right": 0.998272685398434,
+     "all_surface_right": 0.769
+    }
+   },
+   "cells": 36203,
+   "fused_right": 0.9971825539319946,
+   "cells_by_references": {
+    "1": {
+     "cells": 29636,
+     "right": 0.9965582399784046
+    },
+    "2": {
+     "cells": 5071,
+     "right": 1.0
+    },
+    "3": {
+     "cells": 1164,
+     "right": 1.0
+    },
+    "4": {
+     "cells": 281,
+     "right": 1.0
+    },
+    "5": {
+     "cells": 51,
+     "right": 1.0
+    }
+   },
+   "confirmed_cells": 6567,
+   "confirmed_right": 1.0,
+   "coverage": 0.07383527276152312,
+   "surface_cells": 116787,
+   "control_E2_perturbed_right": 0.38114816506776306,
+   "control_E2_confirmed_cells": 6567,
+   "control_E1_mirrored": {
+    "cells": 48,
+    "right": 0.020833333333333332,
+    "kept": 0.00048
+   },
+   "sectors_yield": {
+    "0-15": {
+     "anchors": 2593,
+     "yield": 0.01195526417277285
+    },
+    "15-60": {
+     "anchors": 25017,
+     "yield": 0.1775592597034017
+    },
+    "60-120": {
+     "anchors": 43121,
+     "yield": 0.5514946313860996
+    },
+    "120-165": {
+     "anchors": 24962,
+     "yield": 0.7331543946799135
+    },
+    "165-180": {
+     "anchors": 4307,
+     "yield": 0.07244021360575807
+    }
+   },
+   "sectors_reliable_right": {
+    "0-15": {
+     "n": 43,
+     "right": 0.7209302325581395
+    },
+    "15-60": {
+     "n": 4499,
+     "right": 0.9873305178928651
+    },
+    "60-120": {
+     "n": 23796,
+     "right": 0.9993696419566314
+    },
+    "120-165": {
+     "n": 18302,
+     "right": 0.9999453611627145
+    },
+    "165-180": {
+     "n": 331,
+     "right": 0.9425981873111783
+    }
+   }
+  },
+  "E3": {
+   "heading_0_15_turn_minus_straight": 0.0075053025735569556,
+   "lateral_60_120_turn_minus_straight": -0.0617951199103875
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "05ed885992035fba32ac413cf015459b0f59e47f",
+   "clean": true
+  }
+ }
+}
