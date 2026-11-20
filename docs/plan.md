@@ -900,3 +900,13 @@ The checks K1–K7 were declared on #14 before each was built.
   - B's reliable anchors whose pixels are on the ceiling (676) lie a median of 52 cm off it; 134 are within 3 cm. They are mostly fixture and junction edges: right by the surface metric, but not on the ceiling plane.
   - **The calibration room's ceiling carries almost no evidence of its own,** not even enough to fit a plane to.
 - **What would close it:** a stronger prior on the room's layout, not on the evidence. For example, a Manhattan room: the ceiling parallel to the floor, closing the walls at their top. That is Luiz's decision.
+
+**Decision (Luiz, 2026-11-20, in Chat): (ii).**
+- **The ceiling stays "no evidence."** The planar prior is kept where it is supported, and reported, not gated.
+- **The coverage work stops here.** The matcher (B with its mark, then H) goes to the Classroom: R2, #16.
+- **On #14's closing:** Luiz closed #14 before K14 was declared, so K14's declaration and its result are comments on the closed issue.
+
+**Stage 7a in short.**
+- **The matcher's output:** B's reliable anchors, 98 % surface-right on R1; then H, seeded from them, which covers 75 % of the pixels at 86–87 % surface-right.
+- **The ceiling of the calibration room** has no evidence to range it from, and a fitted plane cannot find it.
+- **Edges:** three ways of modelling them (E, F, G) failed. Half of the edge "failures" were the old metric, and K10's surface metric records it.

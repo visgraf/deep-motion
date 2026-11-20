@@ -1366,3 +1366,86 @@ def selftest_k14(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
         res.append((f"K14 {kind} control: planes from shuffled ranges (< 85 % surface-right on what it fills)",
                     (Pc["filled_surface"] if Pc["filled_surface"] is not None else 0.0) < 0.85))
     return res, num
+
+
+# ------------------------------------------------------------------------ R2: the matcher on another scene (#16)
+
+def selftest_r2(runs, max_n=20000, seed=11):
+    """The checks declared on #16 for the matcher on new renders (surface metric): K15, B's reliable anchors >= 95 %
+    surface-right with >= 50 % kept (controls: random marking < 95 %, the mirrored path median >= 20 %); K16, H >= 85 %
+    surface-right on what it fills (control: shuffled seeds < 85 %); K17, H beats B alone by >= 10 points in the
+    least-textured third. Reported: coverage, B and A2 at and off true edges, and P's fill (not gated)."""
+    res, num = [], {}
+    rng = np.random.default_rng(seed)
+    for kind, run_dir in runs.items():
+        looks, P, _, fan = r1_run(run_dir)
+        m = len(looks) // 2
+        c = looks[m][1]
+        W = looks[m][3].shape[1]
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_true = np.linalg.norm(P[pidx] - c, axis=-1)
+        tedge = depth_edge(looks, m, P, px)
+        nb = neighbourhood_ranges(looks, m, P, px)
+        r_b, conf, best = sweep(looks, m, px, u, fan)
+        r_bm, _, _ = sweep(looks, m, px, u, fan, mirror=True)
+        r_a, _, _, _ = lagrange(looks, m, px, u, fan)
+        mk = reliable(best, conf)
+        rs = np.zeros(len(px), bool)
+        rs[rng.choice(len(px), size=int(mk.sum()), replace=False)] = True
+        srB, srA = surface_right(r_b, nb), surface_right(r_a, nb)
+        out = {"looks": len(looks), "anchors": int(len(px)), "true_edges": float(tedge.mean())}
+        for name, e_old, e_new in (("B", _relerr(r_b, r_true) <= 0.1, srB), ("A2", _relerr(r_a, r_true) <= 0.1, srA)):
+            out[name] = {"old": {"all": float(e_old.mean()), "at_edges": float(e_old[tedge].mean()),
+                                 "off_edges": float(e_old[~tedge].mean())},
+                         "surface": {"all": float(e_new.mean()), "at_edges": float(e_new[tedge].mean()),
+                                     "off_edges": float(e_new[~tedge].mean())}}
+        out["B"]["reliable"] = {"kept": float(mk.mean()), "surface": float(srB[mk].mean()),
+                                "old": float((_relerr(r_b, r_true) <= 0.1)[mk].mean())}
+        out["B"]["control_random_marking_surface"] = float(srB[rs].mean())
+        out["B"]["control_mirrored_median_old"] = float(np.median(_relerr(r_bm, r_true)))
+        # H on the 2-px grid
+        spx, su, sr = px[mk], u[mk], r_b[mk]
+        apx, au, aidx, ag = anchors(looks, m, fan, max_n=10 ** 9, frac=1.0)
+        grid = (apx[:, 0] % H_GRID == 0) & (apx[:, 1] % H_GRID == 0)
+        tpx, tu, tidx, tg = apx[grid], au[grid], aidx[grid], ag[grid]
+        tnb = neighbourhood_ranges(looks, m, P, tpx)
+        key_t = tpx[:, 0] * W + tpx[:, 1]
+        seed_at = dict(zip((spx[:, 0] * W + spx[:, 1]).tolist(), sr.tolist()))
+        is_seed = np.isin(key_t, spx[:, 0] * W + spx[:, 1])
+        seed_r_t = np.array([seed_at.get(int(k), np.nan) for k in key_t])
+        r_h, _, _ = seed_fill(looks, m, fan, spx, su, sr, tpx, tu)
+        r_h = np.where(is_seed, seed_r_t, r_h)
+        r_sh, _, _ = seed_fill(looks, m, fan, spx, su, rng.permutation(sr), tpx, tu)
+        r_bt, _, _ = sweep(looks, m, tpx, tu, fan)
+        lo3 = np.quantile(tg[np.isfinite(tg)], 1 / 3)
+        least = tg < lo3
+
+        def sfrac(r, msk=None):
+            cov = np.isfinite(r)
+            ok = cov & surface_right(np.where(cov, r, np.nan), tnb)
+            sel = cov if msk is None else cov & msk
+            return float(ok[sel].mean()) if sel.any() else None
+        out["H"] = {"targets": int(len(tpx)), "coverage": float(np.isfinite(r_h).mean()), "surface": sfrac(r_h),
+                    "surface_least_texture": sfrac(r_h, least)}
+        out["H"]["control_shuffled_seeds_surface"] = sfrac(r_sh)
+        out["B_alone"] = {"surface": sfrac(r_bt), "surface_least_texture": sfrac(r_bt, least)}
+        # P, reported only (Luiz's (ii), 2026-11-20: the prior is kept where it is supported, not gated)
+        fh = np.isfinite(r_h)
+        planes = fit_planes(c + tu[fh] * r_h[fh][:, None], seed=seed)
+        r_p = np.full(len(tpx), np.nan)
+        r_p[~fh] = plane_fill(c, tu[~fh], planes)
+        out["P_reported"] = {"planes": len(planes), "fills_of_empty": float(np.isfinite(r_p[~fh]).mean()),
+                             "surface_of_filled": sfrac(r_p)}
+        num[kind] = out
+        rel = out["B"]["reliable"]
+        res.append((f"K15 B on {kind}: reliable anchors >= 95 % surface-right, >= 50 % kept",
+                    rel["surface"] >= 0.95 and rel["kept"] >= 0.50))
+        res.append((f"K15 {kind} control: as many marked at random (< 95 %)",
+                    out["B"]["control_random_marking_surface"] < 0.95))
+        res.append((f"K15 {kind} control: the mirrored path (median >= 20 %)",
+                    out["B"]["control_mirrored_median_old"] >= 0.20))
+        res.append((f"K16 H on {kind}: >= 85 % surface-right on what it fills", out["H"]["surface"] >= 0.85))
+        res.append((f"K16 {kind} control: shuffled seeds (< 85 %)", out["H"]["control_shuffled_seeds_surface"] < 0.85))
+        res.append((f"K17 {kind}: least-textured third, H >= B alone + 10 points",
+                    out["H"]["surface_least_texture"] >= out["B_alone"]["surface_least_texture"] + 0.10))
+    return res, num
