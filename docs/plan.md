@@ -884,3 +884,19 @@ The checks K1–K7 were declared on #14 before each was built.
 - **What it means.** Nothing in the images ranges the ceiling: there is no texture on it, so there is no trace to match. Carrying a constant range across it is a guess, and a wrong one, because a plane's range varies across the image.
   - Filling it needs a prior: planes fitted to the reliable seeds, or a room model. That is reconstruction, not matching.
   - The 95 % coverage bar of K12 and K13 was a guess that ignored this. It stays failed as declared.
+
+**The planar prior, method P (K14, declared on #14 after Luiz's decision of 2026-11-20 to stop at H; Chat sandbox, `76e090f`, record `docs/runs/issue-14/stage7a_k14.json`; diagnostics `diag_ceiling.py`, `diag_planes.py` and their outputs).**
+
+- **P:** sequential RANSAC planes (≤ 8, ≥ 500 inliers within 3 cm) on H's points. It fills H's empty targets at the nearest plane met within its support.
+- **K14a and K14b fail on both runs.** The control (shuffled ranges) fails, as it must.
+  - P fills 28 % of H's empty targets, at 53.3 % (line) and 51.2 % (arc) surface-right.
+  - H with P covers 82.3 %, at 83.4 % and 83.9 % surface-right.
+- **What P finds:**
+  - the floor (twice, 1.7–5 cm apart), all four walls (x = ±3.0, y = ±2.5 m), and a slanted spurious plane or two;
+  - **no ceiling.**
+  - What it fills on the floor is 100 % right. The ceiling rays it fills meet the walls near their top, and are 37–39 % right.
+- **Why** (diagnostic, line):
+  - H's 4,374 ceiling points lie a median of 38 cm off the true ceiling; only 604 are within 3 cm. The floor's lie 2 cm off.
+  - B's reliable anchors whose pixels are on the ceiling (676) lie a median of 52 cm off it; 134 are within 3 cm. They are mostly fixture and junction edges: right by the surface metric, but not on the ceiling plane.
+  - **The calibration room's ceiling carries almost no evidence of its own,** not even enough to fit a plane to.
+- **What would close it:** a stronger prior on the room's layout, not on the evidence. For example, a Manhattan room: the ceiling parallel to the floor, closing the walls at their top. That is Luiz's decision.

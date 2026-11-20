@@ -1,0 +1,425 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K14a P on R1 (line): fills >= 90 % of H's empty targets, >= 85 % surface-right",
+   "ok": false
+  },
+  {
+   "name": "K14b H + P on R1 (line): coverage >= 95 %, >= 85 % surface-right",
+   "ok": false
+  },
+  {
+   "name": "K14 line control: planes from shuffled ranges (< 85 % surface-right on what it fills)",
+   "ok": true
+  },
+  {
+   "name": "K14a P on R1 (arc): fills >= 90 % of H's empty targets, >= 85 % surface-right",
+   "ok": false
+  },
+  {
+   "name": "K14b H + P on R1 (arc): coverage >= 95 %, >= 85 % surface-right",
+   "ok": false
+  },
+  {
+   "name": "K14 arc control: planes from shuffled ranges (< 85 % surface-right on what it fills)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "line": {
+   "targets": 50400,
+   "H_coverage": 0.7529761904761905,
+   "P": {
+    "planes": [
+     {
+      "n": [
+       -0.0032,
+       0.0068,
+       -1.0
+      ],
+      "d": 0.0081,
+      "inliers": 8734
+     },
+     {
+      "n": [
+       -1.0,
+       0.0046,
+       -0.0022
+      ],
+      "d": -3.0043,
+      "inliers": 2458
+     },
+     {
+      "n": [
+       -0.0058,
+       0.9999,
+       -0.015
+      ],
+      "d": -2.525,
+      "inliers": 1656
+     },
+     {
+      "n": [
+       -0.0041,
+       0.0297,
+       0.9995
+      ],
+      "d": 0.0167,
+      "inliers": 1774
+     },
+     {
+      "n": [
+       -0.9998,
+       0.0128,
+       0.0167
+      ],
+      "d": 3.0329,
+      "inliers": 1659
+     },
+     {
+      "n": [
+       -0.0282,
+       -0.9181,
+       -0.3952
+      ],
+      "d": -2.5199,
+      "inliers": 872
+     },
+     {
+      "n": [
+       0.0327,
+       0.9883,
+       -0.149
+      ],
+      "d": 1.3866,
+      "inliers": 751
+     },
+     {
+      "n": [
+       -0.0091,
+       -0.0027,
+       -1.0
+      ],
+      "d": -0.0613,
+      "inliers": 1052
+     }
+    ],
+    "fills_of_empty": 0.28240963855421686,
+    "filled_surface": 0.5329920364050057,
+    "filled_old": 0.5036973833902162,
+    "filled_by_band": {
+     "floor": {
+      "filled": 825,
+      "surface": 1.0
+     },
+     "between": {
+      "filled": 28,
+      "surface": 0.6428571428571429
+     },
+     "ceiling": {
+      "filled": 2663,
+      "surface": 0.3871573413443485
+     }
+    },
+    "combined_coverage": 0.8227380952380953,
+    "combined_surface": 0.8342497467804949
+   },
+   "control_shuffled": {
+    "planes": [
+     {
+      "n": [
+       -0.0783,
+       0.1504,
+       0.9855
+      ],
+      "d": 0.3619,
+      "inliers": 702
+     },
+     {
+      "n": [
+       -0.313,
+       -0.0506,
+       0.9484
+      ],
+      "d": 0.1822,
+      "inliers": 679
+     },
+     {
+      "n": [
+       0.1549,
+       0.2355,
+       0.9595
+      ],
+      "d": 0.3863,
+      "inliers": 644
+     },
+     {
+      "n": [
+       -0.1316,
+       0.7541,
+       -0.6434
+      ],
+      "d": -0.103,
+      "inliers": 621
+     },
+     {
+      "n": [
+       0.1389,
+       -0.4734,
+       -0.8698
+      ],
+      "d": -0.5759,
+      "inliers": 599
+     },
+     {
+      "n": [
+       0.6264,
+       -0.0686,
+       0.7765
+      ],
+      "d": 0.3616,
+      "inliers": 598
+     },
+     {
+      "n": [
+       0.1424,
+       0.8416,
+       -0.521
+      ],
+      "d": -0.087,
+      "inliers": 600
+     },
+     {
+      "n": [
+       -0.5369,
+       -0.329,
+       0.7768
+      ],
+      "d": 0.4624,
+      "inliers": 602
+     }
+    ],
+    "fills_of_empty": 0.10578313253012048,
+    "filled_surface": 0.025816249050873197,
+    "filled_old": 0.023538344722854973,
+    "filled_by_band": {
+     "floor": {
+      "filled": 825,
+      "surface": 0.0
+     },
+     "between": {
+      "filled": 16,
+      "surface": 0.0
+     },
+     "ceiling": {
+      "filled": 476,
+      "surface": 0.07142857142857142
+     }
+    },
+    "combined_coverage": 0.7791071428571429,
+    "combined_surface": 0.8341100669773601
+   }
+  },
+  "arc": {
+   "targets": 50400,
+   "H_coverage": 0.7534722222222222,
+   "P": {
+    "planes": [
+     {
+      "n": [
+       0.0025,
+       0.003,
+       -1.0
+      ],
+      "d": 0.0042,
+      "inliers": 8930
+     },
+     {
+      "n": [
+       0.9999,
+       0.01,
+       0.0055
+      ],
+      "d": 3.0172,
+      "inliers": 2308
+     },
+     {
+      "n": [
+       -0.9999,
+       0.0143,
+       -0.0085
+      ],
+      "d": 2.9914,
+      "inliers": 1740
+     },
+     {
+      "n": [
+       -0.0066,
+       -0.0019,
+       1.0
+      ],
+      "d": 0.054,
+      "inliers": 2172
+     },
+     {
+      "n": [
+       -0.2071,
+       0.867,
+       0.4532
+      ],
+      "d": 2.6564,
+      "inliers": 993
+     },
+     {
+      "n": [
+       -0.0074,
+       0.999,
+       0.0438
+      ],
+      "d": -2.4412,
+      "inliers": 1207
+     },
+     {
+      "n": [
+       0.0256,
+       -0.9997,
+       -0.0056
+      ],
+      "d": 2.4365,
+      "inliers": 1007
+     },
+     {
+      "n": [
+       0.0044,
+       0.0049,
+       -1.0
+      ],
+      "d": 0.0483,
+      "inliers": 1517
+     }
+    ],
+    "fills_of_empty": 0.28354124748490944,
+    "filled_surface": 0.5117797331819472,
+    "filled_old": 0.48992336077206927,
+    "filled_by_band": {
+     "floor": {
+      "filled": 775,
+      "surface": 1.0
+     },
+     "between": {
+      "filled": 0,
+      "surface": null
+     },
+     "ceiling": {
+      "filled": 2748,
+      "surface": 0.37409024745269287
+     }
+    },
+    "combined_coverage": 0.8233730158730159,
+    "combined_surface": 0.8394621427538677
+   },
+   "control_shuffled": {
+    "planes": [
+     {
+      "n": [
+       0.1662,
+       -0.4288,
+       0.888
+      ],
+      "d": 0.0587,
+      "inliers": 677
+     },
+     {
+      "n": [
+       0.0111,
+       0.1494,
+       0.9887
+      ],
+      "d": 0.1815,
+      "inliers": 682
+     },
+     {
+      "n": [
+       0.0068,
+       0.6699,
+       -0.7424
+      ],
+      "d": -0.3323,
+      "inliers": 633
+     },
+     {
+      "n": [
+       0.1841,
+       -0.3274,
+       -0.9268
+      ],
+      "d": -0.6236,
+      "inliers": 623
+     },
+     {
+      "n": [
+       0.4008,
+       0.2212,
+       0.8891
+      ],
+      "d": 0.3287,
+      "inliers": 596
+     },
+     {
+      "n": [
+       -0.5692,
+       0.2138,
+       0.7939
+      ],
+      "d": 0.5337,
+      "inliers": 604
+     },
+     {
+      "n": [
+       0.1429,
+       0.7819,
+       -0.6068
+      ],
+      "d": -0.061,
+      "inliers": 583
+     },
+     {
+      "n": [
+       -0.5752,
+       0.2562,
+       0.7769
+      ],
+      "d": 0.0621,
+      "inliers": 575
+     }
+    ],
+    "fills_of_empty": 0.07331991951710262,
+    "filled_surface": 0.031833150384193196,
+    "filled_old": 0.030735455543358946,
+    "filled_by_band": {
+     "floor": {
+      "filled": 775,
+      "surface": 0.0
+     },
+     "between": {
+      "filled": 0,
+      "surface": null
+     },
+     "ceiling": {
+      "filled": 136,
+      "surface": 0.21323529411764705
+     }
+    },
+    "combined_coverage": 0.771547619047619,
+    "combined_surface": 0.8502288741449365
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "76e090f23d3e3640c881bc7691d990d942818c49",
+   "clean": true
+  }
+ }
+}
