@@ -79,7 +79,8 @@ def match_reference(looks, truth, j, fan, max_n=20000, mirror=False):
     right = mt.surface_right(r, nb)
     fwd = -R[:, 2]
     psi = np.degrees(np.arccos(np.clip(u @ fwd, -1, 1)))
-    return {"j": j, "c": c, "R": R, "u": u, "r": r, "mark": mk, "right": right, "psi": psi, "win": win}
+    return {"j": j, "c": c, "R": R, "u": u, "r": r, "mark": mk, "right": right, "psi": psi, "win": win,
+            "px": px, "ptrue": P[pidx]}
 
 
 # ------------------------------------------------------------------------------------------------------- fusion
