@@ -271,7 +271,7 @@ def main(argv=None) -> int:
     p.add_argument("--a", action="store_true", help="checks K4-K5 (rung r0) or K6-K7 (rung r1): A, and both on R1")
     p.add_argument("--rung", choices=["r0", "r1"], default="r0")
     p.add_argument("--r2", nargs="+", default=None, metavar="KIND=RUN",
-                   help="checks K15-K17 (#16) on render runs, e.g. line=runs/r2-line arc=runs/r2-arc")
+                   help="checks K15-K17 (#17) on render runs, e.g. line=runs/r2-line arc=runs/r2-arc")
     p.add_argument("--k14", action="store_true", help="check K14: the planar prior, method P (R1)")
     p.add_argument("--k13", action="store_true", help="check K13: method H2, grown in rounds (R1)")
     p.add_argument("--k12", action="store_true", help="check K12: method H, seeding the anchors without texture (R1)")

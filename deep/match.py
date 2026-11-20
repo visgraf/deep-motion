@@ -1368,10 +1368,10 @@ def selftest_k14(kinds=("line", "arc"), max_n=20000, runs=None, seed=11):
     return res, num
 
 
-# ------------------------------------------------------------------------ R2: the matcher on another scene (#16)
+# ------------------------------------------------------------------------ R2: the matcher on another scene (#17)
 
 def selftest_r2(runs, max_n=20000, seed=11):
-    """The checks declared on #16 for the matcher on new renders (surface metric): K15, B's reliable anchors >= 95 %
+    """The checks declared on #17 for the matcher on new renders (surface metric): K15, B's reliable anchors >= 95 %
     surface-right with >= 50 % kept (controls: random marking < 95 %, the mirrored path median >= 20 %); K16, H >= 85 %
     surface-right on what it fills (control: shuffled seeds < 85 %); K17, H beats B alone by >= 10 points in the
     least-textured third. Reported: coverage, B and A2 at and off true edges, and P's fill (not gated)."""

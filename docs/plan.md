@@ -903,7 +903,7 @@ The checks K1–K7 were declared on #14 before each was built.
 
 **Decision (Luiz, 2026-11-20, in Chat): (ii).**
 - **The ceiling stays "no evidence."** The planar prior is kept where it is supported, and reported, not gated.
-- **The coverage work stops here.** The matcher (B with its mark, then H) goes to the Classroom: R2, #16.
+- **The coverage work stops here.** The matcher (B with its mark, then H) goes to the Classroom: R2, #17.
 - **On #14's closing:** Luiz closed #14 before K14 was declared, so K14's declaration and its result are comments on the closed issue.
 
 **Stage 7a in short.**
