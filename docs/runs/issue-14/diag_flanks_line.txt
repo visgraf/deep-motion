@@ -1,0 +1,26 @@
+line {
+ "+": {
+  "flank within10": 0.8482,
+  "flank within10 at edge anchors": 0.5109489051094891,
+  "flank within10 off edge anchors": 0.9428790983606558,
+  "flank gradient / anchor gradient, median": 0.4067247199031627,
+  "flank within10 by gradient ratio": {
+   "0-0.25": 0.8425671969281404,
+   "0.25-0.5": 0.8652416356877324,
+   "0.5-1": 0.8432523051131601,
+   "1-99": 0.8458149779735683
+  }
+ },
+ "-": {
+  "flank within10": 0.8384,
+  "flank within10 at edge anchors": 0.4990875912408759,
+  "flank within10 off edge anchors": 0.9336577868852459,
+  "flank gradient / anchor gradient, median": 0.39565584341679116,
+  "flank within10 by gradient ratio": {
+   "0-0.25": 0.8336933045356372,
+   "0.25-0.5": 0.8494318181818182,
+   "0.5-1": 0.8396624472573839,
+   "1-99": 0.8335170893054025
+  }
+ }
+}

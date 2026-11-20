@@ -768,3 +768,22 @@ The checks K1–K7 were declared on #14 before each was built.
 **Next.**
 - Depth edges, about a fifth of the anchors and the larger part of the failures: the two-depth handling (one surface before the edge, another after).
 - Then the anchors without texture, seeded from the reliable ones.
+
+**Depth edges, method E (K8, declared on #14; Chat sandbox, `9b707d9`, record `docs/runs/issue-14/stage7a_k8.json`).**
+
+- **The diagnosis** (`diag_edge.py`). At the R1 depth-edge anchors B gets wrong:
+  - the pixel centre is on the far surface for 94 % of them;
+  - B's estimate sits on the near surface for 65–67 %.
+  
+  B follows the occluding contour, which moves with the foreground. This is stereo's foreground fattening.
+- **E:** two flanks at ±2 px along the trace, each ranged by B, with the near or far range picked by pixel coverage.
+- **K8 fails on both runs.**
+  - At true edges: 50.3 % (line) and 55.7 % (arc), against B's 51.0 % and 52.0 % and the 70 % bar.
+  - Off edges, E loses 4–5 points.
+  - The controls fail as they must. The coverage rule does carry information: at edges it beats the flipped rule by 7–14 points and the coin by 2.5–6.
+- **Why it fails** (`diag_flanks.py`, `diag_flanks_line.txt`).
+  - At edge anchors, the flanks are ranged no better than the anchors themselves: 50–51 % against 94 % off edges.
+  - This holds whatever the flank's own gradient, so the flanks are not short of texture.
+  - The fattening reaches beyond 2 px: over the 1 m window, the foreground's contour sweeps across the background next to it. A background point there is hidden in part of the window, and the contour's coherent motion wins the cost.
+  
+  An edge cannot be split in space alone. The far surface has to be scored only on the looks where the near one does not hide it.
