@@ -388,3 +388,77 @@ def run(T, looks, truth, vis_fn, fan, refs, out, checks_v2, limit=None, best=Fal
     for c in rec["checks"]:
         print(f"[deep] demo2 {'PASS' if c['ok'] else 'FAIL'} {c['name']}")
     return 0 if all(c["ok"] for c in rec["checks"]) else 1
+
+
+# ------------------------------------------------------------------------- the reconstruction as PLY (#25)
+
+def export_ply(T, looks, truth, vis_fn, fan, refs, rgb_of, ply_dir, rec_dir, git=None, name="classroom"):
+    """Demo D2's final maps (all references fused, as the last frame) as two coloured point clouds, perfect and real.
+    rgb_of(j) gives reference j's image as (H, W, 3) linear RGB on the matcher's scale. Check P1 (#25): each file read
+    back holds exactly its map; control: the batch without the last reference differs."""
+    from . import ply
+    ply_dir, rec_dir = Path(ply_dir), Path(rec_dir)
+    ply_dir.mkdir(parents=True, exist_ok=True)
+    rec_dir.mkdir(parents=True, exist_ok=True)
+    points, per_ref = per_reference(looks, truth, vis_fn, fan, refs)
+    sides = {"perfect": {j: points[j][0] for j in refs}, "real": {j: points[j][1] for j in refs}}
+    model = fan.model()
+    rgbs = {}
+    out = {"command": "demo2-ply", "references": refs, "computed_by": git, "files": {}, "checks": []}
+    for side, pts in sides.items():
+        Xf, nref, dom = fuse_side(pts, refs)
+        err = cells_error(Xf, dom, per_ref, truth, fan)
+        right = err <= ERR_MAX
+        rgb = np.zeros((len(Xf), 3), np.uint8)
+        for j in refs:
+            sel = np.flatnonzero(dom == j)
+            if len(sel) == 0:
+                continue
+            if j not in rgbs:
+                rgbs[j] = rgb_of(j)
+            img = rgbs[j]
+            Hh, Ww = img.shape[:2]
+            rc, _ = model.pixel_of((Xf[sel] - per_ref[j]["c"]) @ per_ref[j]["R"])
+            r = np.clip(np.rint(rc[:, 0]), 0, Hh - 1).astype(int)
+            c = (np.rint(rc[:, 1]).astype(int)) % Ww
+            v = np.nan_to_num(img[r, c], nan=0.0)
+            rgb[sel] = (np.clip(v, 0, 1) ** (1 / 2.2) * 255 + 0.5).astype(np.uint8)
+        path = ply_dir / f"{name}_{side}.ply"
+        size = ply.write_ply(path, Xf, rgb, extras={"right": right.astype(np.uint8),
+                                                    "err": np.where(np.isfinite(err), err, -1).astype(np.float32),
+                                                    "nref": np.minimum(nref, 255).astype(np.uint8)},
+                             comments=(f"deep-motion demo D2 (#23, #25): {side} matcher, {len(refs)} references",
+                                       "world metres, +Z up; right = surface-right (stage 8's metric)"))
+        back = ply.read_ply(path)
+        same = (len(back) == len(Xf) and np.array_equal(np.stack([back["x"], back["y"], back["z"]], 1),
+                                                       Xf.astype(np.float32))
+                and np.array_equal(back["right"].astype(bool), right))
+        Xc, _, _ = fuse_side(pts, refs[:-1])
+        ctl = len(back) == len(Xc) and np.array_equal(np.stack([back["x"], back["y"], back["z"]], 1),
+                                                       Xc.astype(np.float32))
+        out["files"][side] = {"path": str(path), "bytes": int(size), "points": int(len(Xf)),
+                              "right": float(right.mean()), "colour_mean": [float(x) for x in rgb.mean(0)]}
+        out["checks"] += [{"name": f"P1 {side}: the file read back holds exactly the final map", "ok": bool(same)},
+                          {"name": f"P1 {side} control: the batch without the last reference differs",
+                           "ok": not ctl}]
+        print(f"[deep] demo2-ply {side}: {len(Xf):,} points, {size / 1e6:.1f} MB, {100 * right.mean():.1f} % right",
+              flush=True)
+    (rec_dir / ("demo2_ply.json" if T[0][0] is not None else "demo2_ply_r0.json")).write_text(json.dumps(out, indent=1))
+    for c in out["checks"]:
+        print(f"[deep] demo2-ply {'PASS' if c['ok'] else 'FAIL'} {c['name']}")
+    return 0 if all(c["ok"] for c in out["checks"]) else 1
+
+
+def render_rgb(T, mid=None):
+    """rgb_of for render runs: a reference's record as linear RGB on the matcher's scale (render_tour's)."""
+    rec_mid = orc.record(T[len(T) // 2 if mid is None else mid][0])
+    hit = np.isfinite(rec_mid.distance_m)
+    scale = float(np.quantile(rec_mid.value[hit].astype(np.float64) @ mt.LUM, 0.99))
+    Hh, Ww = (int(x) for x in rec_mid.raster_shape)
+
+    def f(j):
+        rec = orc.record(T[j][0])
+        v = rec.value.astype(np.float64) / scale
+        v[~np.isfinite(rec.distance_m)] = np.nan
+        return v.reshape(Hh, Ww, 3)
+    return f
