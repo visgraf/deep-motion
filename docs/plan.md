@@ -88,7 +88,7 @@ tangent, is the orbit of a one-parameter group of rigid motions. One family cove
 
 **On the Riemann sphere** (Luiz's question, 2026-11-19, in Chat; checks M1–M4 with controls in
 [`deep/moebius.py`](../deep/moebius.py), all passing at `c7d755d`, Chat sandbox,
-[record](runs/issue-11/moebius_selftest.json)). Project the viewing sphere stereographically with the focus of
+[record](runs/dm-issue-11/moebius_selftest.json)). Project the viewing sphere stereographically with the focus of
 expansion at z = 0 and its opposite at ∞, and write ℓ = ln |z| = ln tan(ψ/2).
 
 - *Rotations of the eye are Möbius maps:* SO(3) sits inside PSL(2, ℂ) as its unitary part, and a rotation preserves the
@@ -450,7 +450,7 @@ median against ψ).
 
 **What Code ran.** 5a's commands with `--width 3600 --n 101 --ds 0.01 --device OPTIX`: 1 m windows at 1 cm steps, and
 the pivot at 21 looks. Renders were at `b36d8c6`; the tables at `b36d8c6` (stride 25) and `6b0a87b` (stride 7).
-Records, logs and timing are in [`runs/issue-6/`](runs/issue-6). The measured numbers are Code's, on the workstation;
+Records, logs and timing are in [`runs/dm-issue-6/`](runs/dm-issue-6). The measured numbers are Code's, on the workstation;
 the full report is on #6.
 
 - **Cost.** About 12.2–12.8 s per look. Of that, 1.55 s is Cycles; the other ~10.6 s is fov-render writing the EXR
@@ -502,7 +502,7 @@ was written.
 - **Usable.** The 95 % interval along the ray is within ±10 % of range from every look that sees the cell.
 
 **Runs** (calibration room, from the EYE heading +Y, Panorama 720 × 360, 16 spp, CPU, 37 looks every 2.5 cm). Each
-path is rendered as two runs (looks 0–18 and 19–36). Records are in [`runs/issue-7/runs/`](runs/issue-7/runs).
+path is rendered as two runs (looks 0–18 and 19–36). Records are in [`runs/dm-issue-7/runs/`](runs/dm-issue-7/runs).
 - **composed:** 30 cm line, then a 30 cm left arc (R = 1.6 m, 10.7°), then a 30 cm line. Rendered at `5d34b5f`,
   194 + 187 s.
 - **straight:** a 90 cm line, for comparison. Rendered at `f5dfa76`, 191 + 181 s.
@@ -511,8 +511,8 @@ Commands: `python -m deep stage5b2-render [--path straight] --run runs/s5b2-{a,b
 [--seed-base 11000]`.
 
 **Checks** (`python -m deep stage5b2 runs/s5b2-a runs/s5b2-b --out docs/runs/issue-7` at `b8300e9`, clean; record
-[`stage5b2.json`](runs/issue-7/stage5b2.json)). 3 checks PASS; each control fails as it must. The straight path passes
-the same checks at `f5dfa76` ([`stage5b2_straight.json`](runs/issue-7/stage5b2_straight.json)). There, the F1 control
+[`stage5b2.json`](runs/dm-issue-7/stage5b2.json)). 3 checks PASS; each control fails as it must. The straight path passes
+the same checks at `f5dfa76` ([`stage5b2_straight.json`](runs/dm-issue-7/stage5b2_straight.json)). There, the F1 control
 moves every look, since a straight path has no join.
 
 | check | result | control (must fail) | control result |
@@ -522,7 +522,7 @@ moves every look, since a straight path has no join.
 | F3 the usable cells' 95 % intervals cover the truth (0.25, 0.5, 1 px) | 95.0, 94.9, 94.9 % | σ halved | ≤ 67.4 % |
 
 **F1 failed on its first run, at `5d34b5f`** (record kept:
-[`stage5b2_first_run_F1_fail.json`](runs/issue-7/stage5b2_first_run_F1_fail.json)).
+[`stage5b2_first_run_F1_fail.json`](runs/dm-issue-7/stage5b2_first_run_F1_fail.json)).
 - **The failure.** Two cells were off by up to 2.3e5 of range: one on the ceiling straight above the path, one on the
   floor straight below. Both are seen at up to 89.8° elevation, where lon is singular, and a full Gauss–Newton step
   threw them away.
@@ -540,15 +540,15 @@ moves every look, since a straight path has no join.
 | straight | 0.25 / 0.5 / 1 px | 96.7 / 91.6 / 76.7 % | 95.0 / 95.0 / 95.0 % | 1.3 / 2.5 / 4.1 cm median |
 
 **By bearing from the path's middle, relative to the start heading** (Fisher gate at 0.5 px;
-[`stage5b2_cones.json`](runs/issue-7/figures/stage5b2_cones.json), at `db65ef7`):
+[`stage5b2_cones.json`](runs/dm-issue-7/figures/stage5b2_cones.json), at `db65ef7`):
 
 | path | ahead < 15° | ahead 15–30° | lateral 60–120° | behind > 165° |
 |---|---|---|---|---|
 | composed | 65.6 % | 78.5 % | 100 % | 91.0 % |
 | straight | 61.7 % | 82.2 % | 100 % | 90.7 % |
 
-Figures (at `db65ef7`): [`stage5b2_topdown.png`](runs/issue-7/figures/stage5b2_topdown.png) (the cells from above,
-usable or not, with each path) and [`stage5b2_progress.png`](runs/issue-7/figures/stage5b2_progress.png) (the usable
+Figures (at `db65ef7`): [`stage5b2_topdown.png`](runs/dm-issue-7/figures/stage5b2_topdown.png) (the cells from above,
+usable or not, with each path) and [`stage5b2_progress.png`](runs/dm-issue-7/figures/stage5b2_progress.png) (the usable
 fraction as the path is travelled).
 
 **Reading:**
@@ -573,13 +573,13 @@ fraction as the path is travelled).
   18 cm at 1 m.
 - **The run.** `python -m deep stage5b2-render --path turn90 --step 0.1 --run runs/s5b2-turn --seed-base 12000` at
   `4892e22` (clean). 22 looks every 10 cm, ending at 2.1 m of the path's 2.17 m; 240 s. Record:
-  [`runs/issue-7/runs/s5b2-turn`](runs/issue-7/runs/s5b2-turn).
+  [`runs/dm-issue-7/runs/s5b2-turn`](runs/dm-issue-7/runs/s5b2-turn).
 - **What else changed.** `run.json` now records the path, its start and its step. Records are loaded one at a time.
   `--hit-stride` and `--max-cells` bound memory and time for Code. The refactored fusion reproduces the composed
   path's record exactly (cells, F1–F3, rungs, progress).
 
 **Checks** (`python -m deep stage5b2 runs/s5b2-turn --out docs/runs/issue-7` at `4892e22`, clean; record
-[`stage5b2_turn90.json`](runs/issue-7/stage5b2_turn90.json)). All pass: F1 3.2e-14 (control 4.2e-3); F2 1.0018
+[`stage5b2_turn90.json`](runs/dm-issue-7/stage5b2_turn90.json)). All pass: F1 3.2e-14 (control 4.2e-3); F2 1.0018
 (control 1.417); F3 95.0 / 95.0 / 94.9 % (σ halved ≤ 67.3 %).
 
 | path | length | looks | usable at 0.25 / 0.5 / 1 px | median 3-D error at 0.5 px |
@@ -588,20 +588,20 @@ fraction as the path is travelled).
 | turn90 | 2.1 m | 22 | 99.5 / 98.4 / 92.8 % | 1.6 cm |
 
 By bearing from the path's middle, relative to the start heading, at 0.5 px
-([`turn90/stage5b2_cones.json`](runs/issue-7/figures/turn90/stage5b2_cones.json)):
+([`turn90/stage5b2_cones.json`](runs/dm-issue-7/figures/turn90/stage5b2_cones.json)):
 - turn90: ahead < 15° 98.6 %, 15–30° 98.0 %, behind 100 %;
 - straight: 61.7 %, 82.2 % and 90.7 %.
 
 On the turn, 92.8 % of the cells first become usable on the arc, 5.4 % on the first line and 0.3 % on the last. 1.5 %
-never do. Figure: [`turn90/stage5b2_topdown.png`](runs/issue-7/figures/turn90/stage5b2_topdown.png).
+never do. Figure: [`turn90/stage5b2_topdown.png`](runs/dm-issue-7/figures/turn90/stage5b2_topdown.png).
 
 **Reading:**
 - **A real turn closes the line's blind cone and most of the grazing losses.** As the heading sweeps, the wall ahead
   and the boards seen edge-on from the straight path come into view from other directions.
 - **Turning, not only length** (an equal-length straight path, added after the first reading). `straight_long` is a
   2.17 m line from 2 m further back (`--start 0,-2,90`, so it clears the box ahead), 22 looks every 10 cm, rendered at
-  `ff7f8ee`; checks at `ff7f8ee`, all pass ([`stage5b2_straight_long.json`](runs/issue-7/stage5b2_straight_long.json)).
-  The figures are in [`turn90_vs_long/`](runs/issue-7/figures/turn90_vs_long).
+  `ff7f8ee`; checks at `ff7f8ee`, all pass ([`stage5b2_straight_long.json`](runs/dm-issue-7/stage5b2_straight_long.json)).
+  The figures are in [`turn90_vs_long/`](runs/dm-issue-7/figures/turn90_vs_long).
 
   | path | usable at 0.25 / 0.5 / 1 px | median 3-D error at 0.5 px | ahead < 15° | ahead 15–30° |
   |---|---|---|---|---|
@@ -619,7 +619,7 @@ never do. Figure: [`turn90/stage5b2_topdown.png`](runs/issue-7/figures/turn90/st
 
 **What Code ran.** The 90° turn and the equal-length straight path at 3600 wide, 1 cm steps (218 looks each), with
 `--drop-exr`. Renders were at `0b125a5`. Checks used `--cell 0.02 --hit-stride 23 --max-cells 200000`; records are at
-`53b81c8` and `1fd9b3d`, in [`runs/issue-7/code/`](runs/issue-7/code). The numbers are Code's, measured on the
+`53b81c8` and `1fd9b3d`, in [`runs/dm-issue-7/code/`](runs/dm-issue-7/code). The numbers are Code's, measured on the
 workstation; the full report is on #7.
 
 **Cost.** About 12–13 s a look (1.6 s of it Cycles): 45 and 43 min per path. Each fusion check took about 17 min.
@@ -644,7 +644,7 @@ workstation; the full report is on #7.
   commits).
 - **New check F1b.** No noise; the 2000 floor cells under the turn's looks are all recovered (7.6e-16). Its control,
   the earlier start, stalls on 5.
-- **Sandbox reruns at `3edf1ac`** ([`runs/issue-7/rays/`](runs/issue-7/rays)). The composed, turn90 and straight_long
+- **Sandbox reruns at `3edf1ac`** ([`runs/dm-issue-7/rays/`](runs/dm-issue-7/rays)). The composed, turn90 and straight_long
   paths pass F1, F1b, F2, F3 and every control. Usable fractions and coverage are unchanged to four decimals.
 - **The estimator and every threshold are unchanged.**
 
@@ -656,8 +656,8 @@ Code's recommended start poses (2026-11-17, #7):
 
 ### Stage 5b.2, Code part 2: the room after the F1 fix, and the Classroom (#7; Code, RTX 4090)
 
-Every step ran at `3d82252` with `deep/` clean. Records are at `28e3ac2`, in [`runs/issue-7/code/rays/`](runs/issue-7/code/rays)
-and [`runs/issue-7/code/classroom/`](runs/issue-7/code/classroom). The numbers are Code's, measured on the
+Every step ran at `3d82252` with `deep/` clean. Records are at `28e3ac2`, in [`runs/dm-issue-7/code/rays/`](runs/dm-issue-7/code/rays)
+and [`runs/dm-issue-7/code/classroom/`](runs/dm-issue-7/code/classroom). The numbers are Code's, measured on the
 workstation; the report is on #7. Chat checked them against the records.
 
 **The room again.** Both paths pass F1, F1b, F2, F3 and every control. F1 on the turn went from 0.026 to 6.5e-14 of
@@ -979,3 +979,14 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 **Decision (Luiz, 2026-11-20, in Chat): B2 stops here.**
 - **B is the matcher.** Its reliable anchors are 95–96 % right in the Classroom, at 46 % kept.
 - **The next question is end to end:** what B's reliable anchors give once fused along a composed path, against the oracle.
+
+### Records folders (#20; Luiz, 2026-11-20, in Chat: option (a))
+
+- **The problem.** foveal-motion's records came with the fork as `docs/runs/issue-N/`, numbered by its own issues. Deep-motion had been writing its records to the same names, so `issue-6`, `issue-7`, `issue-11` and `issue-19` held both projects' records.
+- **The move.** Deep-motion's files in them moved to `docs/runs/dm-issue-N/` (`git mv`; nothing recomputed):
+  - 18 from `issue-6`, 80 from `issue-7` and 6 from `issue-11`;
+  - stage 8's 6 from `issue-19`, earlier, at `e903425` on `experiment/p8-e2e`.
+- **The rule.** A file is foveal-motion's if it is in the tree of `c54f774`, foveal-motion's last commit. The folders it left behind now hold exactly that tree.
+- **The links.** This document's links point to the new paths. Commands quoted as they were run keep their `--out` paths, and so do the usage lines inside the moved scripts.
+- **From now on,** deep-motion's records go to `dm-issue-N/` (CLAUDE.md, project facts).
+- **Exceptions.** `issue-5`, `issue-9`, `issue-14`, `issue-15` and `issue-17` are deep-motion's alone, and stay.
