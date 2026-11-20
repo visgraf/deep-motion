@@ -1032,3 +1032,42 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
   - With B in the Classroom, the turn is no better at the heading. It moves yield between sectors instead: +6 points at 60–120° and +12 at 165–180°, but −4 at 15–60° and −15 at 120–165°.
   - **So in the cone, the matcher, not the geometry, is the limit at this resolution.**
 - **The Classroom gives far more yield at the heading than R0** (16–18 % against 1–2 %). Its ranges are short (median 1.8–2 m), so even near the heading the parallax is larger.
+
+### Stage 9: the assessment. The perfect and the real matcher on the same data, through the same pipeline (#22)
+
+**The question** (Luiz, 2026-11-20, (i)): how good is the method with the real matcher?
+- **The setup:** both matchers ran on R3 (the Classroom, 720 wide, the full turn and straight paths) at the same 12 references per path (every 10 looks, ±50-look windows), through stage 8's fusion and metric.
+- **The perfect matcher** is stage 5a's oracle fit: every pixel on a 2-px grid, true bearings with noise of σ = 0.5 px, kept if usable.
+- **The real matcher** is assessed in two tiers: B alone, and B + H, as amended on #22 before any data.
+- **Provenance:** Code ran it at `e443110` on the workstation's CPU, in 16 min; record [`assess.json`](runs/dm-issue-22/assess.json) at `0792136`. The dry run on R0 is [`assess_r0.json`](runs/dm-issue-22/assess_r0.json) (Chat sandbox).
+
+| the Classroom (turn / straight) | cells right | coverage of the surface | covers, of the perfect matcher's coverage |
+|---|---|---|---|
+| perfect matcher | 99.99 / 99.98 % | 86.2 / 80.4 % | — |
+| real, B | 93.98 / 94.59 % | 10.6 / 8.8 % | 11.7 / 9.8 % |
+| real, B, cells from ≥ 2 references | 97.35 / 96.70 % | | |
+| real, B + H | 79.0 / 71.9 % | 34.9 / 26.5 % | 39.1 / 30.2 % |
+
+**The checks:**
+- **A1 passes.** Its control (mirrored poses) gives 2.9 % and 0.0 %.
+- **A2 fails on both paths,** about a point under the 95 % bar. Its control gives 1.5 % and 0.9 %.
+- **A3 passes on the turn and fails on the straight path,** by 0.3 points. Its control gives 32–33 %.
+- **No threshold was moved.**
+
+**The assessment:**
+1. **The geometry is not the limit.** With perfect correspondences, a 4 m walk in the Classroom recovers 80–86 % of the surface at 720 wide, essentially without error. What it misses lies beyond 3 m (61 % covered there), where the intervals widen at this resolution.
+2. **What the real matcher reports, it mostly gets right, but it reports little.**
+   - B's cells are 94–95 % right, and those from four or more references 97.5–98.9 %.
+   - B covers 9–11 % of the surface, about a ninth of what the perfect matcher covers.
+3. **The gap is texture first.** Of the cells the perfect matcher covers and B doesn't:
+   - **73–74 %** lie where B has no anchor (not among the 15 % most textured pixels);
+   - **15–18 %** have anchors but none marked reliable (the mark's caution);
+   - **9–12 %** are errors.
+4. **H triples B's reach, at a cost.** B + H covers 30–39 % of the perfect matcher's coverage, at 72–79 % right. Its cells from four or more references are 93–98 % right.
+5. **The scene matters.** In the calibration room (R0, dry run), the same pipeline gets B 99.3–99.6 % right, and B + H covers 40–43 % of the perfect matcher's coverage at 86–87 % right. The Classroom's clutter costs B about 5 points of accuracy and B + H about 10 points.
+6. **Agreement between nearby references is weaker evidence than it looks** (Code's reading). References 10 looks apart share 91 of their 101 looks. Against stage 8 (5 references, 29 looks apart), denser sampling raised B's coverage (7–8 → 9–11 %) and lowered its confirmed accuracy (98.7 / 97.7 → 97.4 / 96.7 %).
+
+**Where the open experiments stand against this:**
+- **Coverage is the method's main shortfall with the real matcher, and it is a matching problem, not a geometric one:** the perfect matcher covers 80–86 %.
+- **The lever is texture:** the share of pixels that become anchors, and H's accuracy where it seeds.
+- **Resolution bears on two things:** the far range (where even the perfect matcher thins out at 720) and the heading cone (stage 8). Neither is the main shortfall.
