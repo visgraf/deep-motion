@@ -715,3 +715,198 @@ the orbit. Cells seen outside the room (door, opening, windows) had pulled the f
 
 **Where the videos are.** On the workstation, 2 × about 140 MB, 27.9 s each, with sha256 sums in the records. Luiz
 decided (2026-11-18, in Chat) that they stay on the workstation only: not attached to the issue, not a release asset.
+
+### Stage 7a: real matching on a Lambertian world (R0) and on renders (R1) (#14, #15; Chat sandbox)
+
+**The question.** Can traces be matched from images alone, now that their geometry is known? The test is on the anchors with texture along the trace: 20,000 per run, from the 15 % with the strongest gradient along the trace. The truth is the reference look's positions.
+
+**The data.**
+- **R0:** one clean 256-spp panorama of the room, re-projected to every pose. It is point-sampled: no noise, but pixels change in whole jumps.
+- **R1:** Code's renders (#15): the calibration room at 720 wide and 128 spp; 101 looks at 1 cm on a 1 m line and on a 1 m arc (R = 1.6 m). The release is `data-r1-calib-720`; the sha256 sums were checked in the Chat sandbox.
+
+**The three matchers** (`deep/match.py`):
+- **B, the trace sweep:** a global search over inverse range along each anchor's ray. It is scored by the truncated spread of the image along the predicted trace over the 101 looks, and it marks an anchor reliable when its best cost is low and twice as good as the second-best.
+- **A2, Lagrangian:** Gauss–Newton on inverse range from a 2 m start, with the window of looks doubling from ±1 to ±50. Temporal continuity takes the place of the search.
+- **A1, Eulerian:** the instantaneous flow at fixed pixels from three looks (2 cm), solved for inverse range with the flow's direction known.
+
+The checks K1–K7 were declared on #14 before each was built.
+
+**Results** (Chat sandbox; records `docs/runs/issue-14/stage7a_b.json` at `26bb99e`, `stage7a_k3.json` at `d1c0ba8`, `stage7a_a_r0.json` and `stage7a_a_r1.json` at `41b2177`). Each cell gives the anchors within ±10 %, with the median |error| in brackets.
+
+| | R0 line | R0 arc | R1 line | R1 arc |
+|---|---|---|---|---|
+| B, all anchors | 79.3 % (1.3 %) | 79.0 % (1.5 %) | 87.1 % (0.9 %) | 86.9 % (0.9 %) |
+| B, off depth edges | 92.8 % | 91.4 % | 96.9 % | 95.5 % |
+| B, at depth edges (about 21 % of anchors) | 32.1 % | 34.4 % | 51.0 % | 52.0 % |
+| B, marked reliable: kept, then within ±10 % | 51.9 %, 99.3 % | 49.5 %, 99.3 % | 77.6 %, 94.8 % | 75.6 %, 95.2 % |
+| A2, all anchors | 72.7 % (1.5 %) | 70.9 % (1.8 %) | 85.6 % (1.0 %) | 84.8 % (0.9 %) |
+| A2, marked reliable: kept, then within ±10 % | 59.0 %, 98.3 % | 54.6 %, 97.9 % | 79.5 %, 93.6 % | 76.1 %, 94.2 % |
+| A1, ψ 15–165° | 14.7 % (44 %) | 16.7 % (39 %) | 43.4 % (11.9 %) | 36.6 % (15.5 %) |
+| anchors per second, B / A2 / A1 | 1,507 / 3,364 / 134,133 | 1,509 / 3,267 / 138,044 | 1,556 / 3,762 / 134,119 | 1,537 / 3,774 / 137,155 |
+
+**The checks:**
+- **K1, K2 (B on R0) fail**, at 79 % against 90 %.
+- **K3 (B's mark on R0):** the line passes; the arc fails on coverage.
+- **K4 (A2 on R0) fails.**
+- **K4b, the hypothesis that temporal continuity recovers the anchors B refuses, fails.** On B's unreliable anchors off depth edges, A2 is 65.9 % (line) and 63.1 % (arc) within ±10 %, against B's own 79.3 % and 77.6 % there. The no-schedule control does fail (40.2 % and 37.7 %): the growing window matters to A2, but it does not beat the global sweep.
+- **K5 (A1 on R0) fails.**
+- **K6 (the marks on R1):** B on the arc passes. B on the line fails, at 94.8 % against 95 %. A2 fails on both.
+- **K7 (A1 on R1) fails.**
+- Every control fails, as it must: the mirrored path, random marking, and A2 without its schedule.
+
+**What it says:**
+- **Renders are easier than R0.** Area-sampled pixels make the traces smooth, so B and A2 both gain about 8 points. At depth edges they gain about 18 points.
+- **On R1, B and A2 nearly agree.** Both are right on 84 % of the anchors, only one of them on 4–5 %, and neither on 12 %. The failures are where both fail:
+  - depth edges (about half right);
+  - the heading cone at 0–15° (37–49 % right). At 720 wide the oracle is also weak there (#15: heading ±15° usable 70 % (line) and 89 % (arc) at σ = 0.5 px).
+
+  So what is left is in the data, not in the search.
+- **The search is not the bottleneck.** A2 reaches B's answers without sweeping, at 2.4 times B's speed.
+- **The repeated-texture reading of K3 is not supported.** B's unreliable anchors off depth edges are 78–79 % right, so its ratio test is cautious, not confused.
+- **The instantaneous flow is dense and fast** (90 times B), **but at 2 cm it carries too little baseline:** a median of 12–16 % on R1. Precision comes from the length of the trace, so the flow's use would be as a dense start for a filter, not as an estimate. This answers the note's §9 for now.
+
+**Next.**
+- Depth edges, about a fifth of the anchors and the larger part of the failures: the two-depth handling (one surface before the edge, another after).
+- Then the anchors without texture, seeded from the reliable ones.
+
+**Depth edges, method E (K8, declared on #14; Chat sandbox, `9b707d9`, record `docs/runs/issue-14/stage7a_k8.json`).**
+
+- **The diagnosis** (`diag_edge.py`). At the R1 depth-edge anchors B gets wrong:
+  - the pixel centre is on the far surface for 94 % of them;
+  - B's estimate sits on the near surface for 65–67 %.
+  
+  B follows the occluding contour, which moves with the foreground. This is stereo's foreground fattening.
+- **E:** two flanks at ±2 px along the trace, each ranged by B, with the near or far range picked by pixel coverage.
+- **K8 fails on both runs.**
+  - At true edges: 50.3 % (line) and 55.7 % (arc), against B's 51.0 % and 52.0 % and the 70 % bar.
+  - Off edges, E loses 4–5 points.
+  - The controls fail as they must. The coverage rule does carry information: at edges it beats the flipped rule by 7–14 points and the coin by 2.5–6.
+- **Why it fails** (`diag_flanks.py`, `diag_flanks_line.txt`).
+  - At edge anchors, the flanks are ranged no better than the anchors themselves: 50–51 % against 94 % off edges.
+  - This holds whatever the flank's own gradient, so the flanks are not short of texture.
+  - The fattening reaches beyond 2 px: over the 1 m window, the foreground's contour sweeps across the background next to it. A background point there is hidden in part of the window, and the contour's coherent motion wins the cost.
+  
+  An edge cannot be split in space alone. The far surface has to be scored only on the looks where the near one does not hide it.
+
+**Depth edges, method F (K9, declared on #14; Chat sandbox, `2ebef0a`, record `docs/runs/issue-14/stage7a_k9.json`).**
+
+- **F:** the occlusion ordering in time. A far hypothesis, at least 10 % beyond B's range, is scored on each half-window. It replaces B's estimate when its cost is under half of B's.
+- **K9 fails on both runs.**
+  - At true edges F reaches 49.3 % (line) and 49.9 % (arc), against B's 51.0 % and 52.0 % and the 70 % bar.
+  - Off edges it loses 5 points.
+  - Both controls fail as they must, but the ordering is barely better than its reversal (49.3 against 47.1 %).
+  - The far ranges taken (12 % of anchors, 26–28 % of the edge anchors) are right only 22–26 % of the time, with medians of 15–17 %.
+- **What E and F share, and why both fail.** Each scores the far surface against the anchor's own value. At a contour that value is a mixture of both surfaces, which no single surface reproduces. On a half-window, a wrong range at the far side then fits it better than the near trace does.
+- **What remains.** Two directions are left, and the choice between them is Luiz's:
+  - **A two-layer model per contour anchor:** value = α·near + (1 − α)·far, each moving on its own trace.
+  - **An evaluation that accepts what B does.** Most of B's wrong edge anchors sit at the near surface's range, on its silhouette, within a pixel. As 3-D points they lie on a true surface. Judging them by distance to the nearest true surface, rather than by range along the pixel centre's ray, would score them right. That changes the metric, so it is Luiz's decision.
+
+**(b), the surface metric for contour anchors (K10, declared on #14; Chat sandbox, `c28a479`, record `docs/runs/issue-14/stage7a_k10.json`; residual diagnostic `diag_residual.py`, `diag_residual_{line,arc}.txt`).**
+
+- **The metric:** an estimate is surface-right if it is within ±10 % of the true range at any pixel of the anchor's 3×3 neighbourhood. The old metric stays beside it in every record.
+- **K10 passes on both runs** (B on R1):
+
+  | | line | arc |
+  |---|---|---|
+  | at true depth edges, surface-right (old metric) | 75.6 % (51.0 %) | 75.1 % (52.0 %) |
+  | overall, surface-right (old metric) | 92.4 % (87.1 %) | 91.6 % (86.9 %) |
+
+  Off edges nothing changes.
+- **The controls fail, as they must:**
+  - the blend between the neighbourhood's surfaces: 43–45 % at edges;
+  - off by 25 %: 2–3 %;
+  - the mirrored path: 5–7 %.
+- **The reliable marks under the new metric** (reported, not gated):
+  - B: 98.3 % and 98.6 %;
+  - A2: 97.3 % and 97.8 %.
+  
+  K6 stays failed: it was declared on the old metric.
+- **Half of B's old edge failures were the metric.** The rest, about a quarter of the edge anchors and 5 % of all anchors:
+  - mostly lies between the surfaces of its 5×5 neighbourhood (65–71 %), at large depth jumps (median ratio 2.8–3.0);
+  - 21–26 % lies in front of every surface;
+  - 36 % would count right within 2 px, and widening to 11×11 adds only 3 points;
+  - only 18–21 % of it is marked reliable.
+  
+  So the residual is chiefly blends at big discontinuities: (a)'s target.
+
+**(a), method G, two layers per contour anchor (K11, declared on #14; Chat sandbox, `aa67307`, record `docs/runs/issue-14/stage7a_k11.json`; diagnostic `diag_g.py`, `diag_g_line.txt`).**
+
+- **G:** the flanks at ±3 px are the candidate layers.
+  - Each flank is ranged as the near layer on the whole window.
+  - Each is ranged as the far layer on each half-window, restricted by the ordering and scored against the flank's own value.
+  - A far layer counts as found when B's mark passes it. Pixel coverage then decides near or far.
+- **K11 fails, and G does harm.** On the old metric:
+  - overall 65.3 % (line) and 67.1 % (arc), against B's 87.1 % and 86.9 %;
+  - at edges 48.9 % and 52.7 %;
+  - off edges 69.8 % and 70.6 %, against B's 96.9 % and 95.5 %.
+  
+  Both controls fail as they must.
+- **Why.** G finds a "far layer" for 64–65 % of the anchors off depth edges. The diagnostic (line, + flank, the half-window after the reference) traces this to texture:
+  - false far layers depend on the flank's texture: 66 % where the flank's gradient along the trace is under a tenth of the anchor's, 29 % where it is over half;
+  - they are not a bound effect (0.1 % at the bound).
+  
+  A half-window fit on a flank with little texture passes B's mark at a wrong range. The flank is not an anchor, and B's mark was calibrated on anchors.
+- **Where the edge work stands.** Three ways to model edges (E, F, G) have failed: per-anchor layer decisions are fragile. What does work is B with its mark, judged in 3-D:
+  - 92 % surface-right overall;
+  - 98 % among the 76–78 % it marks reliable.
+  
+  The residual is blends, 80 % of them already marked unreliable.
+
+**Anchors without texture, method H (K12, declared on #14; Chat sandbox, `37bd5d8`, record `docs/runs/issue-14/stage7a_k12.json`).**
+
+- **H:** every pixel on a 2-px grid (50,400 targets) takes the best of its 8 nearest reliable seeds' ranges (15,100–15,500 seeds), verified by B's trace cost and refined.
+- **The checks:**
+  - **K12a fails on coverage:** 75.3 % of the targets, against the 95 % bar. The accuracy part holds: 86.2 % (line) and 87.0 % (arc) surface-right, against 85 %.
+  - **K12b passes.** In the least-textured third, H is surface-right 78.3 % and 78.2 %, against B alone at 63.1 % and 62.8 %: +15 points.
+  - **The shuffled-seed control fails, as it must:** 75.5 % and 76.4 %.
+
+| surface-right on the targets (line / arc) | coverage | all | least texture | at true edges | ψ 0–15° | ψ 60–120° |
+|---|---|---|---|---|---|---|
+| H | 75.3 % | 86.2 / 87.0 % | 78.3 / 78.2 % | 75.4 / 74.5 % | 54.0 / 60.6 % | 94.5 / 94.5 % |
+| the nearest seed, unverified | 75.3 % | 87.6 / 88.0 % | 80.9 / 79.3 % | 78.2 / 74.2 % | 73.9 / 72.1 % | 96.5 / 95.8 % |
+| B alone at every target | 100 % | 76.7 / 76.7 % | 63.1 / 62.8 % | 69.6 / 68.5 % | 44.3 / 53.2 % | 75.7 / 75.9 % |
+| control: shuffled seeds | 75.3 % | 75.5 / 76.4 % | 70.3 / 71.2 % | 60.5 / 57.4 % | 38.5 / 28.9 % | 82.4 / 81.3 % |
+
+**What it says:**
+- **Seeding is what helps:** +10 points over B alone overall, and +15 where texture is least.
+- **Coverage is set by the reach.** The 3×3 block of 10-px cells leaves a quarter of the targets with no seed nearby: the large walls without texture.
+- **Verification by the trace cost hurts slightly.** The unverified nearest seed is 1–1.5 points better overall, and 12–20 points better in the heading cone, where traces barely move and the cost cannot tell ranges apart. Yet the cost does carry information where traces move: shuffled seeds are rescued to 75–76 %, and laterally to 81–82 %.
+- **So the cost should decide only where it discriminates.** That is a declared change for a next method, not a retune of H.
+
+**Method H2, grown in rounds (K13, declared on #14; Chat sandbox, `971a45a`, record `docs/runs/issue-14/stage7a_k13.json`; diagnostic `diag_rounds.py`, `diag_rounds_line.txt`).**
+
+- **H2:** H's search in rounds, each round's filled targets seeding the next, with the trace cost used only where it discriminates.
+- **K13a and K13b fail on both runs.** The control fails, as it must.
+  - Coverage reaches 100 %, but H2 is 72.5 % (line) and 73.0 % (arc) surface-right, below B alone at 76.7 %.
+  - Round 1 is H's: 75 % of the targets, 88 % right. The later rounds are mostly wrong: 40–44 % in round 2, and 9–32 % after it.
+  - The gate seldom engages: H2 is within 0.3 points of "never verify." Always verifying gives 75.5–75.7 %.
+- **Where the later rounds land.** 90 % of the targets they fill lie above 30° of elevation, at a true height of 3.2 m: the ceiling, which has no texture.
+- **What it means.** Nothing in the images ranges the ceiling: there is no texture on it, so there is no trace to match. Carrying a constant range across it is a guess, and a wrong one, because a plane's range varies across the image.
+  - Filling it needs a prior: planes fitted to the reliable seeds, or a room model. That is reconstruction, not matching.
+  - The 95 % coverage bar of K12 and K13 was a guess that ignored this. It stays failed as declared.
+
+**The planar prior, method P (K14, declared on #14 after Luiz's decision of 2026-11-20 to stop at H; Chat sandbox, `76e090f`, record `docs/runs/issue-14/stage7a_k14.json`; diagnostics `diag_ceiling.py`, `diag_planes.py` and their outputs).**
+
+- **P:** sequential RANSAC planes (≤ 8, ≥ 500 inliers within 3 cm) on H's points. It fills H's empty targets at the nearest plane met within its support.
+- **K14a and K14b fail on both runs.** The control (shuffled ranges) fails, as it must.
+  - P fills 28 % of H's empty targets, at 53.3 % (line) and 51.2 % (arc) surface-right.
+  - H with P covers 82.3 %, at 83.4 % and 83.9 % surface-right.
+- **What P finds:**
+  - the floor (twice, 1.7–5 cm apart), all four walls (x = ±3.0, y = ±2.5 m), and a slanted spurious plane or two;
+  - **no ceiling.**
+  - What it fills on the floor is 100 % right. The ceiling rays it fills meet the walls near their top, and are 37–39 % right.
+- **Why** (diagnostic, line):
+  - H's 4,374 ceiling points lie a median of 38 cm off the true ceiling; only 604 are within 3 cm. The floor's lie 2 cm off.
+  - B's reliable anchors whose pixels are on the ceiling (676) lie a median of 52 cm off it; 134 are within 3 cm. They are mostly fixture and junction edges: right by the surface metric, but not on the ceiling plane.
+  - **The calibration room's ceiling carries almost no evidence of its own,** not even enough to fit a plane to.
+- **What would close it:** a stronger prior on the room's layout, not on the evidence. For example, a Manhattan room: the ceiling parallel to the floor, closing the walls at their top. That is Luiz's decision.
+
+**Decision (Luiz, 2026-11-20, in Chat): (ii).**
+- **The ceiling stays "no evidence."** The planar prior is kept where it is supported, and reported, not gated.
+- **The coverage work stops here.** The matcher (B with its mark, then H) goes to the Classroom: R2, #17.
+- **On #14's closing:** Luiz closed #14 before K14 was declared, so K14's declaration and its result are comments on the closed issue.
+
+**Stage 7a in short.**
+- **The matcher's output:** B's reliable anchors, 98 % surface-right on R1; then H, seeded from them, which covers 75 % of the pixels at 86–87 % surface-right.
+- **The ceiling of the calibration room** has no evidence to range it from, and a fitted plane cannot find it.
+- **Edges:** three ways of modelling them (E, F, G) failed. Half of the edge "failures" were the old metric, and K10's surface metric records it.

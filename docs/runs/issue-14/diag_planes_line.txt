@@ -1,0 +1,29 @@
+line {
+ "ceiling (true z >= 3.15)": {
+  "points": 4374,
+  "within 3 cm of the plane": 604,
+  "within 10 cm": 1180,
+  "median |dz| (m)": 0.37914010456590685,
+  "true range, median (m)": 2.9576054974542
+ },
+ "floor (true z < 0.05)": {
+  "points": 14758,
+  "within 3 cm of the plane": 8949,
+  "within 10 cm": 12887,
+  "median |dz| (m)": 0.021736292424524573,
+  "true range, median (m)": 2.2149590293957475
+ }
+}
+line reliable seeds {
+ "seeds on the ceiling": {
+  "seeds": 676,
+  "within 3 cm": 134,
+  "median |dz| (m)": 0.516852126401554
+ },
+ "seeds on the floor": {
+  "seeds": 4208,
+  "within 3 cm": 3544,
+  "median |dz| (m)": 0.014304542032656964
+ },
+ "seeds, all": 15526
+}

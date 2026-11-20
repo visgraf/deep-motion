@@ -1,0 +1,193 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K12a H on R1 (line): covers >= 95 % of the targets, >= 85 % surface-right",
+   "ok": false
+  },
+  {
+   "name": "K12b line: least-textured third, H >= B alone + 10 points (surface-right)",
+   "ok": true
+  },
+  {
+   "name": "K12 line control: shuffled seeds (< 85 % surface-right)",
+   "ok": true
+  },
+  {
+   "name": "K12a H on R1 (arc): covers >= 95 % of the targets, >= 85 % surface-right",
+   "ok": false
+  },
+  {
+   "name": "K12b arc: least-textured third, H >= B alone + 10 points (surface-right)",
+   "ok": true
+  },
+  {
+   "name": "K12 arc control: shuffled seeds (< 85 % surface-right)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "line": {
+   "seeds": 15526,
+   "targets": 50400,
+   "targets_that_are_seeds": 3849,
+   "true_edges": 0.06367063492063492,
+   "seconds": {
+    "H": 8.49100136756897,
+    "B_alone": 32.533029317855835
+   },
+   "H": {
+    "coverage": 0.7529761904761905,
+    "surface": 0.8621607378129117,
+    "old": 0.8372332015810277,
+    "surface_least_texture": 0.7827405247813412,
+    "surface_middle_texture": 0.8410543761344803,
+    "surface_most_texture": 0.9189415708812261,
+    "surface_at_edges": 0.7536694320357371,
+    "surface_off_edges": 0.8719267003676471,
+    "surface_by_sector": {
+     "0-15": 0.5401974612129761,
+     "15-60": 0.6850517368810052,
+     "60-120": 0.9445568114217727,
+     "120-165": 0.9612272420768712,
+     "165-180": 0.691114245416079
+    }
+   },
+   "control_shuffled_seeds": {
+    "coverage": 0.7529761904761905,
+    "surface": 0.7552569169960475,
+    "old": 0.7270355731225296,
+    "surface_least_texture": 0.7030903790087464,
+    "surface_middle_texture": 0.7337226738221135,
+    "surface_most_texture": 0.7983716475095786,
+    "surface_at_edges": 0.6052967453733248,
+    "surface_off_edges": 0.7687557444852942,
+    "surface_by_sector": {
+     "0-15": 0.385049365303244,
+     "15-60": 0.5707686622320769,
+     "60-120": 0.8244497323022011,
+     "120-165": 0.8814340301191279,
+     "165-180": 0.7179125528913963
+    }
+   },
+   "B_alone": {
+    "coverage": 1.0,
+    "surface": 0.7673214285714286,
+    "old": 0.7456349206349207,
+    "surface_least_texture": 0.6314880952380952,
+    "surface_middle_texture": 0.7695238095238095,
+    "surface_most_texture": 0.900952380952381,
+    "surface_at_edges": 0.6964786537862262,
+    "surface_off_edges": 0.7721387552711322,
+    "surface_by_sector": {
+     "0-15": 0.44287729196050774,
+     "15-60": 0.7323568575233023,
+     "60-120": 0.7572206260396189,
+     "120-165": 0.8525521526853085,
+     "165-180": 0.6699576868829337
+    }
+   },
+   "nearest_seed_unverified": {
+    "coverage": 0.7529761904761905,
+    "surface": 0.8761528326745718,
+    "old": 0.8527799736495388,
+    "surface_least_texture": 0.8094460641399417,
+    "surface_middle_texture": 0.8549443611396101,
+    "surface_most_texture": 0.9264846743295019,
+    "surface_at_edges": 0.7823867262284621,
+    "surface_off_edges": 0.8845932904411765,
+    "surface_by_sector": {
+     "0-15": 0.7390691114245416,
+     "15-60": 0.674150036954915,
+     "60-120": 0.9647828673408685,
+     "120-165": 0.9626882445493369,
+     "165-180": 0.9097320169252469
+    }
+   }
+  },
+  "arc": {
+   "seeds": 15127,
+   "targets": 50400,
+   "targets_that_are_seeds": 3700,
+   "true_edges": 0.06365079365079365,
+   "seconds": {
+    "H": 9.002604722976685,
+    "B_alone": 32.22521424293518
+   },
+   "H": {
+    "coverage": 0.7534722222222222,
+    "surface": 0.8698617511520738,
+    "old": 0.8459249506254115,
+    "surface_least_texture": 0.7819469026548672,
+    "surface_middle_texture": 0.8570198105081827,
+    "surface_most_texture": 0.9242034789885827,
+    "surface_at_edges": 0.7445859872611464,
+    "surface_off_edges": 0.8811540117697718,
+    "surface_by_sector": {
+     "0-15": 0.6064880112834978,
+     "15-60": 0.6951496779082986,
+     "60-120": 0.944709134756779,
+     "120-165": 0.9604444444444444,
+     "165-180": 0.7898448519040903
+    }
+   },
+   "control_shuffled_seeds": {
+    "coverage": 0.7534722222222222,
+    "surface": 0.7638709677419355,
+    "old": 0.7399605003291639,
+    "surface_least_texture": 0.712094395280236,
+    "surface_middle_texture": 0.7473964450708637,
+    "surface_most_texture": 0.8026779843385737,
+    "surface_at_edges": 0.5735668789808918,
+    "surface_off_edges": 0.7810248313477824,
+    "surface_by_sector": {
+     "0-15": 0.28913963328631875,
+     "15-60": 0.5932171276998863,
+     "60-120": 0.8134227398388331,
+     "120-165": 0.9058888888888889,
+     "165-180": 0.7884344146685472
+    }
+   },
+   "B_alone": {
+    "coverage": 1.0,
+    "surface": 0.7671230158730159,
+    "old": 0.7461111111111111,
+    "surface_least_texture": 0.6283333333333333,
+    "surface_middle_texture": 0.7760119047619047,
+    "surface_most_texture": 0.8970238095238096,
+    "surface_at_edges": 0.684850374064838,
+    "surface_off_edges": 0.7727157145278861,
+    "surface_by_sector": {
+     "0-15": 0.5317348377997179,
+     "15-60": 0.7162893919218819,
+     "60-120": 0.7590352336307273,
+     "120-165": 0.8525521526853085,
+     "165-180": 0.7545839210155149
+    }
+   },
+   "nearest_seed_unverified": {
+    "coverage": 0.7534722222222222,
+    "surface": 0.8803949967083607,
+    "old": 0.8592231731402238,
+    "surface_least_texture": 0.7933923303834808,
+    "surface_middle_texture": 0.8708793359956151,
+    "surface_most_texture": 0.9317353099408213,
+    "surface_at_edges": 0.7420382165605095,
+    "surface_off_edges": 0.8928663700301421,
+    "surface_by_sector": {
+     "0-15": 0.7207334273624824,
+     "15-60": 0.6894657067070861,
+     "60-120": 0.9581201105817305,
+     "120-165": 0.9608888888888889,
+     "165-180": 0.997179125528914
+    }
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "37bd5d89447c6d85191af309e151d9f546515327",
+   "clean": true
+  }
+ }
+}

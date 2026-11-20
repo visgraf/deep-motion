@@ -1,0 +1,18 @@
+line {
+ "round 1": {
+  "share": 0.7529761904761905,
+  "elevation: below -30 deg": 0.3577075098814229,
+  "elevation: -30..30 deg": 0.5579710144927537,
+  "elevation: above 30 deg": 0.08432147562582346,
+  "true point height (z), median": 0.7362844944000244,
+  "true range, median": 3.0722691153947723
+ },
+ "rounds 2+": {
+  "share": 0.24702380952380953,
+  "elevation: below -30 deg": 0.06626506024096386,
+  "elevation: -30..30 deg": 0.03413654618473896,
+  "elevation: above 30 deg": 0.8995983935742972,
+  "true point height (z), median": 3.200000047683716,
+  "true range, median": 1.9840110807859102
+ }
+}

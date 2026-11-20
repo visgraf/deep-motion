@@ -1,0 +1,255 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K11 G on R1 (line), old metric: >= 70 % at true depth edges, off edges >= B - 1 pt, overall >= 90 %",
+   "ok": false
+  },
+  {
+   "name": "K11 line control: G_flipped (< 70 % at edges, old metric)",
+   "ok": true
+  },
+  {
+   "name": "K11 line control: G_no_time (< 70 % at edges, old metric)",
+   "ok": true
+  },
+  {
+   "name": "K11 G on R1 (arc), old metric: >= 70 % at true depth edges, off edges >= B - 1 pt, overall >= 90 %",
+   "ok": false
+  },
+  {
+   "name": "K11 arc control: G_flipped (< 70 % at edges, old metric)",
+   "ok": true
+  },
+  {
+   "name": "K11 arc control: G_no_time (< 70 % at edges, old metric)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "line": {
+   "anchors": 20000,
+   "true_edges": 0.2129,
+   "B": {
+    "old": {
+     "all": 0.8711,
+     "at_edges": 0.5100986378581494,
+     "off_edges": 0.9687460297293864
+    },
+    "surface": {
+     "all": 0.92385,
+     "at_edges": 0.7562235791451386,
+     "off_edges": 0.9691907000381146
+    }
+   },
+   "G": {
+    "old": {
+     "all": 0.6534,
+     "at_edges": 0.4894316580554251,
+     "off_edges": 0.6977512387244315
+    },
+    "surface": {
+     "all": 0.7247,
+     "at_edges": 0.6968060122123062,
+     "off_edges": 0.7322449498157795
+    },
+    "far_layer_found": {
+     "all": 0.59825,
+     "at_edges": 0.3976045091592297,
+     "off_edges": 0.6525219158937873
+    },
+    "decided": {
+     "near": 0.2377,
+     "far": 0.32655
+    },
+    "old_by_decision": {
+     "kept": 0.7900172117039587,
+     "near": 0.8752629364745478,
+     "far": 0.309600367478181
+    },
+    "B_old_by_decision": {
+     "kept": 0.7900172117039587,
+     "near": 0.9617164493058477,
+     "far": 0.9133363956515081
+    }
+   },
+   "G_flipped": {
+    "old": {
+     "all": 0.7133,
+     "at_edges": 0.4114607797087835,
+     "off_edges": 0.7949434633464617
+    },
+    "surface": {
+     "all": 0.78925,
+     "at_edges": 0.6956317519962424,
+     "off_edges": 0.8145724812603227
+    },
+    "far_layer_found": {
+     "all": 0.59825,
+     "at_edges": 0.3976045091592297,
+     "off_edges": 0.6525219158937873
+    },
+    "decided": {
+     "near": 0.32655,
+     "far": 0.2377
+    },
+    "old_by_decision": {
+     "kept": 0.7900172117039587,
+     "near": 0.8646455366712601,
+     "far": 0.3647454774926378
+    },
+    "B_old_by_decision": {
+     "kept": 0.7900172117039587,
+     "near": 0.9133363956515081,
+     "far": 0.9617164493058477
+    }
+   },
+   "G_no_time": {
+    "old": {
+     "all": 0.62625,
+     "at_edges": 0.4781587599812118,
+     "off_edges": 0.6663066954643628
+    },
+    "surface": {
+     "all": 0.7215,
+     "at_edges": 0.7047909816815406,
+     "off_edges": 0.726019565493584
+    },
+    "far_layer_found": {
+     "all": 0.57565,
+     "at_edges": 0.20079849694692345,
+     "off_edges": 0.677042307203659
+    },
+    "decided": {
+     "near": 0.1811,
+     "far": 0.367
+    },
+    "old_by_decision": {
+     "kept": 0.7582429741093162,
+     "near": 0.9080618442849254,
+     "far": 0.3246594005449591
+    },
+    "B_old_by_decision": {
+     "kept": 0.7582429741093162,
+     "near": 0.9770844837106571,
+     "far": 0.9577656675749319
+    }
+   }
+  },
+  "arc": {
+   "anchors": 20000,
+   "true_edges": 0.19665,
+   "B": {
+    "old": {
+     "all": 0.8693,
+     "at_edges": 0.5199593185863208,
+     "off_edges": 0.9548142154727081
+    },
+    "surface": {
+     "all": 0.9158,
+     "at_edges": 0.7508263412153572,
+     "off_edges": 0.9561834816705047
+    }
+   },
+   "G": {
+    "old": {
+     "all": 0.6706,
+     "at_edges": 0.5273328248156623,
+     "off_edges": 0.705670006846331
+    },
+    "surface": {
+     "all": 0.73535,
+     "at_edges": 0.7299771167048055,
+     "off_edges": 0.7366652144146387
+    },
+    "far_layer_found": {
+     "all": 0.59475,
+     "at_edges": 0.3953724891939995,
+     "off_edges": 0.6435551129644613
+    },
+    "decided": {
+     "near": 0.23765,
+     "far": 0.32345
+    },
+    "old_by_decision": {
+     "kept": 0.7957393483709273,
+     "near": 0.8725015779507679,
+     "far": 0.3524501468542279
+    },
+    "B_old_by_decision": {
+     "kept": 0.7957393483709273,
+     "near": 0.9457184935830002,
+     "far": 0.9129695470706446
+    }
+   },
+   "G_flipped": {
+    "old": {
+     "all": 0.7172,
+     "at_edges": 0.42105263157894735,
+     "off_edges": 0.7896931598929483
+    },
+    "surface": {
+     "all": 0.78395,
+     "at_edges": 0.6926010678871091,
+     "off_edges": 0.8063110723843904
+    },
+    "far_layer_found": {
+     "all": 0.59475,
+     "at_edges": 0.3953724891939995,
+     "off_edges": 0.6435551129644613
+    },
+    "decided": {
+     "near": 0.32345,
+     "far": 0.23765
+    },
+    "old_by_decision": {
+     "kept": 0.7957393483709273,
+     "near": 0.8633482763951151,
+     "far": 0.37323795497580475
+    },
+    "B_old_by_decision": {
+     "kept": 0.7957393483709273,
+     "near": 0.9129695470706446,
+     "far": 0.9457184935830002
+    }
+   },
+   "G_no_time": {
+    "old": {
+     "all": 0.6576,
+     "at_edges": 0.5105517416730231,
+     "off_edges": 0.6935955685566689
+    },
+    "surface": {
+     "all": 0.7338,
+     "at_edges": 0.7215865751334859,
+     "off_edges": 0.736789693159893
+    },
+    "far_layer_found": {
+     "all": 0.5697,
+     "at_edges": 0.19705059750826343,
+     "off_edges": 0.6609198979274289
+    },
+    "decided": {
+     "near": 0.192,
+     "far": 0.3483
+    },
+    "old_by_decision": {
+     "kept": 0.7652817054600827,
+     "near": 0.9072916666666667,
+     "far": 0.3778351995406259
+    },
+    "B_old_by_decision": {
+     "kept": 0.7652817054600827,
+     "near": 0.9638020833333333,
+     "far": 0.9544932529428654
+    }
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "aa67307604de5374669cc4274a8d9ac1552d852d",
+   "clean": true
+  }
+ }
+}

@@ -1,0 +1,61 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K1 B on noise-free R0 (line): median |error| <= 2 % and >= 90 % within +/-10 %",
+   "ok": false
+  },
+  {
+   "name": "K1 control: the path traversed backwards (median >= 20 %)",
+   "ok": true
+  },
+  {
+   "name": "K2 B on noise-free R0 (arc): median |error| <= 2 % and >= 90 % within +/-10 %",
+   "ok": false
+  },
+  {
+   "name": "K2 control: the path traversed backwards (median >= 20 %)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "K1": {
+   "anchors": 20000,
+   "median_rel": 0.012657328857343553,
+   "within10": 0.7931,
+   "control_median_rel": 0.8001298238924008,
+   "by_sector_within10": {
+    "0-15": 0.17682020802377416,
+    "15-60": 0.5349758029036515,
+    "60-120": 0.9890092879256966,
+    "120-165": 0.9717213892579237,
+    "165-180": 0.7522464698331194
+   },
+   "depth_edge_fraction": 0.22245,
+   "within10_at_depth_edges": 0.321420543942459,
+   "within10_off_depth_edges": 0.9280432126551347
+  },
+  "K2": {
+   "anchors": 20000,
+   "median_rel": 0.014689029286364397,
+   "within10": 0.7901,
+   "control_median_rel": 0.7915461114692738,
+   "by_sector_within10": {
+    "0-15": 0.22851153039832284,
+    "15-60": 0.5550935550935551,
+    "60-120": 0.9151619755708975,
+    "120-165": 0.9550363243667779,
+    "165-180": 0.7209302325581395
+   },
+   "depth_edge_fraction": 0.21705,
+   "within10_at_depth_edges": 0.3436996083851647,
+   "within10_off_depth_edges": 0.913851459224727
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "26bb99e9e00323719e4292775a8efd5a5c849d29",
+   "clean": true
+  }
+ }
+}

@@ -1,0 +1,24 @@
+line {
+ "targets": 50400,
+ "filled": 0.7529761904761905,
+ "true z range": [
+  0.0,
+  3.200000047683716
+ ],
+ "floor (z < 0.05)": {
+  "share of targets": 0.3091865079365079,
+  "filled": 0.9470576910736058,
+  "filled count": 14758
+ },
+ "0.05-3.15": {
+  "share of targets": 0.37392857142857144,
+  "filled": 0.9985142735859068,
+  "filled count": 18818
+ },
+ "ceiling (z >= 3.15)": {
+  "share of targets": 0.31688492063492063,
+  "filled": 0.2738713918978148,
+  "filled count": 4374
+ },
+ "estimated points with z > 3.0 (count)": 2458
+}

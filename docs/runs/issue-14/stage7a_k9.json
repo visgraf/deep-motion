@@ -1,0 +1,313 @@
+{
+ "command": "stage7a",
+ "checks": [
+  {
+   "name": "K9 F on R1 (line): >= 70 % within +/-10 % at true depth edges, off edges >= B - 1 pt, overall >= 90 %",
+   "ok": false
+  },
+  {
+   "name": "K9 line control: F_reversed (< 70 % at edges)",
+   "ok": true
+  },
+  {
+   "name": "K9 line control: F_no_ordering (< 70 % at edges)",
+   "ok": true
+  },
+  {
+   "name": "K9 F on R1 (arc): >= 70 % within +/-10 % at true depth edges, off edges >= B - 1 pt, overall >= 90 %",
+   "ok": false
+  },
+  {
+   "name": "K9 arc control: F_reversed (< 70 % at edges)",
+   "ok": true
+  },
+  {
+   "name": "K9 arc control: F_no_ordering (< 70 % at edges)",
+   "ok": true
+  }
+ ],
+ "numbers": {
+  "line": {
+   "anchors": 20000,
+   "true_edges": 0.2129,
+   "B": {
+    "all": {
+     "n": 20000,
+     "median": 0.009147098227394124,
+     "within10": 0.8711
+    },
+    "at_edges": {
+     "n": 4258,
+     "median": 0.09011895204688924,
+     "within10": 0.5100986378581494
+    },
+    "off_edges": {
+     "n": 15742,
+     "median": 0.007281143110831334,
+     "within10": 0.9687460297293864
+    }
+   },
+   "F": {
+    "all": {
+     "n": 20000,
+     "median": 0.009666870362649183,
+     "within10": 0.826
+    },
+    "at_edges": {
+     "n": 4258,
+     "median": 0.10695436200939756,
+     "within10": 0.4931892907468295
+    },
+    "off_edges": {
+     "n": 15742,
+     "median": 0.007601791991702966,
+     "within10": 0.9160208359801804
+    },
+    "taken": 0.1231,
+    "taken_at_edges": 0.2747768905589479,
+    "taken_off_edges": 0.08207343412526998,
+    "taken_before": 0.0711,
+    "taken_after": 0.052,
+    "by_decision": {
+     "kept": {
+      "n": 17538,
+      "median": 0.008015234578604202,
+      "within10": 0.9106511574866005
+     },
+     "taken": {
+      "n": 2462,
+      "median": 0.17127339246504403,
+      "within10": 0.22298943948009747
+     }
+    },
+    "B_on_taken": {
+     "n": 2462,
+     "median": 0.043882783239296896,
+     "within10": 0.5893582453290008
+    }
+   },
+   "F_reversed": {
+    "all": {
+     "n": 20000,
+     "median": 0.009746724196320444,
+     "within10": 0.8203
+    },
+    "at_edges": {
+     "n": 4258,
+     "median": 0.13771456649244884,
+     "within10": 0.470643494598403
+    },
+    "off_edges": {
+     "n": 15742,
+     "median": 0.007649986892656835,
+     "within10": 0.9148773980434507
+    },
+    "taken": 0.09925,
+    "taken_at_edges": 0.18506341005166746,
+    "taken_off_edges": 0.07603862279252954,
+    "taken_before": 0.05415,
+    "taken_after": 0.0451,
+    "by_decision": {
+     "kept": {
+      "n": 18015,
+      "median": 0.008346353283754437,
+      "within10": 0.8898695531501527
+     },
+     "taken": {
+      "n": 1985,
+      "median": 0.17526728098039446,
+      "within10": 0.1889168765743073
+     }
+    },
+    "B_on_taken": {
+     "n": 1985,
+     "median": 0.02764450833819898,
+     "within10": 0.7007556675062973
+    }
+   },
+   "F_no_ordering": {
+    "all": {
+     "n": 20000,
+     "median": 0.013394903856918883,
+     "within10": 0.8389
+    },
+    "at_edges": {
+     "n": 4258,
+     "median": 0.09468219614113593,
+     "within10": 0.5056364490371066
+    },
+    "off_edges": {
+     "n": 15742,
+     "median": 0.010300152539212737,
+     "within10": 0.9290433235929361
+    },
+    "taken": 0.57155,
+    "taken_at_edges": 0.703381869422264,
+    "taken_off_edges": 0.5358912463473511,
+    "taken_before": 0.2828,
+    "taken_after": 0.28875,
+    "by_decision": {
+     "kept": {
+      "n": 8569,
+      "median": 0.007438769168714776,
+      "within10": 0.9143423970124869
+     },
+     "taken": {
+      "n": 11431,
+      "median": 0.022811729445655016,
+      "within10": 0.7823462514215729
+     }
+    },
+    "B_on_taken": {
+     "n": 11431,
+     "median": 0.01067456684138024,
+     "within10": 0.838684279590587
+    }
+   }
+  },
+  "arc": {
+   "anchors": 20000,
+   "true_edges": 0.19665,
+   "B": {
+    "all": {
+     "n": 20000,
+     "median": 0.00892480961944414,
+     "within10": 0.8693
+    },
+    "at_edges": {
+     "n": 3933,
+     "median": 0.08144298367510872,
+     "within10": 0.5199593185863208
+    },
+    "off_edges": {
+     "n": 16067,
+     "median": 0.007242929192105008,
+     "within10": 0.9548142154727081
+    }
+   },
+   "F": {
+    "all": {
+     "n": 20000,
+     "median": 0.009651903771704995,
+     "within10": 0.8252
+    },
+    "at_edges": {
+     "n": 3933,
+     "median": 0.10084497612693721,
+     "within10": 0.4988558352402746
+    },
+    "off_edges": {
+     "n": 16067,
+     "median": 0.007728539358283326,
+     "within10": 0.905084956743636
+    },
+    "taken": 0.1264,
+    "taken_at_edges": 0.2613780828883804,
+    "taken_off_edges": 0.09335905894068587,
+    "taken_before": 0.07555,
+    "taken_after": 0.05085,
+    "by_decision": {
+     "kept": {
+      "n": 17472,
+      "median": 0.007800252894985316,
+      "within10": 0.9069368131868132
+     },
+     "taken": {
+      "n": 2528,
+      "median": 0.15280623979612729,
+      "within10": 0.2602848101265823
+     }
+    },
+    "B_on_taken": {
+     "n": 2528,
+     "median": 0.03967244848788454,
+     "within10": 0.6091772151898734
+    }
+   },
+   "F_reversed": {
+    "all": {
+     "n": 20000,
+     "median": 0.009742830363806465,
+     "within10": 0.8159
+    },
+    "at_edges": {
+     "n": 3933,
+     "median": 0.12777763808062326,
+     "within10": 0.4663107042969743
+    },
+    "off_edges": {
+     "n": 16067,
+     "median": 0.007761469327309145,
+     "within10": 0.9014750731312628
+    },
+    "taken": 0.10375,
+    "taken_at_edges": 0.182557843885075,
+    "taken_off_edges": 0.08445882865500716,
+    "taken_before": 0.0665,
+    "taken_after": 0.03725,
+    "by_decision": {
+     "kept": {
+      "n": 17925,
+      "median": 0.008111723196870924,
+      "within10": 0.8851882845188285
+     },
+     "taken": {
+      "n": 2075,
+      "median": 0.1561232531316793,
+      "within10": 0.21734939759036145
+     }
+    },
+    "B_on_taken": {
+     "n": 2075,
+     "median": 0.02404586828173383,
+     "within10": 0.7320481927710843
+    }
+   },
+   "F_no_ordering": {
+    "all": {
+     "n": 20000,
+     "median": 0.014188020666013101,
+     "within10": 0.837
+    },
+    "at_edges": {
+     "n": 3933,
+     "median": 0.09596605562767802,
+     "within10": 0.5036867531146707
+    },
+    "off_edges": {
+     "n": 16067,
+     "median": 0.011407946779954603,
+     "within10": 0.918590900603722
+    },
+    "taken": 0.55805,
+    "taken_at_edges": 0.6903127383676583,
+    "taken_off_edges": 0.5256737412086886,
+    "taken_before": 0.28025,
+    "taken_after": 0.2778,
+    "by_decision": {
+     "kept": {
+      "n": 8839,
+      "median": 0.007624979330183912,
+      "within10": 0.8967077723724404
+     },
+     "taken": {
+      "n": 11161,
+      "median": 0.02357326470184562,
+      "within10": 0.7897141833169071
+     }
+    },
+    "B_on_taken": {
+     "n": 11161,
+     "median": 0.00997840647484538,
+     "within10": 0.8475943015858795
+    }
+   }
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "2ebef0ab7abe0f71249a8918de4fff6d79c81c90",
+   "clean": true
+  }
+ }
+}

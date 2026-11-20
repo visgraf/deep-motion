@@ -122,6 +122,39 @@ def stage5b2(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def stage7a(a) -> int:
+    from . import match as mt
+    if a.r2:
+        res, num = mt.selftest_r2(dict(kv.split("=", 1) for kv in a.r2), max_n=a.max_anchors)
+    elif a.k14:
+        res, num = mt.selftest_k14(max_n=a.max_anchors)
+    elif a.k13:
+        res, num = mt.selftest_k13(max_n=a.max_anchors)
+    elif a.k12:
+        res, num = mt.selftest_k12(max_n=a.max_anchors)
+    elif a.k11:
+        res, num = mt.selftest_k11(max_n=a.max_anchors)
+    elif a.k10:
+        res, num = mt.selftest_k10(max_n=a.max_anchors)
+    elif a.k9:
+        res, num = mt.selftest_k9(max_n=a.max_anchors)
+    elif a.k8:
+        res, num = mt.selftest_k8(max_n=a.max_anchors)
+    elif a.a:
+        res, num = mt.selftest_a(rung=a.rung, kinds=tuple(a.kinds), max_n=a.max_anchors)
+    else:
+        res, num = (mt.selftest_k3 if a.k3 else mt.selftest_b)(max_n=a.max_anchors)
+    for name, ok in res:
+        print(f"{PREFIX} stage 7a {'PASS' if ok else 'FAIL'} {name}")
+    print(f"{PREFIX} " + json.dumps(num))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage7a", "checks": [{"name": n, "ok": bool(ok)} for n, ok in res], "numbers": num,
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / ("stage7a_r2.json" if a.r2 else "stage7a_k14.json" if a.k14 else "stage7a_k13.json" if a.k13 else "stage7a_k12.json" if a.k12 else "stage7a_k11.json" if a.k11 else "stage7a_k10.json" if a.k10 else "stage7a_k9.json" if a.k9 else "stage7a_k8.json" if a.k8 else f"stage7a_a_{a.rung}.json" if a.a else "stage7a_k3.json" if a.k3 else "stage7a_b.json")).write_text(json.dumps(rec, indent=1))
+    return 0 if all(ok for _, ok in res) else 1
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -232,6 +265,22 @@ def main(argv=None) -> int:
     p.add_argument("--hit-stride", type=int, default=1, help="bin a random 1/n of each look's hits (memory at 3600 wide)")
     p.add_argument("--max-cells", type=int, default=None, help="a random subset of the cells (time)")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage7a", help="#14: the trace sweep B on R0 (line, arc), checks K1-K2")
+    p.add_argument("--max-anchors", type=int, default=20000)
+    p.add_argument("--k3", action="store_true", help="check K3: B's reliability marking")
+    p.add_argument("--a", action="store_true", help="checks K4-K5 (rung r0) or K6-K7 (rung r1): A, and both on R1")
+    p.add_argument("--rung", choices=["r0", "r1"], default="r0")
+    p.add_argument("--r2", nargs="+", default=None, metavar="KIND=RUN",
+                   help="checks K15-K17 (#17) on render runs, e.g. line=runs/r2-line arc=runs/r2-arc")
+    p.add_argument("--k14", action="store_true", help="check K14: the planar prior, method P (R1)")
+    p.add_argument("--k13", action="store_true", help="check K13: method H2, grown in rounds (R1)")
+    p.add_argument("--k12", action="store_true", help="check K12: method H, seeding the anchors without texture (R1)")
+    p.add_argument("--k11", action="store_true", help="check K11: method G, two layers per contour anchor (R1)")
+    p.add_argument("--k10", action="store_true", help="check K10: the surface metric for contour anchors (R1)")
+    p.add_argument("--k9", action="store_true", help="check K9: method F, occlusion ordering in time (R1)")
+    p.add_argument("--k8", action="store_true", help="check K8: method E at depth edges (R1; R0 reported)")
+    p.add_argument("--kinds", nargs="+", default=["line", "arc"])
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -249,7 +298,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

@@ -1,0 +1,12 @@
+arc {
+ "edge_anchors": 3933,
+ "still_wrong": 980,
+ "right within 5x5": 0.35408163265306125,
+ "right within 7x7": 0.3663265306122449,
+ "right within 11x11": 0.39183673469387753,
+ "in front of every 5x5 surface (< min/1.1)": 0.2571428571428571,
+ "behind every 5x5 surface (> max*1.1)": 0.09489795918367347,
+ "between 5x5 surfaces": 0.6479591836734694,
+ "marked reliable": 0.1836734693877551,
+ "depth ratio max/min in 5x5, median": 2.8220660603120913
+}
