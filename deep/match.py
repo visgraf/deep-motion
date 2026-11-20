@@ -168,16 +168,25 @@ def anchors(looks, m, fan, max_n=20000, frac=0.15, seed=0, sigma=0.0):
 
 
 def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, coarse_every=10, keep=3,
-          fine=9, mirror=False, sigma=0.0, halves=False, nearest=False, zmin=None, zmax=None):
+          fine=9, mirror=False, sigma=0.0, halves=False, nearest=False, zmin=None, zmax=None, patch=0, trunc=1.0):
     """B on the anchors (px, u) of look m. mirror: pair image k with the pose of look 2m - k (the control).
-    zmin, zmax: optional per-anchor bounds on inverse range (method F's ordering). Returns r_est, confidence, cost
-    curves' best values."""
+    zmin, zmax: optional per-anchor bounds on inverse range (method F's ordering). patch > 0: B2 (#17), the cost per
+    look is 1 - ZNCC of the (2 patch + 1)^2 patch translated to the predicted point against the reference patch,
+    truncated at trunc. Returns r_est, confidence, cost curves' best values."""
     blurred = [lk[3] if sigma < 0 else _gauss(lk[3], sigma) for lk in looks]     # sigma < 0: the raw images
     K = len(looks)
     ref = blurred[m][px[:, 0], px[:, 1]]
     c_m = looks[m][1]
     pose = (lambda k: looks[2 * m - k] if 0 <= 2 * m - k < K else None) if mirror else (lambda k: looks[k])
     zs = np.linspace(z_lo, z_hi, nz)
+    if patch > 0:
+        o = np.arange(-patch, patch + 1, dtype=float)
+        OFF = np.stack(np.meshgrid(o, o, indexing="ij"), -1).reshape(-1, 2)          # (P, 2) row, col offsets
+        a = _sample(blurred[m], (px[:, None, :] + OFF[None, :, :]).reshape(-1, 2)).reshape(len(px), -1)
+        a0 = a - a.mean(1, keepdims=True)
+        na = np.sqrt((a0 ** 2).sum(1))
+        a_ok = (a0 ** 2).mean(1) >= 1e-8
+        a0 = np.where(a_ok[:, None], a0, np.nan)
 
     def cost(zv, ks, sl):
         """zv (n, Z) inverse ranges for the anchors in slice sl; cost (n, Z) over looks ks."""
@@ -193,8 +202,16 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
             if pk is None:
                 continue
             rc, _ = fan.model().pixel_of(((X - pk[1]) @ pk[2]).reshape(-1, 3))
-            v = (_sample_nearest if nearest else _sample)(blurred[k], rc).reshape(N, Z)
-            d = np.minimum((v - rf[:, None]) ** 2, tau ** 2)
+            if patch > 0:
+                b = _sample(blurred[k], (rc[:, None, :] + OFF[None, :, :]).reshape(-1, 2)).reshape(N, Z, -1)
+                b0 = b - b.mean(2, keepdims=True)
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    zncc = (a0[sl][:, None, :] * b0).sum(2) / (na[sl][:, None] * np.sqrt((b0 ** 2).sum(2)))
+                zncc = np.where((b0 ** 2).mean(2) >= 1e-8, zncc, np.nan)
+                d = np.minimum(1.0 - zncc, trunc)
+            else:
+                v = (_sample_nearest if nearest else _sample)(blurred[k], rc).reshape(N, Z)
+                d = np.minimum((v - rf[:, None]) ** 2, tau ** 2)
             f = np.isfinite(d)
             acc += np.where(f, d, 0.0)
             cnt += f
@@ -219,8 +236,9 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
     N = len(px)
     coarse_ks = list(range(0, K, coarse_every)) + [K - 1]
     C = np.full((N, nz), np.inf)
-    for a in range(0, N, 2000):
-        sl = slice(a, min(a + 2000, N))
+    ch = 2000 if patch == 0 else 200
+    for a in range(0, N, ch):
+        sl = slice(a, min(a + ch, N))
         C[sl] = cost(np.broadcast_to(zs, (sl.stop - a, nz)).copy(), coarse_ks, sl)
     # the best `keep` separated minima, refined on all looks
     order = np.argsort(C, axis=1)
@@ -246,8 +264,8 @@ def sweep(looks, m, px, u, fan, z_lo=1 / 25.0, z_hi=1 / 0.25, nz=256, tau=0.08, 
         zq = np.where(ok, zs[np.maximum(cands[:, q], 0)], zs[0])
         zv = np.clip(zq[:, None] + off[None, :], z_lo, z_hi)
         Cf = np.full(zv.shape, np.inf)
-        for a in range(0, N, 1000):
-            sl = slice(a, min(a + 1000, N))
+        for a in range(0, N, ch // 2):
+            sl = slice(a, min(a + ch // 2, N))
             Cf[sl] = cost(zv[sl], allks, sl)
         Cf[~ok] = np.inf
         j = np.argmin(Cf, axis=1)
@@ -1451,4 +1469,95 @@ def selftest_r2(runs, max_n=20000, seed=11):
         res.append((f"K16 {kind} control: shuffled seeds (< 85 %)", out["H"]["control_shuffled_seeds_surface"] < 0.85))
         res.append((f"K17 {kind}: least-textured third, H >= B alone + 10 points",
                     out["H"]["surface_least_texture"] >= out["B_alone"]["surface_least_texture"] + 0.10))
+    return res, num
+
+
+# ---------------------------------------------------------------------------------- B2: the patch cost (#17)
+
+B2_PATCH, B2_TRUNC = 2, 1.0                                   # declared on #17 before the code
+B2_RELIABLE_COST = B2_TRUNC / 4
+
+
+def sweep_b2(looks, m, px, u, fan, **kw):
+    return sweep(looks, m, px, u, fan, patch=B2_PATCH, trunc=B2_TRUNC, **kw)
+
+
+def reliable_b2(best, conf):
+    """B2's mark, declared on #17: B's rule with the cost threshold restated, T/4 (mean ZNCC >= 0.75), ratio >= 2."""
+    return (best <= B2_RELIABLE_COST) & (conf >= RELIABLE_RATIO)
+
+
+def selftest_b2(runs, rung="r1", max_n=20000, seed=11):
+    """K18 (rung r1) or K19 (rung r2) as declared on #17. K18: B2 surface-right overall >= B's - 1 point; K19: B2 off
+    true depth edges >= 90 % surface-right; both: B2's reliable anchors >= 95 % surface-right with >= 50 % kept.
+    Controls: the mirrored path (median old-metric error >= 20 %), as many marked at random (< 95 %)."""
+    import time
+    res, num = [], {}
+    rng = np.random.default_rng(seed)
+    for kind, run_dir in runs.items():
+        looks, P, _, fan = r1_run(run_dir)
+        m = len(looks) // 2
+        c = looks[m][1]
+        px, u, pidx, _ = anchors(looks, m, fan, max_n=max_n)
+        r_true = np.linalg.norm(P[pidx] - c, axis=-1)
+        tedge = depth_edge(looks, m, P, px)
+        nb = neighbourhood_ranges(looks, m, P, px)
+        t = time.time(); r_b, conf_b, best_b = sweep(looks, m, px, u, fan); t_b = time.time() - t
+        t = time.time(); r2, conf2, best2 = sweep_b2(looks, m, px, u, fan); t_2 = time.time() - t
+        r2m, _, _ = sweep_b2(looks, m, px, u, fan, mirror=True)
+        mk = reliable_b2(best2, conf2)
+        rs = np.zeros(len(px), bool)
+        rs[rng.choice(len(px), size=int(mk.sum()), replace=False)] = True
+        sb, s2 = surface_right(r_b, nb), surface_right(r2, nb)
+        ob, o2 = _relerr(r_b, r_true) <= 0.1, _relerr(r2, r_true) <= 0.1
+
+        def split(x):
+            return {"all": float(x.mean()), "at_edges": float(x[tedge].mean()), "off_edges": float(x[~tedge].mean())}
+        out = {"anchors": int(len(px)), "true_edges": float(tedge.mean()), "seconds": {"B": t_b, "B2": t_2},
+               "B": {"surface": split(sb), "old": split(ob), "reliable_kept": float(reliable(best_b, conf_b).mean()),
+                     "reliable_surface": float(sb[reliable(best_b, conf_b)].mean())},
+               "B2": {"surface": split(s2), "old": split(o2), "reliable_kept": float(mk.mean()),
+                      "reliable_surface": float(s2[mk].mean()) if mk.any() else None,
+                      "control_mirrored_median_old": float(np.median(_relerr(r2m, r_true))),
+                      "control_random_marking_surface": float(s2[rs].mean())},
+               "B_vs_B2_surface": {"both": float(np.mean(sb & s2)), "B_only": float(np.mean(sb & ~s2)),
+                                   "B2_only": float(np.mean(~sb & s2)), "neither": float(np.mean(~sb & ~s2))}}
+        if rung == "r2":
+            W = looks[m][3].shape[1]
+            spx, su, sr = px[mk], u[mk], r2[mk]
+            apx, au, aidx, ag = anchors(looks, m, fan, max_n=10 ** 9, frac=1.0)
+            grid = (apx[:, 0] % H_GRID == 0) & (apx[:, 1] % H_GRID == 0)
+            tpx, tu, tidx, tg = apx[grid], au[grid], aidx[grid], ag[grid]
+            tnb = neighbourhood_ranges(looks, m, P, tpx)
+            key_t = tpx[:, 0] * W + tpx[:, 1]
+            seed_at = dict(zip((spx[:, 0] * W + spx[:, 1]).tolist(), sr.tolist()))
+            is_seed = np.isin(key_t, spx[:, 0] * W + spx[:, 1])
+            r_h, _, _ = seed_fill(looks, m, fan, spx, su, sr, tpx, tu)
+            r_h = np.where(is_seed, np.array([seed_at.get(int(k), np.nan) for k in key_t]), r_h)
+            r_bt, _, _ = sweep(looks, m, tpx, tu, fan)
+            least = tg < np.quantile(tg[np.isfinite(tg)], 1 / 3)
+
+            def sfrac(r, msk=None):
+                cov = np.isfinite(r)
+                ok = cov & surface_right(np.where(cov, r, np.nan), tnb)
+                sel = cov if msk is None else cov & msk
+                return float(ok[sel].mean()) if sel.any() else None
+            out["H_from_B2_seeds"] = {"seeds": int(mk.sum()), "coverage": float(np.isfinite(r_h).mean()),
+                                      "surface": sfrac(r_h), "surface_least_texture": sfrac(r_h, least),
+                                      "B_alone_surface_least_texture": sfrac(r_bt, least)}
+        num[kind] = out
+        B2, B = out["B2"], out["B"]
+        if rung == "r1":
+            res.append((f"K18 B2 on {kind}: surface-right overall >= B's - 1 point",
+                        B2["surface"]["all"] >= B["surface"]["all"] - 0.01))
+            tag = "K18"
+        else:
+            res.append((f"K19 B2 on {kind}: off true depth edges >= 90 % surface-right",
+                        B2["surface"]["off_edges"] >= 0.90))
+            tag = "K19"
+        res.append((f"{tag} B2 on {kind}: reliable anchors >= 95 % surface-right, >= 50 % kept",
+                    B2["reliable_surface"] is not None and B2["reliable_surface"] >= 0.95 and B2["reliable_kept"] >= 0.50))
+        res.append((f"{tag} {kind} control: the mirrored path (median >= 20 %)", B2["control_mirrored_median_old"] >= 0.20))
+        res.append((f"{tag} {kind} control: as many marked at random (< 95 %)",
+                    B2["control_random_marking_surface"] < 0.95))
     return res, num
