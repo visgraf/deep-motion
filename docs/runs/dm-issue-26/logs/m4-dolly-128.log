@@ -1,0 +1,103 @@
+2026-11-21T09:58:43-03:00 $ .venv/bin/python -m motion.dolly m4-classroom --run runs/dolly-128 --out runs/m4-dolly-128 --windows both5 --every 1 --exclude 0 5 20 25 40 45 --gate classroom (at dade15d)
+[dolly] M4 matcher on cuda (NVIDIA GeForce RTX 4090), torch 2.15.0+cu132
+[m4] both5: 33 reference frames to estimate: [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41]
+[m4] both5 r 6: accepted 0.276 (3 s)
+[m4] both5 r 7: accepted 0.278 (3 s)
+[m4] both5 r 8: accepted 0.275 (3 s)
+[m4] both5 r 9: accepted 0.273 (3 s)
+[m4] both5 r 10: accepted 0.271 (3 s)
+[m4] both5 r 11: accepted 0.272 (3 s)
+[m4] both5 r 12: accepted 0.275 (3 s)
+[m4] both5 r 13: accepted 0.275 (3 s)
+[m4] both5 r 14: accepted 0.278 (3 s)
+[m4] both5 r 15: accepted 0.278 (3 s)
+[m4] both5 r 16: accepted 0.279 (3 s)
+[m4] both5 r 17: accepted 0.275 (3 s)
+[m4] both5 r 18: accepted 0.279 (3 s)
+[m4] both5 r 19: accepted 0.281 (3 s)
+[m4] both5 r 21: accepted 0.285 (3 s)
+[m4] both5 r 22: accepted 0.289 (3 s)
+[m4] both5 r 23: accepted 0.296 (3 s)
+[m4] both5 r 24: accepted 0.288 (3 s)
+[m4] both5 r 26: accepted 0.294 (3 s)
+[m4] both5 r 27: accepted 0.300 (3 s)
+[m4] both5 r 28: accepted 0.300 (3 s)
+[m4] both5 r 29: accepted 0.301 (3 s)
+[m4] both5 r 30: accepted 0.302 (3 s)
+[m4] both5 r 31: accepted 0.294 (3 s)
+[m4] both5 r 32: accepted 0.299 (3 s)
+[m4] both5 r 33: accepted 0.300 (3 s)
+[m4] both5 r 34: accepted 0.296 (3 s)
+[m4] both5 r 35: accepted 0.286 (3 s)
+[m4] both5 r 36: accepted 0.289 (3 s)
+[m4] both5 r 37: accepted 0.289 (3 s)
+[m4] both5 r 38: accepted 0.289 (3 s)
+[m4] both5 r 39: accepted 0.289 (3 s)
+[m4] both5 r 41: accepted 0.297 (3 s)
+/home/lvelho/rd/deep-motion/motion/matcher.py:169: RuntimeWarning: invalid value encountered in subtract
+  den = cm - 2 * c1 + cp
+/home/lvelho/rd/deep-motion/motion/logpolar.py:49: RuntimeWarning: overflow encountered in exp
+  return np.arctan(np.exp(np.asarray(q, dtype=np.float64)))
+[m4] held-out r 6: M4 usable 0.239, M3 usable 0.050
+/home/lvelho/rd/deep-motion/motion/matcher.py:248: RuntimeWarning: invalid value encountered in subtract
+  r = Ib - alpha[:, None] * Ia - beta[:, None]
+/home/lvelho/rd/deep-motion/motion/matcher.py:249: RuntimeWarning: invalid value encountered in multiply
+  J = np.stack([alpha[:, None] * dI, -Ia, -np.ones_like(Ia)], -1)
+[m4] held-out r 7: M4 usable 0.242, M3 usable 0.048
+[m4] held-out r 8: M4 usable 0.241, M3 usable 0.050
+[m4] held-out r 9: M4 usable 0.241, M3 usable 0.053
+[m4] held-out r 10: M4 usable 0.240, M3 usable 0.048
+[m4] held-out r 11: M4 usable 0.243, M3 usable 0.054
+[m4] held-out r 12: M4 usable 0.247, M3 usable 0.055
+[m4] held-out r 13: M4 usable 0.247, M3 usable 0.056
+[m4] held-out r 14: M4 usable 0.251, M3 usable 0.060
+[m4] held-out r 15: M4 usable 0.253, M3 usable 0.063
+[m4] held-out r 16: M4 usable 0.255, M3 usable 0.063
+[m4] held-out r 17: M4 usable 0.252, M3 usable 0.067
+[m4] held-out r 18: M4 usable 0.256, M3 usable 0.071
+[m4] held-out r 19: M4 usable 0.259, M3 usable 0.076
+[m4] held-out r 21: M4 usable 0.265, M3 usable 0.082
+[m4] held-out r 22: M4 usable 0.270, M3 usable 0.083
+[m4] held-out r 23: M4 usable 0.277, M3 usable 0.089
+[m4] held-out r 24: M4 usable 0.270, M3 usable 0.089
+[m4] held-out r 26: M4 usable 0.278, M3 usable 0.096
+[m4] held-out r 27: M4 usable 0.286, M3 usable 0.096
+[m4] held-out r 28: M4 usable 0.286, M3 usable 0.097
+[m4] held-out r 29: M4 usable 0.288, M3 usable 0.098
+[m4] held-out r 30: M4 usable 0.290, M3 usable 0.101
+[m4] held-out r 31: M4 usable 0.285, M3 usable 0.103
+[m4] held-out r 32: M4 usable 0.289, M3 usable 0.111
+[m4] held-out r 33: M4 usable 0.290, M3 usable 0.113
+[m4] held-out r 34: M4 usable 0.287, M3 usable 0.115
+[m4] held-out r 35: M4 usable 0.279, M3 usable 0.123
+[m4] held-out r 36: M4 usable 0.283, M3 usable 0.121
+[m4] held-out r 37: M4 usable 0.284, M3 usable 0.122
+[m4] held-out r 38: M4 usable 0.284, M3 usable 0.123
+[m4] held-out r 39: M4 usable 0.285, M3 usable 0.126
+[m4] held-out r 41: M4 usable 0.294, M3 usable 0.131
+[dolly] M4 both5 (classroom gate, held-out [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 41]): {"M4": {"field_usable_of_all_hits": 0.26225302529181693, "accepted_fraction": 0.2863354168531392, "interval_coverage_interior": 0.9265165903251034, "usable_interior_median_rel": 0.016085516402122486, "usable_interior_p90_rel": 0.0499297393836667, "fovea_usable": 0.15099992366994885, "gate": {"subset": 609178, "accepted_usable": 55951, "coverage_of_subset": 0.09184671803643599, "median_rel": 0.01636048214747037, "p90_rel": 0.05061713239264817, "over_50pct": 0.0, "gate_pass": false}}, "M3": {"field_usable_of_all_hits": 0.08401857111033474, "accepted_fraction": 0.12869402094459528, "interval_coverage_interior": 0.8620973305736879, "usable_interior_median_rel": 0.0297562720042122, "usable_interior_p90_rel": 0.08923849057820851, "fovea_usable": 0.014731699870238913, "gate": {"subset": 609178, "accepted_usable": 12319, "coverage_of_subset": 0.02022233238889126, "median_rel": 0.02853334669516294, "p90_rel": 0.08406530950574634, "over_50pct": 0.018507995778878156, "gate_pass": false}}}
+[dolly] M4 both5: gate FAIL (control fails), interval coverage PASS (control fails)
+	Command being timed: ".venv/bin/python -m motion.dolly m4-classroom --run runs/dolly-128 --out runs/m4-dolly-128 --windows both5 --every 1 --exclude 0 5 20 25 40 45 --gate classroom"
+	User time (seconds): 604.59
+	System time (seconds): 36.82
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 10:37.71
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2569044
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1056
+	Minor (reclaiming a frame) page faults: 11553722
+	Voluntary context switches: 52718
+	Involuntary context switches: 3330
+	Swaps: 0
+	File system inputs: 200544
+	File system outputs: 218640
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T10:09:21-03:00 exit 0
