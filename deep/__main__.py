@@ -388,8 +388,9 @@ def standard_selftest(a) -> int:
     from . import standard as sd
     res = [("standard", r) for r in sd.selftest()]
     try:
-        from . import confirm as cf
+        from . import confirm as cf, coverage as cv
         res += [("stage12", r) for r in cf.selftest()]
+        res += [("stage13a", r) for r in cv.selftest()]
     except ImportError as e:                                    # deep/confirm.py needs torch (via ntrace)
         print(f"{PREFIX} stage12 span logic not run: {e}")
     for who, (name, ok, val, cname, cfail, cval) in res:
@@ -567,6 +568,50 @@ def demo3(a) -> int:
     Path(a.out).mkdir(parents=True, exist_ok=True)
     (Path(a.out) / ("demo3_dry.json" if a.dry_run else "demo3.json")).write_text(json.dumps(rec, indent=1, default=float))
     bad = [c for c in rec["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
+def stage13a(a) -> int:
+    """#31: coverage first. Anchor sources x ray sets x truth-free filters, from stage 11's caches; the frontier."""
+    _torch_threads()
+    import time as _t
+    from . import coverage as cv, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, _, _, src = _stage11_inputs(a)
+    rec_demo = json.loads((REPO / "docs/runs/dm-issue-29" / ("demo3_dry.json" if a.dry_run else "demo3.json")).read_text())
+    out = cv.run(paths, cache=a.cache, rec_demo=rec_demo, log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    controls = ["mirrored poses"]
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False}, controls=controls)
+    else:
+        values = dict(sd.PROFILES["ablation"]["values"], psi_deg=[list(v) for v in cv.RAYS.values()],
+                      confirm_rule=list(cv.FILTERS), confirm_span_m=0.0, gate_right=list(cv.FLOORS))
+        std = sd.stamp("ablation", values, departures={
+            "psi_deg": "two ray sets under study (#31)",
+            "confirm_rule": "coverage first (Luiz, 2026-11-21, #31): truth-free filters in place of S2's confirmation",
+            "confirm_span_m": "no span: a second reference anywhere (the 2 cm filter)",
+            "gate_right": "coverage first: the frontier at 98, 97 and 95 % right, S2's gate reported only"}, controls=controls)
+    out.update(std)
+    out.update({"command": "stage13a", "sources_runs": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    print(f"{PREFIX} {std['standard']} record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in out["checks"]:
+        ok = c.get("ok")
+        head = "control only" if c["check"].startswith("the standard") else (
+            "not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        cf_ = c.get("control_fails")
+        print(f"{PREFIX} {head} {c['check']}" + (f"; control {c['control']}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')}" if "control" in c else ""))
+    lines = cv.table(out)
+    for line in lines:
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage13a_dry" if a.dry_run else "stage13a"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_table.md").write_text("\n".join(lines) + "\n")
+    bad = [c for c in out["checks"] if c.get("ok") is False or c.get("control_fails") is False]
     return 1 if bad or std["check_record"] else 0
 
 
@@ -781,6 +826,13 @@ def main(argv=None) -> int:
     p.add_argument("--dry-run", action="store_true", help="a synthetic room (Chat sandbox, not gated)")
     p.add_argument("--dry-looks", type=int, default=161)
     p.add_argument("--dry-y0", type=float, default=-0.8)
+    p = sub.add_parser("stage13a", help="#31: coverage first, sources x ray sets x truth-free filters (stage 11's caches)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -798,7 +850,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
