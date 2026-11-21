@@ -137,7 +137,7 @@ def run(paths, cache=None, rec_demo=None, log=print, dev=None):
     surf = st.surface_band(per_ref, truth, looks128, None)
     log(f"[stage13a] sources ready ({time.perf_counter() - t0:.0f} s)")
     out = {"references": refs, "rays": RAYS, "filters": list(FILTERS), "floors": list(FLOORS), "gross_rel": GROSS,
-           "sources": {}, "ceilings": {}, "controls": {}}
+           "sources": {}, "ceilings": {}, "mirrored": {}}
     nested_ok, converse = True, None
     for rname, ray in RAYS.items():
         sectors = [k for k, (lo, hi) in sd.SECTORS.items() if lo < ray[1]]
@@ -156,7 +156,7 @@ def run(paths, cache=None, rec_demo=None, log=print, dev=None):
             log(f"[stage13a] {sname}, rays {rname} ({time.perf_counter() - t0:.0f} s)")
         if cf.MIRROR in R:
             mres, _, _ = maps(R[cf.MIRROR], per_ref, truth, fan, surf, ray, looks128, refs, pcov, sectors)
-            out["controls"][f"N1024 mirrored, rays {rname}"] = mres
+            out["mirrored"][f"N1024 mirrored, rays {rname}"] = mres
     out["frontier"] = frontier(out)
     out["checks"] = checks(out, rec_demo, nested_ok, converse)
     out["seconds"] = round(time.perf_counter() - t0, 1)
@@ -194,7 +194,7 @@ def checks(out, rec_demo, nested_ok, converse):
                 "ok": bool(nested_ok), "control": "the converse (none within neighbours >= 3), first source and ray set",
                 "control_fails": converse is False, "control_value": converse})
     bad = {k: {f: (m["cells"], m["right"]) for f, m in v.items() if m["cells"] >= sd.GATE_MIN_CELLS and (m["right"] or 0) >= min(FLOORS)}
-           for k, v in out["controls"].items()}
+           for k, v in out["mirrored"].items()}
     res.append({"check": "the standard control: N1024 mirrored must not give a usable map (>= 1,000 cells at >= 95 % right)",
                 "ok": None, "control": "N1024 mirrored, every ray set and filter",
                 "control_fails": all(not v for v in bad.values()), "control_value": bad})

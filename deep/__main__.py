@@ -514,6 +514,8 @@ def demo3(a) -> int:
         cache = a.cache                                         # as stage 11's dry run: the room and the rows under one folder
         f12d = REPO / "docs/runs/dm-issue-28/stage12b_dry.json"   # stage 12b's dry run is on #26's room (K = 111)
         rec12b = json.loads(f12d.read_text()) if (f12d.exists() and a.dry_looks == 111) else None
+        f13d = REPO / "docs/runs/dm-issue-31/stage13a_dry.json"   # and so is stage 13a's
+        rec13a = json.loads(f13d.read_text()) if (f13d.exists() and a.dry_looks == 111) else None
         name, label = "dry_room_straight", "synthetic room (dry run), straight path"
         src = {"dry_run": f"a synthetic room of M4's fixture planes (deep/straight.py synthetic_room, K={a.dry_looks}, "
                           f"y0={a.dry_y0}), Chat sandbox, not gated", "noise": st.DRY_NOISE}
@@ -529,11 +531,15 @@ def demo3(a) -> int:
         cache = a.cache
         f12b = REPO / "docs/runs/dm-issue-28/stage12b.json"
         rec12b = json.loads(f12b.read_text()) if f12b.exists() else None
+        f13a = REPO / "docs/runs/dm-issue-31/stage13a.json"
+        rec13a = json.loads(f13a.read_text()) if f13a.exists() else None
         name, label = "classroom_straight", "Classroom, straight path"
         src = {"r128": a.r128, "r1024": a.r1024, "stage12b": str(f12b.relative_to(REPO)) if rec12b else None}
+    if d3.is_map(a.rule):
+        name += "_coverage"
     rec = d3.run(paths, cache, a.out, a.ply_dir, T, rgb_of, rule=a.rule, span=a.span, rec12b=rec12b, name=name,
                  label=label, limit=a.limit, best=a.best, video=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True),
-                 psi_max=a.psi_max)
+                 psi_max=a.psi_max, join_short=a.join_short, rec13a=rec13a, floor=a.floor)
     if a.dry_run:
         std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
                        controls=["mirrored poses"])
@@ -543,12 +549,20 @@ def demo3(a) -> int:
                       psi_deg=[float(nt.SETTINGS["psi_anchor_deg"][0]), float(min(a.psi_max, nt.SETTINGS["psi_anchor_deg"][1]))],
                       lat_max_deg=float(nt.SETTINGS["lat_max_deg"]), confirm_rule=a.rule, confirm_span_m=a.span)
         dep = {"path": "one primitive, R3's straight_long: the demo's path (#29, P-D5)"}
+        if d3.is_map(a.rule):                                   # coverage first (#32, P-D8)
+            values.update(gate_right=a.floor, confirm_span_m=0.0)
+            dep.update({"confirm_rule": "coverage first (Luiz, P-D8): the neighbour filter in place of S2's confirmation",
+                        "confirm_span_m": "no span: the neighbour filter",
+                        "gate_right": "coverage first: Luiz's usable floor (P-D8); S2's gate reported only"})
+        if a.join_short:
+            values["frames"] = [11, 5]
+            dep["frames"] = "two window sets: 11 frames over +/-0.5 m, and 5 over +/-0.2 m (#26's short windows; P-D8)"
         if a.psi_max < nt.SETTINGS["psi_anchor_deg"][1]:
             dep["psi_deg"] = "the ray set chosen from stage 12b's error map (#28, P-D6): the backward sectors dropped"
         if a.rule != sd.PROFILES["build"]["values"]["confirm_rule"]:
-            dep["confirm_rule"] = "chosen after stage 12b (#28, P-D6)"
-        if abs(a.span - sd.CONFIRM_SPAN_M) > 1e-9:
-            dep["confirm_span_m"] = "chosen after stage 12b (#28, P-D6)"
+            dep.setdefault("confirm_rule", "chosen after stage 12b (#28, P-D6)")
+        if abs(values["confirm_span_m"] - sd.CONFIRM_SPAN_M) > 1e-9:
+            dep.setdefault("confirm_span_m", "chosen after stage 12b (#28, P-D6)")
         std = sd.stamp("build", values, departures=dep, controls=["mirrored poses"])
     rec.update(std)
     rec.update({"sources": src, "computed_by": git})
@@ -815,7 +829,10 @@ def main(argv=None) -> int:
     p.add_argument("--r128", default=None, help="R3's straight_long run (128 spp): the truth and the judge")
     p.add_argument("--r1024", default=None, help="the same path at 1024 spp: N1024's images and the colours")
     p.add_argument("--cache", default=None, help="stage 11's cache (N1024 and its mirrored control)")
-    p.add_argument("--rule", default="same cell", choices=["same cell", "within 2 cm"])
+    p.add_argument("--rule", default="same cell", choices=["same cell", "within 2 cm", "neighbours >= 1", "neighbours >= 3"],
+                   help="S2's confirmation, or (coverage first, #32) the neighbour filter")
+    p.add_argument("--join-short", action="store_true", help="join N on +/-0.2 m windows (stage 11's cached row) to N1024")
+    p.add_argument("--floor", type=float, default=0.97, help="coverage first: the usable floor (cells right)")
     p.add_argument("--span", type=float, default=0.5, help="S2's confirmation distance (m)")
     p.add_argument("--psi-max", type=float, default=179.0, help="the ray set: anchors at psi 1..psi_max deg from the heading")
     p.add_argument("--ply-dir", required=True, help="the PLY files and the video (under runs/, not committed)")
