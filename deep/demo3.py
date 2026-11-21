@@ -21,8 +21,8 @@ PLY (#25's format, deep/ply.py), coloured from the scene: <name>_model.ply (the 
 cell, with a `confirmed` flag). Per vertex: x y z, red green blue, right, err, nref, nsup, span_m, confirmed, psi.
 
 Checks (declared on #29 before data), each with a control that must fail:
-- V1a: the end model equals the batch model on the same inputs (deep/confirm.py models_b, full field), in cells,
-  points and cells right. Control: the model before the last release differs.
+- V1a: the end model equals the batch model on the same inputs (deep/confirm.py models_b at the demo's rule and span,
+  full field), in cells and cells right. Control: the model before the last release differs.
 - V1b (real run): the end model equals stage 12b's N1024 model at the rule and span (cells and cells right).
   Control: the same against stage 12b's next shorter span.
 - V2: nothing is shown before its window is complete (m + 50 <= t). Control: a schedule releasing at m.
@@ -127,7 +127,7 @@ def prog(hist, total_s, box=PROG_BOX):
 def frame(sc, looks, m, mp, hist, total_s, fan, rule, span, label):
     im = Image.new("RGB", (W, H), dm.PAPER)
     Xm, cm, _ = colours(mp, sc, False)
-    im.paste(d2.pano(looks, m, Xm, cm, fan), TOP_BOX[:2])
+    im.paste(d2.pano(looks, m, Xm, cm, fan, title="The current look (360° × 180°), with the model's cells"), TOP_BOX[:2])
     im.paste(prog(hist, total_s), PROG_BOX[:2])
     for box, cand, title in ((LEFT_BOX, False, f"S2's model ({rule}, references ≥ {span:g} m apart)"),
                              (RIGHT_BOX, True, "Every cell N reported: the model, and the candidates in grey")):
@@ -246,12 +246,13 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     full = K == len(T)
     # ---------------------------------------------------------------- the checks
     checks = []
-    batch, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, None, looks128, pos, list(sd.SECTORS), sorted(refs))
+    batch, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, None, looks128, pos, list(sd.SECTORS), sorted(refs),
+                           spans=(span,))
     key = f"{span:g}"
     prev_all = model_of(pts, refs[:-1], per_ref, truth, fan, pos, rule, span)
     b = batch["rules"][rule]["spans"].get(key)
     if b is None:
-        checks.append({"name": f"V1a: no batch span {key} m in stage 12b's SPANS_12B", "ok": None})
+        checks.append({"name": f"V1a: the batch has no span {key} m", "ok": None})
     else:
         bm = b["model"]
         endm = {"cells": int(mp["conf"].sum()), "right_cells": int((mp["right"] & mp["conf"]).sum())}

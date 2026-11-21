@@ -292,8 +292,8 @@ def support(X, ref, Xf, cell_of, refs, rule):
     return sup
 
 
-def models_b(row, per_ref, truth, fan, surf, band, looks, pos, sectors, refs, perfect_cov=None):
-    """Stage 12b: one fusion of a row in a band (as models()), its models under both RULES at SPANS_12B."""
+def models_b(row, per_ref, truth, fan, surf, band, looks, pos, sectors, refs, perfect_cov=None, spans=SPANS_12B):
+    """Stage 12b: one fusion of a row in a band (as models()), its models under both RULES at `spans` (SPANS_12B)."""
     Xs, refs_of = [], []
     for j, o in row.items():
         sel = np.ones(len(o["psi"]), bool) if band is None else (o["psi"] >= band[0]) & (o["psi"] <= band[1])
@@ -317,7 +317,7 @@ def models_b(row, per_ref, truth, fan, surf, band, looks, pos, sectors, refs, pe
         lo = np.where(sup, pv[None, :], np.inf).min(1) if len(Xf) else np.zeros(0)
         span = np.where(nsup > 0, hi - lo, 0.0)
         out["rules"][rule] = {"spans": {}}
-        for s in SPANS_12B:
+        for s in spans:
             c = (nsup >= 2) & (span >= s - SLACK_M)
             conf[(rule, s)] = c
             cov = asx.covered(surf[1], Xf[right & c]) if c.any() else np.zeros(len(surf[1]), bool)
@@ -329,8 +329,8 @@ def models_b(row, per_ref, truth, fan, surf, band, looks, pos, sectors, refs, pe
             if perfect_cov is not None and perfect_cov.any():
                 e["model"]["covers_of_perfect"] = float((cov & perfect_cov).sum() / perfect_cov.sum())
             out["rules"][rule]["spans"][f"{s:g}"] = e
-    out["contains"] = {f"{s:g}": bool(np.all(conf[("within 2 cm", s)] | ~conf[("same cell", s)])) for s in SPANS_12B}
-    out["contained"] = {f"{s:g}": bool(np.all(conf[("same cell", s)] | ~conf[("within 2 cm", s)])) for s in SPANS_12B}
+    out["contains"] = {f"{s:g}": bool(np.all(conf[("within 2 cm", s)] | ~conf[("same cell", s)])) for s in spans}
+    out["contained"] = {f"{s:g}": bool(np.all(conf[("same cell", s)] | ~conf[("within 2 cm", s)])) for s in spans}
     return out, cov_all
 
 

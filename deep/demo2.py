@@ -179,7 +179,7 @@ def check_release(log, lag=LAG):
 
 # --------------------------------------------------------------------------------------------------- the frames
 
-def pano(looks, m, Xr, colours, fan, box=PANO_BOX):
+def pano(looks, m, Xr, colours, fan, box=PANO_BOX, title="The current look (360° × 180°), with the real map's cells"):
     x0, y0, w, h = box
     img = looks[m][3]
     Hf, Wf = img.shape
@@ -199,7 +199,7 @@ def pano(looks, m, Xr, colours, fan, box=PANO_BOX):
         a[py, px] = colours[o]
     im = Image.fromarray(a)
     d = ImageDraw.Draw(im)
-    dm._text(d, (14, 8), "The current look (360° × 180°), with the real map's cells", 18, dm.LIGHT)
+    dm._text(d, (14, 8), title, 18, dm.LIGHT)
     return im
 
 
