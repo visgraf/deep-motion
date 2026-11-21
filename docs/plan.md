@@ -183,6 +183,18 @@ Later decisions, numbered P-D1, P-D2, …:
   - **measure before the demo:** stage 12b compares two confirmation rules, the same 2 cm cell (S1's) and an estimate
     within 2 cm of the cell, at spans 0, 0.2, 0.5, 0.8 and 1.0 m; Luiz then picks the rule;
   - **the demo** on the Classroom's straight path, video and PLY, shows N1024 alone.
+- **P-D6** (Luiz, 2026-11-21, in Chat, after stage 12b: "pick the option that gives the best result"; Chat's pick,
+  #28). For the demo (#29), N1024's model uses the **within-2 cm rule**, references **at least 1.0 m apart**, and the ray
+  set **ψ 1–120°**.
+  - **Why:** by S1's rule 4, errors first, then coverage. On the full field, N1024 fails S2's gate under every rule and
+    span; its failures sit in 120–180°.
+  - **Without 120–180°** (estimated from stage 12b's per-sector counts, Code, `stage12b.json`):
+    - within 2 cm at 1.0 m: 18,448 cells, 99.80 % right, every sector at least 5 cells clear of the line;
+    - within 2 cm at 0.8 m: 35,008 cells, but its 60–120° sector exactly on the line;
+    - the same-cell rule: 7,612 cells at 0.8 m and 2,866 at 1.0 m.
+  - **Not a validation:** the rule, span and ray set were chosen on the data the demo shows. Testing them needs a path
+    they were not chosen on.
+  - **S2's defaults are unchanged** (same cell, 0.5 m, ψ 1–179°); the demo declares the three as departures.
 
 ## The plan
 

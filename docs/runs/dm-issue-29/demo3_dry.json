@@ -7,57 +7,55 @@
  "lag_looks": 50,
  "looks": 111,
  "path_looks": 111,
- "rule": "same cell",
+ "rule": "within 2 cm",
  "span_m": 0.1,
+ "ray_set_psi_deg": [
+  1.0,
+  120.0
+ ],
+ "gate_sectors": [
+  "0-15",
+  "15-60",
+  "60-120"
+ ],
  "end": {
   "model": {
-   "cells": 38193,
-   "right": 0.999947634383264,
-   "coverage": 0.30482831045767594
+   "cells": 79895,
+   "right": 0.9999374178609425,
+   "coverage": 0.34850779074879107
   },
   "all": {
-   "cells": 161375,
-   "right": 0.9986367157242447,
-   "coverage": 0.5896180335075465
+   "cells": 106661,
+   "right": 0.9987811852504664,
+   "coverage": 0.42485224441947933
   },
-  "candidates": 123182,
+  "candidates": 26766,
   "gate": {
    "result": "pass",
    "parts": {
     "overall": {
-     "cells": 38193,
-     "right": 0.999947634383264,
+     "cells": 79895,
+     "right": 0.9999374178609425,
      "result": "pass"
     },
     "0-15": {
-     "cells": 191,
-     "right": 0.9947643979057592,
+     "cells": 754,
+     "right": 0.993368700265252,
      "result": "not evaluated"
     },
     "15-60": {
-     "cells": 8249,
+     "cells": 29019,
      "right": 1.0,
      "result": "pass"
     },
     "60-120": {
-     "cells": 22048,
+     "cells": 50122,
      "right": 1.0,
      "result": "pass"
-    },
-    "120-165": {
-     "cells": 7611,
-     "right": 1.0,
-     "result": "pass"
-    },
-    "165-180": {
-     "cells": 94,
-     "right": 0.9893617021276596,
-     "result": "not evaluated"
     }
    },
    "unverified": [
-    "0-15",
-    "165-180"
+    "0-15"
    ],
    "gate_right": 0.995,
    "min_cells": 1000,
@@ -81,33 +79,33 @@
    "model_cells": 0,
    "model_right": null,
    "model_coverage": 0.0,
-   "cells": 99933,
-   "right": 0.998939289323847,
-   "coverage": 0.5188907341376447
+   "cells": 68215,
+   "right": 0.9990471303965404,
+   "coverage": 0.3818077467884531
   },
   {
    "look": 110,
    "released": 2,
-   "model_cells": 38193,
-   "model_right": 0.999947634383264,
-   "model_coverage": 0.30482831045767594,
-   "cells": 161375,
-   "right": 0.9986367157242447,
-   "coverage": 0.5896180335075465
+   "model_cells": 79895,
+   "model_right": 0.9999374178609425,
+   "model_coverage": 0.34850779074879107,
+   "cells": 106661,
+   "right": 0.9987811852504664,
+   "coverage": 0.42485224441947933
   }
  ],
  "files": {
   "model": {
    "path": "runs/demo3-dry-ply/dry_room_straight_model.ply",
-   "bytes": 1184569,
-   "points": 38193,
-   "mb": 1.18
+   "bytes": 2477333,
+   "points": 79895,
+   "mb": 2.48
   },
   "all": {
    "path": "runs/demo3-dry-ply/dry_room_straight_all.ply",
-   "bytes": 5003212,
-   "points": 161375,
-   "mb": 5.0
+   "bytes": 3307080,
+   "points": 106661,
+   "mb": 3.31
   }
  },
  "frames": 362,
@@ -118,12 +116,12 @@
    "name": "V1a: the end model equals the batch model (cells, cells right)",
    "ok": true,
    "end": {
-    "cells": 38193,
-    "right_cells": 38191
+    "cells": 79895,
+    "right_cells": 79890
    },
    "batch": {
-    "cells": 38193,
-    "right_cells": 38191
+    "cells": 79895,
+    "right_cells": 79890
    },
    "control": "the model before the last release",
    "control_fails": true,
@@ -142,7 +140,7 @@
    "ok": true,
    "control": "5 % in place of 10 %",
    "control_fails": true,
-   "control_value": 427
+   "control_value": 218
   },
   {
    "name": "P1 model: the file read back holds exactly its map",
@@ -164,7 +162,7 @@
    "control_value": "not evaluated"
   }
  ],
- "seconds": 89.4,
+ "seconds": 74.9,
  "standard": "S2",
  "profile": "dry",
  "values": {
@@ -185,8 +183,8 @@
  },
  "computed_by": {
   "deep-motion": {
-   "commit": "8da92ea1673dc35f300cd2e2c6e1f719ff9c20e1",
-   "clean": true
+   "commit": "00e2b28f13653ae5b2464bca1d9a73c65389881e",
+   "clean": false
   }
  }
 }
