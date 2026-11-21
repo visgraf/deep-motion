@@ -222,6 +222,43 @@ def assess(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def _torch_threads():
+    import os
+    import torch
+    if os.environ.get("DEEP_TORCH_THREADS"):
+        torch.set_num_threads(int(os.environ["DEEP_TORCH_THREADS"]))
+    return torch
+
+
+def stage11_selftest(a) -> int:
+    _torch_threads()
+    from . import ntrace as nt
+    res = nt.selftest()
+    for name, ok, val, cname, cfail, cval in res:
+        print(f"{PREFIX} stage11 {'PASS' if ok else 'FAIL'} {name}: {val}; {cname}: {'fails' if cfail else 'DOES NOT FAIL'} ({cval})")
+    ok_all = all(r[1] and r[4] for r in res)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage11-selftest", "checks": [{"name": r[0], "ok": bool(r[1]), "value": r[2], "control": r[3],
+                                                          "control_fails": bool(r[4]), "control_value": r[5]} for r in res],
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "n_selftest.json").write_text(json.dumps(rec, indent=1, default=float))
+    return 0 if ok_all else 1
+
+
+def stage11_fixtures(a) -> int:
+    _torch_threads()
+    from . import nfixtures as nf
+    res = nf.main(Path(a.out), names=a.only)
+    res["computed_by"] = {"deep-motion": _git(REPO)}
+    (Path(a.out) / "c1_fixtures.json").write_text(json.dumps(res, indent=1, default=float))
+    for g in res["gates"]:
+        print(f"{PREFIX} C1 {'PASS' if g['ok'] else 'FAIL'} {g['fixture']} {g['label']}: {g}")
+    for c in res["controls"]:
+        print(f"{PREFIX} C1 control {'fails' if c['fails'] else 'DOES NOT FAIL'}: {c['control']}")
+    return 0 if res["ok"] and res["controls_fail"] else 1
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -367,6 +404,11 @@ def main(argv=None) -> int:
     p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room, turn90 and straight_long")
     p.add_argument("--max-anchors", type=int, default=20000)
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11-selftest", help="#26: N's geometry (N.1-N.5) with controls; numpy and torch, no renders")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11-fixtures", help="#26, C1: M4's fixtures rebuilt for the panorama, N's gates and controls")
+    p.add_argument("--out", required=True)
+    p.add_argument("--only", nargs="*", default=None, help="fixture names (a preview; C1 is the full set)")
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -384,7 +426,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

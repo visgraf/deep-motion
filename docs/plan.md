@@ -1095,3 +1095,21 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **Along the tour,** the perfect matcher's coverage rises to 65 % by the turn (2 m) and 89 % at the end. The real matcher's rises steadily to 21 % and 41 %, at a nearly constant 72–75 % right.
 - **In the Classroom, the real map's wrong cells gather in bands across the room:** the rows of desks and chairs, where clutter, repeated structure and occlusion meet (Code's reading from the end frames). That is where the assessment located the gap.
 - **Elsewhere,** the walls and the floor's open areas, the real map is mostly right.
+
+### Stage 11: why the real matcher falls short, on the straight path alone (#26)
+
+**The question** (Luiz, 2026-11-21, in Chat). If the motion is a straight line, the only differences between foveal-motion and deep-motion should be the sensor and the coordinates. What is the real cause of the gap that stage 9 and D2 showed? This stage looks only at the straight path.
+
+**Decision (Luiz, 2026-11-21, in Chat; recorded on #26).** He accepted the plan on #26, C2 as amended there, C3, and the two re-renders, with batch work of up to about 1 h on the workstation.
+- **The ablation:** on R3's `straight_long`, at its 12 references, through stage 9's fusion and metric:
+  - B and N (M4's matcher on exact traces), at 128 and 1024 spp;
+  - the frozen M4 on the Foveated `classroom_dolly`, at 1024 spp (#11's run) and 128 spp.
+- **The same line:** R3's `straight_long` lies on M4's `classroom_dolly`, at x = 0.897, 1.6 m high, facing +Y. Its references sit within 2 cm of M4's dolly frames 28–39 (computed in Chat from the two specs).
+- **C0:** the rerun reproduces stage 9's straight-path numbers.
+- **C1:** N passes M4's fixture gates on the panorama.
+- **C2:** between 18° and 44°, at 1024 spp, N is no worse than M4: cells right ≥ M4's − 3 points, coverage ≥ M4's ÷ 1.25.
+  - Its control: B1024 in place of N must fail.
+  - It is one-sided because the panorama's pixels are as fine as M4's or finer in that band.
+- **C3:** at 1024 spp on the full field, N covers at least twice B's coverage, at cells right at most 2 points below B's.
+  - Its control: N with the mirrored path's poses must fall below 50 % right.
+- **The variant with a one-pixel patch** has no ZNCC, so it is redefined as N with B's per-look cost.
