@@ -64,7 +64,7 @@ def _same(a, b):
 def stamp(profile, values, departures=None, controls=()):
     """The fields a record carries (docs/standard.md, 'How it is used', 2), checked."""
     rec = {"standard": VERSION, "profile": profile, "values": dict(values), "departures": dict(departures or {}),
-           "controls": list(controls)}
+           "standard_controls": list(controls)}           # not "controls": harnesses keep their own under that name
     rec["check_record"] = check_record(rec)
     return rec
 
@@ -86,7 +86,11 @@ def check_record(rec):
     for k in dep:
         if k not in prof["values"]:
             out.append(f"departure {k!r} names no value of profile {rec['profile']!r}")
-    have = set(rec.get("controls") or [])
+    have = rec.get("standard_controls")
+    if have is None:                                    # records stamped before #34 kept them under "controls"
+        old = rec.get("controls")
+        have = old if isinstance(old, list) and all(isinstance(x, str) for x in old) else []
+    have = set(have)
     out += [f"control {c!r} missing" for c in prof["min_controls"] if c not in have]
     return out
 
@@ -176,7 +180,7 @@ def selftest():
     out.append(("R2: a departure declared with its reason is no problem", not dep_rec["check_record"],
                 dep_rec["check_record"], "declared without a reason", bool(blank["check_record"]), blank["check_record"]))
     noctl = stamp("ablation", vals)
-    out.append(("R3: the profile's controls are required", not ok_rec["check_record"], ok_rec["controls"],
+    out.append(("R3: the profile's controls are required", not ok_rec["check_record"], ok_rec["standard_controls"],
                 "without the mirrored poses", bool(noctl["check_record"]), noctl["check_record"]))
     shifted = dict(e2e.SECTORS, **{"0-15": (0, 16)})
     out.append(("S1: S1's sectors are stage 9's", {k: tuple(v) for k, v in SECTORS.items()}
