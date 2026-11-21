@@ -10,7 +10,7 @@ Gates (declared on #34): C1's, median <= 0.1 px and p90 <= 0.25 px with >= 100 a
 parallel and front_far; the periodic wall also <= 1 % of accepted over 1 px. C1's radial wall is left out: its texture
 is constant along a line's traces, not an arc's. Controls on the front wall, each must fail its gate: N given the poses
 of an arc of radius 1.2 x RADIUS (the images stay those of RADIUS); every frame from the scene scaled 1.5x about the
-reference's eye.
+reference's eye; and the fixture profile's own control, the steps 20 % too long (every frame's arc length x 1.2).
 """
 from __future__ import annotations
 
@@ -47,15 +47,16 @@ class ArcScene(nf.Scene):
         return self.cache[key]
 
 
-def run_n_arc(sc: ArcScene, *, radius_given=RADIUS, foreign_geometry=False, psi=nf.FORWARD_PSI, dev=None):
+def run_n_arc(sc: ArcScene, *, radius_given=RADIUS, step_scale=1.0, foreign_geometry=False, psi=nf.FORWARD_PSI, dev=None):
     imgs = [sc.arc_frame(k, geometry=foreign_geometry) for k in nf.WINDOW]
-    poses = [arc_pose(k, radius=radius_given) for k in nf.WINDOW]
+    poses = [arc_pose(k * step_scale, radius=radius_given) for k in nf.WINDOW]
     t0 = time.perf_counter()
     r = nt.match_reference(sc.frame(0), np.zeros(3), nf.R_EYE, imgs, poses, nf.W, mask=nf.psi_mask(*psi), dev=dev)
     tr = sc.truth(r["px"])
     err = (r["zeta"] - 1.0 / tr["range"]) * r["px_per_zeta"]
     acc = r["reason"] == 0
-    out = {"fixture": sc.name, "path": "arc", "radius_m": RADIUS, "radius_given_m": radius_given, "frames": nf.WINDOW,
+    out = {"fixture": sc.name, "path": "arc", "radius_m": RADIUS, "radius_given_m": radius_given, "step_scale": step_scale,
+           "frames": nf.WINDOW,
            "step_m": nf.STEP, "foreign_geometry": foreign_geometry, "general": r["general"], "psi_deg": list(psi),
            "seconds": round(time.perf_counter() - t0, 1), "n_zeta": r["n_zeta"],
            "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))},
@@ -93,7 +94,8 @@ def run_all(log=print, names=None) -> dict:
             f"{L} acc {v['accepted_fraction']:.3f} med {nf._r(v['median_px'])} p90 {nf._r(v['p90_px'])} "
             f">1px {nf._r(v['over_1px_of_accepted'])}" for L, v in c["by_label"].items() if v["anchors"]))
     if "front" in scenes:
-        for lab, kw in ((f"the poses of an arc of radius {WRONG_RADIUS:g} m (images of {RADIUS:g} m)", {"radius_given": WRONG_RADIUS}),
+        for lab, kw in (("steps 20 % long (every frame's arc length x 1.2)", {"step_scale": 1.2}),
+                        (f"the poses of an arc of radius {WRONG_RADIUS:g} m (images of {RADIUS:g} m)", {"radius_given": WRONG_RADIUS}),
                         (f"every frame from the scene scaled {mbf.FOREIGN_GEOMETRY}x about the reference's eye",
                          {"foreign_geometry": True})):
             c, _, _ = run_n_arc(scenes["front"], **kw)

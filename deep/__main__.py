@@ -645,7 +645,7 @@ def stage14_fixtures(a) -> int:
                                     "gates": "M4's fixture gates"},
                         departures={"scene": "M4's fixtures along an arc of radius 1.0 m (deep/arcfixtures.py, #34)",
                                     "gates": "M4's fixture gates without the radial wall (#34)"},
-                        controls=["poses of a radius 20 % too large", "scene scaled 1.5x"]))
+                        controls=["steps 20 % long", "scene scaled 1.5x", "poses of a radius 20 % too large"]))
     res["computed_by"], res["seconds_total"] = git, round(_t.perf_counter() - t0, 1)
     import json as _j
     Path(a.out).mkdir(parents=True, exist_ok=True)
