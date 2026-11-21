@@ -195,6 +195,14 @@ Later decisions, numbered P-D1, P-D2, …:
   - **Not a validation:** the rule, span and ray set were chosen on the data the demo shows. Testing them needs a path
     they were not chosen on.
   - **S2's defaults are unchanged** (same cell, 0.5 m, ψ 1–179°); the demo declares the three as departures.
+- **P-D7** (Luiz, 2026-11-21, in Chat, after demo D3, #29). The opposite test: **coverage first.**
+  - **Why:** S2's model covered 3.8 % of the surface, too little. Every cell N reported covered 17.1 % at 97.77 % right,
+    an acceptable error.
+  - **The question:** how far coverage can be pushed within a usable reconstruction, perhaps beyond 17 %.
+  - **Stage 13a (#31):** from the caches, with no new matching. Anchor sources, ray sets and truth-free filters are
+    reported as a frontier at 98, 97 and 95 % right.
+  - **Then:** Luiz picks the floor that counts as usable. New matching follows if the frontier stops short, then a demo
+    of the chosen map.
 
 ## The plan
 
