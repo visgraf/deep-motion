@@ -37,7 +37,7 @@ of rules, GitHub Issues between Chat and Code. If something here gets in the way
    fov-render should do differently is an issue in fov-render; this repository moves its pin when Luiz accepts.
 7. **foveal-motion stays the reference.** What came from foveal-motion (and, through it, the playground) is left as
    imported: `motion/`, `tools/`, `docs/motion.md`, `docs/runs/`, the playground's docs. M4 is the frozen baseline. New
-   work goes in `deep/`, `paths/` and `docs/plan.md`.
+   work goes in `deep/`, `paths/`, `docs/plan.md` and `docs/standard.md`.
 
 ## Project facts
 
@@ -49,6 +49,8 @@ of rules, GitHub Issues between Chat and Code. If something here gets in the way
   available and is M4's.
 - Paths are compositions of primitives: lines, arcs and pivots (curvature 0, finite, infinite). Depth is estimated in
   the primitive's invariant and reported and gated in world 3D and range along the ray.
+- Runs follow the process standard, `docs/standard.md` (S1): each run declares a profile in its issue before data, and
+  its record carries it.
 - Runs and figures are not committed (`runs/`, `visuals/` are ignored); the command and the run record are.
 - deep-motion's run records go in `docs/runs/dm-issue-N/`, N its own issue number. `docs/runs/issue-N/` holds
   foveal-motion's imported records, left as imported; deep-motion's records for #5, #9, #14, #15 and #17, from before

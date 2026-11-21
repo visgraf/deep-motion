@@ -168,6 +168,15 @@ Later decisions, numbered P-D1, P-D2, …:
   and tests the composed path (line, arc, line; the reference look sliding along it) and the fusion into world 3D,
   gated in range, at 0.5°/px in the calibration room; then Code runs it at the design resolution in the calibration
   room and the Classroom.
+- **P-D4** (Luiz, 2026-11-21, in Chat; #27). The process standard **S1**, [`docs/standard.md`](standard.md), is in
+  force: each run declares a task profile (dry, fixture, oracle, ablation, build) before data, and its record carries
+  it. Within it:
+  - **errors first:** the model is the cells confirmed by references at least 0.5 m apart (provisional until #28), and
+    its error gate is cells right ≥ 99.5 %, overall and in each sector of ψ the ray set includes; coverage comes second;
+  - **noise:** a matcher may use the sensor's noise level σ, a calibration like its intrinsics;
+  - **CLAUDE.md:** rule 7 and the project facts name the standard (approved);
+  - **next:** the first run under S1 tests the confirmation distance (#28); after it, a test demo on the Classroom's
+    straight path, as a video and PLY clouds.
 
 ## The plan
 

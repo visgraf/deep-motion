@@ -1,11 +1,11 @@
 # The process standard, S1
 
-**Status: proposed** by Chat on 2026-11-21 (#27). It is not in force until Luiz accepts it; his decision goes to
-`docs/plan.md`. It comes from the diagnosis of #26 and its tech note, "Why the Real Matcher Fell Short: A Diagnosis on a
+**Status: in force** since 2026-11-21. Proposed by Chat on #27 and accepted by Luiz the same day, in Chat; his
+decision is P-D4 in `docs/plan.md`. It comes from the diagnosis of #26 and its tech note, "Why the Real Matcher Fell Short: A Diagnosis on a
 Straight Path" (`straight-diagnosis/` in [lvelho/foveal-depth-tr](https://github.com/lvelho/foveal-depth-tr)).
 
-Every number below says where it comes from (CLAUDE.md, rule 1). *Proposed* marks a value S1 sets that no run has
-tested yet.
+Every number below says where it comes from (CLAUDE.md, rule 1). *Provisional* marks a value that binds but that no
+run has tested yet; the run that tests it can change it, through an issue and Luiz.
 
 ## Why
 
@@ -124,7 +124,7 @@ own conditions. S1 fixes those conditions per task, so that results can be compa
   - 2 cm world cells, keyed by the estimated point;
   - each cell's point is the median of its estimates;
   - no truth is used.
-- **The model is its confirmed cells** (proposed).
+- **The model is its confirmed cells** (the 0.5 m is provisional until #28 measures it).
   - A cell is confirmed when it is supported by at least two references at least 0.5 m apart along the path.
   - The cells that are not confirmed are candidates. They are kept and reported separately, and never counted as the
     model.
@@ -135,14 +135,14 @@ own conditions. S1 fixes those conditions per task, so that results can be compa
     95.16 to 95.76 % (measured, Code, `stage11c.json`). This suggests that N's errors at 10 % repeat from one nearby
     reference to the next.
   - Two references 0.5 m apart, the window's half-length, share 51 of their 101 looks and see each point from 0.5 m
-    apart. The value is proposed. The first run under S1 tests it (below).
+    apart. The first run under S1, #28, tests the value (below).
 
 ### 6. Evaluation
 
 - **The yardstick is stage 9's metric, unchanged.**
   - A cell is right when its range is within ±10 % of the truth in a 3×3 neighbourhood of its dominant reference.
   - Coverage is the share of the surface's cells that lie within 2 cm of a right cell.
-- **The error gate comes first** (proposed).
+- **The error gate comes first** (Luiz, 2026-11-21: 99.5 %).
   - It applies to the model: cells right ≥ 99.5 %, overall and in each sector of ψ that the ray set includes.
   - A sector that fails is either dropped from the ray set, by a new run declared before its data, or the run fails.
   - Below 1,000 cells, in the model or in a sector, the gate is not evaluated. It is never reported as passed.
@@ -201,27 +201,28 @@ CLAUDE.md already holds most of the procedure. S1 adds what #26 taught:
 
 A demo is made from a build run and its record. It adds no gate.
 
-## Open items
+## Decided at adoption, and open
 
-Each needs a measurement or a decision before the value it concerns binds:
+Decided by Luiz on 2026-11-21, in Chat (#27):
+- **The gate is 99.5 %:** one wrong cell in 200. Applied to #26's cells as they stand, not to an S1 model, N at 10 %
+  would pass in 0–15° only (99.9 %, 9,396 cells; measured, Code).
+- **A matcher may use the noise level σ.** σ is a calibration of the sensor, like its intrinsics. A matcher may then
+  skip anchors whose gradient SNR is below a floor, declared with its other settings.
+- **The first run under S1** tests the confirmation distance (#28).
 
-1. **The confirmation distance, 0.5 m.** First run under S1: on #26's straight path, from its cached anchors (12
-   references, 10 looks apart), the model's cells right and coverage for N at 0.5 px and at 10 %. The supporting
-   references must span 0, 0.2 and 0.5 m. Code, CPU (estimate: minutes).
-2. **The gate, 99.5 %.** One wrong cell in 200. Applied to #26's cells as they stand, not to an S1 model, N at 10 %
-   would pass in 0–15° only (99.9 %, 9,396 cells).
-3. **A noise target in SNR rather than in spp.** The two routes are 4096 spp (median gradient SNR about 3.3,
+Open:
+1. **The confirmation distance, 0.5 m** (#28). On #26's straight path, from its cached anchors (12 references, 10 looks
+   apart): the model's cells right and coverage for N at 0.5 px and at 10 %, with the supporting references spanning
+   at least 0, 0.2 and 0.5 m. Code, CPU (estimate: minutes).
+2. **A noise target in SNR rather than in spp.** The two routes are 4096 spp (median gradient SNR about 3.3,
    estimated from 1/√spp; renders about four times as long) and more frames per window: the windows hold 101 looks,
    and N uses 11.
-4. **Whether a matcher may use the noise level σ.** The proposed answer is yes: σ is a calibration of the sensor, like
-   its intrinsics. A matcher may then skip anchors whose gradient SNR is below a declared floor.
 
-## Adoption
+## Adoption (2026-11-21)
 
-Once Luiz accepts S1:
-- **The record:** his decision goes to `docs/plan.md` as a P-D entry.
-- **The code:** `deep/standard.py` holds the profiles as data, with a `check_record` that every harness calls on its
-  record. Its control: a record with an undeclared departure must fail.
-- **CLAUDE.md,** with his approval:
-  - rule 7 names `docs/standard.md` among the places for new work;
-  - the project facts say that each run declares an S1 profile and that its record carries it.
+- **The record:** P-D4 in `docs/plan.md`.
+- **CLAUDE.md** (approved by Luiz): rule 7 names this file among the places for new work, and the project facts say
+  that each run declares an S1 profile and that its record carries it.
+- **The code:** `deep/standard.py` holds the profiles as data, the error gate, and `check_record`, which every harness
+  from #28 on calls on its record. Its controls: a record with an undeclared departure fails, and so does a gate on
+  98 % of 2,000 cells (`python -m deep standard-selftest`).
