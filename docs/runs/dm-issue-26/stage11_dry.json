@@ -1,0 +1,647 @@
+{
+ "references": [
+  50,
+  60
+ ],
+ "rows": {
+  "perfect": {
+   "full": {
+    "cells": 89898,
+    "right": 0.9998776391020935,
+    "confirmed_right": 1.0,
+    "coverage": 0.8270404923557857,
+    "surface_cells": 81892,
+    "points": 100341,
+    "tried": 100800,
+    "accepted_share": 0.9954464285714286,
+    "accepted_surface_right": null
+   },
+   "shared 1-44": {
+    "cells": 12016,
+    "right": 0.9995838881491345,
+    "confirmed_right": 1.0,
+    "coverage": 0.5239837060437277,
+    "surface_cells": 12029,
+    "points": 12229
+   },
+   "1-18": {
+    "cells": 1759,
+    "right": 0.9971574758385446,
+    "confirmed_right": 1.0,
+    "coverage": 0.30709071949947864,
+    "surface_cells": 1918,
+    "points": 1777
+   },
+   "18-44": {
+    "cells": 10263,
+    "right": 1.0,
+    "confirmed_right": 1.0,
+    "coverage": 0.5647314805657205,
+    "surface_cells": 10111,
+    "points": 10452
+   }
+  },
+  "B128": {
+   "full": {
+    "cells": 44295,
+    "right": 0.9997968167964781,
+    "confirmed_right": 1.0,
+    "coverage": 0.1906779661016949,
+    "surface_cells": 81892,
+    "points": 58957,
+    "tried": 60480,
+    "accepted_share": 0.9748181216931217,
+    "accepted_surface_right": 0.999847346371084,
+    "covers_of_perfect": 0.21370777226553272
+   },
+   "shared 1-44": {
+    "cells": 7351,
+    "right": 0.9989117126921507,
+    "confirmed_right": 1.0,
+    "coverage": 0.08612519743952116,
+    "surface_cells": 12029,
+    "points": 7985,
+    "covers_of_perfect": 0.11232746311280342
+   },
+   "1-18": {
+    "cells": 1026,
+    "right": 0.9961013645224172,
+    "confirmed_right": 1.0,
+    "coverage": 0.06830031282586027,
+    "surface_cells": 1918,
+    "points": 1073,
+    "covers_of_perfect": 0.13412563667232597
+   },
+   "18-44": {
+    "cells": 6330,
+    "right": 0.9993680884676145,
+    "confirmed_right": 1.0,
+    "coverage": 0.08901196716447433,
+    "surface_cells": 10111,
+    "points": 6912,
+    "covers_of_perfect": 0.10910683012259194
+   }
+  },
+  "N128": {
+   "full": {
+    "cells": 158825,
+    "right": 0.9983944593105619,
+    "confirmed_right": 0.9999724077037692,
+    "coverage": 0.5799223367361891,
+    "surface_cells": 81892,
+    "points": 228728,
+    "tried": 403152,
+    "accepted_share": 0.5673492876136048,
+    "accepted_surface_right": 0.9988807666748277,
+    "covers_of_perfect": 0.5991613512875029
+   },
+   "shared 1-44": {
+    "cells": 31837,
+    "right": 0.9955397807582372,
+    "confirmed_right": 0.999625748502994,
+    "coverage": 0.5294704464211489,
+    "surface_cells": 12029,
+    "points": 35457,
+    "covers_of_perfect": 0.6398540377597969
+   },
+   "1-18": {
+    "cells": 6512,
+    "right": 0.9785012285012284,
+    "confirmed_right": 0.9968847352024922,
+    "coverage": 0.42700729927007297,
+    "surface_cells": 1918,
+    "points": 7050,
+    "covers_of_perfect": 0.6213921901528013
+   },
+   "18-44": {
+    "cells": 25375,
+    "right": 0.9999211822660099,
+    "confirmed_right": 1.0,
+    "coverage": 0.5482148155474236,
+    "surface_cells": 10111,
+    "points": 28407,
+    "covers_of_perfect": 0.6416812609457093
+   },
+   "reasons": {
+    "accepted": 228728,
+    "invalid_support": 80,
+    "low_texture": 0,
+    "low_ncc": 22509,
+    "ambiguous": 526,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 1,
+    "few_frames": 20,
+    "unsupported": 401,
+    "depth_edge": 150887
+   }
+  },
+  "B1024": {
+   "full": {
+    "cells": 44372,
+    "right": 0.999842242855855,
+    "confirmed_right": 1.0,
+    "coverage": 0.18948126801152737,
+    "surface_cells": 81892,
+    "points": 59243,
+    "tried": 60480,
+    "accepted_share": 0.9795469576719577,
+    "accepted_surface_right": 0.999881842580558,
+    "covers_of_perfect": 0.21212792345854004
+   },
+   "shared 1-44": {
+    "cells": 7353,
+    "right": 0.9991840065279478,
+    "confirmed_right": 1.0,
+    "coverage": 0.08554327042979466,
+    "surface_cells": 12029,
+    "points": 8022,
+    "covers_of_perfect": 0.11121688085038871
+   },
+   "1-18": {
+    "cells": 1072,
+    "right": 0.996268656716418,
+    "confirmed_right": 1.0,
+    "coverage": 0.06569343065693431,
+    "surface_cells": 1918,
+    "points": 1118,
+    "covers_of_perfect": 0.12054329371816638
+   },
+   "18-44": {
+    "cells": 6284,
+    "right": 0.9996817313812858,
+    "confirmed_right": 1.0,
+    "coverage": 0.08871526060725941,
+    "surface_cells": 10111,
+    "points": 6904,
+    "covers_of_perfect": 0.10910683012259194
+   }
+  },
+  "N1024": {
+   "full": {
+    "cells": 161375,
+    "right": 0.9986367157242447,
+    "confirmed_right": 0.999947634383264,
+    "coverage": 0.5896180335075465,
+    "surface_cells": 81892,
+    "points": 235335,
+    "tried": 403152,
+    "accepted_share": 0.5837376473389689,
+    "accepted_surface_right": 0.9990566639046465,
+    "covers_of_perfect": 0.6068981809591306
+   },
+   "shared 1-44": {
+    "cells": 32341,
+    "right": 0.9959803345598466,
+    "confirmed_right": 0.9996488764044944,
+    "coverage": 0.5428547676448583,
+    "surface_cells": 12029,
+    "points": 36195,
+    "covers_of_perfect": 0.651277169601777
+   },
+   "1-18": {
+    "cells": 6530,
+    "right": 0.9802450229709035,
+    "confirmed_right": 0.9969604863221885,
+    "coverage": 0.4343065693430657,
+    "surface_cells": 1918,
+    "points": 7096,
+    "covers_of_perfect": 0.629881154499151
+   },
+   "18-44": {
+    "cells": 25860,
+    "right": 0.9999613302397525,
+    "confirmed_right": 1.0,
+    "coverage": 0.5623578281080012,
+    "surface_cells": 10111,
+    "points": 29099,
+    "covers_of_perfect": 0.6528896672504378
+   },
+   "reasons": {
+    "accepted": 235335,
+    "invalid_support": 80,
+    "low_texture": 0,
+    "low_ncc": 18044,
+    "ambiguous": 500,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 1,
+    "few_frames": 17,
+    "unsupported": 296,
+    "depth_edge": 148879
+   }
+  },
+  "N1024 mirrored (C3 control)": {
+   "full": {
+    "cells": 4,
+    "right": 0.0,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 81892,
+    "points": 4,
+    "tried": 403152,
+    "accepted_share": 9.92181608921697e-06,
+    "accepted_surface_right": 0.0,
+    "covers_of_perfect": 0.0
+   },
+   "shared 1-44": {
+    "cells": 4,
+    "right": 0.0,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 12029,
+    "points": 4,
+    "covers_of_perfect": 0.0
+   },
+   "1-18": {
+    "cells": 4,
+    "right": 0.0,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 1918,
+    "points": 4,
+    "covers_of_perfect": 0.0
+   },
+   "18-44": {
+    "cells": 0,
+    "right": null,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 10111,
+    "points": 0,
+    "covers_of_perfect": 0.0
+   },
+   "reasons": {
+    "accepted": 4,
+    "invalid_support": 80,
+    "low_texture": 0,
+    "low_ncc": 402123,
+    "ambiguous": 4,
+    "unresolved_far": 925,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 4,
+    "unsupported": 12,
+    "depth_edge": 0
+   }
+  },
+  "N1024 +/-0.2 m": {
+   "full": {
+    "cells": 246825,
+    "right": 0.9930436544110199,
+    "confirmed_right": 0.9999027199501926,
+    "coverage": 0.7517339911102427,
+    "surface_cells": 81892,
+    "points": 363533,
+    "tried": 403152,
+    "accepted_share": 0.9017268920903282,
+    "accepted_surface_right": 0.9952604027694872,
+    "covers_of_perfect": 0.8428419560595323
+   },
+   "shared 1-44": {
+    "cells": 39625,
+    "right": 0.9769589905362775,
+    "confirmed_right": 0.9979838709677419,
+    "coverage": 0.41258624989608444,
+    "surface_cells": 12029,
+    "points": 42393,
+    "covers_of_perfect": 0.5673488814850072
+   },
+   "1-18": {
+    "cells": 6718,
+    "right": 0.8703483179517714,
+    "confirmed_right": 0.9803921568627451,
+    "coverage": 0.2643378519290928,
+    "surface_cells": 1918,
+    "points": 7062,
+    "covers_of_perfect": 0.49575551782682514
+   },
+   "18-44": {
+    "cells": 32946,
+    "right": 0.9987251866690949,
+    "confirmed_right": 1.0,
+    "coverage": 0.4397191177925032,
+    "surface_cells": 10111,
+    "points": 35331,
+    "covers_of_perfect": 0.5737302977232924
+   },
+   "reasons": {
+    "accepted": 363533,
+    "invalid_support": 120,
+    "low_texture": 0,
+    "low_ncc": 13496,
+    "ambiguous": 161,
+    "unresolved_far": 44,
+    "near_boundary": 0,
+    "gn_failed": 57,
+    "few_frames": 90,
+    "unsupported": 241,
+    "depth_edge": 25410
+   }
+  },
+  "B1024 on 11 looks": {
+   "full": {
+    "cells": 44354,
+    "right": 0.999481444740046,
+    "confirmed_right": 1.0,
+    "coverage": 0.1868314365261564,
+    "surface_cells": 81892,
+    "points": 58758,
+    "tried": 60480,
+    "accepted_share": 0.9715277777777778,
+    "accepted_surface_right": 0.9996085639402295,
+    "covers_of_perfect": 0.20961788329789746
+   },
+   "shared 1-44": {
+    "cells": 7353,
+    "right": 0.997688018495852,
+    "confirmed_right": 1.0,
+    "coverage": 0.08587580014963837,
+    "surface_cells": 12029,
+    "points": 7950,
+    "covers_of_perfect": 0.11438997302871648
+   },
+   "1-18": {
+    "cells": 1143,
+    "right": 0.9921259842519685,
+    "confirmed_right": 1.0,
+    "coverage": 0.07194994786235662,
+    "surface_cells": 1918,
+    "points": 1182,
+    "covers_of_perfect": 0.13242784380305603
+   },
+   "18-44": {
+    "cells": 6220,
+    "right": 0.9987138263665595,
+    "confirmed_right": 1.0,
+    "coverage": 0.08782514093561468,
+    "surface_cells": 10111,
+    "points": 6768,
+    "covers_of_perfect": 0.11120840630472854
+   }
+  },
+  "B cost on N's pixels and frames, 1024": {
+   "full": {
+    "cells": 237857,
+    "right": 0.9940468432713774,
+    "confirmed_right": 0.9999447086143979,
+    "coverage": 0.6135153616958922,
+    "surface_cells": 81892,
+    "points": 343713,
+    "tried": 403152,
+    "accepted_share": 0.8525642933682581,
+    "accepted_surface_right": 0.9958715556292604,
+    "covers_of_perfect": 0.69981396172927
+   },
+   "shared 1-44": {
+    "cells": 30980,
+    "right": 0.9747579083279535,
+    "confirmed_right": 0.9993932038834952,
+    "coverage": 0.2264527392135672,
+    "surface_cells": 12029,
+    "points": 32918,
+    "covers_of_perfect": 0.3089005235602094
+   },
+   "1-18": {
+    "cells": 3585,
+    "right": 0.9333333333333333,
+    "confirmed_right": 1.0,
+    "coverage": 0.16579770594369134,
+    "surface_cells": 1918,
+    "points": 3711,
+    "covers_of_perfect": 0.3395585738539898
+   },
+   "18-44": {
+    "cells": 27418,
+    "right": 0.9801954920125465,
+    "confirmed_right": 0.9993429697766097,
+    "coverage": 0.23667293047176344,
+    "surface_cells": 10111,
+    "points": 29207,
+    "covers_of_perfect": 0.3035026269702277
+   }
+  },
+  "N1024 on B's anchors": {
+   "full": {
+    "cells": 35056,
+    "right": 0.9994580100410771,
+    "confirmed_right": 1.0,
+    "coverage": 0.18079910125531187,
+    "surface_cells": 81892,
+    "points": 44566,
+    "tried": 60480,
+    "accepted_share": 0.7368716931216931,
+    "accepted_surface_right": null,
+    "covers_of_perfect": 0.19246102055279943
+   },
+   "shared 1-44": {
+    "cells": 6329,
+    "right": 0.9976299573392321,
+    "confirmed_right": 1.0,
+    "coverage": 0.140410674204007,
+    "surface_cells": 12029,
+    "points": 6922,
+    "covers_of_perfect": 0.18277010947168015
+   },
+   "1-18": {
+    "cells": 1175,
+    "right": 0.9872340425531915,
+    "confirmed_right": 1.0,
+    "coverage": 0.11887382690302398,
+    "surface_cells": 1918,
+    "points": 1231,
+    "covers_of_perfect": 0.19864176570458403
+   },
+   "18-44": {
+    "cells": 5163,
+    "right": 1.0,
+    "confirmed_right": 1.0,
+    "coverage": 0.1438037780634952,
+    "surface_cells": 10111,
+    "points": 5691,
+    "covers_of_perfect": 0.1798598949211909
+   }
+  },
+  "M4@1024": {
+   "shared 1-44": {
+    "cells": 52976,
+    "right": 0.9998112352763515,
+    "confirmed_right": 1.0,
+    "coverage": 0.49821265275584004,
+    "surface_cells": 12029,
+    "points": 83354,
+    "covers_of_perfect": 0.4650166587339362
+   },
+   "1-18": {
+    "cells": 23407,
+    "right": 0.9998291109497159,
+    "confirmed_right": 1.0,
+    "coverage": 0.8952033368091762,
+    "surface_cells": 1918,
+    "points": 48577,
+    "covers_of_perfect": 0.9303904923599321
+   },
+   "18-44": {
+    "cells": 29781,
+    "right": 0.9997985292636244,
+    "confirmed_right": 1.0,
+    "coverage": 0.42162001780239344,
+    "surface_cells": 10111,
+    "points": 34777,
+    "covers_of_perfect": 0.4168126094570928
+   }
+  },
+  "M4@128": {
+   "shared 1-44": {
+    "cells": 54987,
+    "right": 0.999709022132504,
+    "confirmed_right": 1.0,
+    "coverage": 0.4788427965749439,
+    "surface_cells": 12029,
+    "points": 82150,
+    "covers_of_perfect": 0.4464540694907187
+   },
+   "1-18": {
+    "cells": 26110,
+    "right": 0.9998851014936806,
+    "confirmed_right": 1.0,
+    "coverage": 0.8816475495307612,
+    "surface_cells": 1918,
+    "points": 48263,
+    "covers_of_perfect": 0.9117147707979627
+   },
+   "18-44": {
+    "cells": 29065,
+    "right": 0.9995527266471701,
+    "confirmed_right": 1.0,
+    "coverage": 0.40085055879734943,
+    "surface_cells": 10111,
+    "points": 33887,
+    "covers_of_perfect": 0.397723292469352
+   }
+  }
+ },
+ "bands": {
+  "full": null,
+  "shared 1-44": [
+   1.0,
+   44.0
+  ],
+  "1-18": [
+   1.0,
+   18.0
+  ],
+  "18-44": [
+   18.0,
+   44.0
+  ]
+ },
+ "checks": [
+  {
+   "check": "C2 18-44 deg, 1024 spp: N's cells right >= M4's - 3 points and N's coverage >= M4's / 1.25",
+   "ok": true,
+   "values": {
+    "right": 0.9999613302397525,
+    "coverage": 0.5623578281080012,
+    "M4 right": 0.9997985292636244,
+    "M4 coverage": 0.42162001780239344
+   },
+   "control": "B1024 in place of N must fail",
+   "control_fails": true,
+   "control_values": {
+    "right": 0.9996817313812858,
+    "coverage": 0.08871526060725941,
+    "M4 right": 0.9997985292636244,
+    "M4 coverage": 0.42162001780239344
+   }
+  },
+  {
+   "check": "C3 full field, 1024 spp: N's coverage >= 2 x B's and N's cells right >= B's - 2 points",
+   "ok": true,
+   "values": {
+    "N right": 0.9986367157242447,
+    "N coverage": 0.5896180335075465,
+    "B right": 0.999842242855855,
+    "B coverage": 0.18948126801152737
+   },
+   "control": "N given the mirrored path's poses must fall below 50 % right",
+   "control_fails": true,
+   "control_values": {
+    "right": 0.0
+   }
+  }
+ ],
+ "gap": {
+  "chain": [
+   "B128",
+   "B1024",
+   "N1024 on B's anchors",
+   "N1024",
+   "perfect"
+  ],
+  "steps": [
+   {
+    "step": "noise (B128 -> B1024)",
+    "from": 0.1906779661016949,
+    "to": 0.18948126801152737,
+    "gain": -0.0011966980901675361,
+    "share_of_gap": -0.0018805288507666006
+   },
+   {
+    "step": "the cost on the same pixels (B1024 -> N1024 on B's anchors)",
+    "from": 0.18948126801152737,
+    "to": 0.18079910125531187,
+    "gain": -0.008682166756215498,
+    "share_of_gap": -0.013643428703010755
+   },
+   {
+    "step": "the pixels tried (-> N1024)",
+    "from": 0.18079910125531187,
+    "to": 0.5896180335075465,
+    "gain": 0.40881893225223465,
+    "share_of_gap": 0.6424308713756643
+   },
+   {
+    "step": "what remains (-> perfect)",
+    "from": 0.5896180335075465,
+    "to": 0.8270404923557857,
+    "gain": 0.2374224588482392,
+    "share_of_gap": 0.373093086178113
+   }
+  ],
+  "total": 0.6363625262540908,
+  "sensor_shared_field": {
+   "shared 1-44": {
+    "N1024": 0.5428547676448583,
+    "M4@1024": 0.49821265275584004,
+    "perfect": 0.5239837060437277
+   },
+   "1-18": {
+    "N1024": 0.4343065693430657,
+    "M4@1024": 0.8952033368091762,
+    "perfect": 0.30709071949947864
+   },
+   "18-44": {
+    "N1024": 0.5623578281080012,
+    "M4@1024": 0.42162001780239344,
+    "perfect": 0.5647314805657205
+   }
+  }
+ },
+ "seconds": 239.8,
+ "command": "stage11",
+ "sources": {
+  "dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room), Chat sandbox, not gated",
+  "noise": {
+   "1024": 0.005,
+   "128": 0.014142135623730952
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "1da0ae8207d0f9f0d019b1c8a65a293f1ef46176",
+   "clean": true
+  }
+ },
+ "seconds_total": 527.5
+}
