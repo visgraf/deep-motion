@@ -1,0 +1,83 @@
+{
+ "command": "demo2-ply",
+ "references": [
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160,
+  170,
+  180,
+  190,
+  200,
+  210,
+  220,
+  230,
+  240,
+  250,
+  260,
+  270,
+  280,
+  290,
+  300,
+  310,
+  320,
+  330,
+  340,
+  350,
+  360
+ ],
+ "computed_by": {
+  "commit": "c49674f1f772a108dde49b68066899f749cf0028",
+  "clean": true
+ },
+ "files": {
+  "perfect": {
+   "path": "runs/ply-r0/calibration_room_perfect.ply",
+   "bytes": 12009126,
+   "points": 571845,
+   "right": 0.9997936503772875,
+   "colour_mean": [
+    163.985606239453,
+    163.985606239453,
+    163.985606239453
+   ]
+  },
+  "real": {
+   "path": "runs/ply-r0/calibration_room_real.ply",
+   "bytes": 18932886,
+   "points": 901548,
+   "right": 0.8798910318696287,
+   "colour_mean": [
+    171.941538331847,
+    171.941538331847,
+    171.941538331847
+   ]
+  }
+ },
+ "checks": [
+  {
+   "name": "P1 perfect: the file read back holds exactly the final map",
+   "ok": true
+  },
+  {
+   "name": "P1 perfect control: the batch without the last reference differs",
+   "ok": true
+  },
+  {
+   "name": "P1 real: the file read back holds exactly the final map",
+   "ok": true
+  },
+  {
+   "name": "P1 real control: the batch without the last reference differs",
+   "ok": true
+  }
+ ]
+}

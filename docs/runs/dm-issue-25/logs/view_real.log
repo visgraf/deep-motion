@@ -1,0 +1,12 @@
+docs/runs/dm-issue-25/ply_view.py:58: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+docs/runs/dm-issue-25/ply_view.py:79: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w = bpy.data.worlds.new("w"); w.use_nodes = True
+00:00.349  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+PLY import of 'classroom_real.ply' took 43.24 ms
+00:00.805  render           | Saved: 'docs/runs/dm-issue-25/classroom_real.png'
+[view] attributes: [('position', 'POINT', 'FLOAT_VECTOR'), ('.edge_verts', 'EDGE', 'INT32_2D'), ('.corner_vert', 'CORNER', 'INT'), ('.corner_edge', 'CORNER', 'INT'), ('Col', 'POINT', 'FLOAT_COLOR'), ('sharp_face', 'FACE', 'BOOLEAN'), ('right', 'POINT', 'FLOAT'), ('err', 'POINT', 'FLOAT'), ('nref', 'POINT', 'FLOAT')] verts 1008509
+[view] wrote docs/runs/dm-issue-25/classroom_real.png
+
+Blender quit
