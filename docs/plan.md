@@ -203,6 +203,14 @@ Later decisions, numbered P-D1, P-D2, …:
     reported as a frontier at 98, 97 and 95 % right.
   - **Then:** Luiz picks the floor that counts as usable. New matching follows if the frontier stops short, then a demo
     of the chosen map.
+- **P-D8** (Luiz, 2026-11-21, in Chat, after stage 13a, #31): "the middle ground". The usable floor is **97 % right**,
+  with the map that covers most at that floor: **N1024 joined with N on ±0.2 m windows, rays 1–179°, cells with at
+  least 3 neighbours.**
+  - **On the straight path** (measured, Code, `stage13a.json`): 284,561 cells, 97.91 % right, 26.5 % coverage, 3,679
+    gross errors (over 25 %). That is 1.55 times demo D3's every cell (17.1 % at 97.77 %).
+  - **By sector:** 99.0–99.1 % right in 0–60°, 96.5–96.8 % at the sides (60–165°).
+  - **Next:** demo D4 of this map, video and PLY (#32).
+  - **Not a validation:** like P-D6, it was chosen on the data the demo shows.
 
 ## The plan
 
