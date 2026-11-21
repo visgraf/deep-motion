@@ -177,6 +177,12 @@ Later decisions, numbered P-D1, P-D2, …:
   - **CLAUDE.md:** rule 7 and the project facts name the standard (approved);
   - **next:** the first run under S1 tests the confirmation distance (#28); after it, a test demo on the Classroom's
     straight path, as a video and PLY clouds.
+- **P-D5** (Luiz, 2026-11-21, in Chat; #28). After stage 12 (#28):
+  - **S2:** in S1's gate, a sector of ψ under 1,000 cells is listed as unverified and no longer blocks a pass; the gate
+    still fails if any evaluated part fails (`docs/standard.md`, Versions);
+  - **measure before the demo:** stage 12b compares two confirmation rules, the same 2 cm cell (S1's) and an estimate
+    within 2 cm of the cell, at spans 0, 0.2, 0.5, 0.8 and 1.0 m; Luiz then picks the rule;
+  - **the demo** on the Classroom's straight path, video and PLY, shows N1024 alone.
 
 ## The plan
 

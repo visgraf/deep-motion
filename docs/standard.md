@@ -1,8 +1,10 @@
-# The process standard, S1
+# The process standard, S2
 
-**Status: in force** since 2026-11-21. Proposed by Chat on #27 and accepted by Luiz the same day, in Chat; his
-decision is P-D4 in `docs/plan.md`. It comes from the diagnosis of #26 and its tech note, "Why the Real Matcher Fell Short: A Diagnosis on a
-Straight Path" (`straight-diagnosis/` in [lvelho/foveal-depth-tr](https://github.com/lvelho/foveal-depth-tr)).
+**Status: S2 in force** since 2026-11-21 (Versions, at the end). S1 was proposed by Chat on #27 and accepted by Luiz
+the same day, in Chat (P-D4 in `docs/plan.md`); S2 changes one rule of its gate (P-D5, #28). It comes from the diagnosis
+of #26 and its tech note, "Why the Real Matcher Fell Short: A Diagnosis on a Straight Path" (`straight-diagnosis/` in
+[lvelho/foveal-depth-tr](https://github.com/lvelho/foveal-depth-tr)). The name S1 below means this standard; its
+version is the one in force.
 
 Every number below says where it comes from (CLAUDE.md, rule 1). *Provisional* marks a value that binds but that no
 run has tested yet; the run that tests it can change it, through an issue and Luiz.
@@ -23,7 +25,7 @@ own conditions. S1 fixes those conditions per task, so that results can be compa
 
 1. **A run declares a profile.** The issue that plans a run names its profile (below). Before any data, it lists every
    departure from the profile and the reason for it, as with checks.
-2. **The record carries it.** Every run record holds `"standard": "S1"`, `"profile": "<name>"`, the values as run and
+2. **The record carries it.** Every run record holds `"standard"` (the version in force, now `"S2"`), `"profile": "<name>"`, the values as run and
    the departures.
 3. **Like with like.** Rows compared in one table share every value of the profile except the one under study. A row
    that differs in more than one value is labelled with all of them. (#26: B at 128 spp was read against M4 at 1024.)
@@ -145,7 +147,12 @@ own conditions. S1 fixes those conditions per task, so that results can be compa
 - **The error gate comes first** (Luiz, 2026-11-21: 99.5 %).
   - It applies to the model: cells right ≥ 99.5 %, overall and in each sector of ψ that the ray set includes.
   - A sector that fails is either dropped from the ray set, by a new run declared before its data, or the run fails.
-  - Below 1,000 cells, in the model or in a sector, the gate is not evaluated. It is never reported as passed.
+  - Below 1,000 cells, in the model or in a sector, that part of the gate is not evaluated. It is never reported as
+    passed.
+  - **The whole gate** (S2, Luiz, 2026-11-21, #28): it fails if any part fails, and it is not evaluated if the model
+    as a whole has under 1,000 cells. Otherwise it passes, and the sectors under 1,000 cells are listed as unverified.
+    Their cells still count in the overall. (Under S1 an unverified sector blocked a pass: on #28's straight path the
+    165–180° sector never reached 1,000 cells, even for the perfect matcher, so no full-field model could pass.)
   - For scale (measured, Code, #26):
     - the perfect matcher's cells are 99.98 % right;
     - M4's cells confirmed by two references, in its own field, 99.83 %;
@@ -226,3 +233,10 @@ Open:
 - **The code:** `deep/standard.py` holds the profiles as data, the error gate, and `check_record`, which every harness
   from #28 on calls on its record. Its controls: a record with an undeclared departure fails, and so does a gate on
   98 % of 2,000 cells (`python -m deep standard-selftest`).
+
+## Versions
+
+- **S1** (Luiz, 2026-11-21, in Chat; #27, P-D4): the standard as proposed, with the gate at 99.5 %, the noise level σ
+  open to matchers, and the first run (#28). #28's stage 12 ran under it.
+- **S2** (Luiz, 2026-11-21, in Chat; #28, P-D5): a sector under 1,000 cells is listed as unverified and does not block
+  the gate; the gate still fails if any evaluated part fails. Records made under S1 are not re-judged.

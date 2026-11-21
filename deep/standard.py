@@ -1,12 +1,14 @@
-"""The process standard S1 (docs/standard.md; P-D4, Luiz, 2026-11-21, #27) as code: the task profiles as data, the
-error gate, and check_record, which every harness from #28 on calls on its record.
+"""The process standard (docs/standard.md) as code: the task profiles as data, the error gate, and check_record, which
+every harness from #28 on calls on its record. S1: P-D4 (Luiz, 2026-11-21, #27). S2: P-D5 (Luiz, 2026-11-21, #28), a
+sector with too few cells is listed as unverified and does not block the gate.
 
 - A profile fixes `values`; a record lists the values as run, and every value that differs from the profile's must be
   named in the record's `departures`, with its reason. A profile's `min_controls` must all be in the record's
   `controls`.
 - The gate: the model's cells right >= 99.5 %, overall and in each included sector of psi (the angle from the heading,
   taken from the cell's dominant reference to its fused point: observable, no truth). Below 1,000 cells a part is not
-  evaluated, never passed; the whole passes only if every part passes, and fails if any part fails.
+  evaluated, never passed. The whole fails if any part fails; it is not evaluated if the overall is not; otherwise it
+  passes, with the sectors under 1,000 cells listed as unverified (S2; under S1 they blocked a pass).
 
 Self-test with controls: `python -m deep standard-selftest`.
 """
@@ -16,7 +18,7 @@ import math
 
 import numpy as np
 
-VERSION = "S1"
+VERSION = "S2"
 GATE_RIGHT_PERMILLE = 995              # 99.5 % (Luiz, 2026-11-21); counted in integers, no float edge
 GATE_RIGHT = GATE_RIGHT_PERMILLE / 1000
 GATE_MIN_CELLS = 1000
@@ -28,7 +30,8 @@ _REAL = {                              # the values the two real-matching profil
     "scene": "classroom", "spp": 1024, "noise_measured": True, "look_spacing_m": 0.01,
     "sensor": "panorama", "width": 720, "psi_deg": [1.0, 179.0], "lat_max_deg": 70.0,
     "frames": 11, "frame_spacing_m": 0.10, "cell_m": 0.02, "metric": "stage 9",
-    "confirm_span_m": CONFIRM_SPAN_M, "gate_right": GATE_RIGHT, "gate_min_cells": GATE_MIN_CELLS,
+    "confirm_span_m": CONFIRM_SPAN_M, "confirm_rule": "same cell", "gate_right": GATE_RIGHT,
+    "gate_min_cells": GATE_MIN_CELLS,
 }
 PROFILES = {
     "dry": {"task": "a stage's dry run", "who": "Chat sandbox", "gated": False,
@@ -116,8 +119,15 @@ def gate(right, psi_deg, sectors=None):
         m = sec == s
         parts[s] = _part(int(right[m].sum()), int(m.sum()))
     res = [p["result"] for p in parts.values()]
-    whole = "fail" if "fail" in res else ("pass" if all(r == "pass" for r in res) else "not evaluated")
-    return {"result": whole, "parts": parts, "gate_right": GATE_RIGHT, "min_cells": GATE_MIN_CELLS}
+    if "fail" in res:
+        whole = "fail"
+    elif parts["overall"]["result"] == "not evaluated":
+        whole = "not evaluated"
+    else:
+        whole = "pass"
+    unverified = [s for s in names if parts[s]["result"] == "not evaluated"]
+    return {"result": whole, "parts": parts, "unverified": unverified, "gate_right": GATE_RIGHT,
+            "min_cells": GATE_MIN_CELLS, "standard": VERSION}
 
 
 def selftest():
@@ -144,6 +154,18 @@ def selftest():
     few, enough = gate(np.ones(999, bool), rng.uniform(0, 180, 999), []), gate(np.ones(1000, bool), rng.uniform(0, 180, 1000), [])
     out.append(("G3: 999 cells all right are not evaluated, not passed", few["result"] == "not evaluated", few["result"],
                 "1,000 cells all right are not 'not evaluated'", enough["result"] != "not evaluated", enough["result"]))
+    sparse = psi.copy()
+    sparse[2000:4000] = rng.uniform(60, 120, 2000)                              # 165-180 left with ~130 cells
+    sparse[4000:4300] = rng.uniform(165, 180, 300)
+    gs = gate(good, sparse)
+    bad15 = good.copy()
+    i15 = np.flatnonzero((sparse >= 15) & (sparse < 60))
+    bad15[i15[: int(0.03 * len(i15))]] = False                                  # 15-60 at 97 %, overall above 99.5 %
+    gs15 = gate(bad15, sparse)
+    out.append(("G4: a sector under 1,000 cells is listed as unverified, not blocking (S2)",
+                gs["result"] == "pass" and gs["unverified"] == ["165-180"], {"result": gs["result"], "unverified": gs["unverified"],
+                "165-180": gs["parts"]["165-180"]["cells"]}, "an evaluated sector at 97 % (overall above 99.5 %)",
+                gs15["result"] == "fail", {"result": gs15["result"], "overall": gs15["parts"]["overall"]["right"]}))
     vals = dict(PROFILES["ablation"]["values"])
     ok_rec = stamp("ablation", vals, controls=["mirrored poses"])
     bad_rec = stamp("ablation", dict(vals, spp=128), controls=["mirrored poses"])

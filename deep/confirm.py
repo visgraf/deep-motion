@@ -250,4 +250,187 @@ def selftest():
     off = {s: confirmed(np.array([2]), np.array([0.2 - 2e-3]), s).tolist() for s in SPANS_M}
     out.append(("Z2: a span 0.5 mm short of 0.2 m counts (1 mm slack)", one == {0.0: [True], 0.2: [True], 0.5: [False]},
                 one, "2 mm short", off == near, off))
+    # Z3: the within-2 cm rule on known points: reference 50's estimate at a cell, reference 100's 1.5 cm away (in
+    # another 2 cm cell), and 3 cm away for the control
+    def sup_of(d):
+        X = np.array([[0.011, 0.011, 0.011], [0.011 + d, 0.011, 0.011]])
+        ref = np.array([50, 100])
+        Xf, cell_of = X.copy(), np.array([0, 1])          # each point is its own cell (2 cm cells: 0.011 + d is not in the first)
+        same = support(X, ref, Xf, cell_of, [50, 100], "same cell")
+        nb = support(X, ref, Xf, cell_of, [50, 100], "within 2 cm")
+        return same[0].tolist(), nb[0].tolist()
+    s15, n15 = sup_of(0.015)
+    s30, n30 = sup_of(0.030)
+    out.append(("Z3: an estimate 1.5 cm away in another cell supports under 'within 2 cm' only",
+                s15 == [True, False] and n15 == [True, True], {"same cell": s15, "within 2 cm": n15},
+                "3 cm away", n30 == [True, False], {"within 2 cm": n30}))
     return out
+
+
+# ---------------------------------------------------------------- stage 12b (#28): two confirmation rules (P-D5)
+
+SPANS_12B = (0.0, 0.2, 0.5, 0.8, 1.0)   # P-D5 (Luiz, 2026-11-21)
+RULES = ("same cell", "within 2 cm")
+# - same cell (S1's, S2's): a reference supports a cell when one of its estimates lies in the cell;
+# - within 2 cm: ... or when one of its estimates lies within 2 cm of the cell's fused point (stage 8's coverage
+#   distance, assess.covered). It contains the first by construction.
+
+
+def support(X, ref, Xf, cell_of, refs, rule):
+    """(cells x references) bool: which references support each cell under `rule`."""
+    col = {j: k for k, j in enumerate(refs)}
+    sup = np.zeros((len(Xf), len(refs)), bool)
+    if len(X):
+        sup[cell_of, np.array([col[int(j)] for j in ref])] = True
+    if rule == "within 2 cm":
+        for j, k in col.items():
+            m = ref == j
+            if m.any():
+                sup[:, k] |= asx.covered(Xf, X[m])
+    elif rule != "same cell":
+        raise ValueError(rule)
+    return sup
+
+
+def models_b(row, per_ref, truth, fan, surf, band, looks, pos, sectors, refs, perfect_cov=None):
+    """Stage 12b: one fusion of a row in a band (as models()), its models under both RULES at SPANS_12B."""
+    Xs, refs_of = [], []
+    for j, o in row.items():
+        sel = np.ones(len(o["psi"]), bool) if band is None else (o["psi"] >= band[0]) & (o["psi"] <= band[1])
+        Xs.append(o["X"][sel])
+        refs_of.append(np.full(int(sel.sum()), j))
+    if sum(len(x) for x in Xs) == 0:
+        X, ref = np.zeros((0, 3)), np.zeros(0, int)
+        Xf, dom, right, cell_of = np.zeros((0, 3)), np.zeros(0, int), np.zeros(0, bool), np.zeros(0, int)
+    else:
+        X, ref, Xf, nref, dom, right, cell_of = asx.fuse_and_judge(Xs, refs_of, per_ref, truth, fan)
+    psi = cell_psi(Xf, dom, looks)
+    pv = np.array([pos[j] for j in refs])
+    cov_all = asx.covered(surf[1], Xf[right]) if len(Xf) else np.zeros(len(surf[1]), bool)
+    out = {"all": {"cells": int(len(Xf)), "right": float(right.mean()) if len(Xf) else None,
+                   "coverage": float(cov_all.mean())}, "rules": {}}
+    conf = {}
+    for rule in RULES:
+        sup = support(X, ref, Xf, cell_of, refs, rule)
+        nsup = sup.sum(1)
+        hi = np.where(sup, pv[None, :], -np.inf).max(1) if len(Xf) else np.zeros(0)
+        lo = np.where(sup, pv[None, :], np.inf).min(1) if len(Xf) else np.zeros(0)
+        span = np.where(nsup > 0, hi - lo, 0.0)
+        out["rules"][rule] = {"spans": {}}
+        for s in SPANS_12B:
+            c = (nsup >= 2) & (span >= s - SLACK_M)
+            conf[(rule, s)] = c
+            cov = asx.covered(surf[1], Xf[right & c]) if c.any() else np.zeros(len(surf[1]), bool)
+            nr = int((right & c).sum())
+            e = {"model": {"cells": int(c.sum()), "right": nr / int(c.sum()) if c.any() else None,
+                           "right_cells": nr, "wrong_cells": int(c.sum()) - nr, "coverage": float(cov.mean())},
+                 "candidates": {"cells": int((~c).sum()), "right": float(right[~c].mean()) if (~c).any() else None},
+                 "gate": sd.gate(right[c], psi[c], sectors)}
+            if perfect_cov is not None and perfect_cov.any():
+                e["model"]["covers_of_perfect"] = float((cov & perfect_cov).sum() / perfect_cov.sum())
+            out["rules"][rule]["spans"][f"{s:g}"] = e
+    out["contains"] = {f"{s:g}": bool(np.all(conf[("within 2 cm", s)] | ~conf[("same cell", s)])) for s in SPANS_12B}
+    out["contained"] = {f"{s:g}": bool(np.all(conf[("same cell", s)] | ~conf[("within 2 cm", s)])) for s in SPANS_12B}
+    return out, cov_all
+
+
+def run_b(paths, m4=None, cache=None, rec12=None, log=print, dev=None):
+    """Stage 12b. As run(), with both RULES and SPANS_12B; rec12: #28's stage12.json (or its dry run) for K1b."""
+    t0 = time.perf_counter()
+    looks128, truth, fan, refs, vis_fn = paths["128"]
+    R, per_ref = st.collect(paths, m4, cache, rows=["perfect", "N1024", MIRROR], log=log, dev=dev, extra=(st.N_EDGE,))
+    edges = R.pop(st.N_EDGE)
+    R[N10] = {j: st.edge_variant(o, truth, j, looks128, "rel") for j, o in edges.items()}
+    R[MOVED] = moved(R["perfect"], looks128)
+    attr = st.attributes(paths, refs, dev)
+    R.update({CEIL: st.ceiling_rows(R, attr, looks128, fan)[CEIL]})
+    log(f"[stage12b] rows ready ({time.perf_counter() - t0:.0f} s)")
+    pos = positions(looks128, refs)
+    out = {"references": refs, "positions_m": {str(j): round(p, 6) for j, p in pos.items()}, "spans_m": list(SPANS_12B),
+           "rules": list(RULES), "bands": {}}
+    for bname, rows in BAND_ROWS.items():
+        band = st.BANDS[bname]
+        surf = st.surface_band(per_ref, truth, looks128, band)
+        res, pcov = {}, None
+        for name in rows:
+            if name not in R:
+                log(f"[stage12b] {bname}: no row {name!r}")
+                continue
+            res[name], cov = models_b(R[name], per_ref, truth, fan, surf, band, looks128, pos, BAND_SECTORS[bname],
+                                      sorted(refs), pcov)
+            if name == "perfect":
+                pcov = cov
+            log(f"[stage12b] {bname} {name} ({time.perf_counter() - t0:.0f} s)")
+        out["bands"][bname] = res
+    out["checks"] = checks_b(out, rec12)
+    out["seconds"] = round(time.perf_counter() - t0, 1)
+    return out
+
+
+def checks_b(out, rec12):
+    res = []
+    full = out["bands"]["full"]
+    if rec12 is not None:
+        lines, ok = [], True
+        for bname, rows in out["bands"].items():
+            for name, r in rows.items():
+                old = rec12["bands"].get(bname, {}).get(name)
+                if old is None:
+                    continue
+                for s in SPANS_M:
+                    a, b = r["rules"]["same cell"]["spans"][f"{s:g}"]["model"], old["spans"][f"{s:g}"]["model"]
+                    same = a["cells"] == b["cells"] and (a["right"] == b["right"] or _eq(a["right"], b["right"]))
+                    ok &= bool(same)
+                    if not same:
+                        lines.append({"band": bname, "row": name, "span": s, "new": [a["cells"], a["right"]],
+                                      "stage12": [b["cells"], b["right"]]})
+        p0 = full["perfect"]["rules"]
+        res.append({"check": "K1b: the same-cell rule at 0, 0.2 and 0.5 m equals stage 12's models (every row and band)",
+                    "ok": ok, "differences": lines,
+                    "control": "the within-2 cm rule at span 0 (perfect, full field) in place of the same-cell rule",
+                    "control_fails": p0["within 2 cm"]["spans"]["0"]["model"]["cells"]
+                    != rec12["bands"]["full"]["perfect"]["spans"]["0"]["model"]["cells"],
+                    "control_value": [p0["within 2 cm"]["spans"]["0"]["model"]["cells"],
+                                      rec12["bands"]["full"]["perfect"]["spans"]["0"]["model"]["cells"]]})
+    else:
+        res.append({"check": "K1b", "ok": None, "note": "no stage 12 record given"})
+    allc = all(v for rows in out["bands"].values() for r in rows.values() for v in r["contains"].values())
+    conv = full["perfect"]["contained"]["0"]
+    res.append({"check": "K2b: at every span, row and band, the within-2 cm model contains the same-cell model",
+                "ok": allc, "control": "the converse (perfect, full field, span 0)", "control_fails": not conv,
+                "control_value": conv})
+    gp = full["perfect"]["rules"]["within 2 cm"]["spans"]["0.5"]["gate"]
+    gm = full[MOVED]["rules"]["within 2 cm"]["spans"]["0.5"]["gate"] if MOVED in full else None
+    res.append({"check": "K3b: the perfect matcher's within-2 cm model at 0.5 m passes S2's gate (full field)",
+                "ok": None if gp["result"] == "not evaluated" else gp["result"] == "pass",
+                "value": {"result": gp["result"], "unverified": gp["unverified"]},
+                "control": MOVED + " must fail it",
+                "control_fails": None if gm is None or gp["result"] == "not evaluated" else
+                {"fail": True, "pass": False, "not evaluated": None}[gm["result"]],
+                "control_value": gm["result"] if gm is not None else None})
+    if MIRROR in full:
+        r = {f"{rule} {s}": full[MIRROR]["rules"][rule]["spans"][s]["gate"]["result"]
+             for rule in RULES for s in full[MIRROR]["rules"][rule]["spans"]}
+        res.append({"check": "the standard control: N1024 mirrored must not pass S2's gate under either rule at any span",
+                    "ok": None, "control": MIRROR, "control_fails": all(v != "pass" for v in r.values()),
+                    "control_value": r})
+    return res
+
+
+def table_b(out):
+    lines = ["| band | row | rule | span | model cells | right | wrong cells | coverage | of perfect | S2 gate |",
+             "|---|---|---|---|---|---|---|---|---|---|"]
+    f = lambda x, p=2: "—" if x is None else f"{100 * x:.{p}f} %"
+    for bname, rows in out["bands"].items():
+        for name, r in rows.items():
+            a = r["all"]
+            lines.append(f"| {bname} | {name} | all cells | | {a['cells']:,} | {f(a['right'])} | | {f(a['coverage'], 1)} | | |")
+            for rule, rr in r["rules"].items():
+                for s, e in rr["spans"].items():
+                    m, g = e["model"], e["gate"]
+                    fails = [k for k, p in g["parts"].items() if p["result"] == "fail"]
+                    gs = g["result"] + (f"; fails: {', '.join(fails)}" if fails else "") + (
+                        f"; unverified: {', '.join(g['unverified'])}" if g["unverified"] else "")
+                    lines.append(f"| {bname} | {name} | {rule} | ≥ {s} m | {m['cells']:,} | {f(m['right'])} | "
+                                 f"{m['wrong_cells']:,} | {f(m['coverage'], 1)} | {f(m.get('covers_of_perfect'), 1)} | {gs} |")
+    return lines
