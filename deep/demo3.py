@@ -379,12 +379,14 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
                        "control": cf.MIRROR, "control_fails": gm["result"] != "pass", "control_value": gm["result"]})
     gate = sd.gate(mp["right"][mp["conf"]], mp["psi"][mp["conf"]], sectors)
     rec = {"command": "demo3", "references": refs, "lag_looks": LAG, "looks": K, "path_looks": len(T), "rule": rule,
-           "span_m": span, "ray_set_psi_deg": list(ray), "gate_sectors": sectors, "source": src_name,
-           "floor": floor if is_map(rule) else None, "end": {"model": {"cells": int(mp["conf"].sum()),
-                                             "right": float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None,
-                                             "coverage": hist[-1][1]["model"][0]},
-                                   "all": {"cells": int(len(mp["Xf"])), "right": float(mp["right"].mean()) if len(mp["Xf"]) else None,
-                                           "coverage": hist[-1][1]["all"][0]},
+           "span_m": None if is_map(rule) else span, "ray_set_psi_deg": list(ray), "gate_sectors": sectors,
+           "source": src_name, "floor": floor if is_map(rule) else None,
+           "end": {"model": {"cells": int(mp["conf"].sum()),
+                             "right": float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None,
+                             "coverage": hist[-1][1]["model"][0],
+                             "gross": int((mp["conf"] & ~(mp["err"] <= 0.25)).sum())},
+                   "all": {"cells": int(len(mp["Xf"])), "right": float(mp["right"].mean()) if len(mp["Xf"]) else None,
+                           "coverage": hist[-1][1]["all"][0], "gross": int((~(mp["err"] <= 0.25)).sum())},
                                    "candidates": int((~mp["conf"]).sum()), "gate": gate},
            "at_releases": models_at, "files": files, "frames": enc.n if enc is not None else 0, "fps": FPS,
            "display_max_cells_per_side": d2.MAX_DRAW, "checks": checks, "seconds": round(time.perf_counter() - t0, 1)}
