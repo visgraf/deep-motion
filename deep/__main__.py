@@ -346,6 +346,29 @@ def stage11b(a) -> int:
     return 0 if ok else 1
 
 
+def stage11c(a) -> int:
+    _torch_threads()
+    import time as _t
+    from . import straight as st
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, rec_assess, src = _stage11_inputs(a)
+    out = st.diagnose(paths, m4=m4, cache=a.cache, assess_record=rec_assess,
+                      log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    out.update({"command": "stage11c", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    lines = st.diagnose_tables(out)
+    for line in lines:
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage11c_dry" if a.dry_run else "stage11c"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_tables.md").write_text("\n".join(lines) + "\n")
+    ok = all(v.get("equal_to_stage9", v.get("equal", True)) for v in out["consistency"].values())
+    return 0 if ok else 1
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -512,6 +535,14 @@ def main(argv=None) -> int:
     p.add_argument("--cache", default=None)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11c", help="#26: N1024's depth-edge variants (off; 10 %% of zeta) and the cross-tabulations "
+                                         "range x SNR and sector x SNR (from stage11's cache, one new N run)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -529,7 +560,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

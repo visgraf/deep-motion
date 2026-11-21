@@ -476,18 +476,24 @@ def match_reference(img_r, c_r, R_r, imgs, poses, W, settings=None, dev=None, ma
     cand2 = reason == 0
     Dz2, Pr, Kg = ras(zeta, cand2), ras(psi_a / res, allm), ras(fit["gamma"], allm)
     dev_ = np.zeros((H, W))
+    rel_ = np.zeros((H, W))                     # the same deviation over the anchor's own zeta (#26, stage 11c; reported)
     hh = int(s["edge_half_px"])
     for di in range(-hh, hh + 1):
         for dj in range(-hh, hh + 1):
             if di or dj:
-                with np.errstate(invalid="ignore"):
-                    dv = np.abs(shifted(Dz2, di, dj) - (Dz2 + Kg * (shifted(Pr, di, dj) - Pr))) * G
+                with np.errstate(invalid="ignore", divide="ignore"):
+                    d0 = np.abs(shifted(Dz2, di, dj) - (Dz2 + Kg * (shifted(Pr, di, dj) - Pr)))
+                    dv, dr = d0 * G, d0 / Dz2
                 dev_ = np.fmax(dev_, np.where(np.isfinite(dv), dv, 0.0))
+                rel_ = np.fmax(rel_, np.where(np.isfinite(dr), dr, 0.0))
     edge_dev = dev_[px[:, 0], px[:, 1]]
+    edge_rel = rel_[px[:, 0], px[:, 1]]
+    reason_pre_edge = reason.copy()             # N's reasons before its last test, the depth edge (which feeds nothing back)
     mark(cand2 & (edge_dev > s["edge_tol_px"]), "depth_edge")
     return {"px": px, "u": u, "psi": psi_a, "omega": om_a, "zeta": zeta, "gamma": fit["gamma"], "sigma_zeta": sig,
             "sigma_px": sig * geq, "n_frames": fit["n_frames"], "ncc_coarse": c1n, "ncc_second": c2n, "zeta_coarse": z0,
-            "texture": fit["texture"], "support": support, "edge_dev_px": edge_dev, "px_per_zeta": geq, "reason": reason,
+            "texture": fit["texture"], "support": support, "edge_dev_px": edge_dev, "edge_dev_rel": edge_rel,
+            "reason_pre_edge": reason_pre_edge, "px_per_zeta": geq, "reason": reason,
             "ts": np.asarray(ts), "zeta_step": dz, "n_zeta": Z, "settings": s, "alignment": al}
 
 

@@ -104,9 +104,10 @@ def b_short(looks, truth, j, fan, all_pixels=False):
             "accepted": int(mk.sum()), "right_acc": int(right[mk].sum())}
 
 
-def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_all=False):
+def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_all=False, keep_edge=False):
     """N at reference j over the frames j + 10 i, i in offsets; mirror: frame k given look 2j - k's pose. keep_all:
-    also every anchor's pixel and rejection reason (stage 11b's reasons by class)."""
+    also every anchor's pixel and rejection reason (stage 11b's reasons by class). keep_edge: also, for every anchor,
+    its ray, zeta, reason before the depth-edge test and both deviations (stage 11c's variants)."""
     s, c, R, img, _ = looks[j]
     ks = [j + STEP_LOOKS * i for i in offsets]
     poses = [(looks[2 * j - k][1], looks[2 * j - k][2]) if mirror else (looks[k][1], looks[k][2]) for k in ks]
@@ -118,8 +119,12 @@ def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_
     o = {"j": j, "X": c + r["u"][acc] * rng[acc][:, None], "psi": np.degrees(r["psi"][acc]), "tried": int(len(acc)),
          "accepted": int(acc.sum()), "right_acc": int(right[acc].sum()), "px_acc": r["px"][acc],
          "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))}}
-    if keep_all:
+    if keep_all or keep_edge:
         o.update({"px_all": r["px"].astype(np.int16), "reason_all": r["reason"].astype(np.int8)})
+    if keep_edge:
+        o.update({"u_all": r["u"], "zeta_all": r["zeta"], "psi_all": r["psi"],
+                  "reason_pre_edge": r["reason_pre_edge"].astype(np.int8),
+                  "edge_dev_px": r["edge_dev_px"].astype(np.float32), "edge_dev_rel": r["edge_dev_rel"].astype(np.float32)})
     return o
 
 
@@ -253,6 +258,7 @@ def _cache(path, fn):
 
 B_ALL = "B on all pixels, N's frames, 1024"
 N_ALL = "N1024, every anchor's reason"
+N_EDGE = "N1024, every anchor kept (stage 11c)"
 ROW_ALIAS = {B_ALL: "B cost on N's pixels and frames, 1024"}   # its cache's name before #26's fix a
 
 
@@ -266,7 +272,7 @@ def collect(paths, m4=None, cache=None, rows=None, log=print, dev=None, extra=()
     safe = lambda name: "".join(ch if ch.isalnum() or ch in "-_.@" else "_" for ch in name)
     cp = lambda name, j: (cache / safe(ROW_ALIAS.get(name, name)) / f"r{j:04d}.npz") if cache else None
     want = set(rows) if rows else None
-    on = lambda name: (want is None and name not in (N_ALL,)) or (want is not None and name in want) or name in extra
+    on = lambda name: (want is None and name not in (N_ALL, N_EDGE)) or (want is not None and name in want) or name in extra
     R = {}
 
     def per(name, fn):
@@ -295,6 +301,7 @@ def collect(paths, m4=None, cache=None, rows=None, log=print, dev=None, extra=()
         per("B1024 on 11 looks", lambda j: b_short(looks1024, truth, j, fan))
         per(B_ALL, lambda j: b_short(looks1024, truth, j, fan, all_pixels=True))
         per(N_ALL, lambda j: n_reference(looks1024, truth, j, fan, dev=dev, keep_all=True))
+        per(N_EDGE, lambda j: n_reference(looks1024, truth, j, fan, dev=dev, keep_edge=True))
         if "N1024" in R and "B1024" in R and on("N1024 on B's anchors"):
             sub = {}
             for j in refs:
@@ -689,6 +696,235 @@ def breakdown_tables(out, rows=("perfect", "perfect where signal texture >= 0.02
         for n in names:
             L.append(f"| {n} | " + " | ".join(f(tab[b][n][1]) + " %" if n in tab[b] else "—" for b in bins) + " |")
         L.append(f"| anchors | " + " | ".join(str(tab[b]["anchors"]) for b in bins) + " |")
+        L.append("")
+    return L
+
+
+# ------------------------------------------------------------------------- stage 11c: the diagnosis (#26, 2026-11-21)
+
+EDGE_REL = 0.10                     # stage 9's EDGE_RATIO - 1: the share by which stage 9 calls a range change an edge
+EDGE_VARIANTS = {"N1024, depth-edge test off": "off", "N1024, depth-edge test at 10 %": "rel"}
+CROSS = {"range x snr": ("range", "snr"), "sector x snr": ("sector", "snr")}
+DIAG_ROWS = ("perfect", "perfect where gradient SNR >= 3", "B1024", B_ALL, "N1024", "N1024, depth-edge test off",
+             "N1024, depth-edge test at 10 %", "M4@1024")
+
+
+def edge_variant(o, truth, j, looks, mode):
+    """N1024 at reference j with its last test, the depth edge, as `mode`: 'px' (M4's 0.5 px of the longest step: N1024
+    itself), 'off', or 'rel' (a neighbour's deviation from the anchor's planar prediction over 10 % of its zeta)."""
+    pre = o["reason_pre_edge"] == 0
+    if mode == "px":
+        acc = pre & ~(o["edge_dev_px"] > nt.SETTINGS["edge_tol_px"])
+    elif mode == "rel":
+        acc = pre & ~(o["edge_dev_rel"] > EDGE_REL)
+    else:
+        acc = pre.copy()
+    acc &= o["zeta_all"] > 0
+    c = looks[j][1]
+    rng = 1.0 / o["zeta_all"][acc]
+    px = o["px_all"][acc].astype(np.int64)
+    right = _nb_right(c, truth[j][0], truth[j][1], px, rng)
+    return {"j": j, "X": c + o["u_all"][acc] * rng[:, None], "psi": np.degrees(o["psi_all"][acc]),
+            "tried": int(len(pre)), "accepted": int(acc.sum()), "right_acc": int(right.sum()), "px_acc": px}
+
+
+def pred_of(attr, spec):
+    """A predicate on (j, px) for a list of (kind, bin range) pairs: every pair must hold."""
+    def f(j, px):
+        m = np.ones(len(px), bool)
+        for kind, rng in spec:
+            m &= _in(classify(attr, j, px, kind), rng)
+        return m
+    return f
+
+
+def surface_pred(per_ref, truth, pred):
+    """surface_where for any predicate on the true points' reference pixels."""
+    pts = []
+    for j in per_ref:
+        P, idx = truth[j]
+        H, W = idx.shape
+        rows = np.arange(0, H, 2)
+        lat = (0.5 - (rows + 0.5) / H) * np.pi
+        rows = rows[np.abs(lat) < e2e.LAT_MAX]
+        rr, cc = np.meshgrid(rows, np.arange(0, W, 2), indexing="ij")
+        px = np.stack([rr.ravel(), cc.ravel()], -1)
+        q = idx[px[:, 0], px[:, 1]]
+        keep = (q >= 0) & pred(j, px)
+        pts.append(P[q[keep]])
+    S = np.concatenate(pts) if pts else np.zeros((0, 3))
+    S = S[np.all(np.isfinite(S), 1)]
+    if len(S) == 0:
+        return np.zeros(0, np.int64), np.zeros((0, 3))
+    code = e2e._encode(e2e._keys(S))
+    uc, inv = np.unique(code, return_inverse=True)
+    rep = np.zeros((len(uc), 3))
+    np.add.at(rep, inv, S)
+    rep /= np.bincount(inv)[:, None]
+    return uc, rep
+
+
+def score_pred(row, per_ref, truth, fan, surf, pred, looks, perfect_cov=None):
+    """score_where for any predicate on the points' reference pixels."""
+    W = fan.width
+    Xs, refs_of = [], []
+    for j, o in row.items():
+        if len(o["X"]) == 0:
+            continue
+        sel = pred(j, point_pixels(o["X"], looks[j][1], looks[j][2], W))
+        Xs.append(o["X"][sel])
+        refs_of.append(np.full(int(sel.sum()), j))
+    if sum(len(x) for x in Xs) == 0:
+        Xf, right = np.zeros((0, 3)), np.zeros(0, bool)
+    else:
+        _, _, Xf, nref, dom, right, _ = asx.fuse_and_judge(Xs, refs_of, per_ref, truth, fan)
+    cov = asx.covered(surf[1], Xf[right]) if len(Xf) and len(surf[1]) else np.zeros(len(surf[1]), bool)
+    out = {"cells": int(len(Xf)), "right": float(right.mean()) if len(Xf) else None,
+           "coverage": float(cov.mean()) if len(cov) else None, "surface_cells": int(len(surf[1]))}
+    if perfect_cov is not None and perfect_cov.any():
+        out["covers_of_perfect"] = float((cov & perfect_cov).sum() / perfect_cov.sum())
+    return out, cov
+
+
+def _reasons(rows_all, attr, pred, key="reason_all"):
+    cnt = np.zeros(len(nt.REASONS), np.int64)
+    for j, o in rows_all.items():
+        sel = pred(j, o["px_all"].astype(np.int64))
+        cnt += np.bincount(o[key][sel].astype(np.int64), minlength=len(nt.REASONS))
+    tot = int(cnt.sum())
+    return {"anchors": tot, **{nt.REASONS[k]: (int(cnt[k]), float(cnt[k] / tot) if tot else None)
+                               for k in range(len(nt.REASONS)) if cnt[k]}}
+
+
+def diagnose(paths, m4=None, cache=None, assess_record=None, log=print, dev=None):
+    """Stage 11c: the two depth-edge variants of N1024 (from one run keeping every anchor, the 0.5 px case rebuilding
+    N1024 exactly), stage 11's full-field scores and stage 11b's classes for them, and the cross-tabulations range x
+    SNR and sector x SNR of coverage, cells right and N1024's rejections. Reported; no check changes."""
+    t0 = time.perf_counter()
+    looks128, truth, fan, refs, vis_fn = paths["128"]
+    R, per_ref = collect(paths, m4, cache, None, log, dev, extra=(N_EDGE, "perfect"))
+    consistency = {}
+    if assess_record is not None:
+        st = assess_record["numbers"]["straight"]
+        surf = surface_band(per_ref, truth, looks128, None)
+        for name, key in (("B128", "real"), ("perfect", "perfect")):
+            s_, _ = score(R[name], per_ref, truth, fan, surf, None)
+            consistency[name] = {"right": s_["right"], "coverage": s_["coverage"],
+                                 "equal_to_stage9": abs(s_["right"] - st[key]["right"]) <= 1e-12
+                                 and abs(s_["coverage"] - st[key]["coverage"]) <= 1e-12}
+    edges = R.pop(N_EDGE)
+    rebuilt = {j: edge_variant(o, truth, j, looks128, "px") for j, o in edges.items()}
+    same = all(rebuilt[j]["accepted"] == R["N1024"][j]["accepted"] and len(rebuilt[j]["X"]) == len(R["N1024"][j]["X"])
+               and np.allclose(rebuilt[j]["X"], R["N1024"][j]["X"], atol=1e-9) for j in refs)
+    consistency["N1024 rebuilt at 0.5 px equals the cached N1024"] = {
+        "equal": bool(same), "accepted": [int(sum(o["accepted"] for o in rebuilt.values())),
+                                          int(sum(o["accepted"] for o in R["N1024"].values()))]}
+    log(f"[stage11c] consistency: {consistency}")
+    for name, mode in EDGE_VARIANTS.items():
+        R[name] = {j: edge_variant(o, truth, j, looks128, mode) for j, o in edges.items()}
+        log(f"[stage11c] {name}: {sum(o['accepted'] for o in R[name].values())} accepted")
+    tt = time.perf_counter()
+    attr = attributes(paths, refs, dev)
+    log(f"[stage11c] attributes ({time.perf_counter() - tt:.0f} s)")
+    R.update(ceiling_rows(R, attr, looks128, fan))
+    rows = [r for r in DIAG_ROWS if r in R]
+    out = {"references": refs, "edge_rel": EDGE_REL, "variants": EDGE_VARIANTS, "consistency": consistency,
+           "full": {}, "by_class": {}, "cross": {}, "n1024_reasons": {}, "variant_rejections": {}}
+    # stage 11's full-field scores and bands for the variants (and N1024 beside them)
+    surfs = {b: surface_band(per_ref, truth, looks128, rng) for b, rng in BANDS.items()}
+    pcov = {b: score(R["perfect"], per_ref, truth, fan, surfs[b], rng)[1] for b, rng in BANDS.items()}
+    for name in ["N1024"] + list(EDGE_VARIANTS):
+        out["full"][name] = {b: score(R[name], per_ref, truth, fan, surfs[b], rng, pcov[b])[0] for b, rng in BANDS.items()}
+    # how many anchors each tolerance rejects at a depth edge
+    for name, mode in [("N1024 (0.5 px)", "px")] + list((n, m) for n, m in EDGE_VARIANTS.items()):
+        tot = rej = 0
+        for o in edges.values():
+            pre = o["reason_pre_edge"] == 0
+            tot += int(pre.sum())
+            if mode == "px":
+                rej += int((pre & (o["edge_dev_px"] > nt.SETTINGS["edge_tol_px"])).sum())
+            elif mode == "rel":
+                rej += int((pre & (o["edge_dev_rel"] > EDGE_REL)).sum())
+        out["variant_rejections"][name] = {"candidates_before_the_test": tot, "rejected_by_it": rej}
+    log(f"[stage11c] full field ({time.perf_counter() - t0:.0f} s)")
+    # one-dimensional classes for the rows (11b's, with the variants)
+    for kind in ("sector", "range", "edge", "snr"):
+        out["by_class"][kind] = {}
+        for bname, rng in CLASSES[kind].items():
+            pred = pred_of(attr, [(kind, rng)])
+            surf = surface_pred(per_ref, truth, pred)
+            e = {"surface_cells": int(len(surf[1])), "rows": {}}
+            sp, pc = score_pred(R["perfect"], per_ref, truth, fan, surf, pred, looks128)
+            e["rows"]["perfect"] = sp
+            for name in rows[1:]:
+                e["rows"][name] = score_pred(R[name], per_ref, truth, fan, surf, pred, looks128, pc)[0]
+            out["by_class"][kind][bname] = e
+        log(f"[stage11c] {kind} ({time.perf_counter() - t0:.0f} s)")
+    # cross-tabulations
+    for cname, (k1, k2) in CROSS.items():
+        out["cross"][cname] = {}
+        out["n1024_reasons"][cname] = {}
+        for b1, r1 in CLASSES[k1].items():
+            for b2, r2 in CLASSES[k2].items():
+                pred = pred_of(attr, [(k1, r1), (k2, r2)])
+                surf = surface_pred(per_ref, truth, pred)
+                key = f"{b1} | {b2}"
+                e = {"surface_cells": int(len(surf[1])), "rows": {}}
+                sp, pc = score_pred(R["perfect"], per_ref, truth, fan, surf, pred, looks128)
+                e["rows"]["perfect"] = sp
+                for name in rows[1:]:
+                    e["rows"][name] = score_pred(R[name], per_ref, truth, fan, surf, pred, looks128, pc)[0]
+                out["cross"][cname][key] = e
+                out["n1024_reasons"][cname][key] = _reasons(edges, attr, pred)
+        log(f"[stage11c] {cname} ({time.perf_counter() - t0:.0f} s)")
+    out["seconds"] = round(time.perf_counter() - t0, 1)
+    return out
+
+
+def diagnose_tables(out):
+    """Stage 11c as markdown."""
+    f = lambda x, p=1: "—" if x is None else f"{100 * x:.{p}f}"
+    L = ["### The depth-edge variants on the full field and the bands (coverage, cells right)", "",
+         "| row | " + " | ".join(BANDS) + " | rejected by the test |", "|---|" + "---|" * (len(BANDS) + 1)]
+    vr = out["variant_rejections"]
+    vmap = {"N1024": "N1024 (0.5 px)"}
+    for name, b in out["full"].items():
+        r = vr.get(vmap.get(name, name), {})
+        L.append(f"| {name} | " + " | ".join(f"{f(s['coverage'])} % ({f(s['right'], 2)} %)" for s in b.values())
+                 + f" | {r.get('rejected_by_it', '—')} of {r.get('candidates_before_the_test', '—')} |")
+    L.append("")
+    for kind, bins in out["by_class"].items():
+        L += [f"### by {kind} (coverage, cells right)", "",
+              "| row | " + " | ".join(f"{b} ({e['surface_cells']})" for b, e in bins.items()) + " |", "|---|" + "---|" * len(bins)]
+        names = list(next(iter(bins.values()))["rows"])
+        for n in names:
+            L.append(f"| {n} | " + " | ".join("—" if e["rows"][n] is None else
+                                              f"{f(e['rows'][n]['coverage'])} % ({f(e['rows'][n]['right'], 1)} %)" for e in bins.values()) + " |")
+        L.append("")
+    for cname, cells in out["cross"].items():
+        k1, k2 = CROSS[cname]
+        b1s, b2s = list(CLASSES[k1]), list(CLASSES[k2])
+        for n in ("perfect", "N1024", "N1024, depth-edge test off", "N1024, depth-edge test at 10 %", B_ALL):
+            L += [f"### {cname}: {n} (coverage, cells right; surface cells)", "", f"| {k1} \\ {k2} | " + " | ".join(b2s) + " |",
+                  "|---|" + "---|" * len(b2s)]
+            for b1 in b1s:
+                row = []
+                for b2 in b2s:
+                    e = cells[f"{b1} | {b2}"]
+                    s_ = e["rows"].get(n)
+                    row.append("—" if not s_ or s_["coverage"] is None else
+                               f"{f(s_['coverage'])} % ({f(s_['right'], 1)} %; {e['surface_cells']})")
+                L.append(f"| {b1} | " + " | ".join(row) + " |")
+            L.append("")
+        L += [f"### {cname}: N1024's rejections at NCC < 0.8 / at a depth edge / accepted (share of anchors tried)", "",
+              f"| {k1} \\ {k2} | " + " | ".join(b2s) + " |", "|---|" + "---|" * len(b2s)]
+        for b1 in b1s:
+            row = []
+            for b2 in b2s:
+                t = out["n1024_reasons"][cname][f"{b1} | {b2}"]
+                g = lambda k: f(t[k][1], 0) if k in t else "0"
+                row.append(f"{g('low_ncc')} / {g('depth_edge')} / {g('accepted')} ({t['anchors']})")
+            L.append(f"| {b1} | " + " | ".join(row) + " |")
         L.append("")
     return L
 
