@@ -1,0 +1,18 @@
+2026-11-21T11:43:00-03:00 $ PYTHONPATH=. .venv/bin/python docs/runs/dm-issue-26/gain_check.py runs/r3-straight runs/r3-straight-1024 (at 0b9d4f2; the script is committed with this output)
+ref  LS-gain  ratio-of-means  median-ratio(I1024>0.05)
+  50  0.9728   0.9742          0.9630
+  60  0.9727   0.9738          0.9620
+  70  0.9737   0.9748          0.9629
+  80  0.9732   0.9742          0.9627
+  90  0.9731   0.9746          0.9633
+ 100  0.9737   0.9753          0.9636
+ 110  0.9730   0.9742          0.9627
+ 120  0.9732   0.9747          0.9630
+ 130  0.9739   0.9751          0.9631
+ 140  0.9734   0.9750          0.9631
+ 150  0.9737   0.9749          0.9622
+ 160  0.9733   0.9743          0.9625
+runs/r3-straight: raw middle look p99 0.80191, mean 0.13788, median 0.12294
+runs/r3-straight-1024: raw middle look p99 0.78087, mean 0.13773, median 0.12774
+scale ratio p99(1024)/p99(128) 0.9738; raw mean ratio 128/1024 1.0011; raw median ratio 0.9624
+exit 0
