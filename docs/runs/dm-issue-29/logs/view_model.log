@@ -1,0 +1,37 @@
+2026-11-21T17:13:21-03:00 $ blender -b --factory-startup --python-exit-code 1 -P docs/runs/dm-issue-25/ply_view.py -- runs/demo3-classroom/classroom_straight_model.ply /home/lvelho/rd/deep-motion/docs/runs/dm-issue-29/classroom_straight_model.png --eye 3.5 -6.5 6.5 --target -0.6 0.2 0.6 --lens 20 --zmax 2.6 --res 1280 800 (at 77e05dd)
+/home/lvelho/rd/deep-motion/docs/runs/dm-issue-25/ply_view.py:58: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat.use_nodes = True
+/home/lvelho/rd/deep-motion/docs/runs/dm-issue-25/ply_view.py:79: DeprecationWarning: 'World.use_nodes' is expected to be removed in Blender 6.0
+  w = bpy.data.worlds.new("w"); w.use_nodes = True
+00:00.326  cycles           | WARNING HIPEW initialization failed: Error opening HIP dynamic library
+Blender 5.2.1 LTS (hash 9e2066aef7ef built 2026-08-25 02:12:34)
+PLY import of 'classroom_straight_model.ply' took 1.10 ms
+00:00.735  render           | Saved: '/home/lvelho/rd/deep-motion/docs/runs/dm-issue-29/classroom_straight_model.png'
+[view] attributes: [('position', 'POINT', 'FLOAT_VECTOR'), ('.edge_verts', 'EDGE', 'INT32_2D'), ('.corner_vert', 'CORNER', 'INT'), ('.corner_edge', 'CORNER', 'INT'), ('Col', 'POINT', 'FLOAT_COLOR'), ('sharp_face', 'FACE', 'BOOLEAN'), ('right', 'POINT', 'FLOAT'), ('err', 'POINT', 'FLOAT'), ('nref', 'POINT', 'FLOAT'), ('nsup', 'POINT', 'FLOAT'), ('span_m', 'POINT', 'FLOAT'), ('confirmed', 'POINT', 'FLOAT'), ('psi', 'POINT', 'FLOAT')] verts 16922
+[view] wrote /home/lvelho/rd/deep-motion/docs/runs/dm-issue-29/classroom_straight_model.png
+
+Blender quit
+	Command being timed: "blender -b --factory-startup --python-exit-code 1 -P docs/runs/dm-issue-25/ply_view.py -- runs/demo3-classroom/classroom_straight_model.ply /home/lvelho/rd/deep-motion/docs/runs/dm-issue-29/classroom_straight_model.png --eye 3.5 -6.5 6.5 --target -0.6 0.2 0.6 --lens 20 --zmax 2.6 --res 1280 800"
+	User time (seconds): 0.55
+	System time (seconds): 0.40
+	Percent of CPU this job got: 106%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.90
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 680800
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 120196
+	Voluntary context switches: 892
+	Involuntary context switches: 250
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 2504
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T17:13:22-03:00 exit 0

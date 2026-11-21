@@ -1,0 +1,334 @@
+{
+ "command": "demo3",
+ "references": [
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160
+ ],
+ "lag_looks": 50,
+ "looks": 218,
+ "path_looks": 218,
+ "rule": "within 2 cm",
+ "span_m": 1.0,
+ "ray_set_psi_deg": [
+  1.0,
+  120.0
+ ],
+ "gate_sectors": [
+  "0-15",
+  "15-60",
+  "60-120"
+ ],
+ "end": {
+  "model": {
+   "cells": 16922,
+   "right": 0.9989362959461057,
+   "coverage": 0.03834216310547706
+  },
+  "all": {
+   "cells": 134950,
+   "right": 0.9777473138199333,
+   "coverage": 0.17068723866932667
+  },
+  "candidates": 118028,
+  "gate": {
+   "result": "pass",
+   "parts": {
+    "overall": {
+     "cells": 16922,
+     "right": 0.9989362959461057,
+     "result": "pass"
+    },
+    "0-15": {
+     "cells": 1117,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "15-60": {
+     "cells": 9329,
+     "right": 0.9982849179976417,
+     "result": "pass"
+    },
+    "60-120": {
+     "cells": 6476,
+     "right": 0.9996911673872761,
+     "result": "pass"
+    }
+   },
+   "unverified": [],
+   "gate_right": 0.995,
+   "min_cells": 1000,
+   "standard": "S2"
+  }
+ },
+ "at_releases": [
+  {
+   "look": 0,
+   "released": 0,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 0,
+   "right": null,
+   "coverage": 0.0
+  },
+  {
+   "look": 100,
+   "released": 1,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 15294,
+   "right": 0.9769844383418333,
+   "coverage": 0.04507673507950699
+  },
+  {
+   "look": 110,
+   "released": 2,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 28376,
+   "right": 0.9777276571750775,
+   "coverage": 0.06704119996408228
+  },
+  {
+   "look": 120,
+   "released": 3,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 40519,
+   "right": 0.9778375576889854,
+   "coverage": 0.08289965292553711
+  },
+  {
+   "look": 130,
+   "released": 4,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 52285,
+   "right": 0.9779477861719422,
+   "coverage": 0.09702468562237206
+  },
+  {
+   "look": 140,
+   "released": 5,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 63609,
+   "right": 0.9767485733150969,
+   "coverage": 0.10924061356830808
+  },
+  {
+   "look": 150,
+   "released": 6,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 74699,
+   "right": 0.977067966103964,
+   "coverage": 0.12065229697705561
+  },
+  {
+   "look": 160,
+   "released": 7,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 85173,
+   "right": 0.9764714169983445,
+   "coverage": 0.13083028488215476
+  },
+  {
+   "look": 170,
+   "released": 8,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 95392,
+   "right": 0.976339734988259,
+   "coverage": 0.13950129030494923
+  },
+  {
+   "look": 180,
+   "released": 9,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 105746,
+   "right": 0.9766515991148601,
+   "coverage": 0.14818010392713388
+  },
+  {
+   "look": 190,
+   "released": 10,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 115905,
+   "right": 0.977136447953065,
+   "coverage": 0.1570697389328534
+  },
+  {
+   "look": 200,
+   "released": 11,
+   "model_cells": 8738,
+   "model_right": 0.9981689173723964,
+   "model_coverage": 0.023205968587613854,
+   "cells": 125591,
+   "right": 0.9774108017294233,
+   "coverage": 0.1641947208763923
+  },
+  {
+   "look": 210,
+   "released": 12,
+   "model_cells": 16922,
+   "model_right": 0.9989362959461057,
+   "model_coverage": 0.03834216310547706,
+   "cells": 134950,
+   "right": 0.9777473138199333,
+   "coverage": 0.17068723866932667
+  }
+ ],
+ "files": {
+  "model": {
+   "path": "runs/demo3-classroom/classroom_straight_model.ply",
+   "bytes": 525169,
+   "points": 16922,
+   "mb": 0.53
+  },
+  "all": {
+   "path": "runs/demo3-classroom/classroom_straight_all.ply",
+   "bytes": 4184038,
+   "points": 134950,
+   "mb": 4.18
+  }
+ },
+ "frames": 469,
+ "fps": 24,
+ "display_max_cells_per_side": 60000,
+ "checks": [
+  {
+   "name": "V1a: the end model equals the batch model (cells, cells right)",
+   "ok": true,
+   "end": {
+    "cells": 16922,
+    "right_cells": 16904
+   },
+   "batch": {
+    "cells": 16922,
+    "right_cells": 16904
+   },
+   "control": "the model before the last release",
+   "control_fails": true,
+   "control_value": 8738
+  },
+  {
+   "name": "V1b: the full-ray-set model equals stage 12b's N1024 model (within 2 cm, \u2265 1 m)",
+   "ok": true,
+   "end": [
+    23044,
+    0.9957906613435168
+   ],
+   "stage12b": [
+    23044,
+    0.9957906613435168
+   ],
+   "control": "stage 12b's next shorter span",
+   "control_fails": true,
+   "control_value": 43974
+  },
+  {
+   "name": "V2: nothing shown before its window is complete (m + 50 <= t)",
+   "ok": true,
+   "violations": 0,
+   "control": "a schedule releasing at m",
+   "control_fails": true,
+   "control_value": 600
+  },
+  {
+   "name": "C: the colours' error (<= 10 %) equals stage 9's cells right on every end cell",
+   "ok": true,
+   "control": "5 % in place of 10 %",
+   "control_fails": true,
+   "control_value": 3112
+  },
+  {
+   "name": "P1 model: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "P1 all: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "the standard control: N1024 mirrored's end model must not pass S2's gate",
+   "ok": null,
+   "control": "N1024 mirrored (C3 control)",
+   "control_fails": true,
+   "control_value": "not evaluated"
+  }
+ ],
+ "seconds": 177.9,
+ "standard": "S2",
+ "profile": "build",
+ "values": {
+  "scene": "classroom",
+  "spp": 1024,
+  "noise_measured": true,
+  "look_spacing_m": 0.01,
+  "sensor": "panorama",
+  "width": 720,
+  "psi_deg": [
+   1.0,
+   120.0
+  ],
+  "lat_max_deg": 70.0,
+  "frames": 11,
+  "frame_spacing_m": 0.1,
+  "cell_m": 0.02,
+  "metric": "stage 9",
+  "confirm_span_m": 1.0,
+  "confirm_rule": "within 2 cm",
+  "gate_right": 0.995,
+  "gate_min_cells": 1000,
+  "path": "straight_long"
+ },
+ "departures": {
+  "path": "one primitive, R3's straight_long: the demo's path (#29, P-D5)",
+  "psi_deg": "the ray set chosen from stage 12b's error map (#28, P-D6): the backward sectors dropped",
+  "confirm_rule": "chosen after stage 12b (#28, P-D6)",
+  "confirm_span_m": "chosen after stage 12b (#28, P-D6)"
+ },
+ "controls": [
+  "mirrored poses"
+ ],
+ "check_record": [],
+ "sources": {
+  "r128": "runs/r3-straight",
+  "r1024": "runs/r3-straight-1024",
+  "stage12b": "docs/runs/dm-issue-28/stage12b.json"
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "77e05ddf205c3a73f4b9a1712a406aeb0c7b10e1",
+   "clean": true
+  }
+ }
+}
