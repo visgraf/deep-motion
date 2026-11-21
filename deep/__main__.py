@@ -369,6 +369,76 @@ def stage11c(a) -> int:
     return 0 if ok else 1
 
 
+def standard_selftest(a) -> int:
+    """S1's code (deep/standard.py) and stage 12's span logic (deep/confirm.py), each check with its control."""
+    from . import standard as sd
+    res = [("standard", r) for r in sd.selftest()]
+    try:
+        from . import confirm as cf
+        res += [("stage12", r) for r in cf.selftest()]
+    except ImportError as e:                                    # deep/confirm.py needs torch (via ntrace)
+        print(f"{PREFIX} stage12 span logic not run: {e}")
+    for who, (name, ok, val, cname, cfail, cval) in res:
+        print(f"{PREFIX} {who} {'PASS' if ok else 'FAIL'} {name}: {val}; control {cname}: "
+              f"{'fails' if cfail else 'DOES NOT FAIL'} ({cval})")
+    ok_all = all(r[1] and r[4] for _, r in res)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "standard-selftest", "standard": sd.VERSION,
+               "checks": [{"module": w, "name": r[0], "ok": bool(r[1]), "value": r[2], "control": r[3],
+                           "control_fails": bool(r[4]), "control_value": r[5]} for w, r in res],
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "standard_selftest.json").write_text(json.dumps(rec, indent=1, default=str))
+    return 0 if ok_all else 1
+
+
+def stage12(a) -> int:
+    """#28: the confirmation distance, the first run under S1."""
+    _torch_threads()
+    import time as _t
+    from . import confirm as cf, ntrace as nt, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, _, src = _stage11_inputs(a)
+    rec_dir = REPO / "docs/runs/dm-issue-26"
+    suffix = "_dry" if a.dry_run else ""
+    rec11 = json.loads((rec_dir / f"stage11{suffix}.json").read_text())
+    rec11c = json.loads((rec_dir / f"stage11c{suffix}.json").read_text())
+    out = cf.run(paths, m4=m4, cache=a.cache, rec11=rec11, rec11c=rec11c, log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    controls = ["mirrored poses", "points moved 20 %"]
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
+                       controls=controls)
+    else:
+        fan = paths["128"][2]
+        values = dict(sd.PROFILES["ablation"]["values"], width=int(fan.width),
+                      psi_deg=list(nt.SETTINGS["psi_anchor_deg"]), lat_max_deg=float(nt.SETTINGS["lat_max_deg"]),
+                      confirm_span_m=list(cf.SPANS_M))
+        std = sd.stamp("ablation", values, departures={"confirm_span_m": "the value under study (#28): 0, 0.2 and 0.5 m"},
+                       controls=controls)
+    out.update(std)
+    out.update({"command": "stage12", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    print(f"{PREFIX} S1 record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in out["checks"]:
+        ok = c.get("ok")
+        head = "control only" if ok is None and "control_fails" in c and c["check"].startswith("the standard") else (
+            "not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        cf_ = c.get("control_fails")
+        print(f"{PREFIX} {head} {c['check']}" + (f"; control {c['control']}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')} ({c.get('control_value')})"
+              if "control" in c else ""))
+    for line in cf.table(out):
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage12_dry" if a.dry_run else "stage12"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_table.md").write_text("\n".join(cf.table(out)) + "\n")
+    bad = [c for c in out["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -543,6 +613,15 @@ def main(argv=None) -> int:
     p.add_argument("--cache", default=None)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("standard-selftest", help="#27: S1's gate and check_record, and stage 12's span logic (controls)")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage12", help="#28: the confirmation distance under S1 (from stage 11's and 11c's caches)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -560,7 +639,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
