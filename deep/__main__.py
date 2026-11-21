@@ -580,7 +580,9 @@ def demo3(a) -> int:
     for w, f in rec["files"].items():
         print(f"{PREFIX} {w}: {f['path']}, {f['points']:,} points, {f['mb']} MB")
     Path(a.out).mkdir(parents=True, exist_ok=True)
-    (Path(a.out) / ("demo3_dry.json" if a.dry_run else "demo3.json")).write_text(json.dumps(rec, indent=1, default=float))
+    base = "demo4" if d3.is_map(a.rule) else "demo3"           # D4 (#32): the coverage-first map
+    rec["demo"] = base.upper()
+    (Path(a.out) / (f"{base}_dry.json" if a.dry_run else f"{base}.json")).write_text(json.dumps(rec, indent=1, default=float))
     bad = [c for c in rec["checks"] if c.get("ok") is False or c.get("control_fails") is False]
     return 1 if bad or std["check_record"] else 0
 
