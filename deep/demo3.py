@@ -141,7 +141,8 @@ def prog(hist, total_s, box=PROG_BOX, model_name="S2's model"):
 def frame(sc, looks, m, mp, hist, total_s, fan, rule, span, label, psi_max=179.0):
     im = Image.new("RGB", (W, H), dm.PAPER)
     Xm, cm, _ = colours(mp, sc, False)
-    im.paste(d2.pano(looks, m, Xm, cm, fan, title="The current look (360° × 180°), with the model's cells"), TOP_BOX[:2])
+    im.paste(d2.pano(looks, m, Xm, cm, fan, title="The current look (360° × 180°), with the "
+                                                   + ("map's cells" if is_map(rule) else "model's cells")), TOP_BOX[:2])
     im.paste(prog(hist, total_s, model_name="the map" if is_map(rule) else "S2's model"), PROG_BOX[:2])
     rays = "" if psi_max >= 179 else f", rays 1–{psi_max:g}°"
     if is_map(rule):
