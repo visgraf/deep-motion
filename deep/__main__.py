@@ -658,6 +658,65 @@ def stage14_fixtures(a) -> int:
     return 0 if res["ok"] and res["controls_fail"] and not res["check_record"] else 1
 
 
+def stage14(a) -> int:
+    """#34: G0 (N's per-frame path forced on the straight path) and G2 (N on the turn, C3's form), with C0 on the turn."""
+    _torch_threads()
+    import time as _t
+    from types import SimpleNamespace
+    from . import arcs, assess as asx, e2e, oracle as orc, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    log = lambda m: print(f"{PREFIX} {m}", flush=True)
+    out = {"command": "stage14", "checks": []}
+    if not a.skip_g0:
+        paths, _, _, src = _stage11_inputs(SimpleNamespace(dry_run=a.dry_run, cache=a.cache, r128=a.r128, r1024=a.r1024, m4=[]))
+        out["g0"] = arcs.g0(paths, a.cache, log=log)
+        out["checks"].append({k: v for k, v in out["g0"].items() if k in ("check", "ok", "control", "control_fails", "control_value")})
+        out["sources_straight"] = src
+    if a.dry_run:
+        pt = arcs.synthetic_arc_room(cache=Path(a.turn_cache) / "arc_room.npz", log=log)
+        rec_assess, rec11 = None, None
+        out["sources_turn"] = {"dry_run": "#26's synthetic room along an arc of radius 1.0 m (deep/arcs.py), Chat sandbox, not gated"}
+    else:
+        _, L = orc.load(a.turn128)
+        refs = asx.references(len(L))
+        looks, truth, fan, _ = e2e.render_path(a.turn128, refs=refs)
+        pt = {"128": (looks, truth, fan, refs, asx.render_vis(a.turn128, fan))}
+        l2, _, _, _ = e2e.render_path(a.turn1024, refs=refs)
+        pt["1024"] = (l2, truth, fan, refs, None)
+        rec_assess = json.loads((REPO / "docs/runs/dm-issue-22/assess.json").read_text())
+        rec11 = json.loads((REPO / "docs/runs/dm-issue-26/stage11.json").read_text())
+        out["sources_turn"] = {"turn128": a.turn128, "turn1024": a.turn1024}
+    out["g2"] = arcs.g2(pt, a.turn_cache, assess_record=rec_assess, rec11=rec11, log=log)
+    out["checks"] += out["g2"]["checks"]
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
+                       controls=["mirrored poses"])
+    else:
+        std = sd.stamp("ablation", dict(sd.PROFILES["ablation"]["values"], confirm_span_m=0.0, confirm_rule="none"),
+                       departures={"confirm_rule": "C3's form: every cell, no confirmation (#34)",
+                                   "confirm_span_m": "no confirmation (#34)"}, controls=["mirrored poses"])
+    out.update(std)
+    out.update({"computed_by": git, "seconds_total": round(_t.perf_counter() - t0, 1)})
+    print(f"{PREFIX} {std['standard']} record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in out["checks"]:
+        ok, cf_ = c.get("ok"), c.get("control_fails")
+        print(f"{PREFIX} {'not evaluated' if ok is None else ('PASS' if ok else 'FAIL')} {c['check']}; control {c.get('control')}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')} ({c.get('control_value')})")
+    if "g0" in out:
+        g = out["g0"]
+        print(f"{PREFIX} G0: {g['anchors']:,} anchors, same decision {g['same_decision']}, max rel zeta {g['max_rel_zeta']:.3g}; "
+              f"line {g['line']}; per-frame {g['per_frame']}")
+    for name, r in out["g2"]["rows"].items():
+        print(f"{PREFIX} turn {name}: {r['cells']:,} cells, right {r['right']}, coverage {r['coverage']:.4f}")
+    print(f"{PREFIX} turn N by sector: " + "; ".join(f"{k} {p['cells']:,} at {p['right']}" for k, p in out["g2"]["n_by_sector"]["parts"].items()))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        (Path(a.out) / ("stage14_dry.json" if a.dry_run else "stage14.json")).write_text(json.dumps(out, indent=1, default=float))
+    bad = [c for c in out["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -882,6 +941,16 @@ def main(argv=None) -> int:
     p = sub.add_parser("stage14-fixtures", help="#34, G1: M4's fixtures along an arc, N's per-frame path (Chat sandbox)")
     p.add_argument("--out", required=True)
     p.add_argument("--only", nargs="*", default=None, help="fixture names (a preview; G1 is the full set)")
+    p = sub.add_parser("stage14", help="#34: G0 on the straight path, G2 and C0 on the turn (N's per-frame path)")
+    p.add_argument("--r128", default=None, help="R3's straight_long (128 spp)")
+    p.add_argument("--r1024", default=None, help="R3's straight_long (1024 spp)")
+    p.add_argument("--turn128", default=None, help="R3's turn90 (128 spp): the truth and B128")
+    p.add_argument("--turn1024", default=None, help="R3's turn90 at 1024 spp")
+    p.add_argument("--cache", default=None, help="stage 11's cache (the straight path's rows)")
+    p.add_argument("--turn-cache", required=True, help="the turn's per-reference rows (under runs/)")
+    p.add_argument("--skip-g0", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -899,7 +968,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "stage14-fixtures": stage14_fixtures, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "stage14-fixtures": stage14_fixtures, "stage14": stage14, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

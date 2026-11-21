@@ -118,7 +118,8 @@ def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_
     right = _nb_right(c, P, idx, r["px"], rng)
     o = {"j": j, "X": c + r["u"][acc] * rng[acc][:, None], "psi": np.degrees(r["psi"][acc]), "tried": int(len(acc)),
          "accepted": int(acc.sum()), "right_acc": int(right[acc].sum()), "px_acc": r["px"][acc],
-         "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))}}
+         "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))},
+         "general": bool(r.get("general", False))}
     if keep_all or keep_edge:
         o.update({"px_all": r["px"].astype(np.int16), "reason_all": r["reason"].astype(np.int8)})
     if keep_edge:
