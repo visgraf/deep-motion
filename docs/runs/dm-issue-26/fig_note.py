@@ -64,7 +64,7 @@ LAB = {"a": {"perfect": (70, 98.6), "B128": (1.5, 91.4), "B1024": (17, 92.6), B_
              "N128": (21.5, 96.1), "N1024": (46, 97.15), N10: (50, 98.3), NOFF: (51, 95.8),
              "M4@1024": (33, 100.6), "M4@128": (6, 99.6)}}
 for ax, band, key, title, ylo in ((axs[0], "full", "a", "Full field: far from perfect", 84),
-                                  (axs[1], "shared 1-44", "b", "M4's field (1\u201344\u00b0): N matches M4", 91)):
+                                  (axs[1], "shared 1-44", "b", "M4's field (1–44°): N matches M4", 91)):
     pts = list(PTS) + ([("M4@1024", "M4", "M4", True), ("M4@128", "M4, 128 spp", "M4", False)] if key == "b" else [])
     for name, lab, c, filled in pts:
         x, y = row(name, band)
@@ -97,7 +97,7 @@ bc = s11c["by_class"]["sector"]
 fig, (ax, bx) = plt.subplots(2, 1, figsize=(6.2, 4.4), gridspec_kw={"height_ratios": [1.25, 1], "hspace": 0.55})
 w = 0.13
 xs = np.arange(len(SEC))
-TICKS = ["0\u201315", "15\u201360", "60\u2013120", "120\u2013165", "165\u2013180"]
+TICKS = ["0–15", "15–60", "60–120", "120–165", "165–180"]
 for i, (name, lab, c) in enumerate(SROWS):
     vals = [bc[s]["rows"].get(name) for s in SEC]
     v = [np.nan if (o is None or o["coverage"] is None or o["cells"] == 0) else 100 * o["coverage"] for o in vals]
@@ -105,7 +105,7 @@ for i, (name, lab, c) in enumerate(SROWS):
     ax.bar(pos, np.nan_to_num(v), width=w * 0.92, color=COL[c], label=lab, zorder=2)
     for p, val in zip(pos, v):
         if not np.isfinite(val):
-            ax.text(p, 1.0, "\u2013", color=COL[c], ha="center", va="bottom", fontsize=7)
+            ax.text(p, 1.0, "–", color=COL[c], ha="center", va="bottom", fontsize=7)
 ax.set_xticks(xs, TICKS)
 ax.set_ylim(0, 100)
 ax.set_ylabel("coverage (%)")
@@ -119,7 +119,7 @@ bx.set_xticks(xs, TICKS)
 bx.set_xlim(-0.4, len(SEC) - 0.6)
 bx.set_ylim(90, 100.6)
 bx.set_ylabel("cells right (%)")
-bx.set_xlabel("angle from the heading (\u00b0)")
+bx.set_xlabel("angle from the heading (°)")
 bx.set_title("Where each matcher errs")
 bx.legend(ncol=4, loc="lower left", handlelength=1.4, columnspacing=1.0, fontsize=7)
 panel_letter(ax, "a", dx=-0.08)
@@ -154,10 +154,10 @@ ax.legend(ncol=4, loc="upper right", bbox_to_anchor=(1.0, 1.0), handlelength=1.0
 cr = s11c["n1024_reasons"]
 for k, (cname, rows_, rowl, title, letter) in enumerate((
         ("range x snr", ["< 1 m", "1-2 m", "2-3 m", ">= 3 m"], ["< 1 m", "1–2 m", "2–3 m", "≥ 3 m"],
-         "Nearer fails more, at SNR \u2265 1", "b"),
+         "Nearer fails more, at SNR ≥ 1", "b"),
         ("sector x snr", ["0-15", "15-60", "60-120", "120-165", "165-180"],
          ["0–15°", "15–60°", "60–120°", "120–165°", "165–180°"],
-         "Sideways fails more, at SNR \u2265 1", "c"))):
+         "Sideways fails more, at SNR ≥ 1", "c"))):
     hx = fig.add_subplot(gs[1, k])
     M = np.array([[100 * (cr[cname][f"{r} | {s}"].get("low_ncc", [0, 0.0])[1] or 0.0) for s in SNR] for r in rows_])
     im = hx.imshow(M, cmap="cividis_r", vmin=0, vmax=100, aspect="auto")
