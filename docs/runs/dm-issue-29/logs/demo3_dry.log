@@ -1,13 +1,14 @@
-2026-11-21T17:00:05-03:00 $ .venv/bin/python -m deep demo3 --dry-run --dry-looks 111 --dry-y0 -0.55 --cache runs/stage11-dry --rule 'within 2 cm' --span 0.1 --psi-max 120 --ply-dir runs/demo3-dry-ply --out docs/runs/dm-issue-29 (at 00e2b28, Chat sandbox)
+2026-11-21T17:03:24-03:00 $ .venv/bin/python -m deep demo3 --dry-run --dry-looks 111 --dry-y0 -0.55 --cache runs/stage11-dry --rule 'within 2 cm' --span 0.1 --psi-max 120 --ply-dir runs/demo3-dry-ply --out runs/demo3-dry-out (at 9ac5519, Chat sandbox)
 [stage11 dry run] 111 panorama looks at two noise levels (0 s)
 [deep] [stage11] B128: 58957 accepted
 [deep] [stage11] N1024: 235335 accepted of 403152 (0 s)
 [deep] [stage11] N1024 mirrored (C3 control): 4 accepted of 403152 (0 s)
-[deep] [demo3] look 1: 0 references released, model 0 cells, all 0 (41 s)
-[deep] [demo3] look 101: 1 references released, model 0 cells, all 68,215 (47 s)
-[deep] [demo3] look 111: 2 references released, model 79,895 cells, all 106,661 (51 s)
+[deep] [demo3] look 1: 0 references released, model 0 cells, all 0 (43 s)
+[deep] [demo3] look 101: 1 references released, model 0 cells, all 68,215 (49 s)
+[deep] [demo3] look 111: 2 references released, model 79,895 cells, all 106,661 (54 s)
 [deep] S2 record: dry, problems: none
 [deep] PASS V1a: the end model equals the batch model (cells, cells right); control the model before the last release: fails
+[deep] not evaluated V1b: stage 12b has no span 0.1 m
 [deep] PASS V2: nothing shown before its window is complete (m + 50 <= t); control a schedule releasing at m: fails
 [deep] PASS C: the colours' error (<= 10 %) equals stage 9's cells right on every end cell; control 5 % in place of 10 %: fails
 [deep] PASS P1 model: the file read back holds exactly its map; control the map without the last reference: fails
