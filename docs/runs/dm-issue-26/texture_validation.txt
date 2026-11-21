@@ -1,0 +1,8 @@
+contrast 0.05 clean median 0.0086 | signal (noise removed)   median rel. error -0.007 |rel| p90 0.683; same class as clean 1.000
+contrast 0.05 clean median 0.0086 | raw M4 measure, 1024     median rel. error +0.362 |rel| p90 0.765; same class as clean 0.997
+contrast 0.05 control (SPP_RATIO 1, must be off): median rel. error -1.000
+           SNR quantiles p10/p50/p90 [0.35 1.12 1.89]
+contrast 0.20 clean median 0.0344 | signal (noise removed)   median rel. error -0.001 |rel| p90 0.099; same class as clean 0.973
+contrast 0.20 clean median 0.0344 | raw M4 measure, 1024     median rel. error +0.027 |rel| p90 0.109; same class as clean 0.974
+contrast 0.20 control (SPP_RATIO 1, must be off): median rel. error -0.098
+           SNR quantiles p10/p50/p90 [2.83 4.37 6.72]
