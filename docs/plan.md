@@ -211,6 +211,13 @@ Later decisions, numbered P-D1, P-D2, …:
   - **By sector:** 99.0–99.1 % right in 0–60°, 96.5–96.8 % at the sides (60–165°).
   - **Next:** demo D4 of this map, video and PLY (#32).
   - **Not a validation:** like P-D6, it was chosen on the data the demo shows.
+- **P-D9** (Luiz, 2026-11-21, in Chat, after demo D4, #32). **Validate on the tour,** by redoing demo D2 (#23) on the
+  Classroom's L-tour, the straight path's first 2 m then the turn.
+  - **The demo** stands the perfect matcher beside the coverage map (P-D8), renders the match video's 3-D maps in the
+    scene's RGB colours, and writes the PLY files.
+  - **First, N on curved paths.** N runs only where a reference's whole window is on one line. On the tour, 18 of the
+    32 references touch the turn's arc and are refused, and the other 14 lie where the settings were chosen. So N is
+    extended to arcs first (#34), then the demo (D5).
 
 ## The plan
 
