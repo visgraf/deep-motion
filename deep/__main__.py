@@ -270,7 +270,15 @@ def stage11(a) -> int:
     if a.dry_run:
         paths, m4in = st.synthetic_room(cache=Path(a.cache) / "room.npz" if a.cache else None)
         refs = paths["128"][3]
-        m4 = {lvl: st.m4_dry(m4in, paths["128"][0], refs, lvl) for lvl in ("1024", "128")}
+        m4 = {}
+        for lvl in ("1024", "128"):
+            f = Path(a.cache) / f"m4_{lvl}.npz" if a.cache else None
+            if f is not None and f.exists():
+                m4[lvl] = list(np.load(f, allow_pickle=True)["obj"])
+            else:
+                m4[lvl] = st.m4_dry(m4in, paths["128"][0], refs, lvl)
+                if f is not None:
+                    np.savez_compressed(f, obj=np.array(m4[lvl], dtype=object))
         rec_assess = None
         src = {"dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room), Chat sandbox, not gated",
                "noise": st.DRY_NOISE}

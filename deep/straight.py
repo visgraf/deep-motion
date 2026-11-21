@@ -216,7 +216,10 @@ def score(row, per_ref, truth, fan, surf, band, perfect_cov=None):
             have_r = False
         else:
             racc += o["right_acc"]
-    X, ref, Xf, nref, dom, right, cell_of = asx.fuse_and_judge(Xs, refs_of, per_ref, truth, fan)
+    if sum(len(x) for x in Xs) == 0:                         # e2e.fuse needs at least one point
+        Xf, nref, right, X = np.zeros((0, 3)), np.zeros(0, int), np.zeros(0, bool), np.zeros((0, 3))
+    else:
+        X, ref, Xf, nref, dom, right, cell_of = asx.fuse_and_judge(Xs, refs_of, per_ref, truth, fan)
     cov = asx.covered(surf[1], Xf[right]) if len(Xf) else np.zeros(len(surf[1]), bool)
     out = {"cells": int(len(Xf)), "right": float(right.mean()) if len(Xf) else None,
            "confirmed_right": float(right[nref >= 2].mean()) if (nref >= 2).any() else None,
@@ -252,7 +255,8 @@ def run(paths, m4=None, cache=None, rows=None, assess_record=None, log=print, de
     looks128, truth, fan, refs, vis_fn = paths["128"]
     looks1024 = paths["1024"][0] if paths.get("1024") else None
     cache = Path(cache) if cache else None
-    cp = lambda name, j: (cache / name / f"r{j:04d}.npz") if cache else None
+    safe = lambda name: "".join(ch if ch.isalnum() or ch in "-_.@" else "_" for ch in name)
+    cp = lambda name, j: (cache / safe(name) / f"r{j:04d}.npz") if cache else None
     want = set(rows) if rows else None
     on = lambda name: want is None or name in want
     R = {}
