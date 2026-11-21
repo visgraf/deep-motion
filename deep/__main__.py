@@ -511,7 +511,9 @@ def demo3(a) -> int:
         T = [(None, lk[1], lk[2], float(lk[0]), 0) for lk in looks]
         rgb_of = lambda j: np.repeat(np.asarray(looks[j][3], float)[..., None], 3, axis=2)
         cache = a.cache                                         # as stage 11's dry run: the room and the rows under one folder
-        rec12b, name, label = None, "dry_room_straight", "synthetic room (dry run), straight path"
+        f12d = REPO / "docs/runs/dm-issue-28/stage12b_dry.json"   # stage 12b's dry run is on #26's room (K = 111)
+        rec12b = json.loads(f12d.read_text()) if (f12d.exists() and a.dry_looks == 111) else None
+        name, label = "dry_room_straight", "synthetic room (dry run), straight path"
         src = {"dry_run": f"a synthetic room of M4's fixture planes (deep/straight.py synthetic_room, K={a.dry_looks}, "
                           f"y0={a.dry_y0}), Chat sandbox, not gated", "noise": st.DRY_NOISE}
     else:
