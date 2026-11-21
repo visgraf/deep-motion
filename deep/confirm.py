@@ -200,7 +200,8 @@ def checks(out, rec11, rec11c):
     res.append({"check": "K2: the perfect matcher's model at 0.5 m passes S1's gate (full field)",
                 "ok": gp["result"] == "pass" if gp["result"] != "not evaluated" else None, "value": gp["result"],
                 "control": MOVED + " must fail it",
-                "control_fails": (gm["result"] == "fail") if gm is not None else None,
+                "control_fails": None if gm is None or gp["result"] == "not evaluated" else
+                {"fail": True, "pass": False, "not evaluated": None}[gm["result"]],
                 "control_value": gm["result"] if gm is not None else None})
     # the standard control: N mirrored never passes
     if MIRROR in full:
@@ -221,9 +222,9 @@ def table(out):
             lines.append(f"| {bname} | {name} | all cells | {a['cells']:,} | {f(a['right'])} | {f(a['coverage'], 1)} | | | | |")
             for s, e in r["spans"].items():
                 m, c, g = e["model"], e["candidates"], e["gate"]
-                bad = [k for k, p in g["parts"].items() if p["result"] != "pass"]
-                gs = g["result"] + (f" ({', '.join(f'{k} {p['result']}' for k, p in g['parts'].items() if k in bad)})"
-                                    if bad and g["result"] != "pass" else "")
+                fails = [k for k, p in g["parts"].items() if p["result"] == "fail"]
+                nev = [k for k, p in g["parts"].items() if p["result"] == "not evaluated"]
+                gs = g["result"] + "".join(f"; {lab}: {', '.join(v)}" for lab, v in (("fails", fails), ("too few", nev)) if v)
                 lines.append(f"| {bname} | {name} | ≥ {s} m | {m['cells']:,} | {f(m['right'])} | {f(m['coverage'], 1)} | "
                              f"{f(m.get('covers_of_perfect'), 1)} | {c['cells']:,} | {f(c['right'])} | {gs} |")
     return lines
