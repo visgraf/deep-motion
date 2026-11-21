@@ -58,8 +58,15 @@ TOP_BOX, PROG_BOX = (0, 0, 960, 480), (960, 0, 960, 480)
 LEFT_BOX, RIGHT_BOX = (0, 480, 960, 600), (960, 480, 960, 600)
 
 
+def is_map(rule):
+    """Coverage first (#32, P-D8): 'neighbours >= k' keeps the fused cells with at least k others among the 26 around
+    them (deep/coverage.py), in place of S2's confirmation by references a span apart."""
+    return rule.startswith("neighbours")
+
+
 def model_of(pts, released, per_ref, truth, fan, pos, rule, span):
-    """S2's model of the released references' points ({j: X}): fused cells, their judgement and confirmation."""
+    """The model of the released references' points ({j: X}): fused cells, their judgement, and S2's confirmation
+    (rule 'same cell' or 'within 2 cm', at `span`) or the neighbour filter (rule 'neighbours >= k')."""
     if not released:
         z = np.zeros(0)
         return {"Xf": np.zeros((0, 3)), "right": z.astype(bool), "err": z, "nref": z.astype(int), "nsup": z.astype(int),
@@ -73,13 +80,17 @@ def model_of(pts, released, per_ref, truth, fan, pos, rule, span):
     right = e2e.cells_right(Xf, dom, per_ref, truth, fan)
     err = d2.cells_error(Xf, dom, per_ref, truth, fan)
     refs = sorted(released)
-    sup = cf.support(X, ref, Xf, cell_of, refs, rule)
+    sup = cf.support(X, ref, Xf, cell_of, refs, "same cell" if is_map(rule) else rule)
     nsup = sup.sum(1)
     pv = np.array([pos[j] for j in refs])
     hi = np.where(sup, pv[None, :], -np.inf).max(1)
     lo = np.where(sup, pv[None, :], np.inf).min(1)
     sp = np.where(nsup > 0, hi - lo, 0.0)
-    conf = (nsup >= 2) & (sp >= span - cf.SLACK_M)
+    if is_map(rule):
+        from . import coverage as cv
+        conf = cv.neighbours(Xf) >= int(rule.split(">=")[1])
+    else:
+        conf = (nsup >= 2) & (sp >= span - cf.SLACK_M)
     return {"Xf": Xf, "right": right, "err": err, "nref": nref, "nsup": nsup, "span": sp, "conf": conf, "dom": dom,
             "points": int(len(X))}
 
@@ -94,7 +105,7 @@ def colours(mp, sc, with_candidates):
     return Xf[sel], col, conf[sel]
 
 
-def prog(hist, total_s, box=PROG_BOX):
+def prog(hist, total_s, box=PROG_BOX, model_name="S2's model"):
     x0, y0, w, h = box
     im = Image.new("RGB", (w, h), dm.PAPER)
     d = ImageDraw.Draw(im)
@@ -108,7 +119,7 @@ def prog(hist, total_s, box=PROG_BOX):
         dm._text(d, (L + (R_ - L) * v / total_s, B_ + 10), f"{v:g}", 14, dm.MUTED, anchor="mt")
     dm._text(d, (R_, B_ + 34), "metres along the path", 14, dm.MUTED, anchor="rt")
     cols = {"model": dm.INK, "all": tuple(int(v) for v in GREY * 0.8)}
-    names = {"model": "S2's model", "all": "every cell"}
+    names = {"model": model_name, "all": "every cell"}
     for key in ("all", "model"):
         pts_c = [(L + (R_ - L) * s / total_s, B_ - (B_ - T_) * hc[key][0]) for s, hc in hist]
         pts_r = [(L + (R_ - L) * s / total_s, B_ - (B_ - T_) * hc[key][1]) for s, hc in hist if hc[key][1] is not None]
@@ -130,11 +141,18 @@ def prog(hist, total_s, box=PROG_BOX):
 def frame(sc, looks, m, mp, hist, total_s, fan, rule, span, label, psi_max=179.0):
     im = Image.new("RGB", (W, H), dm.PAPER)
     Xm, cm, _ = colours(mp, sc, False)
-    im.paste(d2.pano(looks, m, Xm, cm, fan, title="The current look (360° × 180°), with the model's cells"), TOP_BOX[:2])
-    im.paste(prog(hist, total_s), PROG_BOX[:2])
+    im.paste(d2.pano(looks, m, Xm, cm, fan, title="The current look (360° × 180°), with the "
+                                                   + ("map's cells" if is_map(rule) else "model's cells")), TOP_BOX[:2])
+    im.paste(prog(hist, total_s, model_name="the map" if is_map(rule) else "S2's model"), PROG_BOX[:2])
     rays = "" if psi_max >= 179 else f", rays 1–{psi_max:g}°"
-    for box, cand, title in ((LEFT_BOX, False, f"S2's model ({rule}, references ≥ {span:g} m apart{rays})"),
-                             (RIGHT_BOX, True, "Every cell N reported: the model, and the candidates in grey")):
+    if is_map(rule):
+        k = rule.split(">=")[1].strip()
+        left = f"The map: cells with at least {k} neighbours{rays}"
+        right_t = "Every cell N reported: the map, and the cells the filter removed in grey"
+    else:
+        left = f"S2's model ({rule}, references ≥ {span:g} m apart{rays})"
+        right_t = "Every cell N reported: the model, and the candidates in grey"
+    for box, cand, title in ((LEFT_BOX, False, left), (RIGHT_BOX, True, right_t)):
         X, c, _ = colours(mp, sc, cand)
         keep = d2.subset(len(X))
         im.paste(d2.cloud(sc, X[keep], c[keep], -115.0, box[2:], title, m=m), box[:2])
@@ -162,7 +180,7 @@ def scene_rgb(Xf, dom, per_ref, rgb_of, fan):
     return rgb
 
 
-def write_plys(mp, rgb, ply_dir, name, rule, span, n_refs):
+def write_plys(mp, rgb, ply_dir, name, rule, span, n_refs, flag="confirmed", what="S2's model"):
     from . import ply
     ply_dir = Path(ply_dir)
     ply_dir.mkdir(parents=True, exist_ok=True)
@@ -171,24 +189,27 @@ def write_plys(mp, rgb, ply_dir, name, rule, span, n_refs):
     ex = {"right": mp["right"].astype(np.uint8),
           "err": np.where(np.isfinite(mp["err"]), mp["err"], -1).astype(np.float32),
           "nref": np.minimum(mp["nref"], 255).astype(np.uint8), "nsup": np.minimum(mp["nsup"], 255).astype(np.uint8),
-          "span_m": mp["span"].astype(np.float32), "confirmed": mp["conf"].astype(np.uint8)}
+          "span_m": mp["span"].astype(np.float32), flag: mp["conf"].astype(np.uint8)}
     if "psi" in mp:
         psi = mp["psi"]
     ex["psi"] = psi.astype(np.float32)
     out = {}
-    for which, sel in (("model", mp["conf"]), ("all", np.ones(len(Xf), bool))):
+    for which, sel in ((("map" if flag == "kept" else "model"), mp["conf"]), ("all", np.ones(len(Xf), bool))):
         path = ply_dir / f"{name}_{which}.ply"
         size = ply.write_ply(path, Xf[sel], rgb[sel], extras={k: v[sel] for k, v in ex.items()},
                              comments=(f"deep-motion demo D3 (#29): N1024, the Classroom's straight path, {n_refs} references",
-                                       f"S2's model: {rule}, references >= {span:g} m apart; world metres, +Z up",
-                                       "right = stage 9's metric (within 10 % in a 3x3 neighbourhood); confirmed = in S2's model"))
+                                       (f"the map: cells with {rule.replace('neighbours', 'neighbours (of 26)')}"
+                                        if flag == "kept" else f"S2's model: {rule}, references >= {span:g} m apart")
+                                       + "; world metres, +Z up",
+                                       f"right = stage 9's metric (within 10 % in a 3x3 neighbourhood); {flag} = in {what}"))
         back = ply.read_ply(path)
         out[which] = {"path": str(path), "bytes": int(size), "points": int(sel.sum()), "back": back, "sel": sel}
     return out
 
 
 def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CONFIRM_SPAN_M, rec12b=None, name="classroom_straight",
-        label="Classroom, straight path", limit=None, best=False, video=True, log=print, psi_max=179.0):
+        label="Classroom, straight path", limit=None, best=False, video=True, log=print, psi_max=179.0,
+        join_short=False, rec13a=None, floor=0.97):
     """Demo D3. paths as stage 11's ({'128': (looks, truth, fan, refs, vis), '1024': ...}); T [(path or None, c, R, s, 0)]
     for the scene; rgb_of(j) a reference's image as (H, W, 3) linear RGB. Returns the record (body)."""
     t0 = time.perf_counter()
@@ -196,10 +217,13 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     out_dir.mkdir(parents=True, exist_ok=True)
     looks128, truth, fan, refs, _ = paths["128"]
     looks_show = paths["1024"][0] if paths.get("1024") else looks128
-    R, per_ref = st.collect(paths, None, cache, rows=["N1024", cf.MIRROR], log=log)
+    from . import coverage as cv
+    R, per_ref = st.collect(paths, None, cache, rows=["N1024", cf.MIRROR] + ([cv.SHORT] if join_short else []), log=log)
+    src_row = cv.union(R["N1024"], R[cv.SHORT]) if join_short else R["N1024"]
+    src_name = cv.S_NS if join_short else cv.S_N
     ray = (1.0, float(psi_max))                                 # the ray set, as stage 12's bands select (inclusive)
     inray = lambda o: (o["psi"] >= ray[0]) & (o["psi"] <= ray[1])
-    pts = {j: R["N1024"][j]["X"][inray(R["N1024"][j])] for j in refs}
+    pts = {j: src_row[j]["X"][inray(src_row[j])] for j in refs}
     pts_m = {j: R[cf.MIRROR][j]["X"][inray(R[cf.MIRROR][j])] for j in refs}
     sectors = [k for k, (lo, hi) in sd.SECTORS.items() if lo < ray[1]]
     pos = cf.positions(looks128, refs)
@@ -244,7 +268,8 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
             azs = tuple(-115.0 + 360.0 * i / n for i in range(n))
             for i in range(n):
                 card = Image.new("RGB", (W, H), dm.PAPER)
-                for x0, cand, title in ((0, False, "S2's model"), (960, True, "Every cell (candidates in grey)")):
+                for x0, cand, title in ((0, False, "The map" if is_map(rule) else "S2's model"),
+                                        (960, True, "Every cell (removed in grey)" if is_map(rule) else "Every cell (candidates in grey)")):
                     X, c, _ = colours(mp, sc, cand)
                     keep = d2.subset(len(X))
                     card.paste(d2.cloud(sc, X[keep], c[keep], azs[i], (960, H), title, m=len(T) - 1, azs=azs), (x0, 0))
@@ -253,41 +278,66 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     full = K == len(T)
     # ---------------------------------------------------------------- the checks
     checks = []
-    batch, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, ray, looks128, pos, sectors, sorted(refs),
-                           spans=(span,))
     key = f"{span:g}"
     prev_all = model_of(pts, refs[:-1], per_ref, truth, fan, pos, rule, span)
-    b = batch["rules"][rule]["spans"].get(key)
-    if b is None:
-        checks.append({"name": f"V1a: the batch has no span {key} m", "ok": None})
+    if is_map(rule):
+        bres, _, _ = cv.maps(src_row, per_ref, truth, fan, surf, ray, looks128, refs, None, sectors)
+        bm = bres[rule]
+        endc, endr = int(mp["conf"].sum()), float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None
+        endcov = hist[-1][1]["model"][0]
+        checks.append({"name": f"V1a: the end map equals the batch map ({src_name}, {rule}; cells, cells right, coverage)",
+                       "ok": bool(full and endc == bm["cells"] and endr is not None and abs(endr - bm["right"]) <= 1e-12
+                                  and abs(endcov - bm["coverage"]) <= 1e-12),
+                       "end": [endc, endr, endcov], "batch": [bm["cells"], bm["right"], bm["coverage"]],
+                       "control": "the map before the last release", "control_fails": int(prev_all["conf"].sum()) != bm["cells"],
+                       "control_value": int(prev_all["conf"].sum())})
+        rkey = next((k for k, v in cv.RAYS.items() if abs(v[1] - ray[1]) < 1e-9), None)
+        if rec13a is not None and rkey is not None:
+            r13 = rec13a["sources"][src_name][rkey]
+            other = next(f for f in cv.FILTERS if f.startswith("neighbours") and f != rule)
+            m13 = r13[rule]
+            checks.append({"name": f"V1b: the end map equals stage 13a's ({src_name}, rays {rkey}, {rule})",
+                           "ok": bool(endc == m13["cells"] and endr is not None and abs(endr - m13["right"]) <= 1e-12
+                                      and abs(endcov - m13["coverage"]) <= 1e-12),
+                           "end": [endc, endr, endcov], "stage13a": [m13["cells"], m13["right"], m13["coverage"]],
+                           "control": f"stage 13a's '{other}' map", "control_fails": r13[other]["cells"] != endc,
+                           "control_value": r13[other]["cells"]})
+        elif rec13a is not None:
+            checks.append({"name": "V1b: stage 13a has no such ray set", "ok": None})
     else:
-        bm = b["model"]
-        endm = {"cells": int(mp["conf"].sum()), "right_cells": int((mp["right"] & mp["conf"]).sum())}
-        prev = prev_all
-        checks.append({"name": "V1a: the end model equals the batch model (cells, cells right)", "ok": bool(full and
-                       endm["cells"] == bm["cells"] and endm["right_cells"] == bm["right_cells"]),
-                       "end": endm, "batch": {"cells": bm["cells"], "right_cells": bm["right_cells"]},
-                       "control": "the model before the last release", "control_fails": int(prev["conf"].sum()) != bm["cells"],
-                       "control_value": int(prev["conf"].sum())})
-    if rec12b is not None:
-        spans = rec12b["bands"]["full"]["N1024"]["rules"][rule]["spans"]
-        r12 = spans.get(key)
-        shorter = [s for s in spans if float(s) < span - 1e-9]
-        if r12 is None:
-            checks.append({"name": f"V1b: stage 12b has no span {key} m", "ok": None})
+        batch, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, ray, looks128, pos, sectors, sorted(refs),
+                               spans=(span,))
+        b = batch["rules"][rule]["spans"].get(key)
+        if b is None:
+            checks.append({"name": f"V1a: the batch has no span {key} m", "ok": None})
         else:
-            fb, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, None, looks128, pos, list(sd.SECTORS), sorted(refs),
-                                spans=(span,))
-            fm = fb["rules"][rule]["spans"][key]["model"]
-            endc, endr = fm["cells"], fm["right"]
-            ctl = spans[max(shorter, key=float)]["model"] if shorter else None
-            checks.append({"name": f"V1b: the full-ray-set model equals stage 12b's N1024 model ({rule}, ≥ {key} m)",
-                           "ok": bool(endc == r12["model"]["cells"] and endr is not None
-                                      and abs(endr - r12["model"]["right"]) <= 1e-12),
-                           "end": [endc, endr], "stage12b": [r12["model"]["cells"], r12["model"]["right"]],
-                           "control": "stage 12b's next shorter span",
-                           "control_fails": None if ctl is None else ctl["cells"] != endc,
-                           "control_value": None if ctl is None else ctl["cells"]})
+            bm = b["model"]
+            endm = {"cells": int(mp["conf"].sum()), "right_cells": int((mp["right"] & mp["conf"]).sum())}
+            prev = prev_all
+            checks.append({"name": "V1a: the end model equals the batch model (cells, cells right)", "ok": bool(full and
+                           endm["cells"] == bm["cells"] and endm["right_cells"] == bm["right_cells"]),
+                           "end": endm, "batch": {"cells": bm["cells"], "right_cells": bm["right_cells"]},
+                           "control": "the model before the last release", "control_fails": int(prev["conf"].sum()) != bm["cells"],
+                           "control_value": int(prev["conf"].sum())})
+        if rec12b is not None:
+            spans = rec12b["bands"]["full"]["N1024"]["rules"][rule]["spans"]
+            r12 = spans.get(key)
+            shorter = [s for s in spans if float(s) < span - 1e-9]
+            if r12 is None:
+                checks.append({"name": f"V1b: stage 12b has no span {key} m", "ok": None})
+            else:
+                fb, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, None, looks128, pos, list(sd.SECTORS), sorted(refs),
+                                    spans=(span,))
+                fm = fb["rules"][rule]["spans"][key]["model"]
+                endc, endr = fm["cells"], fm["right"]
+                ctl = spans[max(shorter, key=float)]["model"] if shorter else None
+                checks.append({"name": f"V1b: the full-ray-set model equals stage 12b's N1024 model ({rule}, ≥ {key} m)",
+                               "ok": bool(endc == r12["model"]["cells"] and endr is not None
+                                          and abs(endr - r12["model"]["right"]) <= 1e-12),
+                               "end": [endc, endr], "stage12b": [r12["model"]["cells"], r12["model"]["right"]],
+                               "control": "stage 12b's next shorter span",
+                               "control_fails": None if ctl is None else ctl["cells"] != endc,
+                               "control_value": None if ctl is None else ctl["cells"]})
     ok2, n2 = d2.check_release(log_rel)
     ok2c, n2c = d2.check_release([(t, d2.released_at(t, refs, lag=0)) for t, _ in log_rel])
     checks.append({"name": "V2: nothing shown before its window is complete (m + 50 <= t)", "ok": bool(ok2),
@@ -300,14 +350,16 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
                    "control_fails": not np.array_equal(e05, mp["right"]), "control_value": int((e05 != mp["right"]).sum())})
     # PLY
     rgb = scene_rgb(mp["Xf"], mp["dom"], per_ref, rgb_of, fan)
-    files = write_plys(mp, rgb, ply_dir, name, rule, span, len(refs))
+    flag = "kept" if is_map(rule) else "confirmed"
+    files = write_plys(mp, rgb, ply_dir, name, rule, span, len(refs), flag=flag,
+                       what=f"the map ({src_name}, {rule})" if is_map(rule) else "S2's model")
     for which, f in files.items():
         back, sel = f.pop("back"), f.pop("sel")
         Xb = np.stack([back["x"], back["y"], back["z"]], 1)
         same = (len(back) == int(sel.sum()) and np.array_equal(Xb, mp["Xf"][sel].astype(np.float32))
                 and np.array_equal(back["right"].astype(bool), mp["right"][sel])
-                and np.array_equal(back["confirmed"].astype(bool), mp["conf"][sel]))
-        psel = prev_all["conf"] if which == "model" else np.ones(len(prev_all["Xf"]), bool)
+                and np.array_equal(back[flag].astype(bool), mp["conf"][sel]))
+        psel = prev_all["conf"] if which in ("model", "map") else np.ones(len(prev_all["Xf"]), bool)
         ctl = len(back) == int(psel.sum()) and np.array_equal(Xb, prev_all["Xf"][psel].astype(np.float32))
         checks.append({"name": f"P1 {which}: the file read back holds exactly its map", "ok": bool(same),
                        "control": "the map without the last reference", "control_fails": not ctl})
@@ -316,15 +368,25 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     mm = model_of(pts_m, refs, per_ref, truth, fan, pos, rule, span)
     mm_psi = cf.cell_psi(mm["Xf"], mm["dom"], looks128)
     gm = sd.gate(mm["right"][mm["conf"]], mm_psi[mm["conf"]], sectors)
-    checks.append({"name": "the standard control: N1024 mirrored's end model must not pass S2's gate", "ok": None,
-                   "control": cf.MIRROR, "control_fails": gm["result"] != "pass", "control_value": gm["result"]})
+    if is_map(rule):
+        nm, rm = int(mm["conf"].sum()), float(mm["right"][mm["conf"]].mean()) if mm["conf"].any() else None
+        usable_m = nm >= sd.GATE_MIN_CELLS and rm is not None and rm >= floor
+        checks.append({"name": f"the standard control: N1024 mirrored's end map must not be usable (>= 1,000 cells at "
+                               f">= {100 * floor:g} % right)", "ok": None, "control": cf.MIRROR,
+                       "control_fails": not usable_m, "control_value": [nm, rm]})
+    else:
+        checks.append({"name": "the standard control: N1024 mirrored's end model must not pass S2's gate", "ok": None,
+                       "control": cf.MIRROR, "control_fails": gm["result"] != "pass", "control_value": gm["result"]})
     gate = sd.gate(mp["right"][mp["conf"]], mp["psi"][mp["conf"]], sectors)
     rec = {"command": "demo3", "references": refs, "lag_looks": LAG, "looks": K, "path_looks": len(T), "rule": rule,
-           "span_m": span, "ray_set_psi_deg": list(ray), "gate_sectors": sectors, "end": {"model": {"cells": int(mp["conf"].sum()),
-                                             "right": float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None,
-                                             "coverage": hist[-1][1]["model"][0]},
-                                   "all": {"cells": int(len(mp["Xf"])), "right": float(mp["right"].mean()) if len(mp["Xf"]) else None,
-                                           "coverage": hist[-1][1]["all"][0]},
+           "span_m": None if is_map(rule) else span, "ray_set_psi_deg": list(ray), "gate_sectors": sectors,
+           "source": src_name, "floor": floor if is_map(rule) else None,
+           "end": {"model": {"cells": int(mp["conf"].sum()),
+                             "right": float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None,
+                             "coverage": hist[-1][1]["model"][0],
+                             "gross": int((mp["conf"] & ~(mp["err"] <= 0.25)).sum())},
+                   "all": {"cells": int(len(mp["Xf"])), "right": float(mp["right"].mean()) if len(mp["Xf"]) else None,
+                           "coverage": hist[-1][1]["all"][0], "gross": int((~(mp["err"] <= 0.25)).sum())},
                                    "candidates": int((~mp["conf"]).sum()), "gate": gate},
            "at_releases": models_at, "files": files, "frames": enc.n if enc is not None else 0, "fps": FPS,
            "display_max_cells_per_side": d2.MAX_DRAW, "checks": checks, "seconds": round(time.perf_counter() - t0, 1)}

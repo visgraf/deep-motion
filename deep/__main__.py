@@ -388,8 +388,9 @@ def standard_selftest(a) -> int:
     from . import standard as sd
     res = [("standard", r) for r in sd.selftest()]
     try:
-        from . import confirm as cf
+        from . import confirm as cf, coverage as cv
         res += [("stage12", r) for r in cf.selftest()]
+        res += [("stage13a", r) for r in cv.selftest()]
     except ImportError as e:                                    # deep/confirm.py needs torch (via ntrace)
         print(f"{PREFIX} stage12 span logic not run: {e}")
     for who, (name, ok, val, cname, cfail, cval) in res:
@@ -513,6 +514,8 @@ def demo3(a) -> int:
         cache = a.cache                                         # as stage 11's dry run: the room and the rows under one folder
         f12d = REPO / "docs/runs/dm-issue-28/stage12b_dry.json"   # stage 12b's dry run is on #26's room (K = 111)
         rec12b = json.loads(f12d.read_text()) if (f12d.exists() and a.dry_looks == 111) else None
+        f13d = REPO / "docs/runs/dm-issue-31/stage13a_dry.json"   # and so is stage 13a's
+        rec13a = json.loads(f13d.read_text()) if (f13d.exists() and a.dry_looks == 111) else None
         name, label = "dry_room_straight", "synthetic room (dry run), straight path"
         src = {"dry_run": f"a synthetic room of M4's fixture planes (deep/straight.py synthetic_room, K={a.dry_looks}, "
                           f"y0={a.dry_y0}), Chat sandbox, not gated", "noise": st.DRY_NOISE}
@@ -528,11 +531,15 @@ def demo3(a) -> int:
         cache = a.cache
         f12b = REPO / "docs/runs/dm-issue-28/stage12b.json"
         rec12b = json.loads(f12b.read_text()) if f12b.exists() else None
+        f13a = REPO / "docs/runs/dm-issue-31/stage13a.json"
+        rec13a = json.loads(f13a.read_text()) if f13a.exists() else None
         name, label = "classroom_straight", "Classroom, straight path"
         src = {"r128": a.r128, "r1024": a.r1024, "stage12b": str(f12b.relative_to(REPO)) if rec12b else None}
+    if d3.is_map(a.rule):
+        name += "_coverage"
     rec = d3.run(paths, cache, a.out, a.ply_dir, T, rgb_of, rule=a.rule, span=a.span, rec12b=rec12b, name=name,
                  label=label, limit=a.limit, best=a.best, video=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True),
-                 psi_max=a.psi_max)
+                 psi_max=a.psi_max, join_short=a.join_short, rec13a=rec13a, floor=a.floor)
     if a.dry_run:
         std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
                        controls=["mirrored poses"])
@@ -542,12 +549,20 @@ def demo3(a) -> int:
                       psi_deg=[float(nt.SETTINGS["psi_anchor_deg"][0]), float(min(a.psi_max, nt.SETTINGS["psi_anchor_deg"][1]))],
                       lat_max_deg=float(nt.SETTINGS["lat_max_deg"]), confirm_rule=a.rule, confirm_span_m=a.span)
         dep = {"path": "one primitive, R3's straight_long: the demo's path (#29, P-D5)"}
+        if d3.is_map(a.rule):                                   # coverage first (#32, P-D8)
+            values.update(gate_right=a.floor, confirm_span_m=0.0)
+            dep.update({"confirm_rule": "coverage first (Luiz, P-D8): the neighbour filter in place of S2's confirmation",
+                        "confirm_span_m": "no span: the neighbour filter",
+                        "gate_right": "coverage first: Luiz's usable floor (P-D8); S2's gate reported only"})
+        if a.join_short:
+            values["frames"] = [11, 5]
+            dep["frames"] = "two window sets: 11 frames over +/-0.5 m, and 5 over +/-0.2 m (#26's short windows; P-D8)"
         if a.psi_max < nt.SETTINGS["psi_anchor_deg"][1]:
             dep["psi_deg"] = "the ray set chosen from stage 12b's error map (#28, P-D6): the backward sectors dropped"
         if a.rule != sd.PROFILES["build"]["values"]["confirm_rule"]:
-            dep["confirm_rule"] = "chosen after stage 12b (#28, P-D6)"
-        if abs(a.span - sd.CONFIRM_SPAN_M) > 1e-9:
-            dep["confirm_span_m"] = "chosen after stage 12b (#28, P-D6)"
+            dep.setdefault("confirm_rule", "chosen after stage 12b (#28, P-D6)")
+        if abs(values["confirm_span_m"] - sd.CONFIRM_SPAN_M) > 1e-9:
+            dep.setdefault("confirm_span_m", "chosen after stage 12b (#28, P-D6)")
         std = sd.stamp("build", values, departures=dep, controls=["mirrored poses"])
     rec.update(std)
     rec.update({"sources": src, "computed_by": git})
@@ -565,8 +580,54 @@ def demo3(a) -> int:
     for w, f in rec["files"].items():
         print(f"{PREFIX} {w}: {f['path']}, {f['points']:,} points, {f['mb']} MB")
     Path(a.out).mkdir(parents=True, exist_ok=True)
-    (Path(a.out) / ("demo3_dry.json" if a.dry_run else "demo3.json")).write_text(json.dumps(rec, indent=1, default=float))
+    base = "demo4" if d3.is_map(a.rule) else "demo3"           # D4 (#32): the coverage-first map
+    rec["demo"] = base.upper()
+    (Path(a.out) / (f"{base}_dry.json" if a.dry_run else f"{base}.json")).write_text(json.dumps(rec, indent=1, default=float))
     bad = [c for c in rec["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
+def stage13a(a) -> int:
+    """#31: coverage first. Anchor sources x ray sets x truth-free filters, from stage 11's caches; the frontier."""
+    _torch_threads()
+    import time as _t
+    from . import coverage as cv, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, _, _, src = _stage11_inputs(a)
+    rec_demo = json.loads((REPO / "docs/runs/dm-issue-29" / ("demo3_dry.json" if a.dry_run else "demo3.json")).read_text())
+    out = cv.run(paths, cache=a.cache, rec_demo=rec_demo, log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    controls = ["mirrored poses"]
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False}, controls=controls)
+    else:
+        values = dict(sd.PROFILES["ablation"]["values"], psi_deg=[list(v) for v in cv.RAYS.values()],
+                      confirm_rule=list(cv.FILTERS), confirm_span_m=0.0, gate_right=list(cv.FLOORS))
+        std = sd.stamp("ablation", values, departures={
+            "psi_deg": "two ray sets under study (#31)",
+            "confirm_rule": "coverage first (Luiz, 2026-11-21, #31): truth-free filters in place of S2's confirmation",
+            "confirm_span_m": "no span: a second reference anywhere (the 2 cm filter)",
+            "gate_right": "coverage first: the frontier at 98, 97 and 95 % right, S2's gate reported only"}, controls=controls)
+    out.update(std)
+    out.update({"command": "stage13a", "sources_runs": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    print(f"{PREFIX} {std['standard']} record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in out["checks"]:
+        ok = c.get("ok")
+        head = "control only" if c["check"].startswith("the standard") else (
+            "not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        cf_ = c.get("control_fails")
+        print(f"{PREFIX} {head} {c['check']}" + (f"; control {c['control']}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')}" if "control" in c else ""))
+    lines = cv.table(out)
+    for line in lines:
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage13a_dry" if a.dry_run else "stage13a"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_table.md").write_text("\n".join(lines) + "\n")
+    bad = [c for c in out["checks"] if c.get("ok") is False or c.get("control_fails") is False]
     return 1 if bad or std["check_record"] else 0
 
 
@@ -770,7 +831,10 @@ def main(argv=None) -> int:
     p.add_argument("--r128", default=None, help="R3's straight_long run (128 spp): the truth and the judge")
     p.add_argument("--r1024", default=None, help="the same path at 1024 spp: N1024's images and the colours")
     p.add_argument("--cache", default=None, help="stage 11's cache (N1024 and its mirrored control)")
-    p.add_argument("--rule", default="same cell", choices=["same cell", "within 2 cm"])
+    p.add_argument("--rule", default="same cell", choices=["same cell", "within 2 cm", "neighbours >= 1", "neighbours >= 3"],
+                   help="S2's confirmation, or (coverage first, #32) the neighbour filter")
+    p.add_argument("--join-short", action="store_true", help="join N on +/-0.2 m windows (stage 11's cached row) to N1024")
+    p.add_argument("--floor", type=float, default=0.97, help="coverage first: the usable floor (cells right)")
     p.add_argument("--span", type=float, default=0.5, help="S2's confirmation distance (m)")
     p.add_argument("--psi-max", type=float, default=179.0, help="the ray set: anchors at psi 1..psi_max deg from the heading")
     p.add_argument("--ply-dir", required=True, help="the PLY files and the video (under runs/, not committed)")
@@ -781,6 +845,13 @@ def main(argv=None) -> int:
     p.add_argument("--dry-run", action="store_true", help="a synthetic room (Chat sandbox, not gated)")
     p.add_argument("--dry-looks", type=int, default=161)
     p.add_argument("--dry-y0", type=float, default=-0.8)
+    p = sub.add_parser("stage13a", help="#31: coverage first, sources x ray sets x truth-free filters (stage 11's caches)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -798,7 +869,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

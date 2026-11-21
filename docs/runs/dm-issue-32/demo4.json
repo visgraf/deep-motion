@@ -1,0 +1,360 @@
+{
+ "command": "demo3",
+ "references": [
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160
+ ],
+ "lag_looks": 50,
+ "looks": 218,
+ "path_looks": 218,
+ "rule": "neighbours >= 3",
+ "span_m": 0.5,
+ "ray_set_psi_deg": [
+  1.0,
+  179.0
+ ],
+ "gate_sectors": [
+  "0-15",
+  "15-60",
+  "60-120",
+  "120-165",
+  "165-180"
+ ],
+ "source": "N1024 + N on +/-0.2 m windows",
+ "floor": 0.97,
+ "end": {
+  "model": {
+   "cells": 284561,
+   "right": 0.9790519431686,
+   "coverage": 0.26539679317251047
+  },
+  "all": {
+   "cells": 373312,
+   "right": 0.9463156823247043,
+   "coverage": 0.29191343830156047
+  },
+  "candidates": 88751,
+  "gate": {
+   "result": "fail",
+   "parts": {
+    "overall": {
+     "cells": 284561,
+     "right": 0.9790519431686,
+     "result": "fail"
+    },
+    "0-15": {
+     "cells": 20424,
+     "right": 0.9903055229142186,
+     "result": "fail"
+    },
+    "15-60": {
+     "cells": 126423,
+     "right": 0.9907769946924214,
+     "result": "fail"
+    },
+    "60-120": {
+     "cells": 70913,
+     "right": 0.967537687024946,
+     "result": "fail"
+    },
+    "120-165": {
+     "cells": 62544,
+     "right": 0.9648727295983628,
+     "result": "fail"
+    },
+    "165-180": {
+     "cells": 4257,
+     "right": 0.976979093258163,
+     "result": "fail"
+    }
+   },
+   "unverified": [],
+   "gate_right": 0.995,
+   "min_cells": 1000,
+   "standard": "S2"
+  }
+ },
+ "at_releases": [
+  {
+   "look": 0,
+   "released": 0,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 0,
+   "right": null,
+   "coverage": 0.0
+  },
+  {
+   "look": 100,
+   "released": 1,
+   "model_cells": 15847,
+   "model_right": 0.9818893165898909,
+   "model_coverage": 0.04935953244502052,
+   "cells": 42977,
+   "right": 0.9574190846266608,
+   "coverage": 0.0856247145127098
+  },
+  {
+   "look": 110,
+   "released": 2,
+   "model_cells": 36716,
+   "model_right": 0.9788103279224316,
+   "model_coverage": 0.08526553734076153,
+   "cells": 79280,
+   "right": 0.9545030272452069,
+   "coverage": 0.12396687761818685
+  },
+  {
+   "look": 120,
+   "released": 3,
+   "model_cells": 60015,
+   "model_right": 0.9790552361909522,
+   "model_coverage": 0.11403094389418328,
+   "cells": 112834,
+   "right": 0.9543843167839481,
+   "coverage": 0.15141660257436335
+  },
+  {
+   "look": 130,
+   "released": 4,
+   "model_cells": 84594,
+   "model_right": 0.9791119937584226,
+   "model_coverage": 0.13818170460800888,
+   "cells": 144738,
+   "right": 0.9527421962442483,
+   "coverage": 0.1739237373165561
+  },
+  {
+   "look": 140,
+   "released": 5,
+   "model_cells": 109895,
+   "model_right": 0.9789253378224669,
+   "model_coverage": 0.16053267536239804,
+   "cells": 175493,
+   "right": 0.9512516168736075,
+   "coverage": 0.19412745323864591
+  },
+  {
+   "look": 150,
+   "released": 6,
+   "model_cells": 135697,
+   "model_right": 0.9787762441321474,
+   "model_coverage": 0.18093940446863252,
+   "cells": 205806,
+   "right": 0.9507011457391913,
+   "coverage": 0.21269144728879796
+  },
+  {
+   "look": 160,
+   "released": 7,
+   "model_cells": 161324,
+   "model_right": 0.9787260420024299,
+   "model_coverage": 0.19936675502945644,
+   "cells": 235530,
+   "right": 0.950269604721267,
+   "coverage": 0.22973284245786502
+  },
+  {
+   "look": 170,
+   "released": 8,
+   "model_cells": 186812,
+   "model_right": 0.9791662205854014,
+   "model_coverage": 0.21504561940493713,
+   "cells": 264280,
+   "right": 0.9496405327682761,
+   "coverage": 0.2445293803022554
+  },
+  {
+   "look": 180,
+   "released": 9,
+   "model_cells": 211988,
+   "model_right": 0.9795507292865634,
+   "model_coverage": 0.22926044639475915,
+   "cells": 292435,
+   "right": 0.949110058645511,
+   "coverage": 0.2579399627548889
+  },
+  {
+   "look": 190,
+   "released": 10,
+   "model_cells": 236352,
+   "model_right": 0.9795136068237206,
+   "model_coverage": 0.2427647272400748,
+   "cells": 320199,
+   "right": 0.9480448096340088,
+   "coverage": 0.27091719014136745
+  },
+  {
+   "look": 200,
+   "released": 11,
+   "model_cells": 260217,
+   "model_right": 0.9793057332918295,
+   "model_coverage": 0.25443798532839335,
+   "cells": 346879,
+   "right": 0.9472006088578439,
+   "coverage": 0.28168079300073007
+  },
+  {
+   "look": 210,
+   "released": 12,
+   "model_cells": 284561,
+   "model_right": 0.9790519431686,
+   "model_coverage": 0.26539679317251047,
+   "cells": 373312,
+   "right": 0.9463156823247043,
+   "coverage": 0.29191343830156047
+  }
+ ],
+ "files": {
+  "map": {
+   "path": "runs/demo4-classroom/classroom_straight_coverage_map.ply",
+   "bytes": 8822010,
+   "points": 284561,
+   "mb": 8.82
+  },
+  "all": {
+   "path": "runs/demo4-classroom/classroom_straight_coverage_all.ply",
+   "bytes": 11573291,
+   "points": 373312,
+   "mb": 11.57
+  }
+ },
+ "frames": 469,
+ "fps": 24,
+ "display_max_cells_per_side": 60000,
+ "checks": [
+  {
+   "name": "V1a: the end map equals the batch map (N1024 + N on +/-0.2 m windows, neighbours >= 3; cells, cells right, coverage)",
+   "ok": true,
+   "end": [
+    284561,
+    0.9790519431686,
+    0.26539679317251047
+   ],
+   "batch": [
+    284561,
+    0.9790519431686,
+    0.26539679317251047
+   ],
+   "control": "the map before the last release",
+   "control_fails": true,
+   "control_value": 260217
+  },
+  {
+   "name": "V1b: the end map equals stage 13a's (N1024 + N on +/-0.2 m windows, rays 1-179, neighbours >= 3)",
+   "ok": true,
+   "end": [
+    284561,
+    0.9790519431686,
+    0.26539679317251047
+   ],
+   "stage13a": [
+    284561,
+    0.9790519431686,
+    0.26539679317251047
+   ],
+   "control": "stage 13a's 'neighbours >= 1' map",
+   "control_fails": true,
+   "control_value": 338711
+  },
+  {
+   "name": "V2: nothing shown before its window is complete (m + 50 <= t)",
+   "ok": true,
+   "violations": 0,
+   "control": "a schedule releasing at m",
+   "control_fails": true,
+   "control_value": 600
+  },
+  {
+   "name": "C: the colours' error (<= 10 %) equals stage 9's cells right on every end cell",
+   "ok": true,
+   "control": "5 % in place of 10 %",
+   "control_fails": true,
+   "control_value": 23108
+  },
+  {
+   "name": "P1 map: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "P1 all: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "the standard control: N1024 mirrored's end map must not be usable (>= 1,000 cells at >= 97 % right)",
+   "ok": null,
+   "control": "N1024 mirrored (C3 control)",
+   "control_fails": true,
+   "control_value": [
+    274,
+    0.0
+   ]
+  }
+ ],
+ "seconds": 213.9,
+ "standard": "S2",
+ "profile": "build",
+ "values": {
+  "scene": "classroom",
+  "spp": 1024,
+  "noise_measured": true,
+  "look_spacing_m": 0.01,
+  "sensor": "panorama",
+  "width": 720,
+  "psi_deg": [
+   1.0,
+   179.0
+  ],
+  "lat_max_deg": 70.0,
+  "frames": [
+   11,
+   5
+  ],
+  "frame_spacing_m": 0.1,
+  "cell_m": 0.02,
+  "metric": "stage 9",
+  "confirm_span_m": 0.0,
+  "confirm_rule": "neighbours >= 3",
+  "gate_right": 0.97,
+  "gate_min_cells": 1000,
+  "path": "straight_long"
+ },
+ "departures": {
+  "path": "one primitive, R3's straight_long: the demo's path (#29, P-D5)",
+  "confirm_rule": "coverage first (Luiz, P-D8): the neighbour filter in place of S2's confirmation",
+  "confirm_span_m": "no span: the neighbour filter",
+  "gate_right": "coverage first: Luiz's usable floor (P-D8); S2's gate reported only",
+  "frames": "two window sets: 11 frames over +/-0.5 m, and 5 over +/-0.2 m (#26's short windows; P-D8)"
+ },
+ "controls": [
+  "mirrored poses"
+ ],
+ "check_record": [],
+ "sources": {
+  "r128": "runs/r3-straight",
+  "r1024": "runs/r3-straight-1024",
+  "stage12b": "docs/runs/dm-issue-28/stage12b.json"
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "9ff9f0e8e0d5efbcbdeed0bec59bfc9026780c2a",
+   "clean": true
+  }
+ },
+ "demo": "DEMO4"
+}
