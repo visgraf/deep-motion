@@ -1,0 +1,192 @@
+{
+ "command": "demo3",
+ "references": [
+  50,
+  60
+ ],
+ "lag_looks": 50,
+ "looks": 111,
+ "path_looks": 111,
+ "rule": "same cell",
+ "span_m": 0.1,
+ "end": {
+  "model": {
+   "cells": 38193,
+   "right": 0.999947634383264,
+   "coverage": 0.30482831045767594
+  },
+  "all": {
+   "cells": 161375,
+   "right": 0.9986367157242447,
+   "coverage": 0.5896180335075465
+  },
+  "candidates": 123182,
+  "gate": {
+   "result": "pass",
+   "parts": {
+    "overall": {
+     "cells": 38193,
+     "right": 0.999947634383264,
+     "result": "pass"
+    },
+    "0-15": {
+     "cells": 191,
+     "right": 0.9947643979057592,
+     "result": "not evaluated"
+    },
+    "15-60": {
+     "cells": 8249,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "60-120": {
+     "cells": 22048,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "120-165": {
+     "cells": 7611,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "165-180": {
+     "cells": 94,
+     "right": 0.9893617021276596,
+     "result": "not evaluated"
+    }
+   },
+   "unverified": [
+    "0-15",
+    "165-180"
+   ],
+   "gate_right": 0.995,
+   "min_cells": 1000,
+   "standard": "S2"
+  }
+ },
+ "at_releases": [
+  {
+   "look": 0,
+   "released": 0,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 0,
+   "right": null,
+   "coverage": 0.0
+  },
+  {
+   "look": 100,
+   "released": 1,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 99933,
+   "right": 0.998939289323847,
+   "coverage": 0.5188907341376447
+  },
+  {
+   "look": 110,
+   "released": 2,
+   "model_cells": 38193,
+   "model_right": 0.999947634383264,
+   "model_coverage": 0.30482831045767594,
+   "cells": 161375,
+   "right": 0.9986367157242447,
+   "coverage": 0.5896180335075465
+  }
+ ],
+ "files": {
+  "model": {
+   "path": "runs/demo3-dry-ply/dry_room_straight_model.ply",
+   "bytes": 1184569,
+   "points": 38193,
+   "mb": 1.18
+  },
+  "all": {
+   "path": "runs/demo3-dry-ply/dry_room_straight_all.ply",
+   "bytes": 5003212,
+   "points": 161375,
+   "mb": 5.0
+  }
+ },
+ "frames": 362,
+ "fps": 24,
+ "display_max_cells_per_side": 60000,
+ "checks": [
+  {
+   "name": "V1a: the end model equals the batch model (cells, cells right)",
+   "ok": true,
+   "end": {
+    "cells": 38193,
+    "right_cells": 38191
+   },
+   "batch": {
+    "cells": 38193,
+    "right_cells": 38191
+   },
+   "control": "the model before the last release",
+   "control_fails": true,
+   "control_value": 0
+  },
+  {
+   "name": "V2: nothing shown before its window is complete (m + 50 <= t)",
+   "ok": true,
+   "violations": 0,
+   "control": "a schedule releasing at m",
+   "control_fails": true,
+   "control_value": 100
+  },
+  {
+   "name": "C: the colours' error (<= 10 %) equals stage 9's cells right on every end cell",
+   "ok": true,
+   "control": "5 % in place of 10 %",
+   "control_fails": true,
+   "control_value": 427
+  },
+  {
+   "name": "P1 model: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "P1 all: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "the standard control: N1024 mirrored's end model must not pass S2's gate",
+   "ok": null,
+   "control": "N1024 mirrored (C3 control)",
+   "control_fails": true,
+   "control_value": "not evaluated"
+  }
+ ],
+ "seconds": 89.4,
+ "standard": "S2",
+ "profile": "dry",
+ "values": {
+  "scene": "synthetic room of M4's fixture planes, ray-cast",
+  "gated": false
+ },
+ "departures": {},
+ "controls": [
+  "mirrored poses"
+ ],
+ "check_record": [],
+ "sources": {
+  "dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room, K=111, y0=-0.55), Chat sandbox, not gated",
+  "noise": {
+   "1024": 0.005,
+   "128": 0.014142135623730952
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "8da92ea1673dc35f300cd2e2c6e1f719ff9c20e1",
+   "clean": true
+  }
+ }
+}
