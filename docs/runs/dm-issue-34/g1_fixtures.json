@@ -1,0 +1,479 @@
+{
+ "gates": [
+  {
+   "fixture": "front",
+   "label": "front",
+   "ok": true,
+   "accepted": 24122,
+   "accepted_fraction": 0.9656525220176141,
+   "median_px": 0.03301947582608447,
+   "p90_px": 0.09363480241290656,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "tilted",
+   "label": "tilted",
+   "ok": true,
+   "accepted": 14716,
+   "accepted_fraction": 0.5996251324260451,
+   "median_px": 0.03737611177751274,
+   "p90_px": 0.10087504182295007,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "parallel",
+   "ok": true,
+   "accepted": 84283,
+   "accepted_fraction": 0.421078137490008,
+   "median_px": 0.029631729574228535,
+   "p90_px": 0.08045587771601008,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "front_far",
+   "ok": true,
+   "accepted": 1152,
+   "accepted_fraction": 0.8135593220338984,
+   "median_px": 0.060698523971018714,
+   "p90_px": 0.1599021374599723,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "periodic",
+   "label": "periodic",
+   "ok": true,
+   "accepted": 22714,
+   "accepted_fraction": 0.9092874299439552,
+   "median_px": 0.0039680268881266655,
+   "p90_px": 0.013096312349640588,
+   "over_1px_of_accepted": 0.0
+  }
+ ],
+ "controls": [
+  {
+   "control": "steps 20 % long (every frame's arc length x 1.2)",
+   "fails": true,
+   "stats": {
+    "anchors": 24980,
+    "accepted": 74,
+    "accepted_fraction": 0.0029623698959167334,
+    "median_px": 11.988524816808518,
+    "p90_px": 12.972360863905594,
+    "over_1px_of_accepted": 1.0
+   }
+  },
+  {
+   "control": "the poses of an arc of radius 1.2 m (images of 1 m)",
+   "fails": true,
+   "stats": {
+    "anchors": 24980,
+    "accepted": 16,
+    "accepted_fraction": 0.0006405124099279424,
+    "median_px": 7.713239642301156,
+    "p90_px": 8.638530467576997,
+    "over_1px_of_accepted": 0.875
+   }
+  },
+  {
+   "control": "every frame from the scene scaled 1.5x about the reference's eye",
+   "fails": true,
+   "stats": {
+    "anchors": 24980,
+    "accepted": 24009,
+    "accepted_fraction": 0.961128903122498,
+    "median_px": 3.4841089851788776,
+    "p90_px": 3.860102382498851,
+    "over_1px_of_accepted": 1.0
+   }
+  }
+ ],
+ "cases": [
+  {
+   "fixture": "front",
+   "path": "arc",
+   "radius_m": 1.0,
+   "radius_given_m": 1.0,
+   "step_scale": 1.0,
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "foreign_geometry": false,
+   "general": true,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 51.8,
+   "n_zeta": 455,
+   "reasons": {
+    "accepted": 24122,
+    "invalid_support": 0,
+    "low_texture": 0,
+    "low_ncc": 60,
+    "ambiguous": 177,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 2,
+    "depth_edge": 619
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 24122,
+    "accepted_fraction": 0.9656525220176141,
+    "median_px": 0.03301947582608447,
+    "p90_px": 0.09363480241290656,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "front": {
+     "anchors": 24980,
+     "accepted": 24122,
+     "accepted_fraction": 0.9656525220176141,
+     "median_px": 0.03301947582608447,
+     "p90_px": 0.09363480241290656,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0
+  },
+  {
+   "fixture": "tilted",
+   "path": "arc",
+   "radius_m": 1.0,
+   "radius_given_m": 1.0,
+   "step_scale": 1.0,
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "foreign_geometry": false,
+   "general": true,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 52.5,
+   "n_zeta": 455,
+   "reasons": {
+    "accepted": 14716,
+    "invalid_support": 350,
+    "low_texture": 2,
+    "low_ncc": 3455,
+    "ambiguous": 76,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 39,
+    "depth_edge": 5904
+   },
+   "all": {
+    "anchors": 24542,
+    "accepted": 14716,
+    "accepted_fraction": 0.5996251324260451,
+    "median_px": 0.03737611177751274,
+    "p90_px": 0.10087504182295007,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "tilted": {
+     "anchors": 24542,
+     "accepted": 14716,
+     "accepted_fraction": 0.5996251324260451,
+     "median_px": 0.03737611177751274,
+     "p90_px": 0.10087504182295007,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0
+  },
+  {
+   "fixture": "corridor",
+   "path": "arc",
+   "radius_m": 1.0,
+   "radius_given_m": 1.0,
+   "step_scale": 1.0,
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "foreign_geometry": false,
+   "general": true,
+   "psi_deg": [
+    1.0,
+    179.0
+   ],
+   "seconds": 269.3,
+   "n_zeta": 455,
+   "reasons": {
+    "accepted": 85435,
+    "invalid_support": 0,
+    "low_texture": 0,
+    "low_ncc": 6261,
+    "ambiguous": 421,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 144,
+    "depth_edge": 109315
+   },
+   "all": {
+    "anchors": 201576,
+    "accepted": 85435,
+    "accepted_fraction": 0.4238351787911259,
+    "median_px": 0.02987023003257097,
+    "p90_px": 0.08150258454031327,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "front_far": {
+     "anchors": 1416,
+     "accepted": 1152,
+     "accepted_fraction": 0.8135593220338984,
+     "median_px": 0.060698523971018714,
+     "p90_px": 0.1599021374599723,
+     "over_1px_of_accepted": 0.0
+    },
+    "parallel": {
+     "anchors": 200160,
+     "accepted": 84283,
+     "accepted_fraction": 0.421078137490008,
+     "median_px": 0.029631729574228535,
+     "p90_px": 0.08045587771601008,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0,
+   "parallel_by_psi": {
+    "1-44": {
+     "anchors": 23564,
+     "accepted": 12144,
+     "accepted_fraction": 0.5153624172466474,
+     "median_px": 0.03239086267986474,
+     "p90_px": 0.09006599810065263,
+     "over_1px_of_accepted": 0.0
+    },
+    "44-136": {
+     "anchors": 151616,
+     "accepted": 60355,
+     "accepted_fraction": 0.39807803925707047,
+     "median_px": 0.028386036230243546,
+     "p90_px": 0.07636445348074203,
+     "over_1px_of_accepted": 0.0
+    },
+    "136-179": {
+     "anchors": 24980,
+     "accepted": 11784,
+     "accepted_fraction": 0.47173738991192954,
+     "median_px": 0.033829114298896165,
+     "p90_px": 0.09115501491501098,
+     "over_1px_of_accepted": 0.0
+    }
+   }
+  },
+  {
+   "fixture": "periodic",
+   "path": "arc",
+   "radius_m": 1.0,
+   "radius_given_m": 1.0,
+   "step_scale": 1.0,
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "foreign_geometry": false,
+   "general": true,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 42.5,
+   "n_zeta": 455,
+   "reasons": {
+    "accepted": 22714,
+    "invalid_support": 0,
+    "low_texture": 1,
+    "low_ncc": 2261,
+    "ambiguous": 0,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 4,
+    "depth_edge": 0
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 22714,
+    "accepted_fraction": 0.9092874299439552,
+    "median_px": 0.0039680268881266655,
+    "p90_px": 0.013096312349640588,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "periodic": {
+     "anchors": 24980,
+     "accepted": 22714,
+     "accepted_fraction": 0.9092874299439552,
+     "median_px": 0.0039680268881266655,
+     "p90_px": 0.013096312349640588,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0
+  },
+  {
+   "fixture": "occlusion",
+   "path": "arc",
+   "radius_m": 1.0,
+   "radius_given_m": 1.0,
+   "step_scale": 1.0,
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "foreign_geometry": false,
+   "general": true,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 60.4,
+   "n_zeta": 455,
+   "reasons": {
+    "accepted": 21998,
+    "invalid_support": 0,
+    "low_texture": 0,
+    "low_ncc": 1529,
+    "ambiguous": 146,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 4,
+    "few_frames": 0,
+    "unsupported": 36,
+    "depth_edge": 1267
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 21998,
+    "accepted_fraction": 0.8806244995996797,
+    "median_px": 0.03505701249092059,
+    "p90_px": 0.10315402210981162,
+    "over_1px_of_accepted": 0.0005909628148013455
+   },
+   "by_label": {
+    "board": {
+     "anchors": 2071,
+     "accepted": 1674,
+     "accepted_fraction": 0.8083051665861902,
+     "median_px": 0.025668038272546104,
+     "p90_px": 0.07837181801043332,
+     "over_1px_of_accepted": 0.0
+    },
+    "far": {
+     "anchors": 22909,
+     "accepted": 20324,
+     "accepted_fraction": 0.8871622506438518,
+     "median_px": 0.03608727392761773,
+     "p90_px": 0.10498914700262782,
+     "over_1px_of_accepted": 0.0006396378665617004
+    }
+   },
+   "median_frames_accepted": 10.0,
+   "edge": {
+    "anchors": 1116,
+    "accepted": 277,
+    "accepted_fraction": 0.2482078853046595,
+    "median_px": 0.05514145049041203,
+    "p90_px": 0.17691010251928918,
+    "over_1px_of_accepted": 0.04693140794223827
+   },
+   "interior": {
+    "anchors": 23864,
+    "accepted": 21721,
+    "accepted_fraction": 0.9101994636272209,
+    "median_px": 0.034935583182809975,
+    "p90_px": 0.10249906183405978,
+    "over_1px_of_accepted": 0.0
+   }
+  }
+ ],
+ "ok": true,
+ "controls_fail": true,
+ "standard": "S2",
+ "profile": "fixture",
+ "values": {
+  "scene": "M4's fixtures (deep/nfixtures.py)",
+  "step_m": 0.1,
+  "frames_each_side": 5,
+  "gates": "M4's fixture gates"
+ },
+ "departures": {
+  "scene": "M4's fixtures along an arc of radius 1.0 m (deep/arcfixtures.py, #34)",
+  "gates": "M4's fixture gates without the radial wall (#34)"
+ },
+ "standard_controls": [
+  "steps 20 % long",
+  "scene scaled 1.5x",
+  "poses of a radius 20 % too large"
+ ],
+ "check_record": [],
+ "computed_by": {
+  "deep-motion": {
+   "commit": "cb54974963f7c3db7647b52e125164e0029e9b78",
+   "clean": true
+  }
+ },
+ "seconds_total": 1510.3
+}

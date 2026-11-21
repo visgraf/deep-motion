@@ -1,0 +1,19 @@
+2026-11-21T20:29:18-03:00 $ .venv/bin/python -m deep stage14-fixtures --out runs/g1c (at cb54974, Chat sandbox)
+[deep] [G1] front (51.8 s, 24980 anchors, per-frame path True): front acc 0.966 med 0.033 p90 0.094 >1px 0.0
+[deep] [G1] tilted (52.5 s, 24542 anchors, per-frame path True): tilted acc 0.600 med 0.037 p90 0.101 >1px 0.0
+[deep] [G1] corridor (269.3 s, 201576 anchors, per-frame path True): front_far acc 0.814 med 0.061 p90 0.16 >1px 0.0; parallel acc 0.421 med 0.03 p90 0.08 >1px 0.0
+[deep] [G1] periodic (42.5 s, 24980 anchors, per-frame path True): periodic acc 0.909 med 0.004 p90 0.013 >1px 0.0
+[deep] [G1] occlusion (60.4 s, 24980 anchors, per-frame path True): board acc 0.808 med 0.026 p90 0.078 >1px 0.0; far acc 0.887 med 0.036 p90 0.105 >1px 0.001
+[deep] [G1] control fails: steps 20 % long (every frame's arc length x 1.2): {'anchors': 24980, 'accepted': 74, 'accepted_fraction': 0.0029623698959167334, 'median_px': 11.988524816808518, 'p90_px': 12.972360863905594, 'over_1px_of_accepted': 1.0}
+[deep] [G1] control fails: the poses of an arc of radius 1.2 m (images of 1 m): {'anchors': 24980, 'accepted': 16, 'accepted_fraction': 0.0006405124099279424, 'median_px': 7.713239642301156, 'p90_px': 8.638530467576997, 'over_1px_of_accepted': 0.875}
+[deep] [G1] control fails: every frame from the scene scaled 1.5x about the reference's eye: {'anchors': 24980, 'accepted': 24009, 'accepted_fraction': 0.961128903122498, 'median_px': 3.4841089851788776, 'p90_px': 3.860102382498851, 'over_1px_of_accepted': 1.0}
+[deep] G1 PASS front front: {'fixture': 'front', 'label': 'front', 'ok': True, 'accepted': 24122, 'accepted_fraction': 0.9656525220176141, 'median_px': 0.03301947582608447, 'p90_px': 0.09363480241290656, 'over_1px_of_accepted': 0.0}
+[deep] G1 PASS tilted tilted: {'fixture': 'tilted', 'label': 'tilted', 'ok': True, 'accepted': 14716, 'accepted_fraction': 0.5996251324260451, 'median_px': 0.03737611177751274, 'p90_px': 0.10087504182295007, 'over_1px_of_accepted': 0.0}
+[deep] G1 PASS corridor parallel: {'fixture': 'corridor', 'label': 'parallel', 'ok': True, 'accepted': 84283, 'accepted_fraction': 0.421078137490008, 'median_px': 0.029631729574228535, 'p90_px': 0.08045587771601008, 'over_1px_of_accepted': 0.0}
+[deep] G1 PASS corridor front_far: {'fixture': 'corridor', 'label': 'front_far', 'ok': True, 'accepted': 1152, 'accepted_fraction': 0.8135593220338984, 'median_px': 0.060698523971018714, 'p90_px': 0.1599021374599723, 'over_1px_of_accepted': 0.0}
+[deep] G1 PASS periodic periodic: {'fixture': 'periodic', 'label': 'periodic', 'ok': True, 'accepted': 22714, 'accepted_fraction': 0.9092874299439552, 'median_px': 0.0039680268881266655, 'p90_px': 0.013096312349640588, 'over_1px_of_accepted': 0.0}
+[deep] G1 control fails: steps 20 % long (every frame's arc length x 1.2)
+[deep] G1 control fails: the poses of an arc of radius 1.2 m (images of 1 m)
+[deep] G1 control fails: every frame from the scene scaled 1.5x about the reference's eye
+[deep] S2 record: fixture, problems: none
+exit 0
