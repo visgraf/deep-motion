@@ -717,6 +717,68 @@ def stage14(a) -> int:
     return 1 if bad or std["check_record"] else 0
 
 
+def demo5(a) -> int:
+    """#35 (P-D9): demo D2 redone on the L-tour, the perfect matcher beside N's coverage map (P-D8); RGB and PLY."""
+    _torch_threads()
+    import numpy as np
+    from . import demo as dm, demo2 as d2, demo5 as d5, standard as sd
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    if a.r0:
+        T, looks, truth, vis, fan, refs = d2.r0_tour()
+        looks128 = looks1024 = looks
+        rgb_of = lambda j: np.repeat(np.nan_to_num(np.asarray(looks[j][3], float))[..., None], 3, axis=2)
+        v2 = (d2.check_continuity_r0(T), d2.check_continuity_r0(T, shift=np.array([0.01, 0.0, 0.0])))
+        rec_d2 = json.loads((REPO / "docs/runs/dm-issue-23/demo2_r0.json").read_text())
+        name, src = "r0_tour", {"r0": "R0's calibration-room tour (demo2.r0_tour), Chat sandbox, not gated"}
+    else:
+        T, looks128, truth, vis, fan, refs = d2.render_tour(a.straight, a.turn)
+        T2, looks1024, _, _, _, _ = d2.render_tour(a.straight1024, a.turn1024)
+        dpos = max(float(np.linalg.norm(np.asarray(x[1]) - np.asarray(y[1]))) for x, y in zip(T, T2))
+        if len(T2) != len(T) or dpos > 1e-9:
+            raise SystemExit(f"{PREFIX} refused: the 1024-spp tour is not the 128-spp tour's ({len(T2)} looks, {dpos} m)")
+        rgb_of = d2.render_rgb(T2)
+        step = float(np.median(np.diff([t[3] for t in T])))
+        v2 = (dm.check_continuity(T, step, [a.straight], [a.turn]),
+              dm.check_continuity(T, step, [a.straight], [a.turn], shift=np.array([0.01, 0.0, 0.0])))
+        rec_d2 = json.loads((REPO / "docs/runs/dm-issue-23/demo2.json").read_text())
+        name, src = "classroom_tour", {"straight": a.straight, "turn": a.turn, "straight1024": a.straight1024, "turn1024": a.turn1024}
+    if a.refs_every > 1:
+        refs = refs[::a.refs_every]
+        rec_d2 = None                                           # V0 needs every reference
+        truth = {j: truth[j] for j in refs}
+    rec = d5.run(T, looks128, looks1024, truth, vis, fan, refs, rgb_of, a.out, a.ply_dir, v2, cache=a.cache, rec_d2=rec_d2,
+                 limit=a.limit, best=a.best, videos=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True), name=name)
+    if a.r0:
+        std = sd.stamp("dry", {"scene": "R0's calibration room (demo D2's dry tour)", "gated": False}, controls=["mirrored poses"])
+    else:
+        values = dict(sd.PROFILES["build"]["values"], path="the L-tour", frames=[11, 5], confirm_rule="neighbours >= 3",
+                      confirm_span_m=0.0, gate_right=d5.FLOOR)
+        std = sd.stamp("build", values, departures={
+            "path": "demo D2's L-tour: the straight path's first 2 m, then the turn (P-D9, #35)",
+            "frames": "two window sets: 11 frames over +/-0.5 m and 5 over +/-0.2 m (P-D8)",
+            "confirm_rule": "coverage first (P-D8): the neighbour filter in place of S2's confirmation",
+            "confirm_span_m": "no span: the neighbour filter",
+            "gate_right": "coverage first: Luiz's usable floor (P-D8); S2's gate reported only"}, controls=["mirrored poses"])
+    rec.update(std)
+    rec.update({"sources": src, "computed_by": git, "refs_every": a.refs_every})
+    print(f"{PREFIX} {std['standard']} record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in rec["checks"]:
+        ok, cf_ = c.get("ok"), c.get("control_fails")
+        head = "control only" if c["name"].startswith("the standard") else ("not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        print(f"{PREFIX} {head} {c['name']}; control {c.get('control')}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')}")
+    for k, e in rec["end"].items():
+        print(f"{PREFIX} end {k}: {e}")
+    v = rec["validation"]
+    print(f"{PREFIX} validation: {v['question']} {v['answer']}; " + "; ".join(f"{k}: {s_}" for k, s_ in v["segments"].items()))
+    for w, f in rec["files"].items():
+        print(f"{PREFIX} {w}: {f}")
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    (Path(a.out) / ("demo5_dry.json" if a.r0 else "demo5.json")).write_text(json.dumps(rec, indent=1, default=float))
+    bad = [c for c in rec["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -951,6 +1013,19 @@ def main(argv=None) -> int:
     p.add_argument("--skip-g0", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("demo5", help="#35: demo D2 redone on the L-tour with N's coverage map (P-D8); RGB video and PLY")
+    p.add_argument("--straight", default=None, help="R3's straight path (128 spp): the truth and the judge")
+    p.add_argument("--turn", default=None, help="R3's turn (128 spp)")
+    p.add_argument("--straight1024", default=None, help="the straight path at 1024 spp: N's images and the colours")
+    p.add_argument("--turn1024", default=None, help="the turn at 1024 spp")
+    p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration-room tour (Chat sandbox, not gated)")
+    p.add_argument("--refs-every", type=int, default=1, help="every n-th reference only (a dry run; V0 needs all)")
+    p.add_argument("--cache", default=None, help="N's per-reference points (under runs/)")
+    p.add_argument("--ply-dir", required=True, help="the PLY files and the videos (under runs/, not committed)")
+    p.add_argument("--out", required=True, help="the record's folder")
+    p.add_argument("--limit", type=int, default=None)
+    p.add_argument("--best", action="store_true")
+    p.add_argument("--no-video", action="store_true")
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -968,7 +1043,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "stage14-fixtures": stage14_fixtures, "stage14": stage14, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "stage14-fixtures": stage14_fixtures, "stage14": stage14, "demo5": demo5, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
