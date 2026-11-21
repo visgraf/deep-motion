@@ -23,8 +23,11 @@ cell, with a `confirmed` flag). Per vertex: x y z, red green blue, right, err, n
 Checks (declared on #29 before data), each with a control that must fail:
 - V1a: the end model equals the batch model on the same inputs (deep/confirm.py models_b at the demo's rule and span,
   full field), in cells and cells right. Control: the model before the last release differs.
-- V1b (real run): the end model equals stage 12b's N1024 model at the rule and span (cells and cells right).
-  Control: the same against stage 12b's next shorter span.
+- V1b (real run): the same pipeline on the full ray set equals stage 12b's N1024 model at the rule and span (cells
+  and cells right): the demo's inputs are 12b's. Control: stage 12b's next shorter span.
+
+The ray set (S2, part 3): anchors whose psi from their reference lies in [1, psi_max] deg (default N's 179); S2's gate is
+taken over the sectors it reaches. Coverage is of the whole surface, as in stage 12b.
 - V2: nothing is shown before its window is complete (m + 50 <= t). Control: a schedule releasing at m.
 - P1: each PLY read back holds exactly its map (points to float32, right and confirmed flags). Control: the map
   without the last reference.
@@ -124,12 +127,13 @@ def prog(hist, total_s, box=PROG_BOX):
     return im
 
 
-def frame(sc, looks, m, mp, hist, total_s, fan, rule, span, label):
+def frame(sc, looks, m, mp, hist, total_s, fan, rule, span, label, psi_max=179.0):
     im = Image.new("RGB", (W, H), dm.PAPER)
     Xm, cm, _ = colours(mp, sc, False)
     im.paste(d2.pano(looks, m, Xm, cm, fan, title="The current look (360° × 180°), with the model's cells"), TOP_BOX[:2])
     im.paste(prog(hist, total_s), PROG_BOX[:2])
-    for box, cand, title in ((LEFT_BOX, False, f"S2's model ({rule}, references ≥ {span:g} m apart)"),
+    rays = "" if psi_max >= 179 else f", rays 1–{psi_max:g}°"
+    for box, cand, title in ((LEFT_BOX, False, f"S2's model ({rule}, references ≥ {span:g} m apart{rays})"),
                              (RIGHT_BOX, True, "Every cell N reported: the model, and the candidates in grey")):
         X, c, _ = colours(mp, sc, cand)
         keep = d2.subset(len(X))
@@ -184,7 +188,7 @@ def write_plys(mp, rgb, ply_dir, name, rule, span, n_refs):
 
 
 def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CONFIRM_SPAN_M, rec12b=None, name="classroom_straight",
-        label="Classroom, straight path", limit=None, best=False, video=True, log=print):
+        label="Classroom, straight path", limit=None, best=False, video=True, log=print, psi_max=179.0):
     """Demo D3. paths as stage 11's ({'128': (looks, truth, fan, refs, vis), '1024': ...}); T [(path or None, c, R, s, 0)]
     for the scene; rgb_of(j) a reference's image as (H, W, 3) linear RGB. Returns the record (body)."""
     t0 = time.perf_counter()
@@ -193,8 +197,11 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     looks128, truth, fan, refs, _ = paths["128"]
     looks_show = paths["1024"][0] if paths.get("1024") else looks128
     R, per_ref = st.collect(paths, None, cache, rows=["N1024", cf.MIRROR], log=log)
-    pts = {j: R["N1024"][j]["X"] for j in refs}
-    pts_m = {j: R[cf.MIRROR][j]["X"] for j in refs}
+    ray = (1.0, float(psi_max))                                 # the ray set, as stage 12's bands select (inclusive)
+    inray = lambda o: (o["psi"] >= ray[0]) & (o["psi"] <= ray[1])
+    pts = {j: R["N1024"][j]["X"][inray(R["N1024"][j])] for j in refs}
+    pts_m = {j: R[cf.MIRROR][j]["X"][inray(R[cf.MIRROR][j])] for j in refs}
+    sectors = [k for k, (lo, hi) in sd.SECTORS.items() if lo < ray[1]]
     pos = cf.positions(looks128, refs)
     surf = st.surface_band(per_ref, truth, looks128, None)
     P = np.concatenate([truth[j][0][np.all(np.isfinite(truth[j][0]), 1)] for j in refs])
@@ -227,7 +234,7 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
                 f"all {hc['all'][2]:,} ({time.perf_counter() - t0:.0f} s)")
         hist.append((float(T[m][3]), hc))
         if enc is not None:
-            last = frame(sc, looks_show, m, mp, hist, total_s, fan, rule, span, label)
+            last = frame(sc, looks_show, m, mp, hist, total_s, fan, rule, span, label, psi_max)
             enc.put(last, int(dm.HOLD_START * FPS) if m == 0 else 1)
     if enc is not None and last is not None:
         last.save(out_dir / f"last_frame{'' if T[0][0] is not None else '_dry'}.png")
@@ -246,7 +253,7 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     full = K == len(T)
     # ---------------------------------------------------------------- the checks
     checks = []
-    batch, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, None, looks128, pos, list(sd.SECTORS), sorted(refs),
+    batch, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, ray, looks128, pos, sectors, sorted(refs),
                            spans=(span,))
     key = f"{span:g}"
     prev_all = model_of(pts, refs[:-1], per_ref, truth, fan, pos, rule, span)
@@ -269,10 +276,13 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
         if r12 is None:
             checks.append({"name": f"V1b: stage 12b has no span {key} m", "ok": None})
         else:
-            endc, endr = int(mp["conf"].sum()), float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None
+            fb, _ = cf.models_b(R["N1024"], per_ref, truth, fan, surf, None, looks128, pos, list(sd.SECTORS), sorted(refs),
+                                spans=(span,))
+            fm = fb["rules"][rule]["spans"][key]["model"]
+            endc, endr = fm["cells"], fm["right"]
             ctl = spans[max(shorter, key=float)]["model"] if shorter else None
-            checks.append({"name": f"V1b: the end model equals stage 12b's N1024 model ({rule}, ≥ {key} m)",
-                           "ok": bool(full and endc == r12["model"]["cells"] and endr is not None
+            checks.append({"name": f"V1b: the full-ray-set model equals stage 12b's N1024 model ({rule}, ≥ {key} m)",
+                           "ok": bool(endc == r12["model"]["cells"] and endr is not None
                                       and abs(endr - r12["model"]["right"]) <= 1e-12),
                            "end": [endc, endr], "stage12b": [r12["model"]["cells"], r12["model"]["right"]],
                            "control": "stage 12b's next shorter span",
@@ -305,12 +315,12 @@ def run(paths, cache, out_dir, ply_dir, T, rgb_of, rule="same cell", span=sd.CON
     # the standard control: the mirrored poses' end model
     mm = model_of(pts_m, refs, per_ref, truth, fan, pos, rule, span)
     mm_psi = cf.cell_psi(mm["Xf"], mm["dom"], looks128)
-    gm = sd.gate(mm["right"][mm["conf"]], mm_psi[mm["conf"]])
+    gm = sd.gate(mm["right"][mm["conf"]], mm_psi[mm["conf"]], sectors)
     checks.append({"name": "the standard control: N1024 mirrored's end model must not pass S2's gate", "ok": None,
                    "control": cf.MIRROR, "control_fails": gm["result"] != "pass", "control_value": gm["result"]})
-    gate = sd.gate(mp["right"][mp["conf"]], mp["psi"][mp["conf"]])
+    gate = sd.gate(mp["right"][mp["conf"]], mp["psi"][mp["conf"]], sectors)
     rec = {"command": "demo3", "references": refs, "lag_looks": LAG, "looks": K, "path_looks": len(T), "rule": rule,
-           "span_m": span, "end": {"model": {"cells": int(mp["conf"].sum()),
+           "span_m": span, "ray_set_psi_deg": list(ray), "gate_sectors": sectors, "end": {"model": {"cells": int(mp["conf"].sum()),
                                              "right": float(mp["right"][mp["conf"]].mean()) if mp["conf"].any() else None,
                                              "coverage": hist[-1][1]["model"][0]},
                                    "all": {"cells": int(len(mp["Xf"])), "right": float(mp["right"].mean()) if len(mp["Xf"]) else None,

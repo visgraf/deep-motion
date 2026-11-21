@@ -529,20 +529,23 @@ def demo3(a) -> int:
         name, label = "classroom_straight", "Classroom, straight path"
         src = {"r128": a.r128, "r1024": a.r1024, "stage12b": str(f12b.relative_to(REPO)) if rec12b else None}
     rec = d3.run(paths, cache, a.out, a.ply_dir, T, rgb_of, rule=a.rule, span=a.span, rec12b=rec12b, name=name,
-                 label=label, limit=a.limit, best=a.best, video=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True))
+                 label=label, limit=a.limit, best=a.best, video=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True),
+                 psi_max=a.psi_max)
     if a.dry_run:
         std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
                        controls=["mirrored poses"])
     else:
         fan = paths["128"][2]
         values = dict(sd.PROFILES["build"]["values"], path="straight_long", width=int(fan.width),
-                      psi_deg=list(nt.SETTINGS["psi_anchor_deg"]), lat_max_deg=float(nt.SETTINGS["lat_max_deg"]),
-                      confirm_rule=a.rule, confirm_span_m=a.span)
+                      psi_deg=[float(nt.SETTINGS["psi_anchor_deg"][0]), float(min(a.psi_max, nt.SETTINGS["psi_anchor_deg"][1]))],
+                      lat_max_deg=float(nt.SETTINGS["lat_max_deg"]), confirm_rule=a.rule, confirm_span_m=a.span)
         dep = {"path": "one primitive, R3's straight_long: the demo's path (#29, P-D5)"}
+        if a.psi_max < nt.SETTINGS["psi_anchor_deg"][1]:
+            dep["psi_deg"] = "the ray set chosen from stage 12b's error map (#28, P-D6): the backward sectors dropped"
         if a.rule != sd.PROFILES["build"]["values"]["confirm_rule"]:
-            dep["confirm_rule"] = "Luiz's choice after stage 12b (#28)"
+            dep["confirm_rule"] = "chosen after stage 12b (#28, P-D6)"
         if abs(a.span - sd.CONFIRM_SPAN_M) > 1e-9:
-            dep["confirm_span_m"] = "Luiz's choice after stage 12b (#28)"
+            dep["confirm_span_m"] = "chosen after stage 12b (#28, P-D6)"
         std = sd.stamp("build", values, departures=dep, controls=["mirrored poses"])
     rec.update(std)
     rec.update({"sources": src, "computed_by": git})
@@ -767,6 +770,7 @@ def main(argv=None) -> int:
     p.add_argument("--cache", default=None, help="stage 11's cache (N1024 and its mirrored control)")
     p.add_argument("--rule", default="same cell", choices=["same cell", "within 2 cm"])
     p.add_argument("--span", type=float, default=0.5, help="S2's confirmation distance (m)")
+    p.add_argument("--psi-max", type=float, default=179.0, help="the ray set: anchors at psi 1..psi_max deg from the heading")
     p.add_argument("--ply-dir", required=True, help="the PLY files and the video (under runs/, not committed)")
     p.add_argument("--out", required=True, help="the record's folder")
     p.add_argument("--limit", type=int, default=None, help="the first n looks only (a preview; the checks need all)")
