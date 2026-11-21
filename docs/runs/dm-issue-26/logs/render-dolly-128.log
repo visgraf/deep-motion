@@ -1,0 +1,73 @@
+2026-11-21T09:58:26-03:00 $ .venv/bin/python -m motion.dolly run --path paths/classroom_dolly.json --run runs/dolly-128 --profile full --spp 128 --device OPTIX --modes ahead --seed-base 28000 (at dade15d)
+[dolly] ahead k=  0 head [0.897, -3.793, 1.6] 0.95 s
+[dolly] ahead k=  1 head [0.897, -3.694, 1.6] 0.33 s
+[dolly] ahead k=  2 head [0.897, -3.595, 1.6] 0.32 s
+[dolly] ahead k=  3 head [0.897, -3.496, 1.6] 0.32 s
+[dolly] ahead k=  4 head [0.897, -3.397, 1.6] 0.33 s
+[dolly] ahead k=  5 head [0.897, -3.298, 1.6] 0.33 s
+[dolly] ahead k=  6 head [0.897, -3.199, 1.6] 0.29 s
+[dolly] ahead k=  7 head [0.897, -3.1, 1.6] 0.34 s
+[dolly] ahead k=  8 head [0.897, -3.001, 1.6] 0.34 s
+[dolly] ahead k=  9 head [0.897, -2.902, 1.6] 0.33 s
+[dolly] ahead k= 10 head [0.897, -2.803, 1.6] 0.34 s
+[dolly] ahead k= 11 head [0.897, -2.704, 1.6] 0.33 s
+[dolly] ahead k= 12 head [0.897, -2.606, 1.6] 0.31 s
+[dolly] ahead k= 13 head [0.897, -2.507, 1.6] 0.34 s
+[dolly] ahead k= 14 head [0.897, -2.408, 1.6] 0.35 s
+[dolly] ahead k= 15 head [0.897, -2.309, 1.6] 0.31 s
+[dolly] ahead k= 16 head [0.897, -2.21, 1.6] 0.33 s
+[dolly] ahead k= 17 head [0.897, -2.111, 1.6] 0.33 s
+[dolly] ahead k= 18 head [0.897, -2.012, 1.6] 0.34 s
+[dolly] ahead k= 19 head [0.897, -1.913, 1.6] 0.33 s
+[dolly] ahead k= 20 head [0.897, -1.814, 1.6] 0.35 s
+[dolly] ahead k= 21 head [0.897, -1.715, 1.6] 0.32 s
+[dolly] ahead k= 22 head [0.897, -1.616, 1.6] 0.34 s
+[dolly] ahead k= 23 head [0.897, -1.517, 1.6] 0.34 s
+[dolly] ahead k= 24 head [0.897, -1.418, 1.6] 0.35 s
+[dolly] ahead k= 25 head [0.897, -1.319, 1.6] 0.36 s
+[dolly] ahead k= 26 head [0.897, -1.22, 1.6] 0.35 s
+[dolly] ahead k= 27 head [0.897, -1.121, 1.6] 0.33 s
+[dolly] ahead k= 28 head [0.897, -1.022, 1.6] 0.36 s
+[dolly] ahead k= 29 head [0.897, -0.923, 1.6] 0.37 s
+[dolly] ahead k= 30 head [0.897, -0.824, 1.6] 0.34 s
+[dolly] ahead k= 31 head [0.897, -0.725, 1.6] 0.35 s
+[dolly] ahead k= 32 head [0.897, -0.626, 1.6] 0.35 s
+[dolly] ahead k= 33 head [0.897, -0.527, 1.6] 0.37 s
+[dolly] ahead k= 34 head [0.897, -0.428, 1.6] 0.34 s
+[dolly] ahead k= 35 head [0.897, -0.33, 1.6] 0.35 s
+[dolly] ahead k= 36 head [0.897, -0.231, 1.6] 0.34 s
+[dolly] ahead k= 37 head [0.897, -0.132, 1.6] 0.35 s
+[dolly] ahead k= 38 head [0.897, -0.033, 1.6] 0.36 s
+[dolly] ahead k= 39 head [0.897, 0.066, 1.6] 0.35 s
+[dolly] ahead k= 40 head [0.897, 0.165, 1.6] 0.36 s
+[dolly] ahead k= 41 head [0.897, 0.264, 1.6] 0.33 s
+[dolly] ahead k= 42 head [0.897, 0.363, 1.6] 0.36 s
+[dolly] ahead k= 43 head [0.897, 0.462, 1.6] 0.35 s
+[dolly] ahead k= 44 head [0.897, 0.561, 1.6] 0.32 s
+[dolly] ahead k= 45 head [0.897, 0.66, 1.6] 0.32 s
+[dolly] ahead k= 46 head [0.897, 0.759, 1.6] 0.36 s
+[dolly] 47 looks in 17.23 s -> runs/dolly-128
+	Command being timed: ".venv/bin/python -m motion.dolly run --path paths/classroom_dolly.json --run runs/dolly-128 --profile full --spp 128 --device OPTIX --modes ahead --seed-base 28000"
+	User time (seconds): 23.24
+	System time (seconds): 3.06
+	Percent of CPU this job got: 151%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:17.35
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1308708
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 496
+	Minor (reclaiming a frame) page faults: 339989
+	Voluntary context switches: 137551
+	Involuntary context switches: 23580
+	Swaps: 0
+	File system inputs: 68776
+	File system outputs: 419944
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T09:58:43-03:00 exit 0

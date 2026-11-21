@@ -1,0 +1,680 @@
+{
+ "references": [
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160
+ ],
+ "rows": {
+  "perfect": {
+   "full": {
+    "cells": 328984,
+    "right": 0.9997568270797365,
+    "confirmed_right": 1.0,
+    "coverage": 0.8036940591314939,
+    "surface_cells": 256141,
+    "points": 582488,
+    "tried": 586065,
+    "accepted_share": 0.9938965814372126,
+    "accepted_surface_right": null
+   },
+   "shared 1-44": {
+    "cells": 64819,
+    "right": 0.9995680278930561,
+    "confirmed_right": 1.0,
+    "coverage": 0.6503275529865126,
+    "surface_cells": 51900,
+    "points": 72469
+   },
+   "1-18": {
+    "cells": 10624,
+    "right": 0.9974585843373494,
+    "confirmed_right": 1.0,
+    "coverage": 0.32764505119453924,
+    "surface_cells": 8204,
+    "points": 10837
+   },
+   "18-44": {
+    "cells": 54295,
+    "right": 0.9999815820977991,
+    "confirmed_right": 1.0,
+    "coverage": 0.6927337968154295,
+    "surface_cells": 44590,
+    "points": 61632
+   }
+  },
+  "B128": {
+   "full": {
+    "cells": 92001,
+    "right": 0.9458918924794296,
+    "confirmed_right": 0.9669768620777057,
+    "coverage": 0.08825998180689543,
+    "surface_cells": 256141,
+    "points": 167718,
+    "tried": 348115,
+    "accepted_share": 0.48178906395874926,
+    "accepted_surface_right": 0.9558246580569766,
+    "covers_of_perfect": 0.09757163884017701
+   },
+   "shared 1-44": {
+    "cells": 27133,
+    "right": 0.9642870305532009,
+    "confirmed_right": 0.9711405416090136,
+    "coverage": 0.08840077071290944,
+    "surface_cells": 51900,
+    "points": 34623,
+    "covers_of_perfect": 0.0900094809196492
+   },
+   "1-18": {
+    "cells": 5226,
+    "right": 0.9850746268656716,
+    "confirmed_right": 1.0,
+    "coverage": 0.07922964407606045,
+    "surface_cells": 8204,
+    "points": 5774,
+    "covers_of_perfect": 0.07998511904761904
+   },
+   "18-44": {
+    "cells": 22173,
+    "right": 0.9598159924232175,
+    "confirmed_right": 0.9665137614678899,
+    "coverage": 0.08618524332810047,
+    "surface_cells": 44590,
+    "points": 28849,
+    "covers_of_perfect": 0.08776587134578652
+   }
+  },
+  "N128": {
+   "full": {
+    "cells": 83703,
+    "right": 0.947815490484212,
+    "confirmed_right": 0.9559199638934858,
+    "coverage": 0.09187517812454858,
+    "surface_cells": 256141,
+    "points": 110397,
+    "tried": 2345469,
+    "accepted_share": 0.04706819830063838,
+    "accepted_surface_right": 0.9499714666159407,
+    "covers_of_perfect": 0.09002278258419598
+   },
+   "shared 1-44": {
+    "cells": 45922,
+    "right": 0.9704281172422804,
+    "confirmed_right": 0.982837528604119,
+    "coverage": 0.18310211946050095,
+    "surface_cells": 51900,
+    "points": 52087,
+    "covers_of_perfect": 0.16514576913960655
+   },
+   "1-18": {
+    "cells": 17663,
+    "right": 0.953575270339127,
+    "confirmed_right": 0.9967969250480462,
+    "coverage": 0.3205753291077523,
+    "surface_cells": 8204,
+    "points": 19408,
+    "covers_of_perfect": 0.3515625
+   },
+   "18-44": {
+    "cells": 28667,
+    "right": 0.9812327763630655,
+    "confirmed_right": 0.9746646795827124,
+    "coverage": 0.14875532630634672,
+    "surface_cells": 44590,
+    "points": 32679,
+    "covers_of_perfect": 0.14102107546375733
+   },
+   "reasons": {
+    "accepted": 110397,
+    "invalid_support": 71310,
+    "low_texture": 1231,
+    "low_ncc": 1830160,
+    "ambiguous": 74417,
+    "unresolved_far": 493,
+    "near_boundary": 0,
+    "gn_failed": 7048,
+    "few_frames": 558,
+    "unsupported": 42187,
+    "depth_edge": 207668
+   }
+  },
+  "B1024": {
+   "full": {
+    "cells": 125348,
+    "right": 0.9445782940294221,
+    "confirmed_right": 0.9721684528586941,
+    "coverage": 0.10052666304886762,
+    "surface_cells": 256141,
+    "points": 244545,
+    "tried": 348115,
+    "accepted_share": 0.7024833747468509,
+    "accepted_surface_right": 0.9592426751722587,
+    "covers_of_perfect": 0.10757363049465897
+   },
+   "shared 1-44": {
+    "cells": 42512,
+    "right": 0.9641748212269476,
+    "confirmed_right": 0.98277017325548,
+    "coverage": 0.11957610789980733,
+    "surface_cells": 51900,
+    "points": 58803,
+    "covers_of_perfect": 0.11741526428063521
+   },
+   "1-18": {
+    "cells": 9259,
+    "right": 0.9724592288584081,
+    "confirmed_right": 0.9967923015236567,
+    "coverage": 0.10714285714285714,
+    "surface_cells": 8204,
+    "points": 10691,
+    "covers_of_perfect": 0.11383928571428571
+   },
+   "18-44": {
+    "cells": 33949,
+    "right": 0.9626204011900203,
+    "confirmed_right": 0.9799818016378526,
+    "coverage": 0.11675263511998206,
+    "surface_cells": 44590,
+    "points": 48112,
+    "covers_of_perfect": 0.1136326847745152
+   }
+  },
+  "N1024": {
+   "full": {
+    "cells": 179823,
+    "right": 0.9723172230471074,
+    "confirmed_right": 0.9870061715437256,
+    "coverage": 0.21629883540706096,
+    "surface_cells": 256141,
+    "points": 301581,
+    "tried": 2345469,
+    "accepted_share": 0.12858025409843404,
+    "accepted_surface_right": 0.9790769312390369,
+    "covers_of_perfect": 0.21490437629639705
+   },
+   "shared 1-44": {
+    "cells": 84596,
+    "right": 0.9815121282330134,
+    "confirmed_right": 0.9949896661865096,
+    "coverage": 0.37175337186897883,
+    "surface_cells": 51900,
+    "points": 106327,
+    "covers_of_perfect": 0.35621592794501067
+   },
+   "1-18": {
+    "cells": 27598,
+    "right": 0.959055003985796,
+    "confirmed_right": 0.996776273372018,
+    "coverage": 0.5043881033642126,
+    "surface_cells": 8204,
+    "points": 31224,
+    "covers_of_perfect": 0.5450148809523809
+   },
+   "18-44": {
+    "cells": 58186,
+    "right": 0.9925411611040457,
+    "confirmed_right": 0.9941807299027351,
+    "coverage": 0.3379233011886073,
+    "surface_cells": 44590,
+    "points": 75103,
+    "covers_of_perfect": 0.33173621677619863
+   },
+   "reasons": {
+    "accepted": 301581,
+    "invalid_support": 71332,
+    "low_texture": 10418,
+    "low_ncc": 1296508,
+    "ambiguous": 162085,
+    "unresolved_far": 1531,
+    "near_boundary": 0,
+    "gn_failed": 8765,
+    "few_frames": 516,
+    "unsupported": 59438,
+    "depth_edge": 433295
+   }
+  },
+  "N1024 mirrored (C3 control)": {
+   "full": {
+    "cells": 2207,
+    "right": 0.0,
+    "confirmed_right": 0.0,
+    "coverage": 0.0,
+    "surface_cells": 256141,
+    "points": 2430,
+    "tried": 2345469,
+    "accepted_share": 0.0010360401267294516,
+    "accepted_surface_right": 0.0,
+    "covers_of_perfect": 0.0
+   },
+   "shared 1-44": {
+    "cells": 39,
+    "right": 0.0,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 51900,
+    "points": 39,
+    "covers_of_perfect": 0.0
+   },
+   "1-18": {
+    "cells": 39,
+    "right": 0.0,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 8204,
+    "points": 39,
+    "covers_of_perfect": 0.0
+   },
+   "18-44": {
+    "cells": 0,
+    "right": null,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 44590,
+    "points": 0,
+    "covers_of_perfect": 0.0
+   },
+   "reasons": {
+    "accepted": 2430,
+    "invalid_support": 71332,
+    "low_texture": 10439,
+    "low_ncc": 2206627,
+    "ambiguous": 26244,
+    "unresolved_far": 18248,
+    "near_boundary": 0,
+    "gn_failed": 7665,
+    "few_frames": 137,
+    "unsupported": 2058,
+    "depth_edge": 289
+   }
+  },
+  "N1024 +/-0.2 m": {
+   "full": {
+    "cells": 250033,
+    "right": 0.9364083940919798,
+    "confirmed_right": 0.9818528085460356,
+    "coverage": 0.2276285327222116,
+    "surface_cells": 256141,
+    "points": 384417,
+    "tried": 2345469,
+    "accepted_share": 0.1638977108629447,
+    "accepted_surface_right": 0.9536883124315522,
+    "covers_of_perfect": 0.24609077086743839
+   },
+   "shared 1-44": {
+    "cells": 97257,
+    "right": 0.9407857532105658,
+    "confirmed_right": 0.993799719232569,
+    "coverage": 0.29560693641618496,
+    "surface_cells": 51900,
+    "points": 107807,
+    "covers_of_perfect": 0.31115193173737854
+   },
+   "1-18": {
+    "cells": 26426,
+    "right": 0.8339135699689699,
+    "confirmed_right": 0.9815789473684211,
+    "coverage": 0.2773037542662116,
+    "surface_cells": 8204,
+    "points": 27638,
+    "covers_of_perfect": 0.30282738095238093
+   },
+   "18-44": {
+    "cells": 71272,
+    "right": 0.9807357728140083,
+    "confirmed_right": 0.9957264957264957,
+    "coverage": 0.28551244673693654,
+    "surface_cells": 44590,
+    "points": 80169,
+    "covers_of_perfect": 0.30392696429149535
+   },
+   "reasons": {
+    "accepted": 384417,
+    "invalid_support": 72955,
+    "low_texture": 10308,
+    "low_ncc": 1149260,
+    "ambiguous": 151308,
+    "unresolved_far": 3615,
+    "near_boundary": 2,
+    "gn_failed": 22339,
+    "few_frames": 3887,
+    "unsupported": 58742,
+    "depth_edge": 488636
+   }
+  },
+  "B1024 on 11 looks": {
+   "full": {
+    "cells": 133807,
+    "right": 0.9435007137145291,
+    "confirmed_right": 0.974786753637732,
+    "coverage": 0.10593384112656701,
+    "surface_cells": 256141,
+    "points": 242591,
+    "tried": 348115,
+    "accepted_share": 0.6968702871177628,
+    "accepted_surface_right": 0.9582259853003615,
+    "covers_of_perfect": 0.1125090474548113
+   },
+   "shared 1-44": {
+    "cells": 46793,
+    "right": 0.9618318979334516,
+    "confirmed_right": 0.982738659088517,
+    "coverage": 0.1310019267822736,
+    "surface_cells": 51900,
+    "points": 61049,
+    "covers_of_perfect": 0.12760725290353164
+   },
+   "1-18": {
+    "cells": 10625,
+    "right": 0.9628235294117647,
+    "confirmed_right": 0.9973285841495992,
+    "coverage": 0.12701121404193078,
+    "surface_cells": 8204,
+    "points": 11885,
+    "covers_of_perfect": 0.1328125
+   },
+   "18-44": {
+    "cells": 36777,
+    "right": 0.9621502569540745,
+    "confirmed_right": 0.9798994974874372,
+    "coverage": 0.125969948418928,
+    "surface_cells": 44590,
+    "points": 49164,
+    "covers_of_perfect": 0.12188805076240733
+   }
+  },
+  "B cost on N's pixels and frames, 1024": {
+   "full": {
+    "cells": 550405,
+    "right": 0.8563330638348126,
+    "confirmed_right": 0.9454855436943342,
+    "coverage": 0.3676373559875225,
+    "surface_cells": 256141,
+    "points": 959329,
+    "tried": 2320450,
+    "accepted_share": 0.4134236893705962,
+    "accepted_surface_right": 0.8989595852934708,
+    "covers_of_perfect": 0.4138998052064763
+   },
+   "shared 1-44": {
+    "cells": 111965,
+    "right": 0.9258428973339883,
+    "confirmed_right": 0.9795356567807615,
+    "coverage": 0.30639691714836226,
+    "surface_cells": 51900,
+    "points": 142864,
+    "covers_of_perfect": 0.34092794501066603
+   },
+   "1-18": {
+    "cells": 14417,
+    "right": 0.9001872789068461,
+    "confirmed_right": 0.9802215189873418,
+    "coverage": 0.15333983422720623,
+    "surface_cells": 8204,
+    "points": 15819,
+    "covers_of_perfect": 0.16257440476190477
+   },
+   "18-44": {
+    "cells": 98240,
+    "right": 0.9300590390879478,
+    "confirmed_right": 0.9791535781598035,
+    "coverage": 0.323973985198475,
+    "surface_cells": 44590,
+    "points": 127045,
+    "covers_of_perfect": 0.3509663634303474
+   }
+  },
+  "N1024 on B's anchors": {
+   "full": {
+    "cells": 64612,
+    "right": 0.9759177861697518,
+    "confirmed_right": 0.986411197173529,
+    "coverage": 0.08279814633346477,
+    "surface_cells": 256141,
+    "points": 95147,
+    "tried": 348115,
+    "accepted_share": 0.2733205980782213,
+    "accepted_surface_right": null,
+    "covers_of_perfect": 0.07802913644776278
+   },
+   "shared 1-44": {
+    "cells": 37706,
+    "right": 0.9819126929401156,
+    "confirmed_right": 0.9948400412796697,
+    "coverage": 0.1820616570327553,
+    "surface_cells": 51900,
+    "points": 46464,
+    "covers_of_perfect": 0.16135340127992415
+   },
+   "1-18": {
+    "cells": 14921,
+    "right": 0.9658199852556799,
+    "confirmed_right": 0.9975609756097561,
+    "coverage": 0.30875182837640175,
+    "surface_cells": 8204,
+    "points": 16821,
+    "covers_of_perfect": 0.3325892857142857
+   },
+   "18-44": {
+    "cells": 23436,
+    "right": 0.9926608636286056,
+    "confirmed_right": 0.993394417217132,
+    "coverage": 0.15126710024669207,
+    "surface_cells": 44590,
+    "points": 29643,
+    "covers_of_perfect": 0.13911101039204896
+   }
+  },
+  "M4@1024": {
+   "shared 1-44": {
+    "cells": 142838,
+    "right": 0.9890225290188885,
+    "confirmed_right": 0.9983432799292129,
+    "coverage": 0.41861271676300577,
+    "surface_cells": 51900,
+    "points": 290949,
+    "covers_of_perfect": 0.3775183692818203
+   },
+   "1-18": {
+    "cells": 65072,
+    "right": 0.9947903860339317,
+    "confirmed_right": 0.9991752985419278,
+    "coverage": 0.7571916138469039,
+    "surface_cells": 8204,
+    "points": 173138,
+    "covers_of_perfect": 0.7667410714285714
+   },
+   "18-44": {
+    "cells": 83643,
+    "right": 0.9853066006719032,
+    "confirmed_right": 0.9971156487501145,
+    "coverage": 0.35483292217986095,
+    "surface_cells": 44590,
+    "points": 117811,
+    "covers_of_perfect": 0.33707792418012883
+   }
+  },
+  "M4@128": {
+   "shared 1-44": {
+    "cells": 92492,
+    "right": 0.9845067681529214,
+    "confirmed_right": 0.9957963568425969,
+    "coverage": 0.2271290944123314,
+    "surface_cells": 51900,
+    "points": 172285,
+    "covers_of_perfect": 0.18671486134155013
+   },
+   "1-18": {
+    "cells": 47422,
+    "right": 0.9913753110370714,
+    "confirmed_right": 0.9985667192202953,
+    "coverage": 0.5247440273037542,
+    "surface_cells": 8204,
+    "points": 113560,
+    "covers_of_perfect": 0.5438988095238095
+   },
+   "18-44": {
+    "cells": 47980,
+    "right": 0.9786577740725302,
+    "confirmed_right": 0.9878787878787879,
+    "coverage": 0.1684458398744113,
+    "surface_cells": 44590,
+    "points": 58725,
+    "covers_of_perfect": 0.1474634983327398
+   }
+  }
+ },
+ "bands": {
+  "full": null,
+  "shared 1-44": [
+   1.0,
+   44.0
+  ],
+  "1-18": [
+   1.0,
+   18.0
+  ],
+  "18-44": [
+   18.0,
+   44.0
+  ]
+ },
+ "checks": [
+  {
+   "check": "C0 B128 and the perfect matcher reproduce stage 9's straight-path numbers exactly",
+   "ok": true,
+   "want": {
+    "B right": 0.9458918924794296,
+    "B coverage": 0.08825998180689543,
+    "perfect right": 0.9997568270797365,
+    "perfect coverage": 0.8036940591314939
+   },
+   "got": {
+    "B right": 0.9458918924794296,
+    "B coverage": 0.08825998180689543,
+    "perfect right": 0.9997568270797365,
+    "perfect coverage": 0.8036940591314939
+   },
+   "control": "B on the 1024-spp renders must not reproduce them",
+   "control_fails": true,
+   "control_values": {
+    "B right": 0.9445782940294221,
+    "B coverage": 0.10052666304886762
+   }
+  },
+  {
+   "check": "C2 18-44 deg, 1024 spp: N's cells right >= M4's - 3 points and N's coverage >= M4's / 1.25",
+   "ok": true,
+   "values": {
+    "right": 0.9925411611040457,
+    "coverage": 0.3379233011886073,
+    "M4 right": 0.9853066006719032,
+    "M4 coverage": 0.35483292217986095
+   },
+   "control": "B1024 in place of N must fail",
+   "control_fails": true,
+   "control_values": {
+    "right": 0.9626204011900203,
+    "coverage": 0.11675263511998206,
+    "M4 right": 0.9853066006719032,
+    "M4 coverage": 0.35483292217986095
+   }
+  },
+  {
+   "check": "C3 full field, 1024 spp: N's coverage >= 2 x B's and N's cells right >= B's - 2 points",
+   "ok": true,
+   "values": {
+    "N right": 0.9723172230471074,
+    "N coverage": 0.21629883540706096,
+    "B right": 0.9445782940294221,
+    "B coverage": 0.10052666304886762
+   },
+   "control": "N given the mirrored path's poses must fall below 50 % right",
+   "control_fails": true,
+   "control_values": {
+    "right": 0.0
+   }
+  }
+ ],
+ "gap": {
+  "chain": [
+   "B128",
+   "B1024",
+   "N1024 on B's anchors",
+   "N1024",
+   "perfect"
+  ],
+  "steps": [
+   {
+    "step": "noise (B128 -> B1024)",
+    "from": 0.08825998180689543,
+    "to": 0.10052666304886762,
+    "gain": 0.012266681241972194,
+    "share_of_gap": 0.017145788313360836
+   },
+   {
+    "step": "the cost on the same pixels (B1024 -> N1024 on B's anchors)",
+    "from": 0.10052666304886762,
+    "to": 0.08279814633346477,
+    "gain": -0.017728516715402848,
+    "share_of_gap": -0.024780084255560653
+   },
+   {
+    "step": "the pixels tried (-> N1024)",
+    "from": 0.08279814633346477,
+    "to": 0.21629883540706096,
+    "gain": 0.1335006890735962,
+    "share_of_gap": 0.18660096479165306
+   },
+   {
+    "step": "what remains (-> perfect)",
+    "from": 0.21629883540706096,
+    "to": 0.8036940591314939,
+    "gain": 0.587395223724433,
+    "share_of_gap": 0.8210333311505468
+   }
+  ],
+  "total": 0.7154340773245985,
+  "sensor_shared_field": {
+   "shared 1-44": {
+    "N1024": 0.37175337186897883,
+    "M4@1024": 0.41861271676300577,
+    "perfect": 0.6503275529865126
+   },
+   "1-18": {
+    "N1024": 0.5043881033642126,
+    "M4@1024": 0.7571916138469039,
+    "perfect": 0.32764505119453924
+   },
+   "18-44": {
+    "N1024": 0.3379233011886073,
+    "M4@1024": 0.35483292217986095,
+    "perfect": 0.6927337968154295
+   }
+  }
+ },
+ "seconds": 1355.4,
+ "command": "stage11",
+ "sources": {
+  "r128": "runs/r3-straight",
+  "r1024": "runs/r3-straight-1024",
+  "m4": [
+   "1024=/home/lvelho/rd/foveal-motion/runs/m4-classroom,/home/lvelho/rd/foveal-motion/runs/dolly-1024",
+   "128=runs/m4-dolly-128,runs/dolly-128"
+  ]
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "dade15df14e3c56315cc5e269c7af39230643adb",
+   "clean": true
+  }
+ },
+ "seconds_total": 1384.3
+}

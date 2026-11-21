@@ -1,0 +1,171 @@
+2026-11-21T16:40:13-03:00 $ .venv/bin/python -m deep stage12b --r128 runs/r3-straight --r1024 runs/r3-straight-1024 --m4 1024=/home/lvelho/rd/foveal-motion/runs/m4-classroom,/home/lvelho/rd/foveal-motion/runs/dolly-1024 --cache runs/stage11-cache --out docs/runs/dm-issue-28 (at 0f3fea3)
+[deep] [stage11] B128: 167718 accepted
+[deep] [stage11] perfect (117 s)
+[deep] [stage11] N1024: 301581 accepted of 2345469 (0 s)
+[deep] [stage11] N1024 mirrored (C3 control): 2430 accepted of 2345469 (0 s)
+[deep] [stage11] N1024, every anchor kept (stage 11c): 301581 accepted of 2345469 (0 s)
+[deep] [stage11] M4@1024: references [(28, 50, 0.0188), (29, 60, 0.0177), (30, 70, 0.0167), (31, 80, 0.0157), (32, 90, 0.0146), (33, 100, 0.0136), (34, 110, 0.0125), (35, 120, 0.0115), (36, 130, 0.0104), (37, 140, 0.0094), (38, 150, 0.0083), (39, 160, 0.0073)]
+[deep] [stage12b] rows ready (251 s)
+[deep] [stage12b] full perfect (262 s)
+[deep] [stage12b] full perfect where gradient SNR >= 3 (267 s)
+[deep] [stage12b] full N1024 (274 s)
+[deep] [stage12b] full N1024, depth-edge test at 10 % (284 s)
+[deep] [stage12b] full N1024 mirrored (C3 control) (284 s)
+[deep] [stage12b] full perfect, points moved 20 % (control) (296 s)
+[deep] [stage12b] shared 1-44 perfect (298 s)
+[deep] [stage12b] shared 1-44 perfect where gradient SNR >= 3 (299 s)
+[deep] [stage12b] shared 1-44 N1024 (301 s)
+[deep] [stage12b] shared 1-44 N1024, depth-edge test at 10 % (304 s)
+[deep] [stage12b] shared 1-44 M4@1024 (308 s)
+[deep] S2 record: ablation, problems: none
+[deep] PASS K1b: the same-cell rule at 0, 0.2 and 0.5 m equals stage 12's models (every row and band); control the within-2 cm rule at span 0 (perfect, full field) in place of the same-cell rule: fails ([216589, 93343])
+[deep] PASS K2b: at every span, row and band, the within-2 cm model contains the same-cell model; control the converse (perfect, full field, span 0): fails (False)
+[deep] PASS K3b: the perfect matcher's within-2 cm model at 0.5 m passes S2's gate (full field); control perfect, points moved 20 % (control) must fail it: fails (fail)
+[deep] control only the standard control: N1024 mirrored must not pass S2's gate under either rule at any span; control N1024 mirrored (C3 control): fails ({'same cell 0': 'not evaluated', 'same cell 0.2': 'not evaluated', 'same cell 0.5': 'not evaluated', 'same cell 0.8': 'not evaluated', 'same cell 1': 'not evaluated', 'within 2 cm 0': 'not evaluated', 'within 2 cm 0.2': 'not evaluated', 'within 2 cm 0.5': 'not evaluated', 'within 2 cm 0.8': 'not evaluated', 'within 2 cm 1': 'not evaluated'})
+| band | row | rule | span | model cells | right | wrong cells | coverage | of perfect | S2 gate |
+|---|---|---|---|---|---|---|---|---|---|
+| full | perfect | all cells | | 328,984 | 99.98 % | | 80.4 % | | |
+| full | perfect | same cell | ≥ 0 m | 93,343 | 100.00 % | 0 | 44.2 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | same cell | ≥ 0.2 m | 83,176 | 100.00 % | 0 | 41.2 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | same cell | ≥ 0.5 m | 52,331 | 100.00 % | 0 | 29.8 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | same cell | ≥ 0.8 m | 26,192 | 100.00 % | 0 | 18.0 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | same cell | ≥ 1 m | 11,663 | 100.00 % | 0 | 9.6 % | — | pass; unverified: 0-15, 120-165, 165-180 |
+| full | perfect | within 2 cm | ≥ 0 m | 216,589 | 100.00 % | 0 | 63.6 % | — | pass; unverified: 165-180 |
+| full | perfect | within 2 cm | ≥ 0.2 m | 205,682 | 100.00 % | 0 | 61.3 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | within 2 cm | ≥ 0.5 m | 159,919 | 100.00 % | 0 | 51.1 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | within 2 cm | ≥ 0.8 m | 105,030 | 100.00 % | 0 | 37.8 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect | within 2 cm | ≥ 1 m | 61,752 | 100.00 % | 0 | 25.4 % | — | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | all cells | | 135,986 | 99.97 % | | 39.7 % | | |
+| full | perfect where gradient SNR >= 3 | same cell | ≥ 0 m | 23,253 | 100.00 % | 0 | 13.5 % | 16.8 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | same cell | ≥ 0.2 m | 19,859 | 100.00 % | 0 | 12.0 % | 14.9 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | same cell | ≥ 0.5 m | 10,847 | 100.00 % | 0 | 7.5 % | 9.3 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | same cell | ≥ 0.8 m | 4,589 | 100.00 % | 0 | 3.8 % | 4.7 % | pass; unverified: 0-15, 120-165, 165-180 |
+| full | perfect where gradient SNR >= 3 | same cell | ≥ 1 m | 1,640 | 100.00 % | 0 | 1.6 % | 2.0 % | pass; unverified: 0-15, 15-60, 120-165, 165-180 |
+| full | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0 m | 69,921 | 100.00 % | 0 | 24.5 % | 30.5 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0.2 m | 64,078 | 100.00 % | 0 | 22.7 % | 28.3 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0.5 m | 43,980 | 100.00 % | 0 | 16.6 % | 20.7 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0.8 m | 24,586 | 100.00 % | 0 | 10.4 % | 12.9 % | pass; unverified: 0-15, 165-180 |
+| full | perfect where gradient SNR >= 3 | within 2 cm | ≥ 1 m | 11,939 | 100.00 % | 0 | 5.7 % | 7.1 % | pass; unverified: 0-15, 165-180 |
+| full | N1024 | all cells | | 179,823 | 97.23 % | | 21.6 % | | |
+| full | N1024 | same cell | ≥ 0 m | 47,638 | 98.70 % | 619 | 11.6 % | 12.5 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024 | same cell | ≥ 0.2 m | 39,348 | 98.88 % | 441 | 10.4 % | 11.2 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024 | same cell | ≥ 0.5 m | 21,904 | 99.19 % | 177 | 7.1 % | 7.9 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024 | same cell | ≥ 0.8 m | 9,411 | 99.52 % | 45 | 3.9 % | 4.4 % | fail; fails: 120-165; unverified: 0-15, 165-180 |
+| full | N1024 | same cell | ≥ 1 m | 3,567 | 99.72 % | 10 | 1.8 % | 2.1 % | pass; unverified: 0-15, 120-165, 165-180 |
+| full | N1024 | within 2 cm | ≥ 0 m | 120,817 | 98.40 % | 1,939 | 17.2 % | 17.5 % | fail; fails: overall, 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 | within 2 cm | ≥ 0.2 m | 108,742 | 98.56 % | 1,569 | 16.0 % | 16.4 % | fail; fails: overall, 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 | within 2 cm | ≥ 0.5 m | 76,299 | 98.91 % | 831 | 12.7 % | 13.0 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024 | within 2 cm | ≥ 0.8 m | 43,974 | 99.31 % | 303 | 8.7 % | 9.1 % | fail; fails: overall, 120-165; unverified: 165-180 |
+| full | N1024 | within 2 cm | ≥ 1 m | 23,044 | 99.58 % | 97 | 5.3 % | 5.8 % | fail; fails: 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | all cells | | 280,022 | 95.16 % | | 29.6 % | | |
+| full | N1024, depth-edge test at 10 % | same cell | ≥ 0 m | 98,534 | 95.76 % | 4,173 | 18.7 % | 21.1 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | same cell | ≥ 0.2 m | 82,029 | 96.13 % | 3,172 | 17.0 % | 19.3 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | same cell | ≥ 0.5 m | 47,001 | 96.89 % | 1,463 | 12.2 % | 14.0 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | N1024, depth-edge test at 10 % | same cell | ≥ 0.8 m | 21,744 | 97.76 % | 487 | 7.5 % | 8.8 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | N1024, depth-edge test at 10 % | same cell | ≥ 1 m | 9,326 | 98.26 % | 162 | 4.1 % | 4.9 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0 m | 212,611 | 95.58 % | 9,408 | 25.3 % | 27.3 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0.2 m | 193,412 | 95.78 % | 8,161 | 23.9 % | 25.9 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0.5 m | 139,205 | 96.26 % | 5,203 | 19.3 % | 21.1 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0.8 m | 86,152 | 96.94 % | 2,639 | 14.2 % | 15.8 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 165-180 |
+| full | N1024, depth-edge test at 10 % | within 2 cm | ≥ 1 m | 48,928 | 97.47 % | 1,237 | 9.6 % | 11.0 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | N1024 mirrored (C3 control) | all cells | | 2,207 | 0.00 % | | 0.0 % | | |
+| full | N1024 mirrored (C3 control) | same cell | ≥ 0 m | 109 | 0.00 % | 109 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | same cell | ≥ 0.2 m | 73 | 0.00 % | 73 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | same cell | ≥ 0.5 m | 34 | 0.00 % | 34 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | same cell | ≥ 0.8 m | 17 | 0.00 % | 17 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | same cell | ≥ 1 m | 9 | 0.00 % | 9 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | within 2 cm | ≥ 0 m | 338 | 0.00 % | 338 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | within 2 cm | ≥ 0.2 m | 205 | 0.00 % | 205 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | within 2 cm | ≥ 0.5 m | 92 | 0.00 % | 92 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | within 2 cm | ≥ 0.8 m | 43 | 0.00 % | 43 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | N1024 mirrored (C3 control) | within 2 cm | ≥ 1 m | 21 | 0.00 % | 21 | 0.0 % | 0.0 % | not evaluated; unverified: 0-15, 15-60, 60-120, 120-165, 165-180 |
+| full | perfect, points moved 20 % (control) | all cells | | 385,798 | 3.36 % | | 1.0 % | | |
+| full | perfect, points moved 20 % (control) | same cell | ≥ 0 m | 84,053 | 1.88 % | 82,475 | 0.3 % | 0.3 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | same cell | ≥ 0.2 m | 72,326 | 1.48 % | 71,254 | 0.2 % | 0.2 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | same cell | ≥ 0.5 m | 42,715 | 0.92 % | 42,324 | 0.0 % | 0.1 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | same cell | ≥ 0.8 m | 18,876 | 0.63 % | 18,758 | 0.0 % | 0.0 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | same cell | ≥ 1 m | 7,280 | 0.41 % | 7,250 | 0.0 % | 0.0 % | fail; fails: overall, 15-60, 60-120; unverified: 0-15, 120-165, 165-180 |
+| full | perfect, points moved 20 % (control) | within 2 cm | ≥ 0 m | 209,510 | 2.38 % | 204,527 | 0.5 % | 0.7 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | within 2 cm | ≥ 0.2 m | 188,345 | 1.94 % | 184,694 | 0.4 % | 0.4 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | within 2 cm | ≥ 0.5 m | 136,578 | 1.32 % | 134,781 | 0.1 % | 0.2 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | within 2 cm | ≥ 0.8 m | 82,540 | 0.78 % | 81,896 | 0.0 % | 0.0 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| full | perfect, points moved 20 % (control) | within 2 cm | ≥ 1 m | 44,590 | 0.47 % | 44,382 | 0.0 % | 0.0 % | fail; fails: overall, 15-60, 60-120, 120-165; unverified: 0-15, 165-180 |
+| shared 1-44 | perfect | all cells | | 64,819 | 99.96 % | | 65.0 % | | |
+| shared 1-44 | perfect | same cell | ≥ 0 m | 6,274 | 100.00 % | 0 | 17.2 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect | same cell | ≥ 0.2 m | 5,154 | 100.00 % | 0 | 14.4 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect | same cell | ≥ 0.5 m | 2,292 | 100.00 % | 0 | 7.2 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect | same cell | ≥ 0.8 m | 688 | 100.00 % | 0 | 2.2 % | — | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | perfect | same cell | ≥ 1 m | 214 | 100.00 % | 0 | 0.8 % | — | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | perfect | within 2 cm | ≥ 0 m | 26,660 | 100.00 % | 0 | 37.5 % | — | pass |
+| shared 1-44 | perfect | within 2 cm | ≥ 0.2 m | 23,867 | 100.00 % | 0 | 34.3 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect | within 2 cm | ≥ 0.5 m | 13,550 | 100.00 % | 0 | 21.8 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect | within 2 cm | ≥ 0.8 m | 5,361 | 100.00 % | 0 | 10.2 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect | within 2 cm | ≥ 1 m | 1,701 | 100.00 % | 0 | 3.8 % | — | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | all cells | | 34,106 | 99.94 % | | 32.4 % | | |
+| shared 1-44 | perfect where gradient SNR >= 3 | same cell | ≥ 0 m | 1,837 | 100.00 % | 0 | 4.9 % | 7.5 % | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | same cell | ≥ 0.2 m | 1,544 | 100.00 % | 0 | 4.1 % | 6.3 % | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | same cell | ≥ 0.5 m | 684 | 100.00 % | 0 | 1.8 % | 2.8 % | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | perfect where gradient SNR >= 3 | same cell | ≥ 0.8 m | 215 | 100.00 % | 0 | 0.6 % | 0.8 % | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | perfect where gradient SNR >= 3 | same cell | ≥ 1 m | 61 | 100.00 % | 0 | 0.2 % | 0.3 % | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0 m | 9,647 | 100.00 % | 0 | 13.7 % | 21.0 % | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0.2 m | 8,665 | 100.00 % | 0 | 12.4 % | 19.0 % | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0.5 m | 4,503 | 100.00 % | 0 | 7.3 % | 11.2 % | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | within 2 cm | ≥ 0.8 m | 1,545 | 100.00 % | 0 | 2.8 % | 4.3 % | pass; unverified: 0-15 |
+| shared 1-44 | perfect where gradient SNR >= 3 | within 2 cm | ≥ 1 m | 466 | 100.00 % | 0 | 1.0 % | 1.5 % | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | N1024 | all cells | | 84,596 | 98.15 % | | 37.2 % | | |
+| shared 1-44 | N1024 | same cell | ≥ 0 m | 15,967 | 99.50 % | 80 | 16.5 % | 17.0 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024 | same cell | ≥ 0.2 m | 12,817 | 99.58 % | 54 | 14.5 % | 14.9 % | fail; fails: 15-60 |
+| shared 1-44 | N1024 | same cell | ≥ 0.5 m | 6,296 | 99.71 % | 18 | 8.6 % | 8.7 % | pass |
+| shared 1-44 | N1024 | same cell | ≥ 0.8 m | 2,200 | 99.91 % | 2 | 3.5 % | 3.5 % | pass; unverified: 0-15 |
+| shared 1-44 | N1024 | same cell | ≥ 1 m | 670 | 100.00 % | 0 | 1.2 % | 1.1 % | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | N1024 | within 2 cm | ≥ 0 m | 53,336 | 99.39 % | 323 | 28.5 % | 27.8 % | fail; fails: overall, 0-15, 15-60 |
+| shared 1-44 | N1024 | within 2 cm | ≥ 0.2 m | 47,268 | 99.48 % | 247 | 26.5 % | 25.7 % | fail; fails: overall, 0-15 |
+| shared 1-44 | N1024 | within 2 cm | ≥ 0.5 m | 31,218 | 99.72 % | 87 | 20.5 % | 19.6 % | pass |
+| shared 1-44 | N1024 | within 2 cm | ≥ 0.8 m | 15,738 | 99.87 % | 21 | 12.6 % | 11.8 % | pass |
+| shared 1-44 | N1024 | within 2 cm | ≥ 1 m | 6,577 | 99.94 % | 4 | 6.3 % | 6.0 % | pass |
+| shared 1-44 | N1024, depth-edge test at 10 % | all cells | | 97,096 | 98.50 % | | 42.4 % | | |
+| shared 1-44 | N1024, depth-edge test at 10 % | same cell | ≥ 0 m | 23,264 | 98.40 % | 373 | 21.5 % | 24.2 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | same cell | ≥ 0.2 m | 18,766 | 98.49 % | 283 | 18.9 % | 21.4 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | same cell | ≥ 0.5 m | 9,090 | 98.88 % | 102 | 11.6 % | 13.1 % | fail; fails: overall, 15-60; unverified: 0-15 |
+| shared 1-44 | N1024, depth-edge test at 10 % | same cell | ≥ 0.8 m | 3,100 | 99.26 % | 23 | 5.1 % | 5.8 % | fail; fails: overall, 15-60; unverified: 0-15 |
+| shared 1-44 | N1024, depth-edge test at 10 % | same cell | ≥ 1 m | 894 | 99.44 % | 5 | 1.6 % | 1.8 % | not evaluated; unverified: 0-15, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0 m | 67,482 | 98.61 % | 937 | 34.2 % | 36.3 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0.2 m | 60,282 | 98.63 % | 824 | 32.0 % | 34.0 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0.5 m | 39,853 | 98.88 % | 448 | 24.8 % | 26.1 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | within 2 cm | ≥ 0.8 m | 20,091 | 99.10 % | 180 | 15.3 % | 16.0 % | fail; fails: overall, 15-60 |
+| shared 1-44 | N1024, depth-edge test at 10 % | within 2 cm | ≥ 1 m | 8,358 | 99.25 % | 63 | 7.7 % | 8.1 % | fail; fails: overall, 15-60; unverified: 0-15 |
+| shared 1-44 | M4@1024 | all cells | | 142,838 | 98.90 % | | 41.9 % | | |
+| shared 1-44 | M4@1024 | same cell | ≥ 0 m | 53,117 | 99.83 % | 88 | 24.9 % | 20.6 % | pass |
+| shared 1-44 | M4@1024 | same cell | ≥ 0.2 m | 44,082 | 99.86 % | 63 | 22.4 % | 17.9 % | pass |
+| shared 1-44 | M4@1024 | same cell | ≥ 0.5 m | 29,137 | 99.93 % | 20 | 17.2 % | 12.8 % | pass |
+| shared 1-44 | M4@1024 | same cell | ≥ 0.8 m | 16,641 | 99.95 % | 9 | 11.6 % | 8.0 % | pass |
+| shared 1-44 | M4@1024 | same cell | ≥ 1 m | 8,121 | 99.96 % | 3 | 7.0 % | 4.6 % | pass |
+| shared 1-44 | M4@1024 | within 2 cm | ≥ 0 m | 111,069 | 99.68 % | 356 | 35.0 % | 30.4 % | pass |
+| shared 1-44 | M4@1024 | within 2 cm | ≥ 0.2 m | 101,667 | 99.73 % | 271 | 33.1 % | 28.1 % | pass |
+| shared 1-44 | M4@1024 | within 2 cm | ≥ 0.5 m | 79,263 | 99.84 % | 124 | 28.2 % | 22.7 % | pass |
+| shared 1-44 | M4@1024 | within 2 cm | ≥ 0.8 m | 56,108 | 99.94 % | 35 | 22.3 % | 17.0 % | pass |
+| shared 1-44 | M4@1024 | within 2 cm | ≥ 1 m | 35,811 | 99.96 % | 16 | 16.5 % | 12.1 % | pass |
+	Command being timed: ".venv/bin/python -m deep stage12b --r128 runs/r3-straight --r1024 runs/r3-straight-1024 --m4 1024=/home/lvelho/rd/foveal-motion/runs/m4-classroom,/home/lvelho/rd/foveal-motion/runs/dolly-1024 --cache runs/stage11-cache --out docs/runs/dm-issue-28"
+	User time (seconds): 1310.78
+	System time (seconds): 5.41
+	Percent of CPU this job got: 390%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:37.10
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2238944
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3040765
+	Voluntary context switches: 7489
+	Involuntary context switches: 153066
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 368
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T16:45:51-03:00 exit 0

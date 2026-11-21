@@ -1,0 +1,194 @@
+{
+ "command": "demo3",
+ "references": [
+  50,
+  60
+ ],
+ "lag_looks": 50,
+ "looks": 111,
+ "path_looks": 111,
+ "rule": "within 2 cm",
+ "span_m": 0.1,
+ "ray_set_psi_deg": [
+  1.0,
+  120.0
+ ],
+ "gate_sectors": [
+  "0-15",
+  "15-60",
+  "60-120"
+ ],
+ "end": {
+  "model": {
+   "cells": 79895,
+   "right": 0.9999374178609425,
+   "coverage": 0.34850779074879107
+  },
+  "all": {
+   "cells": 106661,
+   "right": 0.9987811852504664,
+   "coverage": 0.42485224441947933
+  },
+  "candidates": 26766,
+  "gate": {
+   "result": "pass",
+   "parts": {
+    "overall": {
+     "cells": 79895,
+     "right": 0.9999374178609425,
+     "result": "pass"
+    },
+    "0-15": {
+     "cells": 754,
+     "right": 0.993368700265252,
+     "result": "not evaluated"
+    },
+    "15-60": {
+     "cells": 29019,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "60-120": {
+     "cells": 50122,
+     "right": 1.0,
+     "result": "pass"
+    }
+   },
+   "unverified": [
+    "0-15"
+   ],
+   "gate_right": 0.995,
+   "min_cells": 1000,
+   "standard": "S2"
+  }
+ },
+ "at_releases": [
+  {
+   "look": 0,
+   "released": 0,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 0,
+   "right": null,
+   "coverage": 0.0
+  },
+  {
+   "look": 100,
+   "released": 1,
+   "model_cells": 0,
+   "model_right": null,
+   "model_coverage": 0.0,
+   "cells": 68215,
+   "right": 0.9990471303965404,
+   "coverage": 0.3818077467884531
+  },
+  {
+   "look": 110,
+   "released": 2,
+   "model_cells": 79895,
+   "model_right": 0.9999374178609425,
+   "model_coverage": 0.34850779074879107,
+   "cells": 106661,
+   "right": 0.9987811852504664,
+   "coverage": 0.42485224441947933
+  }
+ ],
+ "files": {
+  "model": {
+   "path": "runs/demo3-dry-ply/dry_room_straight_model.ply",
+   "bytes": 2477333,
+   "points": 79895,
+   "mb": 2.48
+  },
+  "all": {
+   "path": "runs/demo3-dry-ply/dry_room_straight_all.ply",
+   "bytes": 3307080,
+   "points": 106661,
+   "mb": 3.31
+  }
+ },
+ "frames": 362,
+ "fps": 24,
+ "display_max_cells_per_side": 60000,
+ "checks": [
+  {
+   "name": "V1a: the end model equals the batch model (cells, cells right)",
+   "ok": true,
+   "end": {
+    "cells": 79895,
+    "right_cells": 79890
+   },
+   "batch": {
+    "cells": 79895,
+    "right_cells": 79890
+   },
+   "control": "the model before the last release",
+   "control_fails": true,
+   "control_value": 0
+  },
+  {
+   "name": "V1b: stage 12b has no span 0.1 m",
+   "ok": null
+  },
+  {
+   "name": "V2: nothing shown before its window is complete (m + 50 <= t)",
+   "ok": true,
+   "violations": 0,
+   "control": "a schedule releasing at m",
+   "control_fails": true,
+   "control_value": 100
+  },
+  {
+   "name": "C: the colours' error (<= 10 %) equals stage 9's cells right on every end cell",
+   "ok": true,
+   "control": "5 % in place of 10 %",
+   "control_fails": true,
+   "control_value": 218
+  },
+  {
+   "name": "P1 model: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "P1 all: the file read back holds exactly its map",
+   "ok": true,
+   "control": "the map without the last reference",
+   "control_fails": true
+  },
+  {
+   "name": "the standard control: N1024 mirrored's end model must not pass S2's gate",
+   "ok": null,
+   "control": "N1024 mirrored (C3 control)",
+   "control_fails": true,
+   "control_value": "not evaluated"
+  }
+ ],
+ "seconds": 79.1,
+ "standard": "S2",
+ "profile": "dry",
+ "values": {
+  "scene": "synthetic room of M4's fixture planes, ray-cast",
+  "gated": false
+ },
+ "departures": {},
+ "controls": [
+  "mirrored poses"
+ ],
+ "check_record": [],
+ "sources": {
+  "dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room, K=111, y0=-0.55), Chat sandbox, not gated",
+  "noise": {
+   "1024": 0.005,
+   "128": 0.014142135623730952
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "9ac5519ef5ead39d074fb08c761944bcee72d8c6",
+   "clean": true
+  }
+ }
+}

@@ -1,0 +1,36 @@
+2026-11-21T16:40:08-03:00 $ .venv/bin/python -m deep standard-selftest (at 0f3fea3)
+[deep] standard PASS G1: the gate passes 12,000 cells all right: pass; control 98 % right: fails (fail)
+[deep] standard PASS G2: exactly 99.5 % right passes: {'cells': 12000, 'right': 0.995, 'result': 'pass'}; control one cell fewer right: fails ({'cells': 12000, 'right': 0.9949166666666667, 'result': 'fail'})
+[deep] standard PASS G3: 999 cells all right are not evaluated, not passed: not evaluated; control 1,000 cells all right are not 'not evaluated': fails (pass)
+[deep] standard PASS G4: a sector under 1,000 cells is listed as unverified, not blocking (S2): {'result': 'pass', 'unverified': ['165-180'], '165-180': 939}; control an evaluated sector at 97 % (overall above 99.5 %): fails ({'result': 'fail', 'overall': 0.9951666666666666})
+[deep] standard PASS R1: a conforming ablation record has no problems: []; control spp 128, undeclared: fails (["undeclared departure: spp = 128, the profile's is 1024"])
+[deep] standard PASS R2: a departure declared with its reason is no problem: []; control declared without a reason: fails (["undeclared departure: spp = 128, the profile's is 1024"])
+[deep] standard PASS R3: the profile's controls are required: ['mirrored poses']; control without the mirrored poses: fails (["control 'mirrored poses' missing"])
+[deep] standard PASS S1: S1's sectors are stage 9's: ['0-15', '15-60', '60-120', '120-165', '165-180']; control a copy with 0-16: fails (differs)
+[deep] stage12 PASS Z1: spans and confirmation on known cells: {'spans': [0.1, 0.5, 0.0, 0.6], 'confirmed': {0.0: [True, True, False, True], 0.2: [False, True, False, True], 0.5: [False, True, False, True]}}; control positions in looks instead of metres: fails ({0.0: [True, True, False, True], 0.2: [True, True, False, True], 0.5: [True, True, False, True]})
+[deep] stage12 PASS Z2: a span 0.5 mm short of 0.2 m counts (1 mm slack): {0.0: [True], 0.2: [True], 0.5: [False]}; control 2 mm short: fails ({0.0: [True], 0.2: [False], 0.5: [False]})
+[deep] stage12 PASS Z3: an estimate 1.5 cm away in another cell supports under 'within 2 cm' only: {'same cell': [True, False], 'within 2 cm': [True, True]}; control 3 cm away: fails ({'within 2 cm': [True, False]})
+	Command being timed: ".venv/bin/python -m deep standard-selftest"
+	User time (seconds): 3.29
+	System time (seconds): 0.12
+	Percent of CPU this job got: 372%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.91
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 639020
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 83034
+	Voluntary context switches: 85
+	Involuntary context switches: 629
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T16:40:09-03:00 exit 0

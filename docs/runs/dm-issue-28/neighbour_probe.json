@@ -1,0 +1,39 @@
+{
+ "note": "Chat sandbox probe, not a stage, not gated: the dry room of #26 (2 references, 0.1 m apart)",
+ "computed_by": {
+  "commit": "b529a5f92554030ae7e49ed0969f572ab5c294a9",
+  "clean": true
+ },
+ "rows": {
+  "perfect": {
+   "cells": 89898,
+   "same cell: confirmed": 7082,
+   "right": 1.0,
+   "coverage": 0.13837737507937284,
+   "within 2 cm: confirmed": 43742,
+   "right_nb": 1.0,
+   "coverage_nb": 0.45295022712841304,
+   "coverage_all": 0.8270404923557857
+  },
+  "N1024": {
+   "cells": 161375,
+   "same cell: confirmed": 38193,
+   "right": 0.999947634383264,
+   "coverage": 0.30482831045767594,
+   "within 2 cm: confirmed": 112652,
+   "right_nb": 0.9999112310478288,
+   "coverage_nb": 0.4721584525961022,
+   "coverage_all": 0.5896180335075465
+  },
+  "N1024, depth-edge test at 10 %": {
+   "cells": 238787,
+   "same cell: confirmed": 68653,
+   "right": 1.0,
+   "coverage": 0.5404190885556587,
+   "within 2 cm: confirmed": 183721,
+   "right_nb": 1.0,
+   "coverage_nb": 0.7616494895716309,
+   "coverage_all": 0.8730034679822205
+  }
+ }
+}

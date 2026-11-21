@@ -168,6 +168,33 @@ Later decisions, numbered P-D1, P-D2, …:
   and tests the composed path (line, arc, line; the reference look sliding along it) and the fusion into world 3D,
   gated in range, at 0.5°/px in the calibration room; then Code runs it at the design resolution in the calibration
   room and the Classroom.
+- **P-D4** (Luiz, 2026-11-21, in Chat; #27). The process standard **S1**, [`docs/standard.md`](standard.md), is in
+  force: each run declares a task profile (dry, fixture, oracle, ablation, build) before data, and its record carries
+  it. Within it:
+  - **errors first:** the model is the cells confirmed by references at least 0.5 m apart (provisional until #28), and
+    its error gate is cells right ≥ 99.5 %, overall and in each sector of ψ the ray set includes; coverage comes second;
+  - **noise:** a matcher may use the sensor's noise level σ, a calibration like its intrinsics;
+  - **CLAUDE.md:** rule 7 and the project facts name the standard (approved);
+  - **next:** the first run under S1 tests the confirmation distance (#28); after it, a test demo on the Classroom's
+    straight path, as a video and PLY clouds.
+- **P-D5** (Luiz, 2026-11-21, in Chat; #28). After stage 12 (#28):
+  - **S2:** in S1's gate, a sector of ψ under 1,000 cells is listed as unverified and no longer blocks a pass; the gate
+    still fails if any evaluated part fails (`docs/standard.md`, Versions);
+  - **measure before the demo:** stage 12b compares two confirmation rules, the same 2 cm cell (S1's) and an estimate
+    within 2 cm of the cell, at spans 0, 0.2, 0.5, 0.8 and 1.0 m; Luiz then picks the rule;
+  - **the demo** on the Classroom's straight path, video and PLY, shows N1024 alone.
+- **P-D6** (Luiz, 2026-11-21, in Chat, after stage 12b: "pick the option that gives the best result"; Chat's pick,
+  #28). For the demo (#29), N1024's model uses the **within-2 cm rule**, references **at least 1.0 m apart**, and the ray
+  set **ψ 1–120°**.
+  - **Why:** by S1's rule 4, errors first, then coverage. On the full field, N1024 fails S2's gate under every rule and
+    span; its failures sit in 120–180°.
+  - **Without 120–180°** (estimated from stage 12b's per-sector counts, Code, `stage12b.json`):
+    - within 2 cm at 1.0 m: 18,448 cells, 99.80 % right, every sector at least 5 cells clear of the line;
+    - within 2 cm at 0.8 m: 35,008 cells, but its 60–120° sector exactly on the line;
+    - the same-cell rule: 7,612 cells at 0.8 m and 2,866 at 1.0 m.
+  - **Not a validation:** the rule, span and ray set were chosen on the data the demo shows. Testing them needs a path
+    they were not chosen on.
+  - **S2's defaults are unchanged** (same cell, 0.5 m, ψ 1–179°); the demo declares the three as departures.
 
 ## The plan
 
@@ -1095,3 +1122,44 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **Along the tour,** the perfect matcher's coverage rises to 65 % by the turn (2 m) and 89 % at the end. The real matcher's rises steadily to 21 % and 41 %, at a nearly constant 72–75 % right.
 - **In the Classroom, the real map's wrong cells gather in bands across the room:** the rows of desks and chairs, where clutter, repeated structure and occlusion meet (Code's reading from the end frames). That is where the assessment located the gap.
 - **Elsewhere,** the walls and the floor's open areas, the real map is mostly right.
+
+### Stage 11: why the real matcher falls short, on the straight path alone (#26)
+
+**The question** (Luiz, 2026-11-21, in Chat). If the motion is a straight line, the only differences between foveal-motion and deep-motion should be the sensor and the coordinates. What is the real cause of the gap that stage 9 and D2 showed? This stage looks only at the straight path.
+
+**Decision (Luiz, 2026-11-21, in Chat; recorded on #26).** He accepted the plan on #26, C2 as amended there, C3, and the two re-renders, with batch work of up to about 1 h on the workstation.
+- **The ablation:** on R3's `straight_long`, at its 12 references, through stage 9's fusion and metric:
+  - B and N (M4's matcher on exact traces), at 128 and 1024 spp;
+  - the frozen M4 on the Foveated `classroom_dolly`, at 1024 spp (#11's run) and 128 spp.
+- **The same line:** R3's `straight_long` lies on M4's `classroom_dolly`, at x = 0.897, 1.6 m high, facing +Y. Its references sit within 2 cm of M4's dolly frames 28–39 (computed in Chat from the two specs).
+- **C0:** the rerun reproduces stage 9's straight-path numbers.
+- **C1:** N passes M4's fixture gates on the panorama.
+- **C2:** between 18° and 44°, at 1024 spp, N is no worse than M4: cells right ≥ M4's − 3 points, coverage ≥ M4's ÷ 1.25.
+  - Its control: B1024 in place of N must fail.
+  - It is one-sided because the panorama's pixels are as fine as M4's or finer in that band.
+- **C3:** at 1024 spp on the full field, N covers at least twice B's coverage, at cells right at most 2 points below B's.
+  - Its control: N with the mirrored path's poses must fall below 50 % right.
+- **The variant with a one-pixel patch** has no ZNCC, so it is redefined as N with B's per-look cost.
+
+**Results** (#26; stage 11 at `dade15d`, 11b at `0b9d4f2`, 11c at `b19b525`; Classroom numbers measured by Code on the workstation; records in `docs/runs/dm-issue-26/`).
+- **C0–C3 pass, and every control fails as it must.**
+  - C0: stage 9 is reproduced exactly.
+  - C1: N passes M4's fixture gates on the panorama (Chat sandbox).
+  - C2: between 18° and 44°, N covers 33.8 % against M4's 35.5 %, at 99.25 % right against 98.53 %.
+  - C3: N covers 21.6 % of the full field against B's 10.1 %.
+- **The coordinates are not the cause.** With the same matcher at the same noise, the panorama does what the Foveated sensor does outside the fovea. Inside 18°, the fovea's finer pixels win: 75.7 % against 50.4 %.
+- **The impression that M4 works and deep-motion does not rested on three confounds:**
+  - **B was a much weaker matcher.** One pixel, no photometric model, and an anchor rule that picks depth edges.
+  - **Deep-motion's real matcher was judged at 128 spp, M4 always at 1024.** At 128 spp M4 itself halves, from 41.9 % to 22.7 %, and fails its own gate.
+  - **The perfect matcher ignores the image.** M4 was never measured against it.
+- **The noise floor.** Even at 1024 spp, half of the surface's pixels have a gradient SNR under 1.65, though the texture is there (median 0.081).
+  - Below SNR 1, NCC < 0.8 rejects 72–92 % of N's anchors at every range.
+  - Much of the perfect matcher's 80 % is coverage no photometric matcher can reach from these renders.
+- **M4's depth-edge tolerance does not carry over.** 0.5 px of the longest step's displacement is about five times stricter in depth to the side than in M4's cone (estimated).
+  - At 10 % of ζ (stage 9's edge ratio), N covers 29.6 % of the full field at 95.16 % right, 2.9 times B1024's coverage at higher precision.
+  - In 18–44° it covers 41.7 % at 98.22 % right, against M4's 35.5 % at 98.53 %.
+  - Near the heading 10 % is the stricter tolerance: 40.6 % in 1–18° at 99.92 % right.
+- **To the side, at the same SNR, near surfaces fail NCC most.** At SNR 3–10, NCC rejects 44 % in 60–120° against 13 % in 15–60°, and 41 % at 1–2 m against 18 % at ≥ 3 m.
+  - This points to the change of appearance over the window, a viewpoint sweep of about 31° at 1.8 m, which N's patch model (shift, slope along the trace, gain and offset) does not capture.
+  - In the Classroom, range and sector are confounded.
+  - At high SNR to the side every matcher is only 75–88 % right. Code reads these as likely occlusion boundaries; that is not measured.

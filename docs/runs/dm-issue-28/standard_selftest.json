@@ -1,0 +1,222 @@
+{
+ "command": "standard-selftest",
+ "standard": "S2",
+ "checks": [
+  {
+   "module": "standard",
+   "name": "G1: the gate passes 12,000 cells all right",
+   "ok": true,
+   "value": "pass",
+   "control": "98 % right",
+   "control_fails": true,
+   "control_value": "fail"
+  },
+  {
+   "module": "standard",
+   "name": "G2: exactly 99.5 % right passes",
+   "ok": true,
+   "value": {
+    "cells": 12000,
+    "right": 0.995,
+    "result": "pass"
+   },
+   "control": "one cell fewer right",
+   "control_fails": true,
+   "control_value": {
+    "cells": 12000,
+    "right": 0.9949166666666667,
+    "result": "fail"
+   }
+  },
+  {
+   "module": "standard",
+   "name": "G3: 999 cells all right are not evaluated, not passed",
+   "ok": true,
+   "value": "not evaluated",
+   "control": "1,000 cells all right are not 'not evaluated'",
+   "control_fails": true,
+   "control_value": "pass"
+  },
+  {
+   "module": "standard",
+   "name": "G4: a sector under 1,000 cells is listed as unverified, not blocking (S2)",
+   "ok": true,
+   "value": {
+    "result": "pass",
+    "unverified": [
+     "165-180"
+    ],
+    "165-180": 939
+   },
+   "control": "an evaluated sector at 97 % (overall above 99.5 %)",
+   "control_fails": true,
+   "control_value": {
+    "result": "fail",
+    "overall": 0.9951666666666666
+   }
+  },
+  {
+   "module": "standard",
+   "name": "R1: a conforming ablation record has no problems",
+   "ok": true,
+   "value": [],
+   "control": "spp 128, undeclared",
+   "control_fails": true,
+   "control_value": [
+    "undeclared departure: spp = 128, the profile's is 1024"
+   ]
+  },
+  {
+   "module": "standard",
+   "name": "R2: a departure declared with its reason is no problem",
+   "ok": true,
+   "value": [],
+   "control": "declared without a reason",
+   "control_fails": true,
+   "control_value": [
+    "undeclared departure: spp = 128, the profile's is 1024"
+   ]
+  },
+  {
+   "module": "standard",
+   "name": "R3: the profile's controls are required",
+   "ok": true,
+   "value": [
+    "mirrored poses"
+   ],
+   "control": "without the mirrored poses",
+   "control_fails": true,
+   "control_value": [
+    "control 'mirrored poses' missing"
+   ]
+  },
+  {
+   "module": "standard",
+   "name": "S1: S1's sectors are stage 9's",
+   "ok": true,
+   "value": [
+    "0-15",
+    "15-60",
+    "60-120",
+    "120-165",
+    "165-180"
+   ],
+   "control": "a copy with 0-16",
+   "control_fails": true,
+   "control_value": "differs"
+  },
+  {
+   "module": "stage12",
+   "name": "Z1: spans and confirmation on known cells",
+   "ok": true,
+   "value": {
+    "spans": [
+     0.1,
+     0.5,
+     0.0,
+     0.6
+    ],
+    "confirmed": {
+     "0.0": [
+      true,
+      true,
+      false,
+      true
+     ],
+     "0.2": [
+      false,
+      true,
+      false,
+      true
+     ],
+     "0.5": [
+      false,
+      true,
+      false,
+      true
+     ]
+    }
+   },
+   "control": "positions in looks instead of metres",
+   "control_fails": true,
+   "control_value": {
+    "0.0": [
+     true,
+     true,
+     false,
+     true
+    ],
+    "0.2": [
+     true,
+     true,
+     false,
+     true
+    ],
+    "0.5": [
+     true,
+     true,
+     false,
+     true
+    ]
+   }
+  },
+  {
+   "module": "stage12",
+   "name": "Z2: a span 0.5 mm short of 0.2 m counts (1 mm slack)",
+   "ok": true,
+   "value": {
+    "0.0": [
+     true
+    ],
+    "0.2": [
+     true
+    ],
+    "0.5": [
+     false
+    ]
+   },
+   "control": "2 mm short",
+   "control_fails": true,
+   "control_value": {
+    "0.0": [
+     true
+    ],
+    "0.2": [
+     false
+    ],
+    "0.5": [
+     false
+    ]
+   }
+  },
+  {
+   "module": "stage12",
+   "name": "Z3: an estimate 1.5 cm away in another cell supports under 'within 2 cm' only",
+   "ok": true,
+   "value": {
+    "same cell": [
+     true,
+     false
+    ],
+    "within 2 cm": [
+     true,
+     true
+    ]
+   },
+   "control": "3 cm away",
+   "control_fails": true,
+   "control_value": {
+    "within 2 cm": [
+     true,
+     false
+    ]
+   }
+  }
+ ],
+ "computed_by": {
+  "deep-motion": {
+   "commit": "a84fe8aca467c64b375887aaf9a33a561a628682",
+   "clean": true
+  }
+ }
+}

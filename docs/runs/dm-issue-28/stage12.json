@@ -1,0 +1,1709 @@
+{
+ "references": [
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160
+ ],
+ "positions_m": {
+  "50": 0.0,
+  "60": 0.1,
+  "70": 0.2,
+  "80": 0.3,
+  "90": 0.4,
+  "100": 0.5,
+  "110": 0.6,
+  "120": 0.7,
+  "130": 0.8,
+  "140": 0.9,
+  "150": 1.0,
+  "160": 1.1
+ },
+ "spans_m": [
+  0.0,
+  0.2,
+  0.5
+ ],
+ "noise": {
+  "gradient_snr_median": 1.6735088623923364,
+  "share_under_1": 0.34778085915518325,
+  "share_under_3": 0.6794916005498157,
+  "pixels": "the references' pixels that see a surface, |latitude| < 70 deg (stage 11b's raster; #26 quoted every 7th pixel of all, so its 1.65 differs slightly)"
+ },
+ "bands": {
+  "full": {
+   "perfect": {
+    "all": {
+     "cells": 328984,
+     "right": 0.9997568270797365,
+     "confirmed_right": 1.0,
+     "coverage": 0.8036940591314939,
+     "surface_cells": 256141,
+     "points": 582488
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 93343,
+       "right": 1.0,
+       "coverage": 0.4419636059826424
+      },
+      "candidates": {
+       "cells": 235641,
+       "right": 0.9996605005071274
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 93343,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 178,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 22812,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 56739,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 13510,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 104,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 83176,
+       "right": 1.0,
+       "coverage": 0.4122495032033138
+      },
+      "candidates": {
+       "cells": 245808,
+       "right": 0.9996745427325392
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 83176,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 151,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 20661,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 50540,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 11744,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 80,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 52331,
+       "right": 1.0,
+       "coverage": 0.2978515739377921
+      },
+      "candidates": {
+       "cells": 276653,
+       "right": 0.9997108290891478
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 52331,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 87,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 13205,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 32479,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 6521,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 39,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "perfect where gradient SNR >= 3": {
+    "all": {
+     "cells": 135986,
+     "right": 0.999727913167532,
+     "confirmed_right": 1.0,
+     "coverage": 0.3970508430903292,
+     "surface_cells": 256141,
+     "points": 180152
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 23253,
+       "right": 1.0,
+       "coverage": 0.1346797271815133,
+       "covers_of_perfect": 0.1675175727075328
+      },
+      "candidates": {
+       "cells": 112733,
+       "right": 0.9996717908686897
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 23253,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 120,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 5502,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 13515,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 4104,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 12,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 19859,
+       "right": 1.0,
+       "coverage": 0.11963332695663717,
+       "covers_of_perfect": 0.1488008782710496
+      },
+      "candidates": {
+       "cells": 116127,
+       "right": 0.9996813833130969
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 19859,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 105,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 4902,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 11393,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 3453,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 6,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 10847,
+       "right": 1.0,
+       "coverage": 0.07477131736036012,
+       "covers_of_perfect": 0.09301512200098125
+      },
+      "candidates": {
+       "cells": 125139,
+       "right": 0.9997043287863895
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 10847,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 58,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 2847,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 6202,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 1736,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 4,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024": {
+    "all": {
+     "cells": 179823,
+     "right": 0.9723172230471074,
+     "confirmed_right": 0.9870061715437256,
+     "coverage": 0.21629883540706096,
+     "surface_cells": 256141,
+     "points": 301581
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 47638,
+       "right": 0.9870061715437256,
+       "coverage": 0.11622114382312866,
+       "covers_of_perfect": 0.12543051311820227
+      },
+      "candidates": {
+       "cells": 132185,
+       "right": 0.9670234898059538
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 47638,
+         "right": 0.9870061715437256,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 2367,
+         "right": 0.9957752429235319,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 19306,
+         "right": 0.9931627473324355,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 16656,
+         "right": 0.9863712776176753,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 9078,
+         "right": 0.9729015201586253,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 231,
+         "right": 0.9826839826839827,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 39348,
+       "right": 0.9887923147301007,
+       "coverage": 0.1038295313909136,
+       "covers_of_perfect": 0.1124799012916608
+      },
+      "candidates": {
+       "cells": 140475,
+       "right": 0.9677024381562556
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 39348,
+         "right": 0.9887923147301007,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 2122,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 15911,
+         "right": 0.9932750927031614,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 13520,
+         "right": 0.9889792899408284,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 7599,
+         "right": 0.9759178839320963,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 196,
+         "right": 0.9897959183673469,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 21904,
+       "right": 0.9919192841490139,
+       "coverage": 0.07145283261953378,
+       "covers_of_perfect": 0.07857805585376398
+      },
+      "candidates": {
+       "cells": 157919,
+       "right": 0.9695983383886676
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 21904,
+         "right": 0.9919192841490139,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 1205,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 8568,
+         "right": 0.9947478991596639,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 7868,
+         "right": 0.9930096593797662,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 4174,
+         "right": 0.9820316243411595,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 89,
+         "right": 0.9775280898876404,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024, depth-edge test at 10 %": {
+    "all": {
+     "cells": 280022,
+     "right": 0.951596660262408,
+     "confirmed_right": 0.9576491363387257,
+     "coverage": 0.2963133586579267,
+     "surface_cells": 256141,
+     "points": 622808
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 98534,
+       "right": 0.9576491363387257,
+       "coverage": 0.18738507306522578,
+       "covers_of_perfect": 0.21127082129030064
+      },
+      "candidates": {
+       "cells": 181488,
+       "right": 0.948310632107908
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 98534,
+         "right": 0.9576491363387257,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 1728,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 36379,
+         "right": 0.9776794304406389,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 37473,
+         "right": 0.9424385557601473,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 22893,
+         "right": 0.9474075044773511,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 61,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 82029,
+       "right": 0.9613307488814932,
+       "coverage": 0.17013285651262391,
+       "covers_of_perfect": 0.1927970115467383
+      },
+      "candidates": {
+       "cells": 197993,
+       "right": 0.9475638027607036
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 82029,
+         "right": 0.9613307488814932,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 1571,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 30765,
+         "right": 0.9787420770355924,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 30569,
+         "right": 0.9460564624292584,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 19068,
+         "right": 0.9544262638976295,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 56,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 47001,
+       "right": 0.9688730027020702,
+       "coverage": 0.12196797857430088,
+       "covers_of_perfect": 0.14004731393818098
+      },
+      "candidates": {
+       "cells": 233021,
+       "right": 0.9481119727406543
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 47001,
+         "right": 0.9688730027020702,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 932,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 17852,
+         "right": 0.9820748375532153,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 17561,
+         "right": 0.9591708900404305,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 10635,
+         "right": 0.9599435825105783,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 21,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024 mirrored (C3 control)": {
+    "all": {
+     "cells": 2207,
+     "right": 0.0,
+     "confirmed_right": 0.0,
+     "coverage": 0.0,
+     "surface_cells": 256141,
+     "points": 2430
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 109,
+       "right": 0.0,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 2098,
+       "right": 0.0
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 109,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 109,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 73,
+       "right": 0.0,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 2134,
+       "right": 0.0
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 73,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 73,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 34,
+       "right": 0.0,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 2173,
+       "right": 0.0
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 34,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 34,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "perfect, points moved 20 % (control)": {
+    "all": {
+     "cells": 385798,
+     "right": 0.033597893197994805,
+     "confirmed_right": 0.01877386886845205,
+     "coverage": 0.010185796104489324,
+     "surface_cells": 256141,
+     "points": 582488
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 84053,
+       "right": 0.01877386886845205,
+       "coverage": 0.002807047680769576,
+       "covers_of_perfect": 0.003444104945618117
+      },
+      "candidates": {
+       "cells": 301745,
+       "right": 0.037727220003645465
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 84053,
+         "right": 0.01877386886845205,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 90,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 18787,
+         "right": 0.005535742800872944,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 53973,
+         "right": 0.021251366423952717,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 11166,
+         "right": 0.029285330467490597,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 37,
+         "right": 0.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 72326,
+       "right": 0.014821779166551448,
+       "coverage": 0.0018895842524234699,
+       "covers_of_perfect": 0.002307404582748386
+      },
+      "candidates": {
+       "cells": 313472,
+       "right": 0.03793002245814618
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 72326,
+         "right": 0.014821779166551448,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 64,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 16459,
+         "right": 0.004860562610122122,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 46725,
+         "right": 0.016265382557517388,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 9058,
+         "right": 0.025612718039302273,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 20,
+         "right": 0.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 42715,
+       "right": 0.009153693082055485,
+       "coverage": 0.0004802042624960471,
+       "covers_of_perfect": 0.0005877809568685362
+      },
+      "candidates": {
+       "cells": 343083,
+       "right": 0.03664127922397787
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 42715,
+         "right": 0.009153693082055485,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 32,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 10311,
+         "right": 0.003782368344486471,
+         "result": "fail"
+        },
+        "60-120": {
+         "cells": 27742,
+         "right": 0.010092999783721433,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 4618,
+         "right": 0.015591165006496318,
+         "result": "fail"
+        },
+        "165-180": {
+         "cells": 12,
+         "right": 0.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   }
+  },
+  "shared 1-44": {
+   "perfect": {
+    "all": {
+     "cells": 64819,
+     "right": 0.9995680278930561,
+     "confirmed_right": 1.0,
+     "coverage": 0.6503275529865126,
+     "surface_cells": 51900,
+     "points": 72469
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 6274,
+       "right": 1.0,
+       "coverage": 0.17167630057803468
+      },
+      "candidates": {
+       "cells": 58545,
+       "right": 0.9995217354172005
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 6274,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 178,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 6096,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 5154,
+       "right": 1.0,
+       "coverage": 0.14441233140655105
+      },
+      "candidates": {
+       "cells": 59665,
+       "right": 0.999530713148412
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 5154,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 151,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 5003,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 2292,
+       "right": 1.0,
+       "coverage": 0.0716184971098266
+      },
+      "candidates": {
+       "cells": 62527,
+       "right": 0.9995521934524285
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 2292,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 87,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 2205,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "perfect where gradient SNR >= 3": {
+    "all": {
+     "cells": 34106,
+     "right": 0.9994135929162025,
+     "confirmed_right": 1.0,
+     "coverage": 0.3242774566473988,
+     "surface_cells": 51900,
+     "points": 36193
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 1837,
+       "right": 1.0,
+       "coverage": 0.04859344894026975,
+       "covers_of_perfect": 0.07466224223749704
+      },
+      "candidates": {
+       "cells": 32269,
+       "right": 0.9993802101087731
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 1837,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 120,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 1717,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 1544,
+       "right": 1.0,
+       "coverage": 0.04084778420038536,
+       "covers_of_perfect": 0.06275183692818204
+      },
+      "candidates": {
+       "cells": 32562,
+       "right": 0.9993857871138137
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 1544,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 105,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 1439,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 684,
+       "right": 1.0,
+       "coverage": 0.018477842003853565,
+       "covers_of_perfect": 0.02838350319981038
+      },
+      "candidates": {
+       "cells": 33422,
+       "right": 0.9994015917659027
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 684,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 58,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 626,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024": {
+    "all": {
+     "cells": 84596,
+     "right": 0.9815121282330134,
+     "confirmed_right": 0.9949896661865096,
+     "coverage": 0.37175337186897883,
+     "surface_cells": 51900,
+     "points": 106327
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 15967,
+       "right": 0.9949896661865096,
+       "coverage": 0.16535645472061658,
+       "covers_of_perfect": 0.17015287982934343
+      },
+      "candidates": {
+       "cells": 68629,
+       "right": 0.9783764880735549
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 15967,
+         "right": 0.9949896661865096,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 2367,
+         "right": 0.9957752429235319,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 13600,
+         "right": 0.9948529411764706,
+         "result": "fail"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 12817,
+       "right": 0.9957868455956932,
+       "coverage": 0.14464354527938342,
+       "covers_of_perfect": 0.14911708935766768
+      },
+      "candidates": {
+       "cells": 71779,
+       "right": 0.9789632065088675
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 12817,
+         "right": 0.9957868455956932,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 2122,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 10695,
+         "right": 0.9949509116409537,
+         "result": "fail"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 6296,
+       "right": 0.997141041931385,
+       "coverage": 0.08566473988439306,
+       "covers_of_perfect": 0.08683929841194596
+      },
+      "candidates": {
+       "cells": 78300,
+       "right": 0.9802554278416348
+      },
+      "gate": {
+       "result": "pass",
+       "parts": {
+        "overall": {
+         "cells": 6296,
+         "right": 0.997141041931385,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 1205,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 5091,
+         "right": 0.9964643488509134,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024, depth-edge test at 10 %": {
+    "all": {
+     "cells": 97096,
+     "right": 0.9850148306830353,
+     "confirmed_right": 0.9839666437414031,
+     "coverage": 0.42447013487475915,
+     "surface_cells": 51900,
+     "points": 134510
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 23264,
+       "right": 0.9839666437414031,
+       "coverage": 0.21504816955684009,
+       "covers_of_perfect": 0.24211898554159753
+      },
+      "candidates": {
+       "cells": 73832,
+       "right": 0.9853451078123306
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 23264,
+         "right": 0.9839666437414031,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 1728,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 21536,
+         "right": 0.9826801634472511,
+         "result": "fail"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 18766,
+       "right": 0.9849195353298519,
+       "coverage": 0.18909441233140656,
+       "covers_of_perfect": 0.21409101682863238
+      },
+      "candidates": {
+       "cells": 78330,
+       "right": 0.9850376611770714
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 18766,
+         "right": 0.9849195353298519,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 1571,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 17195,
+         "right": 0.9835417272462925,
+         "result": "fail"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 9090,
+       "right": 0.9887788778877887,
+       "coverage": 0.11560693641618497,
+       "covers_of_perfect": 0.13145887651102156
+      },
+      "candidates": {
+       "cells": 88006,
+       "right": 0.9846260482239847
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 9090,
+         "right": 0.9887788778877887,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 932,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 8158,
+         "right": 0.9874969355234126,
+         "result": "fail"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "M4@1024": {
+    "all": {
+     "cells": 142838,
+     "right": 0.9890225290188885,
+     "confirmed_right": 0.9983432799292129,
+     "coverage": 0.41861271676300577,
+     "surface_cells": 51900,
+     "points": 290949
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 53117,
+       "right": 0.9983432799292129,
+       "coverage": 0.24946050096339115,
+       "covers_of_perfect": 0.20600260725290354
+      },
+      "candidates": {
+       "cells": 89721,
+       "right": 0.9835044192552468
+      },
+      "gate": {
+       "result": "pass",
+       "parts": {
+        "overall": {
+         "cells": 53117,
+         "right": 0.9983432799292129,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 25782,
+         "right": 0.9990303312388488,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 27335,
+         "right": 0.9976952624839949,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 44082,
+       "right": 0.9985708452429564,
+       "coverage": 0.22427745664739884,
+       "covers_of_perfect": 0.1793671486134155
+      },
+      "candidates": {
+       "cells": 98756,
+       "right": 0.9847604196200738
+      },
+      "gate": {
+       "result": "pass",
+       "parts": {
+        "overall": {
+         "cells": 44082,
+         "right": 0.9985708452429564,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 23103,
+         "right": 0.9990910271393325,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 20979,
+         "right": 0.997997997997998,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 29137,
+       "right": 0.9993135875347496,
+       "coverage": 0.17215799614643545,
+       "covers_of_perfect": 0.12837757762502963
+      },
+      "candidates": {
+       "cells": 113701,
+       "right": 0.9863853440163235
+      },
+      "gate": {
+       "result": "pass",
+       "parts": {
+        "overall": {
+         "cells": 29137,
+         "right": 0.9993135875347496,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 17102,
+         "right": 0.9995906911472342,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 12035,
+         "right": 0.9989198171998338,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   }
+  }
+ },
+ "checks": [
+  {
+   "check": "K1: at span 0 every row equals #26's records (cells, right, cells from >= 2 references right)",
+   "ok": true,
+   "rows": [
+    {
+     "row": "N1024",
+     "equal": true,
+     "cells": [
+      179823,
+      179823
+     ],
+     "model_right_span0": [
+      0.9870061715437256,
+      0.9870061715437256
+     ],
+     "right": [
+      0.9723172230471074,
+      0.9723172230471074
+     ]
+    },
+    {
+     "row": "N1024, depth-edge test at 10 %",
+     "equal": true,
+     "cells": [
+      280022,
+      280022
+     ],
+     "model_right_span0": [
+      0.9576491363387257,
+      0.9576491363387257
+     ],
+     "right": [
+      0.951596660262408,
+      0.951596660262408
+     ]
+    },
+    {
+     "row": "perfect",
+     "equal": true,
+     "cells": [
+      328984,
+      328984
+     ],
+     "model_right_span0": [
+      1.0,
+      1.0
+     ],
+     "right": [
+      0.9997568270797365,
+      0.9997568270797365
+     ]
+    },
+    {
+     "row": "M4@1024 (1-44)",
+     "equal": true,
+     "cells": [
+      142838,
+      142838
+     ],
+     "model_right_span0": [
+      0.9983432799292129,
+      0.9983432799292129
+     ],
+     "right": [
+      0.9890225290188885,
+      0.9890225290188885
+     ]
+    }
+   ],
+   "control": "N1024's cells right over all its cells in place of the model's",
+   "control_fails": true,
+   "control_value": 0.9723172230471074
+  },
+  {
+   "check": "K2: the perfect matcher's model at 0.5 m passes S1's gate (full field)",
+   "ok": null,
+   "value": "not evaluated",
+   "control": "perfect, points moved 20 % (control) must fail it",
+   "control_fails": null,
+   "control_value": "fail"
+  },
+  {
+   "check": "the standard control: N1024 mirrored must not pass S1's gate at any span",
+   "ok": null,
+   "control": "N1024 mirrored (C3 control)",
+   "control_fails": true,
+   "control_value": {
+    "0": "not evaluated",
+    "0.2": "not evaluated",
+    "0.5": "not evaluated"
+   }
+  }
+ ],
+ "seconds": 281.6,
+ "standard": "S1",
+ "profile": "ablation",
+ "values": {
+  "scene": "classroom",
+  "spp": 1024,
+  "noise_measured": true,
+  "look_spacing_m": 0.01,
+  "sensor": "panorama",
+  "width": 720,
+  "psi_deg": [
+   1.0,
+   179.0
+  ],
+  "lat_max_deg": 70.0,
+  "frames": 11,
+  "frame_spacing_m": 0.1,
+  "cell_m": 0.02,
+  "metric": "stage 9",
+  "confirm_span_m": [
+   0.0,
+   0.2,
+   0.5
+  ],
+  "gate_right": 0.995,
+  "gate_min_cells": 1000
+ },
+ "departures": {
+  "confirm_span_m": "the value under study (#28): 0, 0.2 and 0.5 m"
+ },
+ "controls": [
+  "mirrored poses",
+  "points moved 20 %"
+ ],
+ "check_record": [],
+ "command": "stage12",
+ "sources": {
+  "r128": "runs/r3-straight",
+  "r1024": "runs/r3-straight-1024",
+  "m4": [
+   "1024=/home/lvelho/rd/foveal-motion/runs/m4-classroom,/home/lvelho/rd/foveal-motion/runs/dolly-1024"
+  ]
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "155480378feb46b3d92715acb14059842a498f33",
+   "clean": true
+  }
+ },
+ "seconds_total": 309.6
+}

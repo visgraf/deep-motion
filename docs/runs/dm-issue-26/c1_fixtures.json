@@ -1,0 +1,503 @@
+{
+ "gates": [
+  {
+   "fixture": "front",
+   "label": "front",
+   "ok": true,
+   "accepted": 24621,
+   "accepted_fraction": 0.9856285028022418,
+   "median_px": 0.023631311876738323,
+   "p90_px": 0.0733161007754293,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "tilted",
+   "label": "tilted",
+   "ok": true,
+   "accepted": 19082,
+   "accepted_fraction": 0.7775242441528808,
+   "median_px": 0.027991282654103326,
+   "p90_px": 0.07483055528510603,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "parallel",
+   "ok": true,
+   "accepted": 93771,
+   "accepted_fraction": 0.4684802158273381,
+   "median_px": 0.027525262306220717,
+   "p90_px": 0.07537052409084478,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "corridor",
+   "label": "front_far",
+   "ok": true,
+   "accepted": 1305,
+   "accepted_fraction": 0.9216101694915254,
+   "median_px": 0.031976004684090946,
+   "p90_px": 0.1106346715846688,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "periodic",
+   "label": "periodic",
+   "ok": true,
+   "accepted": 22611,
+   "accepted_fraction": 0.905164131305044,
+   "median_px": 0.002940220316993633,
+   "p90_px": 0.009182947878342623,
+   "over_1px_of_accepted": 0.0
+  },
+  {
+   "fixture": "radial",
+   "label": "radial",
+   "ok": true,
+   "accepted": 0,
+   "accepted_fraction": 0.0,
+   "median_px": null,
+   "p90_px": null,
+   "over_1px_of_accepted": null
+  }
+ ],
+ "controls": [
+  {
+   "control": "steps 20 % too long",
+   "fails": true,
+   "stats": {
+    "anchors": 24980,
+    "accepted": 24621,
+    "accepted_fraction": 0.9856285028022418,
+    "median_px": 1.4142604612678324,
+    "p90_px": 1.586317563444312,
+    "over_1px_of_accepted": 0.8119085333658259
+   }
+  },
+  {
+   "control": "every frame from the scene scaled 1.5x about the reference's eye",
+   "fails": true,
+   "stats": {
+    "anchors": 24980,
+    "accepted": 24649,
+    "accepted_fraction": 0.9867493995196157,
+    "median_px": 2.8336694751429294,
+    "p90_px": 3.163819759159862,
+    "over_1px_of_accepted": 0.9597955292303948
+   }
+  }
+ ],
+ "cases": [
+  {
+   "fixture": "front",
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "ts_scale": 1.0,
+   "foreign_geometry": false,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 43.5,
+   "n_zeta": 460,
+   "reasons": {
+    "accepted": 24621,
+    "invalid_support": 20,
+    "low_texture": 0,
+    "low_ncc": 102,
+    "ambiguous": 80,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 3,
+    "depth_edge": 154
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 24621,
+    "accepted_fraction": 0.9856285028022418,
+    "median_px": 0.023631311876738323,
+    "p90_px": 0.0733161007754293,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "front": {
+     "anchors": 24980,
+     "accepted": 24621,
+     "accepted_fraction": 0.9856285028022418,
+     "median_px": 0.023631311876738323,
+     "p90_px": 0.0733161007754293,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0
+  },
+  {
+   "fixture": "tilted",
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "ts_scale": 1.0,
+   "foreign_geometry": false,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 48.3,
+   "n_zeta": 460,
+   "reasons": {
+    "accepted": 19082,
+    "invalid_support": 370,
+    "low_texture": 2,
+    "low_ncc": 3455,
+    "ambiguous": 87,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 2,
+    "unsupported": 46,
+    "depth_edge": 1498
+   },
+   "all": {
+    "anchors": 24542,
+    "accepted": 19082,
+    "accepted_fraction": 0.7775242441528808,
+    "median_px": 0.027991282654103326,
+    "p90_px": 0.07483055528510603,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "tilted": {
+     "anchors": 24542,
+     "accepted": 19082,
+     "accepted_fraction": 0.7775242441528808,
+     "median_px": 0.027991282654103326,
+     "p90_px": 0.07483055528510603,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0
+  },
+  {
+   "fixture": "corridor",
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "ts_scale": 1.0,
+   "foreign_geometry": false,
+   "psi_deg": [
+    1.0,
+    179.0
+   ],
+   "seconds": 285.1,
+   "n_zeta": 460,
+   "reasons": {
+    "accepted": 95076,
+    "invalid_support": 40,
+    "low_texture": 0,
+    "low_ncc": 6558,
+    "ambiguous": 389,
+    "unresolved_far": 6,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 11,
+    "unsupported": 147,
+    "depth_edge": 99349
+   },
+   "all": {
+    "anchors": 201576,
+    "accepted": 95076,
+    "accepted_fraction": 0.4716632932491963,
+    "median_px": 0.027578722831873966,
+    "p90_px": 0.07581452739912575,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "front_far": {
+     "anchors": 1416,
+     "accepted": 1305,
+     "accepted_fraction": 0.9216101694915254,
+     "median_px": 0.031976004684090946,
+     "p90_px": 0.1106346715846688,
+     "over_1px_of_accepted": 0.0
+    },
+    "parallel": {
+     "anchors": 200160,
+     "accepted": 93771,
+     "accepted_fraction": 0.4684802158273381,
+     "median_px": 0.027525262306220717,
+     "p90_px": 0.07537052409084478,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0,
+   "parallel_by_psi": {
+    "1-44": {
+     "anchors": 23564,
+     "accepted": 15448,
+     "accepted_fraction": 0.6555763028348328,
+     "median_px": 0.02834655235209086,
+     "p90_px": 0.0762777504107642,
+     "over_1px_of_accepted": 0.0
+    },
+    "44-136": {
+     "anchors": 151616,
+     "accepted": 63260,
+     "accepted_fraction": 0.4172382861967075,
+     "median_px": 0.02734426158171735,
+     "p90_px": 0.0747043676924504,
+     "over_1px_of_accepted": 0.0
+    },
+    "136-179": {
+     "anchors": 24980,
+     "accepted": 15063,
+     "accepted_fraction": 0.6030024019215372,
+     "median_px": 0.02743395736442077,
+     "p90_px": 0.07759772956550885,
+     "over_1px_of_accepted": 0.0
+    }
+   }
+  },
+  {
+   "fixture": "periodic",
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "ts_scale": 1.0,
+   "foreign_geometry": false,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 33.1,
+   "n_zeta": 460,
+   "reasons": {
+    "accepted": 22611,
+    "invalid_support": 20,
+    "low_texture": 1,
+    "low_ncc": 2332,
+    "ambiguous": 0,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 16,
+    "depth_edge": 0
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 22611,
+    "accepted_fraction": 0.905164131305044,
+    "median_px": 0.002940220316993633,
+    "p90_px": 0.009182947878342623,
+    "over_1px_of_accepted": 0.0
+   },
+   "by_label": {
+    "periodic": {
+     "anchors": 24980,
+     "accepted": 22611,
+     "accepted_fraction": 0.905164131305044,
+     "median_px": 0.002940220316993633,
+     "p90_px": 0.009182947878342623,
+     "over_1px_of_accepted": 0.0
+    }
+   },
+   "median_frames_accepted": 10.0
+  },
+  {
+   "fixture": "radial",
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "ts_scale": 1.0,
+   "foreign_geometry": false,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 33.1,
+   "n_zeta": 460,
+   "reasons": {
+    "accepted": 0,
+    "invalid_support": 20,
+    "low_texture": 2910,
+    "low_ncc": 19,
+    "ambiguous": 17809,
+    "unresolved_far": 4222,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 0,
+    "unsupported": 0,
+    "depth_edge": 0
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 0,
+    "accepted_fraction": 0.0,
+    "median_px": null,
+    "p90_px": null,
+    "over_1px_of_accepted": null
+   },
+   "by_label": {
+    "radial": {
+     "anchors": 24980,
+     "accepted": 0,
+     "accepted_fraction": 0.0,
+     "median_px": null,
+     "p90_px": null,
+     "over_1px_of_accepted": null
+    }
+   },
+   "median_frames_accepted": null
+  },
+  {
+   "fixture": "occlusion",
+   "frames": [
+    -5,
+    -4,
+    -3,
+    -2,
+    -1,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "step_m": 0.1,
+   "ts_scale": 1.0,
+   "foreign_geometry": false,
+   "psi_deg": [
+    1.0,
+    44.0
+   ],
+   "seconds": 55.8,
+   "n_zeta": 460,
+   "reasons": {
+    "accepted": 23059,
+    "invalid_support": 20,
+    "low_texture": 0,
+    "low_ncc": 1320,
+    "ambiguous": 28,
+    "unresolved_far": 0,
+    "near_boundary": 0,
+    "gn_failed": 0,
+    "few_frames": 13,
+    "unsupported": 32,
+    "depth_edge": 508
+   },
+   "all": {
+    "anchors": 24980,
+    "accepted": 23059,
+    "accepted_fraction": 0.9230984787830264,
+    "median_px": 0.022851534006443002,
+    "p90_px": 0.06910032595588793,
+    "over_1px_of_accepted": 0.00047703716553189644
+   },
+   "by_label": {
+    "board": {
+     "anchors": 2071,
+     "accepted": 1743,
+     "accepted_fraction": 0.8416224046354418,
+     "median_px": 0.02082119073426113,
+     "p90_px": 0.0631648823969509,
+     "over_1px_of_accepted": 0.0
+    },
+    "far": {
+     "anchors": 22909,
+     "accepted": 21316,
+     "accepted_fraction": 0.9304640097778166,
+     "median_px": 0.02300158801946496,
+     "p90_px": 0.06936131265283862,
+     "over_1px_of_accepted": 0.0005160442859823606
+    }
+   },
+   "median_frames_accepted": 10.0,
+   "edge": {
+    "anchors": 1116,
+    "accepted": 264,
+    "accepted_fraction": 0.23655913978494625,
+    "median_px": 0.035811610992689244,
+    "p90_px": 0.1362782082107631,
+    "over_1px_of_accepted": 0.041666666666666664
+   },
+   "interior": {
+    "anchors": 23864,
+    "accepted": 22795,
+    "accepted_fraction": 0.9552044921220249,
+    "median_px": 0.022757259932943537,
+    "p90_px": 0.06845237226795019,
+    "over_1px_of_accepted": 0.0
+   }
+  }
+ ],
+ "ok": true,
+ "controls_fail": true,
+ "schema": "deep-motion-stage11-c1-v1",
+ "computed_at": {
+  "commit": "4e99bcbf06769c59909de130f33979accee68c79",
+  "deep_dirty": true
+ },
+ "machine": "vm",
+ "torch": "2.15.0+cpu",
+ "seconds": 1485.8,
+ "computed_by": {
+  "deep-motion": {
+   "commit": "4e99bcbf06769c59909de130f33979accee68c79",
+   "clean": false
+  }
+ },
+ "provenance_note": "Run in the Chat sandbox (2 CPU cores, torch 2.15.0+cpu) on deep/ntrace.py and deep/nfixtures.py as committed at 4e99bcb; the harness read git at the end of the run, when deep/__main__.py had uncommitted edits and deep/straight.py was new (neither is imported by C1), hence clean: false. `git diff 4e99bcb -- deep/ntrace.py deep/nfixtures.py motion/` was empty after the run. The harness now reads git at the start."
+}

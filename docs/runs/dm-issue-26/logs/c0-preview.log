@@ -1,0 +1,39 @@
+2026-11-21T09:47:42-03:00 $ .venv/bin/python -m deep stage11 --r128 runs/r3-straight --rows perfect --out /home/lvelho/tmp/claude-2002/-home-lvelho-rd-deep-motion/a377fffd-c0c7-4fc4-acb9-b3c51162f810/scratchpad/c0-preview (at dade15d)
+[deep] [stage11] B128: 167718 accepted
+[deep] [stage11] perfect (122 s)
+[deep] PASS C0 B128 and the perfect matcher reproduce stage 9's straight-path numbers exactly; control B on the 1024-spp renders must not reproduce them: DOES NOT FAIL
+| row | field | cells | right | coverage | of perfect's | accepted share | accepted surface-right |
+|---|---|---|---|---|---|---|---|
+| perfect | full | 328984 | 99.98 % | 80.4 % | — | 99.4 % | — |
+| perfect | shared 1-44 | 64819 | 99.96 % | 65.0 % | — | — | — |
+| perfect | 1-18 | 10624 | 99.75 % | 32.8 % | — | — | — |
+| perfect | 18-44 | 54295 | 100.00 % | 69.3 % | — | — | — |
+| B128 | full | 92001 | 94.59 % | 8.8 % | 9.8 % | 48.2 % | 95.6 % |
+| B128 | shared 1-44 | 27133 | 96.43 % | 8.8 % | 9.0 % | — | — |
+| B128 | 1-18 | 5226 | 98.51 % | 7.9 % | 8.0 % | — | — |
+| B128 | 18-44 | 22173 | 95.98 % | 8.6 % | 8.8 % | — | — |
+[deep] gap: {"chain": ["B128", "B1024", "N1024 on B's anchors", "N1024", "perfect"], "steps": [{"step": "noise (B128 -> B1024)", "gain": null}, {"step": "the cost on the same pixels (B1024 -> N1024 on B's anchors)", "gain": null}, {"step": "the pixels tried (-> N1024)", "gain": null}, {"step": "what remains (-> perfect)", "gain": null}], "total": 0.7154340773245985, "sensor_shared_field": {"shared 1-44": {"N1024": null, "M4@1024": null, "perfect": 0.6503275529865126}, "1-18": {"N1024": null, "M4@1024": null, "perfect": 0.32764505119453924}, "18-44": {"N1024": null, "M4@1024": null, "perfect": 0.6927337968154295}}}
+	Command being timed: ".venv/bin/python -m deep stage11 --r128 runs/r3-straight --rows perfect --out /home/lvelho/tmp/claude-2002/-home-lvelho-rd-deep-motion/a377fffd-c0c7-4fc4-acb9-b3c51162f810/scratchpad/c0-preview"
+	User time (seconds): 821.51
+	System time (seconds): 4.68
+	Percent of CPU this job got: 294%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:40.19
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1212384
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3792433
+	Voluntary context switches: 1685
+	Involuntary context switches: 98661
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 32
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T09:52:23-03:00 exit 0

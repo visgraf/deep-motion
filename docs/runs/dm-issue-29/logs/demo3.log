@@ -1,0 +1,52 @@
+2026-11-21T17:09:26-03:00 $ .venv/bin/python -m deep demo3 --r128 runs/r3-straight --r1024 runs/r3-straight-1024 --cache runs/stage11-cache --rule "within 2 cm" --span 1.0 --psi-max 120 --ply-dir runs/demo3-classroom --out docs/runs/dm-issue-29 (at 77e05dd)
+[deep] [stage11] B128: 167718 accepted
+[deep] [stage11] N1024: 301581 accepted of 2345469 (0 s)
+[deep] [stage11] N1024 mirrored (C3 control): 2430 accepted of 2345469 (0 s)
+[deep] [demo3] look 1: 0 references released, model 0 cells, all 0 (131 s)
+[deep] [demo3] look 101: 1 references released, model 0 cells, all 15,294 (133 s)
+[deep] [demo3] look 111: 2 references released, model 0 cells, all 28,376 (134 s)
+[deep] [demo3] look 121: 3 references released, model 0 cells, all 40,519 (135 s)
+[deep] [demo3] look 131: 4 references released, model 0 cells, all 52,285 (137 s)
+[deep] [demo3] look 141: 5 references released, model 0 cells, all 63,609 (138 s)
+[deep] [demo3] look 151: 6 references released, model 0 cells, all 74,699 (140 s)
+[deep] [demo3] look 161: 7 references released, model 0 cells, all 85,173 (142 s)
+[deep] [demo3] look 171: 8 references released, model 0 cells, all 95,392 (145 s)
+[deep] [demo3] look 181: 9 references released, model 0 cells, all 105,746 (148 s)
+[deep] [demo3] look 191: 10 references released, model 0 cells, all 115,905 (151 s)
+[deep] [demo3] look 201: 11 references released, model 8,738 cells, all 125,591 (154 s)
+[deep] [demo3] look 211: 12 references released, model 16,922 cells, all 134,950 (158 s)
+[deep] S2 record: build, problems: none
+[deep] PASS V1a: the end model equals the batch model (cells, cells right); control the model before the last release: fails
+[deep] PASS V1b: the full-ray-set model equals stage 12b's N1024 model (within 2 cm, ≥ 1 m); control stage 12b's next shorter span: fails
+[deep] PASS V2: nothing shown before its window is complete (m + 50 <= t); control a schedule releasing at m: fails
+[deep] PASS C: the colours' error (<= 10 %) equals stage 9's cells right on every end cell; control 5 % in place of 10 %: fails
+[deep] PASS P1 model: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] PASS P1 all: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] control only the standard control: N1024 mirrored's end model must not pass S2's gate; control N1024 mirrored (C3 control): fails
+[deep] end: model 16,922 cells, 0.9989362959461057, coverage 0.0383; all 134,950; gate pass (unverified [])
+[deep] model: runs/demo3-classroom/classroom_straight_model.ply, 16,922 points, 0.53 MB
+[deep] all: runs/demo3-classroom/classroom_straight_all.ply, 134,950 points, 4.18 MB
+	Command being timed: ".venv/bin/python -m deep demo3 --r128 runs/r3-straight --r1024 runs/r3-straight-1024 --cache runs/stage11-cache --rule within 2 cm --span 1.0 --psi-max 120 --ply-dir runs/demo3-classroom --out docs/runs/dm-issue-29"
+	User time (seconds): 1022.93
+	System time (seconds): 4.55
+	Percent of CPU this job got: 498%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:25.91
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1531296
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2138165
+	Voluntary context switches: 130869
+	Involuntary context switches: 158978
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 37360
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T17:12:52-03:00 exit 0

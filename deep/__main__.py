@@ -179,6 +179,20 @@ def stage8(a) -> int:
     return 0 if all(ok for _, ok in res) else 1
 
 
+def demo2_ply(a) -> int:
+    from . import demo2 as d2
+    import numpy as np
+    if a.r0:
+        T, looks, truth, vis, fan, refs = d2.r0_tour()
+        rgb_of = lambda j: np.repeat(looks[j][3][..., None].astype(np.float64), 3, axis=2)
+        name = "calibration_room"
+    else:
+        T, looks, truth, vis, fan, refs = d2.render_tour(a.straight, a.turn)
+        rgb_of = d2.render_rgb(T)
+        name = "classroom"
+    return d2.export_ply(T, looks, truth, vis, fan, refs, rgb_of, a.ply_dir, a.out, git=_git(REPO), name=name)
+
+
 def demo2(a) -> int:
     from . import demo2 as d2, demo as dm
     import numpy as np
@@ -220,6 +234,340 @@ def assess(a) -> int:
                "computed_by": {"deep-motion": _git(REPO)}}
         (Path(a.out) / ("assess_r0.json" if a.r0 else "assess.json")).write_text(json.dumps(rec, indent=1))
     return 0 if all(ok for _, ok in res) else 1
+
+
+def _torch_threads():
+    import os
+    import torch
+    if os.environ.get("DEEP_TORCH_THREADS"):
+        torch.set_num_threads(int(os.environ["DEEP_TORCH_THREADS"]))
+    return torch
+
+
+def stage11_selftest(a) -> int:
+    _torch_threads()
+    from . import ntrace as nt
+    res = nt.selftest()
+    for name, ok, val, cname, cfail, cval in res:
+        print(f"{PREFIX} stage11 {'PASS' if ok else 'FAIL'} {name}: {val}; {cname}: {'fails' if cfail else 'DOES NOT FAIL'} ({cval})")
+    ok_all = all(r[1] and r[4] for r in res)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "stage11-selftest", "checks": [{"name": r[0], "ok": bool(r[1]), "value": r[2], "control": r[3],
+                                                          "control_fails": bool(r[4]), "control_value": r[5]} for r in res],
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "n_selftest.json").write_text(json.dumps(rec, indent=1, default=float))
+    return 0 if ok_all else 1
+
+
+def stage11_fixtures(a) -> int:
+    _torch_threads()
+    from . import nfixtures as nf
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    res = nf.main(Path(a.out), names=a.only)
+    res["computed_by"] = git
+    (Path(a.out) / "c1_fixtures.json").write_text(json.dumps(res, indent=1, default=float))
+    for g in res["gates"]:
+        print(f"{PREFIX} C1 {'PASS' if g['ok'] else 'FAIL'} {g['fixture']} {g['label']}: {g}")
+    for c in res["controls"]:
+        print(f"{PREFIX} C1 control {'fails' if c['fails'] else 'DOES NOT FAIL'}: {c['control']}")
+    return 0 if res["ok"] and res["controls_fail"] else 1
+
+
+def _stage11_inputs(a):
+    """The rows' inputs for stage11 and stage11b: the real runs, or the dry run's synthetic room."""
+    from . import assess as asx, e2e, straight as st
+    from . import oracle as orc
+    if a.dry_run:
+        paths, m4in = st.synthetic_room(cache=Path(a.cache) / "room.npz" if a.cache else None)
+        refs = paths["128"][3]
+        m4 = {}
+        for lvl in ("1024", "128"):
+            f = Path(a.cache) / f"m4_{lvl}.npz" if a.cache else None
+            if f is not None and f.exists():
+                m4[lvl] = list(np.load(f, allow_pickle=True)["obj"])
+            else:
+                m4[lvl] = st.m4_dry(m4in, paths["128"][0], refs, lvl)
+                if f is not None:
+                    np.savez_compressed(f, obj=np.array(m4[lvl], dtype=object))
+        rec_assess = None
+        src = {"dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room), Chat sandbox, not gated",
+               "noise": st.DRY_NOISE}
+    else:
+        _, L = orc.load(a.r128)
+        refs = asx.references(len(L))
+        looks, truth, fan, _ = e2e.render_path(a.r128, refs=refs)
+        paths = {"128": (looks, truth, fan, refs, asx.render_vis(a.r128, fan))}
+        if a.r1024:
+            l2, _, _, _ = e2e.render_path(a.r1024, refs=refs)
+            paths["1024"] = (l2, truth, fan, refs, None)
+        m4 = {}
+        for kv in a.m4:
+            lvl, dirs = kv.split("=", 1)
+            res_dir, run_dir = dirs.split(",", 1)
+            m4[lvl] = st.m4_points(res_dir, run_dir)
+        rec_assess = json.loads((REPO / "docs/runs/dm-issue-22/assess.json").read_text())
+        src = {"r128": a.r128, "r1024": a.r1024, "m4": a.m4}
+    return paths, m4, rec_assess, src
+
+
+def stage11(a) -> int:
+    _torch_threads()
+    import time as _t
+    from . import straight as st
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, rec_assess, src = _stage11_inputs(a)
+    out = st.run(paths, m4=m4, cache=a.cache, rows=a.rows, assess_record=rec_assess,
+                 log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    out.update({"command": "stage11", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    for c in out["checks"]:
+        cf = c["control_fails"]
+        print(f"{PREFIX} {'PASS' if c['ok'] else 'FAIL'} {c['check']}; control {c['control']}: "
+              f"{'not evaluated' if cf is None else ('fails' if cf else 'DOES NOT FAIL')}")
+    for line in st.table(out):
+        print(line)
+    print(f"{PREFIX} gap: " + json.dumps(out["gap"], default=float))
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage11_dry.json" if a.dry_run else "stage11.json"
+        (Path(a.out) / name).write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / name.replace(".json", "_table.md")).write_text("\n".join(st.table(out)) + "\n")
+    return 0 if all(c["ok"] and c["control_fails"] is not False for c in out["checks"]) else 1
+
+
+def stage11b(a) -> int:
+    _torch_threads()
+    import time as _t
+    from . import straight as st
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, rec_assess, src = _stage11_inputs(a)
+    out = st.breakdown(paths, m4=m4, cache=a.cache, assess_record=rec_assess,
+                       log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    out.update({"command": "stage11b", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    lines = st.breakdown_tables(out)
+    for line in lines:
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage11b_dry" if a.dry_run else "stage11b"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_tables.md").write_text("\n".join(lines) + "\n")
+    ok = all(v["equal_to_stage9"] for v in out["consistency"].values()) if out["consistency"] else True
+    return 0 if ok else 1
+
+
+def stage11c(a) -> int:
+    _torch_threads()
+    import time as _t
+    from . import straight as st
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, rec_assess, src = _stage11_inputs(a)
+    out = st.diagnose(paths, m4=m4, cache=a.cache, assess_record=rec_assess,
+                      log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    out.update({"command": "stage11c", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    lines = st.diagnose_tables(out)
+    for line in lines:
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage11c_dry" if a.dry_run else "stage11c"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_tables.md").write_text("\n".join(lines) + "\n")
+    ok = all(v.get("equal_to_stage9", v.get("equal", True)) for v in out["consistency"].values())
+    return 0 if ok else 1
+
+
+def standard_selftest(a) -> int:
+    """S1's code (deep/standard.py) and stage 12's span logic (deep/confirm.py), each check with its control."""
+    from . import standard as sd
+    res = [("standard", r) for r in sd.selftest()]
+    try:
+        from . import confirm as cf
+        res += [("stage12", r) for r in cf.selftest()]
+    except ImportError as e:                                    # deep/confirm.py needs torch (via ntrace)
+        print(f"{PREFIX} stage12 span logic not run: {e}")
+    for who, (name, ok, val, cname, cfail, cval) in res:
+        print(f"{PREFIX} {who} {'PASS' if ok else 'FAIL'} {name}: {val}; control {cname}: "
+              f"{'fails' if cfail else 'DOES NOT FAIL'} ({cval})")
+    ok_all = all(r[1] and r[4] for _, r in res)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        rec = {"command": "standard-selftest", "standard": sd.VERSION,
+               "checks": [{"module": w, "name": r[0], "ok": bool(r[1]), "value": r[2], "control": r[3],
+                           "control_fails": bool(r[4]), "control_value": r[5]} for w, r in res],
+               "computed_by": {"deep-motion": _git(REPO)}}
+        (Path(a.out) / "standard_selftest.json").write_text(json.dumps(rec, indent=1, default=str))
+    return 0 if ok_all else 1
+
+
+def stage12(a) -> int:
+    """#28: the confirmation distance, the first run under S1."""
+    _torch_threads()
+    import time as _t
+    from . import confirm as cf, ntrace as nt, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, _, src = _stage11_inputs(a)
+    rec_dir = REPO / "docs/runs/dm-issue-26"
+    suffix = "_dry" if a.dry_run else ""
+    rec11 = json.loads((rec_dir / f"stage11{suffix}.json").read_text())
+    rec11c = json.loads((rec_dir / f"stage11c{suffix}.json").read_text())
+    out = cf.run(paths, m4=m4, cache=a.cache, rec11=rec11, rec11c=rec11c, log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    controls = ["mirrored poses", "points moved 20 %"]
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
+                       controls=controls)
+    else:
+        fan = paths["128"][2]
+        values = dict(sd.PROFILES["ablation"]["values"], width=int(fan.width),
+                      psi_deg=list(nt.SETTINGS["psi_anchor_deg"]), lat_max_deg=float(nt.SETTINGS["lat_max_deg"]),
+                      confirm_span_m=list(cf.SPANS_M))
+        std = sd.stamp("ablation", values, departures={"confirm_span_m": "the value under study (#28): 0, 0.2 and 0.5 m"},
+                       controls=controls)
+    out.update(std)
+    out.update({"command": "stage12", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    print(f"{PREFIX} S1 record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in out["checks"]:
+        ok = c.get("ok")
+        head = "control only" if ok is None and "control_fails" in c and c["check"].startswith("the standard") else (
+            "not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        cf_ = c.get("control_fails")
+        print(f"{PREFIX} {head} {c['check']}" + (f"; control {c['control']}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')} ({c.get('control_value')})"
+              if "control" in c else ""))
+    for line in cf.table(out):
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage12_dry" if a.dry_run else "stage12"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_table.md").write_text("\n".join(cf.table(out)) + "\n")
+    bad = [c for c in out["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
+def stage12b(a) -> int:
+    """#28, P-D5: two confirmation rules (same cell; within 2 cm) at spans 0-1.0 m, under S2."""
+    _torch_threads()
+    import time as _t
+    from . import confirm as cf, ntrace as nt, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    paths, m4, _, src = _stage11_inputs(a)
+    rec12 = json.loads((REPO / "docs/runs/dm-issue-28" / ("stage12_dry.json" if a.dry_run else "stage12.json")).read_text())
+    out = cf.run_b(paths, m4=m4, cache=a.cache, rec12=rec12, log=lambda m: print(f"{PREFIX} {m}", flush=True))
+    controls = ["mirrored poses", "points moved 20 %"]
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False}, controls=controls)
+    else:
+        fan = paths["128"][2]
+        values = dict(sd.PROFILES["ablation"]["values"], width=int(fan.width),
+                      psi_deg=list(nt.SETTINGS["psi_anchor_deg"]), lat_max_deg=float(nt.SETTINGS["lat_max_deg"]),
+                      confirm_span_m=list(cf.SPANS_12B), confirm_rule=list(cf.RULES))
+        std = sd.stamp("ablation", values, departures={
+            "confirm_span_m": "a value under study (#28, P-D5): 0, 0.2, 0.5, 0.8 and 1.0 m",
+            "confirm_rule": "a value under study (#28, P-D5): the same cell, and an estimate within 2 cm"}, controls=controls)
+    out.update(std)
+    out.update({"command": "stage12b", "sources": src, "computed_by": git,
+                "seconds_total": round(_t.perf_counter() - t0, 1)})
+    print(f"{PREFIX} {std['standard']} record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in out["checks"]:
+        ok = c.get("ok")
+        head = "control only" if c["check"].startswith("the standard") else (
+            "not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        cf_ = c.get("control_fails")
+        print(f"{PREFIX} {head} {c['check']}" + (f"; control {c['control']}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')} ({c.get('control_value')})"
+              if "control" in c else ""))
+    for line in cf.table_b(out):
+        print(line)
+    if a.out:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        name = "stage12b_dry" if a.dry_run else "stage12b"
+        (Path(a.out) / f"{name}.json").write_text(json.dumps(out, indent=1, default=float))
+        (Path(a.out) / f"{name}_table.md").write_text("\n".join(cf.table_b(out)) + "\n")
+    bad = [c for c in out["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
+
+
+def demo3(a) -> int:
+    """#29, P-D5: demo D3, N1024 along the Classroom's straight path as S2's model grows (video and PLY)."""
+    _torch_threads()
+    import numpy as np
+    from . import assess as asx, confirm as cf, demo2 as d2, demo3 as d3, e2e, fusion as fu, ntrace as nt, oracle as orc
+    from . import standard as sd, straight as st
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    if a.dry_run:
+        paths, _ = st.synthetic_room(K=a.dry_looks, y0=a.dry_y0, fov_frames=False,
+                                     cache=Path(a.cache) / "room.npz" if a.cache else None)
+        looks = paths["1024"][0]
+        T = [(None, lk[1], lk[2], float(lk[0]), 0) for lk in looks]
+        rgb_of = lambda j: np.repeat(np.asarray(looks[j][3], float)[..., None], 3, axis=2)
+        cache = a.cache                                         # as stage 11's dry run: the room and the rows under one folder
+        f12d = REPO / "docs/runs/dm-issue-28/stage12b_dry.json"   # stage 12b's dry run is on #26's room (K = 111)
+        rec12b = json.loads(f12d.read_text()) if (f12d.exists() and a.dry_looks == 111) else None
+        name, label = "dry_room_straight", "synthetic room (dry run), straight path"
+        src = {"dry_run": f"a synthetic room of M4's fixture planes (deep/straight.py synthetic_room, K={a.dry_looks}, "
+                          f"y0={a.dry_y0}), Chat sandbox, not gated", "noise": st.DRY_NOISE}
+    else:
+        _, L = orc.load(a.r128)
+        refs = asx.references(len(L))
+        looks, truth, fan, _ = e2e.render_path(a.r128, refs=refs)
+        paths = {"128": (looks, truth, fan, refs, asx.render_vis(a.r128, fan))}
+        l2, _, _, _ = e2e.render_path(a.r1024, refs=refs)
+        paths["1024"] = (l2, truth, fan, refs, None)
+        T = [(p, c, R, float(s), 0) for p, c, R, s in fu.load_looks([a.r1024])]
+        rgb_of = d2.render_rgb(T)
+        cache = a.cache
+        f12b = REPO / "docs/runs/dm-issue-28/stage12b.json"
+        rec12b = json.loads(f12b.read_text()) if f12b.exists() else None
+        name, label = "classroom_straight", "Classroom, straight path"
+        src = {"r128": a.r128, "r1024": a.r1024, "stage12b": str(f12b.relative_to(REPO)) if rec12b else None}
+    rec = d3.run(paths, cache, a.out, a.ply_dir, T, rgb_of, rule=a.rule, span=a.span, rec12b=rec12b, name=name,
+                 label=label, limit=a.limit, best=a.best, video=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True),
+                 psi_max=a.psi_max)
+    if a.dry_run:
+        std = sd.stamp("dry", {"scene": "synthetic room of M4's fixture planes, ray-cast", "gated": False},
+                       controls=["mirrored poses"])
+    else:
+        fan = paths["128"][2]
+        values = dict(sd.PROFILES["build"]["values"], path="straight_long", width=int(fan.width),
+                      psi_deg=[float(nt.SETTINGS["psi_anchor_deg"][0]), float(min(a.psi_max, nt.SETTINGS["psi_anchor_deg"][1]))],
+                      lat_max_deg=float(nt.SETTINGS["lat_max_deg"]), confirm_rule=a.rule, confirm_span_m=a.span)
+        dep = {"path": "one primitive, R3's straight_long: the demo's path (#29, P-D5)"}
+        if a.psi_max < nt.SETTINGS["psi_anchor_deg"][1]:
+            dep["psi_deg"] = "the ray set chosen from stage 12b's error map (#28, P-D6): the backward sectors dropped"
+        if a.rule != sd.PROFILES["build"]["values"]["confirm_rule"]:
+            dep["confirm_rule"] = "chosen after stage 12b (#28, P-D6)"
+        if abs(a.span - sd.CONFIRM_SPAN_M) > 1e-9:
+            dep["confirm_span_m"] = "chosen after stage 12b (#28, P-D6)"
+        std = sd.stamp("build", values, departures=dep, controls=["mirrored poses"])
+    rec.update(std)
+    rec.update({"sources": src, "computed_by": git})
+    print(f"{PREFIX} {std['standard']} record: {std['profile']}, problems: {std['check_record'] or 'none'}")
+    for c in rec["checks"]:
+        ok = c.get("ok")
+        head = "control only" if c["name"].startswith("the standard") else (
+            "not evaluated" if ok is None else ("PASS" if ok else "FAIL"))
+        cf_ = c.get("control_fails")
+        print(f"{PREFIX} {head} {c['name']}" + (f"; control {c['control']}: "
+              f"{'not evaluated' if cf_ is None else ('fails' if cf_ else 'DOES NOT FAIL')}" if "control" in c else ""))
+    e = rec["end"]
+    print(f"{PREFIX} end: model {e['model']['cells']:,} cells, {e['model']['right']}, coverage {e['model']['coverage']:.4f}; "
+          f"all {e['all']['cells']:,}; gate {e['gate']['result']} (unverified {e['gate']['unverified']})")
+    for w, f in rec["files"].items():
+        print(f"{PREFIX} {w}: {f['path']}, {f['points']:,} points, {f['mb']} MB")
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    (Path(a.out) / ("demo3_dry.json" if a.dry_run else "demo3.json")).write_text(json.dumps(rec, indent=1, default=float))
+    bad = [c for c in rec["checks"] if c.get("ok") is False or c.get("control_fails") is False]
+    return 1 if bad or std["check_record"] else 0
 
 
 def note_figs(a) -> int:
@@ -350,6 +698,12 @@ def main(argv=None) -> int:
     p.add_argument("--k8", action="store_true", help="check K8: method E at depth edges (R1; R0 reported)")
     p.add_argument("--kinds", nargs="+", default=["line", "arc"])
     p.add_argument("--out", default=None)
+    p = sub.add_parser("demo2-ply", help="#25: demo D2's final maps as coloured PLY point clouds (perfect, real)")
+    p.add_argument("--straight", default=None)
+    p.add_argument("--turn", default=None)
+    p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room (grey)")
+    p.add_argument("--ply-dir", required=True, help="where the PLY files go (keep it under runs/, not committed)")
+    p.add_argument("--out", required=True, help="the record's folder")
     p = sub.add_parser("demo2", help="#23: demo D2, the perfect and the real matcher side by side along #9's tour")
     p.add_argument("--straight", default=None, help="the straight path's run (R3)")
     p.add_argument("--turn", default=None, help="the turn's run (R3)")
@@ -367,6 +721,66 @@ def main(argv=None) -> int:
     p.add_argument("--r0", action="store_true", help="the dry run: R0's calibration room, turn90 and straight_long")
     p.add_argument("--max-anchors", type=int, default=20000)
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11-selftest", help="#26: N's geometry (N.1-N.5) with controls; numpy and torch, no renders")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11-fixtures", help="#26, C1: M4's fixtures rebuilt for the panorama, N's gates and controls")
+    p.add_argument("--out", required=True)
+    p.add_argument("--only", nargs="*", default=None, help="fixture names (a preview; C1 is the full set)")
+    p = sub.add_parser("stage11", help="#26: the ablation on the straight path, C0/C2/C3 and the decomposition")
+    p.add_argument("--r128", default=None, help="R3's straight_long run (128 spp): the truth and B128")
+    p.add_argument("--r1024", default=None, help="the same path re-rendered at 1024 spp")
+    p.add_argument("--m4", nargs="*", default=[], help="LEVEL=RESULT_DIR,RUN_DIR, e.g. 1024=runs/m4-dolly-1024,runs/dolly-1024")
+    p.add_argument("--cache", default=None, help="per-reference outputs (resumable; under runs/)")
+    p.add_argument("--rows", nargs="*", default=None, help="only these rows (B128 is always computed)")
+    p.add_argument("--dry-run", action="store_true", help="the synthetic room (Chat sandbox, not gated)")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11b", help="#26: stage 11's rows by sector, range, depth edge, texture and SNR, the "
+                                         "texture-limited ceilings, N1024's rejections by class (from stage11's cache)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage11c", help="#26: N1024's depth-edge variants (off; 10 %% of zeta) and the cross-tabulations "
+                                         "range x SNR and sector x SNR (from stage11's cache, one new N run)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("standard-selftest", help="#27: S1's gate and check_record, and stage 12's span logic (controls)")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage12", help="#28: the confirmation distance under S1 (from stage 11's and 11c's caches)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("stage12b", help="#28, P-D5: two confirmation rules at spans 0-1.0 m, under S2 (stage 11's caches)")
+    p.add_argument("--r128", default=None)
+    p.add_argument("--r1024", default=None)
+    p.add_argument("--m4", nargs="*", default=[])
+    p.add_argument("--cache", default=None)
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--out", default=None)
+    p = sub.add_parser("demo3", help="#29: demo D3, N1024 along the Classroom's straight path as S2's model grows")
+    p.add_argument("--r128", default=None, help="R3's straight_long run (128 spp): the truth and the judge")
+    p.add_argument("--r1024", default=None, help="the same path at 1024 spp: N1024's images and the colours")
+    p.add_argument("--cache", default=None, help="stage 11's cache (N1024 and its mirrored control)")
+    p.add_argument("--rule", default="same cell", choices=["same cell", "within 2 cm"])
+    p.add_argument("--span", type=float, default=0.5, help="S2's confirmation distance (m)")
+    p.add_argument("--psi-max", type=float, default=179.0, help="the ray set: anchors at psi 1..psi_max deg from the heading")
+    p.add_argument("--ply-dir", required=True, help="the PLY files and the video (under runs/, not committed)")
+    p.add_argument("--out", required=True, help="the record's folder")
+    p.add_argument("--limit", type=int, default=None, help="the first n looks only (a preview; the checks need all)")
+    p.add_argument("--best", action="store_true")
+    p.add_argument("--no-video", action="store_true")
+    p.add_argument("--dry-run", action="store_true", help="a synthetic room (Chat sandbox, not gated)")
+    p.add_argument("--dry-looks", type=int, default=161)
+    p.add_argument("--dry-y0", type=float, default=-0.8)
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -384,7 +798,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 

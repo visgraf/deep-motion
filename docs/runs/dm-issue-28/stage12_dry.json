@@ -1,0 +1,1667 @@
+{
+ "references": [
+  50,
+  60
+ ],
+ "positions_m": {
+  "50": 0.0,
+  "60": 0.1
+ },
+ "spans_m": [
+  0.0,
+  0.2,
+  0.5
+ ],
+ "noise": {
+  "gradient_snr_median": 21.772491342028168,
+  "share_under_1": 0.0,
+  "share_under_3": 0.0,
+  "pixels": "the references' pixels that see a surface, |latitude| < 70 deg (stage 11b's raster; #26 quoted every 7th pixel of all, so its 1.65 differs slightly)"
+ },
+ "bands": {
+  "full": {
+   "perfect": {
+    "all": {
+     "cells": 89898,
+     "right": 0.9998776391020935,
+     "confirmed_right": 1.0,
+     "coverage": 0.8270404923557857,
+     "surface_cells": 81892,
+     "points": 100341
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 7082,
+       "right": 1.0,
+       "coverage": 0.13837737507937284
+      },
+      "candidates": {
+       "cells": 82816,
+       "right": 0.9998671754250387
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 7082,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 15,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 936,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 5420,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 708,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 3,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0
+      },
+      "candidates": {
+       "cells": 89898,
+       "right": 0.9998776391020935
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0
+      },
+      "candidates": {
+       "cells": 89898,
+       "right": 0.9998776391020935
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "perfect where gradient SNR >= 3": {
+    "all": {
+     "cells": 89898,
+     "right": 0.9998776391020935,
+     "confirmed_right": 1.0,
+     "coverage": 0.8270404923557857,
+     "surface_cells": 81892,
+     "points": 100341
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 7082,
+       "right": 1.0,
+       "coverage": 0.13837737507937284,
+       "covers_of_perfect": 0.16731632412000946
+      },
+      "candidates": {
+       "cells": 82816,
+       "right": 0.9998671754250387
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 7082,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 15,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 936,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 5420,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 708,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 3,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 89898,
+       "right": 0.9998776391020935
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 89898,
+       "right": 0.9998776391020935
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024": {
+    "all": {
+     "cells": 161375,
+     "right": 0.9986367157242447,
+     "confirmed_right": 0.999947634383264,
+     "coverage": 0.5896180335075465,
+     "surface_cells": 81892,
+     "points": 235335
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 38193,
+       "right": 0.999947634383264,
+       "coverage": 0.30482831045767594,
+       "covers_of_perfect": 0.3540633120718167
+      },
+      "candidates": {
+       "cells": 123182,
+       "right": 0.998230260914744
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 38193,
+         "right": 0.999947634383264,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 191,
+         "right": 0.9947643979057592,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 8249,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 22048,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 7611,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 94,
+         "right": 0.9893617021276596,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 161375,
+       "right": 0.9986367157242447
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 161375,
+       "right": 0.9986367157242447
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024, depth-edge test at 10 %": {
+    "all": {
+     "cells": 238787,
+     "right": 0.9999874365019872,
+     "confirmed_right": 1.0,
+     "coverage": 0.8730034679822205,
+     "surface_cells": 81892,
+     "points": 379254
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 68653,
+       "right": 1.0,
+       "coverage": 0.5404190885556587,
+       "covers_of_perfect": 0.6349072761634774
+      },
+      "candidates": {
+       "cells": 170134,
+       "right": 0.9999823668402553
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 68653,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 179,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 12152,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "60-120": {
+         "cells": 45305,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "120-165": {
+         "cells": 10944,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "165-180": {
+         "cells": 73,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 238787,
+       "right": 0.9999874365019872
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 238787,
+       "right": 0.9999874365019872
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024 mirrored (C3 control)": {
+    "all": {
+     "cells": 4,
+     "right": 0.0,
+     "confirmed_right": null,
+     "coverage": 0.0,
+     "surface_cells": 81892,
+     "points": 4
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 4,
+       "right": 0.0
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 4,
+       "right": 0.0
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 4,
+       "right": 0.0
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "perfect, points moved 20 % (control)": {
+    "all": {
+     "cells": 92994,
+     "right": 8.602705550895757e-05,
+     "confirmed_right": 0.0,
+     "coverage": 0.0,
+     "surface_cells": 81892,
+     "points": 100341
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 5365,
+       "right": 0.0,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 87629,
+       "right": 9.129397802097479e-05
+      },
+      "gate": {
+       "result": "fail",
+       "parts": {
+        "overall": {
+         "cells": 5365,
+         "right": 0.0,
+         "result": "fail"
+        },
+        "0-15": {
+         "cells": 11,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 651,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 4188,
+         "right": 0.0,
+         "result": "fail"
+        },
+        "120-165": {
+         "cells": 511,
+         "right": 0.0,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 4,
+         "right": 0.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 92994,
+       "right": 8.602705550895757e-05
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 92994,
+       "right": 8.602705550895757e-05
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "60-120": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "120-165": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "165-180": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   }
+  },
+  "shared 1-44": {
+   "perfect": {
+    "all": {
+     "cells": 12016,
+     "right": 0.9995838881491345,
+     "confirmed_right": 1.0,
+     "coverage": 0.5239837060437277,
+     "surface_cells": 12029,
+     "points": 12229
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 213,
+       "right": 1.0,
+       "coverage": 0.024274669548590904
+      },
+      "candidates": {
+       "cells": 11803,
+       "right": 0.9995763788867237
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 213,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 15,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 198,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0
+      },
+      "candidates": {
+       "cells": 12016,
+       "right": 0.9995838881491345
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0
+      },
+      "candidates": {
+       "cells": 12016,
+       "right": 0.9995838881491345
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "perfect where gradient SNR >= 3": {
+    "all": {
+     "cells": 12016,
+     "right": 0.9995838881491345,
+     "confirmed_right": 1.0,
+     "coverage": 0.5239837060437277,
+     "surface_cells": 12029,
+     "points": 12229
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 213,
+       "right": 1.0,
+       "coverage": 0.024274669548590904,
+       "covers_of_perfect": 0.046327145803585594
+      },
+      "candidates": {
+       "cells": 11803,
+       "right": 0.9995763788867237
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 213,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 15,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 198,
+         "right": 1.0,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 12016,
+       "right": 0.9995838881491345
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 12016,
+       "right": 0.9995838881491345
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024": {
+    "all": {
+     "cells": 32341,
+     "right": 0.9959803345598466,
+     "confirmed_right": 0.9996488764044944,
+     "coverage": 0.5428547676448583,
+     "surface_cells": 12029,
+     "points": 36195
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 2848,
+       "right": 0.9996488764044944,
+       "coverage": 0.14938897663978717,
+       "covers_of_perfect": 0.24718388069173408
+      },
+      "candidates": {
+       "cells": 29493,
+       "right": 0.9956260807649273
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 2848,
+         "right": 0.9996488764044944,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 191,
+         "right": 0.9947643979057592,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 2657,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 32341,
+       "right": 0.9959803345598466
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 32341,
+       "right": 0.9959803345598466
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "N1024, depth-edge test at 10 %": {
+    "all": {
+     "cells": 36752,
+     "right": 0.9999183717892903,
+     "confirmed_right": 1.0,
+     "coverage": 0.6136004655416077,
+     "surface_cells": 12029,
+     "points": 41262
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 3429,
+       "right": 1.0,
+       "coverage": 0.1682600382409178,
+       "covers_of_perfect": 0.2771696017769316
+      },
+      "candidates": {
+       "cells": 33323,
+       "right": 0.9999099720913484
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 3429,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 179,
+         "right": 1.0,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 3250,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 36752,
+       "right": 0.9999183717892903
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 36752,
+       "right": 0.9999183717892903
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   },
+   "M4@1024": {
+    "all": {
+     "cells": 52976,
+     "right": 0.9998112352763515,
+     "confirmed_right": 1.0,
+     "coverage": 0.49821265275584004,
+     "surface_cells": 12029,
+     "points": 83354
+    },
+    "spans": {
+     "0": {
+      "model": {
+       "cells": 11709,
+       "right": 1.0,
+       "coverage": 0.19186964834982126,
+       "covers_of_perfect": 0.17642392511502458
+      },
+      "candidates": {
+       "cells": 41267,
+       "right": 0.9997576756245911
+      },
+      "gate": {
+       "result": "pass",
+       "parts": {
+        "overall": {
+         "cells": 11709,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "0-15": {
+         "cells": 7445,
+         "right": 1.0,
+         "result": "pass"
+        },
+        "15-60": {
+         "cells": 4264,
+         "right": 1.0,
+         "result": "pass"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.2": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 52976,
+       "right": 0.9998112352763515
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     },
+     "0.5": {
+      "model": {
+       "cells": 0,
+       "right": null,
+       "coverage": 0.0,
+       "covers_of_perfect": 0.0
+      },
+      "candidates": {
+       "cells": 52976,
+       "right": 0.9998112352763515
+      },
+      "gate": {
+       "result": "not evaluated",
+       "parts": {
+        "overall": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "0-15": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        },
+        "15-60": {
+         "cells": 0,
+         "right": null,
+         "result": "not evaluated"
+        }
+       },
+       "gate_right": 0.995,
+       "min_cells": 1000
+      }
+     }
+    }
+   }
+  }
+ },
+ "checks": [
+  {
+   "check": "K1: at span 0 every row equals #26's records (cells, right, cells from >= 2 references right)",
+   "ok": true,
+   "rows": [
+    {
+     "row": "N1024",
+     "equal": true,
+     "cells": [
+      161375,
+      161375
+     ],
+     "model_right_span0": [
+      0.999947634383264,
+      0.999947634383264
+     ],
+     "right": [
+      0.9986367157242447,
+      0.9986367157242447
+     ]
+    },
+    {
+     "row": "N1024, depth-edge test at 10 %",
+     "equal": true,
+     "cells": [
+      238787,
+      238787
+     ],
+     "model_right_span0": [
+      1.0,
+      1.0
+     ],
+     "right": [
+      0.9999874365019872,
+      0.9999874365019872
+     ]
+    },
+    {
+     "row": "perfect",
+     "equal": true,
+     "cells": [
+      89898,
+      89898
+     ],
+     "model_right_span0": [
+      1.0,
+      1.0
+     ],
+     "right": [
+      0.9998776391020935,
+      0.9998776391020935
+     ]
+    },
+    {
+     "row": "M4@1024 (1-44)",
+     "equal": true,
+     "cells": [
+      52976,
+      52976
+     ],
+     "model_right_span0": [
+      1.0,
+      1.0
+     ],
+     "right": [
+      0.9998112352763515,
+      0.9998112352763515
+     ]
+    }
+   ],
+   "control": "N1024's cells right over all its cells in place of the model's",
+   "control_fails": true,
+   "control_value": 0.9986367157242447
+  },
+  {
+   "check": "K2: the perfect matcher's model at 0.5 m passes S1's gate (full field)",
+   "ok": null,
+   "value": "not evaluated",
+   "control": "perfect, points moved 20 % (control) must fail it",
+   "control_fails": null,
+   "control_value": "not evaluated"
+  },
+  {
+   "check": "the standard control: N1024 mirrored must not pass S1's gate at any span",
+   "ok": null,
+   "control": "N1024 mirrored (C3 control)",
+   "control_fails": true,
+   "control_value": {
+    "0": "not evaluated",
+    "0.2": "not evaluated",
+    "0.5": "not evaluated"
+   }
+  }
+ ],
+ "seconds": 214.4,
+ "standard": "S1",
+ "profile": "dry",
+ "values": {
+  "scene": "synthetic room of M4's fixture planes, ray-cast",
+  "gated": false
+ },
+ "departures": {},
+ "controls": [
+  "mirrored poses",
+  "points moved 20 %"
+ ],
+ "check_record": [],
+ "command": "stage12",
+ "sources": {
+  "dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room), Chat sandbox, not gated",
+  "noise": {
+   "1024": 0.005,
+   "128": 0.014142135623730952
+  }
+ },
+ "computed_by": {
+  "deep-motion": {
+   "commit": "fc4e9e44ccadc050b208d0281a84636ea34fc23a",
+   "clean": true
+  }
+ },
+ "seconds_total": 222.5
+}

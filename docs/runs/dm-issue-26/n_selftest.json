@@ -1,0 +1,51 @@
+{
+ "command": "stage11-selftest",
+ "checks": [
+  {
+   "name": "N.1 torch pix_of equals fov-render's PanoramaModel.pixel_of (<= 1e-9 px)",
+   "ok": true,
+   "value": 2.398081733190338e-13,
+   "control": "control: elevation sign flipped (> 1 px)",
+   "control_fails": true,
+   "control_value": 355.57709604580987
+  },
+  {
+   "name": "N.2 the pencil's coordinates round-trip (<= 1e-12)",
+   "ok": true,
+   "value": 3.3514857555871913e-15,
+   "control": "control: the plane angle's second axis flipped (> 0.1)",
+   "control_fails": true,
+   "control_value": 1.9996608424023556
+  },
+  {
+   "name": "N.3 the line law psi' = atan2(sin psi, cos psi - t zeta) and omega kept, against the exact projection (<= 1e-9 rad)",
+   "ok": true,
+   "value": 7.993605777301127e-15,
+   "control": "control: t's sign flipped (median > 1e-3 rad)",
+   "control_fails": true,
+   "control_value": 0.29388916851275376
+  },
+  {
+   "name": "N.4 px per unit zeta at the longest step = t_max sin psi / res (relative <= 1e-5)",
+   "ok": true,
+   "value": 2.5558190730701096e-07,
+   "control": "control: times |cos psi| (median > 0.1)",
+   "control_fails": true,
+   "control_value": 0.31349998511991745
+  },
+  {
+   "name": "N.5 N's thresholds are M4's frozen SETTINGS (motion/multibaseline.py)",
+   "ok": true,
+   "value": null,
+   "control": "control: ncc_min - 0.01 differs",
+   "control_fails": true,
+   "control_value": null
+  }
+ ],
+ "computed_by": {
+  "deep-motion": {
+   "commit": "4e99bcbf06769c59909de130f33979accee68c79",
+   "clean": true
+  }
+ }
+}
