@@ -104,8 +104,9 @@ def b_short(looks, truth, j, fan, all_pixels=False):
             "accepted": int(mk.sum()), "right_acc": int(right[mk].sum())}
 
 
-def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None):
-    """N at reference j over the frames j + 10 i, i in offsets; mirror: frame k given look 2j - k's pose."""
+def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_all=False):
+    """N at reference j over the frames j + 10 i, i in offsets; mirror: frame k given look 2j - k's pose. keep_all:
+    also every anchor's pixel and rejection reason (stage 11b's reasons by class)."""
     s, c, R, img, _ = looks[j]
     ks = [j + STEP_LOOKS * i for i in offsets]
     poses = [(looks[2 * j - k][1], looks[2 * j - k][2]) if mirror else (looks[k][1], looks[k][2]) for k in ks]
@@ -114,9 +115,12 @@ def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None):
     acc = (r["reason"] == 0) & (r["zeta"] > 0)
     rng = np.where(r["zeta"] > 0, 1.0 / np.maximum(r["zeta"], 1e-12), np.inf)
     right = _nb_right(c, P, idx, r["px"], rng)
-    return {"j": j, "X": c + r["u"][acc] * rng[acc][:, None], "psi": np.degrees(r["psi"][acc]), "tried": int(len(acc)),
-            "accepted": int(acc.sum()), "right_acc": int(right[acc].sum()), "px_acc": r["px"][acc],
-            "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))}}
+    o = {"j": j, "X": c + r["u"][acc] * rng[acc][:, None], "psi": np.degrees(r["psi"][acc]), "tried": int(len(acc)),
+         "accepted": int(acc.sum()), "right_acc": int(right[acc].sum()), "px_acc": r["px"][acc],
+         "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))}}
+    if keep_all:
+        o.update({"px_all": r["px"].astype(np.int16), "reason_all": r["reason"].astype(np.int8)})
+    return o
 
 
 def perfect_points(looks, truth, fan, refs, vis_fn, seed=22):
@@ -247,18 +251,22 @@ def _cache(path, fn):
     return o
 
 
-def run(paths, m4=None, cache=None, rows=None, assess_record=None, log=print, dev=None):
-    """paths: {"128": (looks, truth, fan, refs, vis_fn), "1024": (looks, truth, fan, refs, vis_fn) or None}; the truth
-    and visibility used are the 128 run's. m4: {"1024": [m4 refs], "128": [...]} (m4_points output). rows: names to
-    compute (default all). assess_record: stage 9's assess.json (C0). Returns the record."""
-    t0 = time.perf_counter()
+B_ALL = "B on all pixels, N's frames, 1024"
+N_ALL = "N1024, every anchor's reason"
+ROW_ALIAS = {B_ALL: "B cost on N's pixels and frames, 1024"}   # its cache's name before #26's fix a
+
+
+def collect(paths, m4=None, cache=None, rows=None, log=print, dev=None, extra=()):
+    """Every row's per-reference output ({name: {j: {X, psi, tried, accepted, right_acc, ...}}}) and B128's
+    per-reference windows (the cells' judge). Rows are cached per reference under `cache`; B128 and the perfect
+    matcher are always recomputed. extra: rows only stage 11b asks for (N_ALL)."""
     looks128, truth, fan, refs, vis_fn = paths["128"]
     looks1024 = paths["1024"][0] if paths.get("1024") else None
     cache = Path(cache) if cache else None
     safe = lambda name: "".join(ch if ch.isalnum() or ch in "-_.@" else "_" for ch in name)
-    cp = lambda name, j: (cache / safe(name) / f"r{j:04d}.npz") if cache else None
+    cp = lambda name, j: (cache / safe(ROW_ALIAS.get(name, name)) / f"r{j:04d}.npz") if cache else None
     want = set(rows) if rows else None
-    on = lambda name: want is None or name in want
+    on = lambda name: (want is None and name not in (N_ALL,)) or (want is not None and name in want) or name in extra
     R = {}
 
     def per(name, fn):
@@ -274,7 +282,7 @@ def run(paths, m4=None, cache=None, rows=None, assess_record=None, log=print, de
     per_ref = {j: o["m"] for j, o in b128.items()}
     R["B128"] = {j: {k: v for k, v in o.items() if k != "m"} for j, o in b128.items()}
     log(f"[stage11] B128: {sum(o['accepted'] for o in R['B128'].values())} accepted")
-    if on("perfect"):
+    if on("perfect") or "perfect" in extra:
         tt = time.perf_counter()
         R["perfect"] = perfect_points(looks128, truth, fan, refs, vis_fn)
         log(f"[stage11] perfect ({time.perf_counter() - tt:.0f} s)")
@@ -285,7 +293,8 @@ def run(paths, m4=None, cache=None, rows=None, assess_record=None, log=print, de
         per("N1024 mirrored (C3 control)", lambda j: n_reference(looks1024, truth, j, fan, mirror=True, dev=dev))
         per("N1024 +/-0.2 m", lambda j: n_reference(looks1024, truth, j, fan, offsets=WIN_SHORT, dev=dev))
         per("B1024 on 11 looks", lambda j: b_short(looks1024, truth, j, fan))
-        per("B cost on N's pixels and frames, 1024", lambda j: b_short(looks1024, truth, j, fan, all_pixels=True))
+        per(B_ALL, lambda j: b_short(looks1024, truth, j, fan, all_pixels=True))
+        per(N_ALL, lambda j: n_reference(looks1024, truth, j, fan, dev=dev, keep_all=True))
         if "N1024" in R and "B1024" in R and on("N1024 on B's anchors"):
             sub = {}
             for j in refs:
@@ -300,6 +309,16 @@ def run(paths, m4=None, cache=None, rows=None, assess_record=None, log=print, de
         a = assign_m4(lst, looks128, refs)
         R[f"M4@{spp}"] = a
         log(f"[stage11] M4@{spp}: references {sorted((o['r'], j, round(o['offset_m'], 4)) for j, o in a.items())}")
+    return R, per_ref
+
+
+def run(paths, m4=None, cache=None, rows=None, assess_record=None, log=print, dev=None):
+    """paths: {"128": (looks, truth, fan, refs, vis_fn), "1024": (looks, truth, fan, refs, vis_fn) or None}; the truth
+    and visibility used are the 128 run's. m4: {"1024": [m4 refs], "128": [...]} (m4_points output). rows: names to
+    compute (default all). assess_record: stage 9's assess.json (C0). Returns the record."""
+    t0 = time.perf_counter()
+    looks128, truth, fan, refs, vis_fn = paths["128"]
+    R, per_ref = collect(paths, m4, cache, rows, log, dev)
     # scoring
     out = {"references": refs, "rows": {}, "bands": {k: v for k, v in BANDS.items()}}
     surfs = {b: surface_band(per_ref, truth, looks128, rng) for b, rng in BANDS.items()}
@@ -412,6 +431,266 @@ def table(out):
             lines.append(f"| {name} | {b} | {s['cells']} | {f(s['right'], 2)} | {f(s['coverage'])} | "
                          f"{f(s.get('covers_of_perfect'))} | {f(s.get('accepted_share'))} | {f(s.get('accepted_surface_right'))} |")
     return lines
+
+
+# ------------------------------------------------------------------------- stage 11b: the breakdown (#26, 2026-11-21)
+
+RANGE_BINS = {"< 1 m": (0.0, 1.0), "1-2 m": (1.0, 2.0), "2-3 m": (2.0, 3.0), ">= 3 m": (3.0, 99.0)}     # stage 9's
+TEXTURE_BINS = {"< 0.02": (0.0, 0.02), "0.02-0.05": (0.02, 0.05), "0.05-0.1": (0.05, 0.1), "0.1-0.2": (0.1, 0.2),
+                ">= 0.2": (0.2, np.inf)}
+SNR_BINS = {"< 1": (0.0, 1.0), "1-3": (1.0, 3.0), "3-10": (3.0, 10.0), ">= 10": (10.0, np.inf)}
+CEILINGS = {"perfect where signal texture >= 0.02": ("texture", 0.02), "perfect where gradient SNR >= 3": ("snr", 3.0)}
+SPP_RATIO = 8.0                                        # 1024 / 128; Cycles' noise scales as 1/sqrt(spp) (no adaptive
+                                                       # sampling, no denoiser: fov-render bl/config.py)
+
+
+def attributes(paths, refs, dev=None):
+    """Per reference j, rasters (H, W): psi (deg from the heading), true range, depth edge (stage 9's: max/min true
+    range over +/-2 px > 1.10), and texture along the trace by M4's measure on the 7 x 3 angular patch of N:
+    - raw: rms of the half-pixel differences along the trace over the patch mean, on the 1024-spp reference;
+    - signal: the same with the noise's share removed. D = I128 / g - I1024 (g the least-squares gain between the two
+      runs' scalings) has variance (SPP_RATIO + 1) sigma_1024^2, so the noise's share of the mean squared difference is
+      that of D over (SPP_RATIO + 1); the same operator on both images, so interpolation cancels;
+    - snr: the signal's rms difference over the noise's.
+    The 1024 run is the texture's; the truth is the 128 run's."""
+    import torch
+    looks128, truth, fan, _, _ = paths["128"]
+    looks1024 = paths["1024"][0]
+    dev = dev or nt.device()
+    W = fan.width
+    H = W // 2
+    res = 2 * np.pi / W
+    s = nt.SETTINGS
+    a, b = nt._patch(s, torch.float64, dev)
+    out = {}
+    rows, cols = np.mgrid[0:H, 0:W]
+    lon = (cols + 0.5) / W * 2 * np.pi - np.pi
+    lat = (0.5 - (rows + 0.5) / H) * np.pi
+    vloc = np.stack([np.sin(lon) * np.cos(lat), np.sin(lat), -np.cos(lon) * np.cos(lat)], -1).reshape(-1, 3)
+    for j in refs:
+        c, R = looks128[j][1], looks128[j][2]
+        P, idx = truth[j]
+        u = vloc @ R.T
+        pen = nt.Pencil(-R[:, 2])
+        psi, om = pen.coords(u)
+        rng = np.where(idx.ravel() >= 0, np.linalg.norm(P[np.maximum(idx.ravel(), 0)] - c, axis=-1), np.nan).reshape(H, W)
+        mx, mn = np.zeros((H, W)), np.full((H, W), np.inf)
+        for dr in range(-2, 3):
+            for dc in range(-2, 3):
+                sh = rng[np.clip(np.arange(H) + dr, 0, H - 1)][:, (np.arange(W) + dc) % W]
+                mx, mn = np.fmax(mx, sh), np.fmin(mn, sh)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            edge = (mx / mn) > mt.EDGE_RATIO
+        I1, I8 = np.asarray(looks1024[j][3], float), np.asarray(looks128[j][3], float)
+        ok = np.isfinite(I1) & np.isfinite(I8)
+        g = float((I8[ok] * I1[ok]).sum() / (I1[ok] ** 2).sum())
+        D = I8 / g - I1
+        T = lambda x: torch.as_tensor(x, dtype=torch.float64, device=dev)
+        I1t, Dt = T(I1), T(D)
+        ct, Rt = T(c), T(R)
+        tex_raw, tex_sig, snr = (np.full(H * W, np.nan) for _ in range(3))
+        ps, os_ = T(psi), T(om)
+        for a0 in range(0, H * W, 40000):
+            b0 = min(H * W, a0 + 40000)
+            p_, o_ = ps[a0:b0], os_[a0:b0]
+            U0 = nt.patch_dirs(pen, p_, o_, a, b, res)
+            Up = nt.patch_dirs(pen, p_ + 0.5 * res, o_, a, b, res)
+            Um = nt.patch_dirs(pen, p_ - 0.5 * res, o_, a, b, res)
+            A = nt.sample_world(I1t, ct + U0, ct, Rt, W)
+            gI = nt.sample_world(I1t, ct + Up, ct, Rt, W) - nt.sample_world(I1t, ct + Um, ct, Rt, W)
+            gD = nt.sample_world(Dt, ct + Up, ct, Rt, W) - nt.sample_world(Dt, ct + Um, ct, Rt, W)
+            m2, n2 = (gI ** 2).mean(1), (gD ** 2).mean(1) / (SPP_RATIO + 1.0)
+            mean = torch.abs(A.mean(1))
+            tex_raw[a0:b0] = (torch.sqrt(m2) / mean).cpu().numpy()
+            sig = torch.sqrt(torch.clamp(m2 - n2, min=0.0))
+            tex_sig[a0:b0] = (sig / mean).cpu().numpy()
+            snr[a0:b0] = (sig / torch.sqrt(torch.clamp(n2, min=1e-30))).cpu().numpy()
+        out[j] = {"psi": np.degrees(psi).reshape(H, W), "range": rng, "edge": edge, "texture_raw": tex_raw.reshape(H, W),
+                  "texture": tex_sig.reshape(H, W), "snr": snr.reshape(H, W), "gain_128_over_1024": g}
+    return out
+
+
+def point_pixels(X, c, R, W):
+    """The panorama pixel of reference (c, R) that sees each world point (row, col), nearest centre."""
+    H = W // 2
+    v = (X - c) @ R
+    n = np.linalg.norm(v, axis=-1)
+    lon = np.arctan2(v[:, 0], -v[:, 2])
+    lat = np.arcsin(np.clip(v[:, 1] / np.maximum(n, 1e-12), -1, 1))
+    col = np.mod(np.rint((lon / (2 * np.pi) + 0.5) * W - 0.5), W).astype(np.int64)
+    row = np.clip(np.rint((0.5 - lat / np.pi) * H - 0.5), 0, H - 1).astype(np.int64)
+    return np.stack([row, col], -1)
+
+
+def classify(attr, j, px, kind):
+    """The value of the class `kind` at reference j's pixels px."""
+    A = attr[j]
+    key = {"sector": "psi", "range": "range", "texture": "texture", "snr": "snr", "edge": "edge"}[kind]
+    return A[key][px[:, 0], px[:, 1]]
+
+
+CLASSES = {"sector": mt.SECTORS, "range": RANGE_BINS, "edge": {"at depth edges": True, "interior": False},
+           "texture": TEXTURE_BINS, "snr": SNR_BINS}
+
+
+def _in(v, rng):
+    if isinstance(rng, bool):
+        return v.astype(bool) == rng
+    with np.errstate(invalid="ignore"):
+        return (v >= rng[0]) & (v < rng[1])
+
+
+def surface_where(per_ref, truth, attr, kind, rng):
+    """assess.surface's cells from the true points (every 2nd pixel, |elevation| < 70 deg) whose reference pixel is in
+    the class."""
+    pts = []
+    for j in per_ref:
+        P, idx = truth[j]
+        H, W = idx.shape
+        rows = np.arange(0, H, 2)
+        lat = (0.5 - (rows + 0.5) / H) * np.pi
+        rows = rows[np.abs(lat) < e2e.LAT_MAX]
+        rr, cc = np.meshgrid(rows, np.arange(0, W, 2), indexing="ij")
+        px = np.stack([rr.ravel(), cc.ravel()], -1)
+        q = idx[px[:, 0], px[:, 1]]
+        keep = (q >= 0) & _in(classify(attr, j, px, kind), rng)
+        pts.append(P[q[keep]])
+    S = np.concatenate(pts) if pts else np.zeros((0, 3))
+    S = S[np.all(np.isfinite(S), 1)]
+    if len(S) == 0:
+        return np.zeros(0, np.int64), np.zeros((0, 3))
+    code = e2e._encode(e2e._keys(S))
+    uc, inv = np.unique(code, return_inverse=True)
+    rep = np.zeros((len(uc), 3))
+    np.add.at(rep, inv, S)
+    rep /= np.bincount(inv)[:, None]
+    return uc, rep
+
+
+def score_where(row, per_ref, truth, fan, surf, attr, kind, rng, looks, perfect_cov=None):
+    """score() for the points whose reference pixel is in the class."""
+    W = fan.width
+    Xs, refs_of = [], []
+    for j, o in row.items():
+        if len(o["X"]) == 0:
+            continue
+        px = point_pixels(o["X"], looks[j][1], looks[j][2], W)
+        sel = _in(classify(attr, j, px, kind), rng)
+        Xs.append(o["X"][sel])
+        refs_of.append(np.full(int(sel.sum()), j))
+    if sum(len(x) for x in Xs) == 0:
+        Xf, right = np.zeros((0, 3)), np.zeros(0, bool)
+    else:
+        _, _, Xf, nref, dom, right, _ = asx.fuse_and_judge(Xs, refs_of, per_ref, truth, fan)
+    cov = asx.covered(surf[1], Xf[right]) if len(Xf) and len(surf[1]) else np.zeros(len(surf[1]), bool)
+    out = {"cells": int(len(Xf)), "right": float(right.mean()) if len(Xf) else None,
+           "coverage": float(cov.mean()) if len(cov) else None, "surface_cells": int(len(surf[1]))}
+    if perfect_cov is not None and perfect_cov.any():
+        out["covers_of_perfect"] = float((cov & perfect_cov).sum() / perfect_cov.sum())
+        out["gap_cells"] = int((perfect_cov & ~cov).sum())
+    return out, cov
+
+
+def ceiling_rows(R, attr, looks, fan):
+    """The perfect matcher kept only where an image could carry a match (CEILINGS)."""
+    out = {}
+    W = fan.width
+    for name, (kind, thr) in CEILINGS.items():
+        row = {}
+        for j, o in R["perfect"].items():
+            px = point_pixels(o["X"], looks[j][1], looks[j][2], W)
+            with np.errstate(invalid="ignore"):
+                sel = classify(attr, j, px, kind) >= thr
+            row[j] = {"j": j, "X": o["X"][sel], "psi": o["psi"][sel], "tried": o["tried"], "accepted": int(sel.sum()),
+                      "right_acc": None}
+        out[name] = row
+    return out
+
+
+def breakdown(paths, m4=None, cache=None, assess_record=None, log=print, dev=None):
+    """Stage 11b: every row of stage 11 by class (CLASSES), the two ceilings, and N1024's rejection reasons by class.
+    From the cache; adds only N_ALL (N1024 re-run keeping every anchor's reason)."""
+    t0 = time.perf_counter()
+    looks128, truth, fan, refs, vis_fn = paths["128"]
+    R, per_ref = collect(paths, m4, cache, None, log, dev, extra=(N_ALL, "perfect"))
+    consistency = {}
+    if assess_record is not None:
+        st = assess_record["numbers"]["straight"]
+        surf = surface_band(per_ref, truth, looks128, None)
+        for name, key in (("B128", "real"), ("perfect", "perfect")):
+            s_, _ = score(R[name], per_ref, truth, fan, surf, None)
+            consistency[name] = {"right": s_["right"], "coverage": s_["coverage"],
+                                 "equal_to_stage9": abs(s_["right"] - st[key]["right"]) <= 1e-12
+                                 and abs(s_["coverage"] - st[key]["coverage"]) <= 1e-12}
+        log(f"[stage11b] consistency with stage 9 (C0's numbers again): {consistency}")
+    tt = time.perf_counter()
+    attr = attributes(paths, refs, dev)
+    log(f"[stage11b] attributes ({time.perf_counter() - tt:.0f} s); gains 128/1024: "
+        f"{[round(attr[j]['gain_128_over_1024'], 4) for j in refs]}")
+    R.update(ceiling_rows(R, attr, looks128, fan))
+    reasons = R.pop(N_ALL)
+    out = {"references": refs, "classes": {k: {b: (list(v) if not isinstance(v, bool) else v) for b, v in c.items()}
+                                           for k, c in CLASSES.items()},
+           "ceilings": {k: list(v) for k, v in CEILINGS.items()}, "consistency": consistency, "by_class": {},
+           "n1024_reasons_by_class": {}, "texture_distribution": {}}
+    for kind, bins in CLASSES.items():
+        out["by_class"][kind] = {}
+        for bname, rng in bins.items():
+            surf = surface_where(per_ref, truth, attr, kind, rng)
+            entry = {"surface_cells": int(len(surf[1])), "rows": {}}
+            s_p, pcov = score_where(R["perfect"], per_ref, truth, fan, surf, attr, kind, rng, looks128)
+            entry["rows"]["perfect"] = s_p
+            for name, row in R.items():
+                if name in ("perfect", "N1024 mirrored (C3 control)"):
+                    continue
+                s_, _ = score_where(row, per_ref, truth, fan, surf, attr, kind, rng, looks128, pcov)
+                entry["rows"][name] = s_
+            out["by_class"][kind][bname] = entry
+        log(f"[stage11b] {kind} ({time.perf_counter() - t0:.0f} s)")
+        # N1024's rejection reasons by class
+        tab = {}
+        for bname, rng in bins.items():
+            cnt = np.zeros(len(nt.REASONS), np.int64)
+            for j, o in reasons.items():
+                sel = _in(classify(attr, j, o["px_all"].astype(np.int64), kind), rng)
+                cnt += np.bincount(o["reason_all"][sel].astype(np.int64), minlength=len(nt.REASONS))
+            tot = int(cnt.sum())
+            tab[bname] = {"anchors": tot, **{nt.REASONS[k]: (int(cnt[k]), float(cnt[k] / tot) if tot else None)
+                                             for k in range(len(nt.REASONS)) if cnt[k]}}
+        out["n1024_reasons_by_class"][kind] = tab
+    # how the surface's pixels are textured, raw against signal (the noise's share of M4's measure)
+    for kind in ("texture_raw", "texture", "snr"):
+        v = np.concatenate([attr[j][kind][np.abs(attr[j]["psi"]) >= 0][::7] for j in refs])
+        v = v[np.isfinite(v)]
+        out["texture_distribution"][kind] = {f"p{q}": float(np.quantile(v, q / 100)) for q in (10, 25, 50, 75, 90)}
+    out["gains_128_over_1024"] = {str(j): attr[j]["gain_128_over_1024"] for j in refs}
+    out["seconds"] = round(time.perf_counter() - t0, 1)
+    return out
+
+
+def breakdown_tables(out, rows=("perfect", "perfect where signal texture >= 0.02", "perfect where gradient SNR >= 3",
+                                "B1024", "N1024", B_ALL, "N1024 +/-0.2 m", "M4@1024")):
+    """The breakdown as markdown: coverage (cells right) per class and row, and N1024's main rejections."""
+    f = lambda x, p=1: "—" if x is None else f"{100 * x:.{p}f}"
+    L = []
+    for kind, bins in out["by_class"].items():
+        L += [f"### by {kind}", "", "| row | " + " | ".join(f"{b} ({e['surface_cells']} cells)" for b, e in bins.items()) + " |",
+              "|---|" + "---|" * len(bins)]
+        for r in rows:
+            cells = []
+            for b, e in bins.items():
+                s = e["rows"].get(r)
+                cells.append("—" if s is None else f"{f(s['coverage'])} % ({f(s['right'], 1)} %)")
+            L.append(f"| {r} | " + " | ".join(cells) + " |")
+        L += ["", f"N1024's rejections by {kind} (share of the anchors tried):", "",
+              "| reason | " + " | ".join(bins) + " |", "|---|" + "---|" * len(bins)]
+        tab = out["n1024_reasons_by_class"][kind]
+        names = [n for n in nt.REASONS if any(n in tab[b] for b in bins)]
+        for n in names:
+            L.append(f"| {n} | " + " | ".join(f(tab[b][n][1]) + " %" if n in tab[b] else "—" for b in bins) + " |")
+        L.append(f"| anchors | " + " | ".join(str(tab[b]["anchors"]) for b in bins) + " |")
+        L.append("")
+    return L
 
 
 # ------------------------------------------------------------------------------- the dry run: a synthetic room
