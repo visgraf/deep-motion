@@ -1,6 +1,6 @@
 {
  "command": "standard-selftest",
- "standard": "S1",
+ "standard": "S2",
  "checks": [
   {
    "module": "standard",
@@ -36,6 +36,24 @@
    "control": "1,000 cells all right are not 'not evaluated'",
    "control_fails": true,
    "control_value": "pass"
+  },
+  {
+   "module": "standard",
+   "name": "G4: a sector under 1,000 cells is listed as unverified, not blocking (S2)",
+   "ok": true,
+   "value": {
+    "result": "pass",
+    "unverified": [
+     "165-180"
+    ],
+    "165-180": 939
+   },
+   "control": "an evaluated sector at 97 % (overall above 99.5 %)",
+   "control_fails": true,
+   "control_value": {
+    "result": "fail",
+    "overall": 0.9951666666666666
+   }
   },
   {
    "module": "standard",
@@ -170,11 +188,34 @@
      false
     ]
    }
+  },
+  {
+   "module": "stage12",
+   "name": "Z3: an estimate 1.5 cm away in another cell supports under 'within 2 cm' only",
+   "ok": true,
+   "value": {
+    "same cell": [
+     true,
+     false
+    ],
+    "within 2 cm": [
+     true,
+     true
+    ]
+   },
+   "control": "3 cm away",
+   "control_fails": true,
+   "control_value": {
+    "within 2 cm": [
+     true,
+     false
+    ]
+   }
   }
  ],
  "computed_by": {
   "deep-motion": {
-   "commit": "fc4e9e44ccadc050b208d0281a84636ea34fc23a",
+   "commit": "a84fe8aca467c64b375887aaf9a33a561a628682",
    "clean": true
   }
  }
