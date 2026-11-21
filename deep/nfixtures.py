@@ -195,9 +195,9 @@ def main(out: Path, names=None):
     import subprocess
     import torch
     t0 = time.perf_counter()
-    res = run_all(names=names)
     git = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     dirty = bool(subprocess.run(["git", "status", "--porcelain", "deep"], capture_output=True, text=True).stdout.strip())
+    res = run_all(names=names)                                  # git is read before the run (#26's C1 record)
     res.update({"schema": "deep-motion-stage11-c1-v1", "computed_at": {"commit": git, "deep_dirty": dirty},
                 "machine": platform.node(), "torch": torch.__version__, "seconds": round(time.perf_counter() - t0, 1)})
     out = Path(out)
