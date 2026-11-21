@@ -1113,3 +1113,26 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
 - **C3:** at 1024 spp on the full field, N covers at least twice B's coverage, at cells right at most 2 points below B's.
   - Its control: N with the mirrored path's poses must fall below 50 % right.
 - **The variant with a one-pixel patch** has no ZNCC, so it is redefined as N with B's per-look cost.
+
+**Results** (#26; stage 11 at `dade15d`, 11b at `0b9d4f2`, 11c at `b19b525`; Classroom numbers measured by Code on the workstation; records in `docs/runs/dm-issue-26/`).
+- **C0–C3 pass, and every control fails as it must.**
+  - C0: stage 9 is reproduced exactly.
+  - C1: N passes M4's fixture gates on the panorama (Chat sandbox).
+  - C2: between 18° and 44°, N covers 33.8 % against M4's 35.5 %, at 99.25 % right against 98.53 %.
+  - C3: N covers 21.6 % of the full field against B's 10.1 %.
+- **The coordinates are not the cause.** With the same matcher at the same noise, the panorama does what the Foveated sensor does outside the fovea. Inside 18°, the fovea's finer pixels win: 75.7 % against 50.4 %.
+- **The impression that M4 works and deep-motion does not rested on three confounds:**
+  - **B was a much weaker matcher.** One pixel, no photometric model, and an anchor rule that picks depth edges.
+  - **Deep-motion's real matcher was judged at 128 spp, M4 always at 1024.** At 128 spp M4 itself halves, from 41.9 % to 22.7 %, and fails its own gate.
+  - **The perfect matcher ignores the image.** M4 was never measured against it.
+- **The noise floor.** Even at 1024 spp, half of the surface's pixels have a gradient SNR under 1.65, though the texture is there (median 0.081).
+  - Below SNR 1, NCC < 0.8 rejects 72–92 % of N's anchors at every range.
+  - Much of the perfect matcher's 80 % is coverage no photometric matcher can reach from these renders.
+- **M4's depth-edge tolerance does not carry over.** 0.5 px of the longest step's displacement is about five times stricter in depth to the side than in M4's cone (estimated).
+  - At 10 % of ζ (stage 9's edge ratio), N covers 29.6 % of the full field at 95.16 % right, 2.9 times B1024's coverage at higher precision.
+  - In 18–44° it covers 41.7 % at 98.22 % right, against M4's 35.5 % at 98.53 %.
+  - Near the heading 10 % is the stricter tolerance: 40.6 % in 1–18° at 99.92 % right.
+- **To the side, at the same SNR, near surfaces fail NCC most.** At SNR 3–10, NCC rejects 44 % in 60–120° against 13 % in 15–60°, and 41 % at 1–2 m against 18 % at ≥ 3 m.
+  - This points to the change of appearance over the window, a viewpoint sweep of about 31° at 1.8 m, which N's patch model (shift, slope along the trace, gain and offset) does not capture.
+  - In the Classroom, range and sector are confounded.
+  - At high SNR to the side every matcher is only 75–88 % right. Code reads these as likely occlusion boundaries; that is not measured.
