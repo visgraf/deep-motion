@@ -25,8 +25,17 @@ Two translations, said here:
 - M4's coarse zeta step uses the largest px per unit zeta over its grid (the fovea's); N's is 1 / res (psi = 90 deg),
   the panorama's largest. Both are first order at zeta = 0, as M4's.
 
-Straight paths only: every frame must share the reference's rotation and lie on its heading line (the analogue of
-#5's alignment gate, checked in match_reference).
+Straight paths: every frame shares the reference's rotation and lies on its heading line (the analogue of #5's
+alignment gate, checked in match_reference); N runs as at #26.
+
+Curved paths (stage 14, #34, accepted by Luiz on 2026-11-21): where the gate fails (or `general=True`), the coarse search
+takes one pencil per frame, about the baseline e_k = (c_k - c_r) / t_k from the reference to frame k. Both images are
+sampled on that pencil by world direction, so frame k's rotation is undone exactly and the motion is a pure translation
+t_k along e_k: the row-shift law holds per frame with t_k > 0. Each anchor's curve for frame k is read at its own row and
+column of that frame's grid, and the curves are averaged over the frames as on a line. Pixels per unit zeta become, per
+anchor, the largest over the frames of t_k sin(angle to e_k) / res (on a line, t_max sin psi / res). The fine fit, the
+patch (laid out on the reference's heading pencil) and every threshold are unchanged. On a line the per-frame grids are
+N's own directions (mirrored for the frames behind), so the forced general path gives N's results back (check G0).
 """
 from __future__ import annotations
 
@@ -159,6 +168,38 @@ class Grid:
         R_t = torch.as_tensor(R, dtype=self.dirs.dtype, device=self.dirs.device)
         r, col = pix_of(self.dirs @ R_t, self.W)
         return bilinear(img, r, col)
+
+
+def coarse_general(Ir, Is, c_r, R_r, poses, u, zetas, s, W, dev, dt):
+    """Stage 14 (#34): the coarse curves of anchors (unit world rays u, (N, 3)) on one pencil per frame. Returns the
+    per-anchor mean NCC over the frames with a full window (N, n_zeta), nan where under min_frames, and the per-anchor
+    pixels per unit zeta (N,) of the longest baseline component across the ray."""
+    T = lambda x: torch.as_tensor(np.asarray(x, np.float64), dtype=dt, device=dev)
+    res = 2 * math.pi / W
+    N, Z = len(u), len(zetas)
+    tot = torch.zeros((N, Z), dtype=torch.float32, device=dev)
+    cnt = torch.zeros((N, Z), dtype=torch.int16, device=dev)
+    geq = np.zeros(N)
+    for Ik, (ck, Rk) in zip(Is, poses):
+        b = np.asarray(ck, float) - c_r
+        tk = float(np.linalg.norm(b))
+        e = b / tk
+        geq = np.maximum(geq, tk * np.sqrt(np.clip(1.0 - (u @ e) ** 2, 0.0, 1.0)) / res)
+        pen = Pencil(e)
+        grid = Grid(pen, W, dev, dt)
+        Jr, Jk = grid.unwrap(Ir, c_r, R_r), grid.unwrap(Ik, ck, Rk)
+        psi_k, om_k = pen.coords(u)
+        ir = np.clip(np.rint(psi_k / res - 0.5).astype(int), 0, grid.n_psi - 1)
+        ic = np.mod(np.rint((om_k + np.pi) / res - 0.5).astype(int), grid.n_om)
+        lo, hi = int(ir.min()), int(ir.max())
+        rows = torch.tensor(np.arange(lo, hi + 1), device=dev)
+        total, count = coarse_curves(Jr, [Jk], [tk], zetas, grid, rows, s)
+        ir_t, ic_t = torch.tensor(ir - lo, device=dev), torch.tensor(ic, device=dev)
+        tot += total[ir_t, ic_t]
+        cnt += count[ir_t, ic_t]
+        del total, count, Jr, Jk, grid
+    C = torch.where(cnt >= s["min_frames"], tot / torch.clamp(cnt.float(), min=1), torch.full_like(tot, float("nan")))
+    return C, geq
 
 
 def coarse_curves(Jr, Js, ts, zetas, grid: Grid, rows, s):
@@ -370,46 +411,59 @@ def anchor_pixels(img_r, R_r, W, s, mask=None):
     return np.stack([rows[sel], cols[sel]], -1), u[sel]
 
 
-def match_reference(img_r, c_r, R_r, imgs, poses, W, settings=None, dev=None, mask=None, ts_override=None):
+def match_reference(img_r, c_r, R_r, imgs, poses, W, settings=None, dev=None, mask=None, ts_override=None, general=None):
     """N at one reference. img_r and imgs: luminance panoramas (numpy, nan where nothing is hit); c_r, R_r the
     reference's pose; poses [(c_k, R_k)] the frames' (the mirrored control passes them mirrored). mask: optional
-    (H, W) bool restricting the anchors. Returns per anchor numpy arrays, M4's fields and N's."""
+    (H, W) bool restricting the anchors. general: None for the line's path where the frames are on the reference's line
+    and the per-frame pencils elsewhere (stage 14); True forces the per-frame pencils (check G0); False forces the line
+    (refused off the line, as at #26). Returns per anchor numpy arrays, M4's fields and N's."""
     s = dict(SETTINGS, **(settings or {}))
     dev = dev or device()
     dt = torch.float64
     c_r, R_r = np.asarray(c_r, float), np.asarray(R_r, float)
     al = alignment(c_r, R_r, poses, s["align_tol"])
-    if not al["ok"]:
+    if general is None:
+        general = not al["ok"]
+    if not al["ok"] and not general:
         raise ValueError(f"[N] refused: the frames are not on the reference's line ({al})")
+    if general and ts_override is not None:
+        raise ValueError("[N] ts_override is the line's control; on the per-frame path, pass the poses to test")
     h = -R_r[:, 2]
-    ts = [float((np.asarray(c, float) - c_r) @ h) for c, _ in poses] if ts_override is None else list(ts_override)
+    if general:
+        ts = [float(np.linalg.norm(np.asarray(c, float) - c_r)) for c, _ in poses]       # each frame's baseline
+    else:
+        ts = [float((np.asarray(c, float) - c_r) @ h) for c, _ in poses] if ts_override is None else list(ts_override)
     tmax = max(abs(t) for t in ts)
     res = 2 * math.pi / W
     pencil = Pencil(h)
-    grid = Grid(pencil, W, dev, dt)
     T = lambda x: torch.as_tensor(np.asarray(x, np.float64), dtype=dt, device=dev)
     Ir, Is = T(img_r), [T(x) for x in imgs]
     cr_t, Rr_t = T(c_r), T(R_r)
     frames = [(T(c), T(R)) for c, R in poses]
-    Jr = grid.unwrap(Ir, c_r, R_r)
-    Js = [grid.unwrap(I, c, R) for I, (c, R) in zip(Is, poses)]
     zmin, zmax = s["z_envelope_m"]
     dz = s["zeta_step_px"] * res / tmax                                  # 0.5 px at the largest px per zeta, 1 / res
     zetas = list(np.arange(0.0, 1.0 / zmin + dz, dz))
     px, u = anchor_pixels(img_r, R_r, W, s, mask)
     psi_a, om_a = pencil.coords(u)
-    ir = np.clip(np.rint(psi_a / res - 0.5).astype(int), 0, grid.n_psi - 1)
-    ic = np.mod(np.rint((om_a + np.pi) / res - 0.5).astype(int), grid.n_om)
-    urow = np.unique(ir)
-    rows = torch.tensor(np.arange(urow.min(), urow.max() + 1), device=dev)
-    total, count = coarse_curves(Jr, Js, ts, zetas, grid, rows, s)
-    C = torch.where(count >= s["min_frames"], total / torch.clamp(count.float(), min=1), torch.full_like(total, float("nan")))
-    ir_t, ic_t = torch.tensor(ir - urow.min(), device=dev), torch.tensor(ic, device=dev)
-    curves = C[ir_t, ic_t]
+    if general:                                                          # stage 14: one pencil per frame
+        curves, geq = coarse_general(Ir, Is, c_r, R_r, poses, u, zetas, s, W, dev, dt)
+        total = count = C = None
+    else:
+        grid = Grid(pencil, W, dev, dt)
+        Jr = grid.unwrap(Ir, c_r, R_r)
+        Js = [grid.unwrap(I, c, R) for I, (c, R) in zip(Is, poses)]
+        ir = np.clip(np.rint(psi_a / res - 0.5).astype(int), 0, grid.n_psi - 1)
+        ic = np.mod(np.rint((om_a + np.pi) / res - 0.5).astype(int), grid.n_om)
+        urow = np.unique(ir)
+        rows = torch.tensor(np.arange(urow.min(), urow.max() + 1), device=dev)
+        total, count = coarse_curves(Jr, Js, ts, zetas, grid, rows, s)
+        C = torch.where(count >= s["min_frames"], total / torch.clamp(count.float(), min=1), torch.full_like(total, float("nan")))
+        ir_t, ic_t = torch.tensor(ir - urow.min(), device=dev), torch.tensor(ic, device=dev)
+        curves = C[ir_t, ic_t]
+        geq = tmax * np.sin(psi_a) / res                                 # px per unit zeta at the longest step
     cz = torch.nan_to_num(curves, nan=-2.0)
     j1 = torch.argmax(cz, 1)
     c1 = cz.gather(1, j1[:, None])[:, 0]
-    geq = tmax * np.sin(psi_a) / res                                     # px per unit zeta at the longest step
     excl = torch.tensor(np.ceil(s["excl_px"] / (geq * dz)), device=dev)
     Z = len(zetas)
     jj = torch.arange(Z, device=dev)[None, :]
@@ -494,7 +548,7 @@ def match_reference(img_r, c_r, R_r, imgs, poses, W, settings=None, dev=None, ma
             "sigma_px": sig * geq, "n_frames": fit["n_frames"], "ncc_coarse": c1n, "ncc_second": c2n, "zeta_coarse": z0,
             "texture": fit["texture"], "support": support, "edge_dev_px": edge_dev, "edge_dev_rel": edge_rel,
             "reason_pre_edge": reason_pre_edge, "px_per_zeta": geq, "reason": reason,
-            "ts": np.asarray(ts), "zeta_step": dz, "n_zeta": Z, "settings": s, "alignment": al}
+            "ts": np.asarray(ts), "zeta_step": dz, "n_zeta": Z, "settings": s, "alignment": al, "general": bool(general)}
 
 
 # ----------------------------------------------------------------------------- selftest (numpy and torch, no renders)

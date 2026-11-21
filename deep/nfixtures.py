@@ -37,9 +37,10 @@ GATE = dict(fx.GATE)
 FORWARD_PSI = (1.0, 44.0)
 
 
-def render(planes, c, W=W, ss=SS, noise=NOISE, seed=0):
-    """The panorama (H, W) of luminance a look at c (rotation R_EYE) sees of the planes, box-filtered over ss x ss
-    sub-pixel rays; nan where any sub-ray misses."""
+def render(planes, c, W=W, ss=SS, noise=NOISE, seed=0, R=None):
+    """The panorama (H, W) of luminance a look at c (rotation R, default R_EYE) sees of the planes, box-filtered over
+    ss x ss sub-pixel rays; nan where any sub-ray misses."""
+    R = R_EYE if R is None else np.asarray(R, float)
     H = W // 2
     v, u = np.mgrid[0:H, 0:W].astype(np.float64)
     o = (np.arange(ss) + 0.5) / ss - 0.5
@@ -49,7 +50,7 @@ def render(planes, c, W=W, ss=SS, noise=NOISE, seed=0):
         vv, uu = v[r0:r0 + 45, :, None] + oi.reshape(-1), u[r0:r0 + 45, :, None] + oj.reshape(-1)
         lon = ((uu + 0.5) / W - 0.5) * 2 * np.pi
         lat = (0.5 - (vv + 0.5) / H) * np.pi
-        d = np.stack([np.sin(lon) * np.cos(lat), np.sin(lat), -np.cos(lon) * np.cos(lat)], -1) @ R_EYE.T
+        d = np.stack([np.sin(lon) * np.cos(lat), np.sin(lat), -np.cos(lon) * np.cos(lat)], -1) @ R.T
         _, _, val = fx._hit(planes, np.asarray(c, float), d)
         full = np.isfinite(val).all(-1)
         out[r0:r0 + 45] = np.where(full, np.where(full[..., None], val, 0.0).mean(-1), np.nan)

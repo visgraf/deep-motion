@@ -391,6 +391,8 @@ def standard_selftest(a) -> int:
         from . import confirm as cf, coverage as cv
         res += [("stage12", r) for r in cf.selftest()]
         res += [("stage13a", r) for r in cv.selftest()]
+        from . import arcfixtures as af
+        res += [("stage14", r) for r in af.selftest()]
     except ImportError as e:                                    # deep/confirm.py needs torch (via ntrace)
         print(f"{PREFIX} stage12 span logic not run: {e}")
     for who, (name, ok, val, cname, cfail, cval) in res:
@@ -631,6 +633,31 @@ def stage13a(a) -> int:
     return 1 if bad or std["check_record"] else 0
 
 
+def stage14_fixtures(a) -> int:
+    """#34, G1: M4's fixtures along an arc, N's per-frame path, M4's gates and two controls."""
+    _torch_threads()
+    import time as _t
+    from . import arcfixtures as af, standard as sd
+    t0 = _t.perf_counter()
+    git = {"deep-motion": _git(REPO)}                           # read before the run
+    res = af.run_all(log=lambda m: print(f"{PREFIX} {m}", flush=True), names=a.only)
+    res.update(sd.stamp("fixture", {"scene": "M4's fixtures (deep/nfixtures.py)", "step_m": 0.10, "frames_each_side": 5,
+                                    "gates": "M4's fixture gates"},
+                        departures={"scene": "M4's fixtures along an arc of radius 1.0 m (deep/arcfixtures.py, #34)",
+                                    "gates": "M4's fixture gates without the radial wall (#34)"},
+                        controls=["poses of a radius 20 % too large", "scene scaled 1.5x"]))
+    res["computed_by"], res["seconds_total"] = git, round(_t.perf_counter() - t0, 1)
+    import json as _j
+    Path(a.out).mkdir(parents=True, exist_ok=True)
+    (Path(a.out) / "g1_fixtures.json").write_text(_j.dumps(res, indent=1, default=float))
+    for g in res["gates"]:
+        print(f"{PREFIX} G1 {'PASS' if g['ok'] else 'FAIL'} {g['fixture']} {g['label']}: {g}")
+    for c in res["controls"]:
+        print(f"{PREFIX} G1 control {'fails' if c['fails'] else 'DOES NOT FAIL'}: {c['control']}")
+    print(f"{PREFIX} {res['standard']} record: {res['profile']}, problems: {res['check_record'] or 'none'}")
+    return 0 if res["ok"] and res["controls_fail"] and not res["check_record"] else 1
+
+
 def note_figs(a) -> int:
     from . import note_figs as nf
     for f in nf.run(a.out):
@@ -852,6 +879,9 @@ def main(argv=None) -> int:
     p.add_argument("--cache", default=None)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--out", default=None)
+    p = sub.add_parser("stage14-fixtures", help="#34, G1: M4's fixtures along an arc, N's per-frame path (Chat sandbox)")
+    p.add_argument("--out", required=True)
+    p.add_argument("--only", nargs="*", default=None, help="fixture names (a preview; G1 is the full set)")
     p = sub.add_parser("note-figs", help="the Moebius Traces note's schematic figures (formulas only)")
     p.add_argument("--out", required=True)
     p = sub.add_parser("moebius", help="#11: the primitives on the Riemann sphere, checks M1-M4 with controls")
@@ -869,7 +899,7 @@ def main(argv=None) -> int:
     p.add_argument("--limit", type=int, default=None, help="the first n looks only, no orbit, no V1 (a preview)")
     p.add_argument("--best", action="store_true", help="x264 preset slow")
     a = ap.parse_args(argv)
-    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "stage14-fixtures": stage14_fixtures, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
             "stage5a": stage5a}[a.cmd](a)
 
 
