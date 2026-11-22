@@ -1,0 +1,29 @@
+2026-11-21T23:24:57-03:00 $ .venv/bin/python -m deep demo5 --r0 --refs-every 8 --cache runs/demo5-r0-cache --ply-dir runs/demo5-r0 --out runs/demo5-r0-out (at 5f6e111, Chat sandbox; R0's reference re-rendered at the EYE, 256 spp; N from the cache of the run at 9da6a65)
+[deep] [demo5] the judge's windows (85 s)
+[deep] [demo5] the perfect matcher (121 s)
+[deep] [demo5] reference 50: N 34567 + 39459 points (line, line) (0 s)
+[deep] [demo5] reference 130: N 37897 + 39254 points (line, line) (0 s)
+[deep] [demo5] reference 210: N 47731 + 53455 points (per-frame, line) (0 s)
+[deep] [demo5] reference 290: N 28980 + 41695 points (per-frame, per-frame) (0 s)
+[deep] [demo5] look 1: 0 references, perfect 0 cells, map 0 (122 s)
+[deep] [demo5] look 101: 1 references, perfect 46,112 cells, map 31,395 (132 s)
+[deep] [demo5] look 181: 2 references, perfect 87,445 cells, map 71,752 (148 s)
+[deep] [demo5] look 261: 3 references, perfect 127,277 cells, map 126,325 (170 s)
+[deep] [demo5] look 341: 4 references, perfect 162,995 cells, map 162,580 (199 s)
+[deep] S2 record: dry, problems: none
+[deep] PASS V2: the tour is the planned L-curve sampled evenly; control the turn's looks shifted 1 cm sideways: fails
+[deep] PASS V3: both end maps equal their batch fusion (the map with its neighbour filter); control the batch without the last reference: fails
+[deep] PASS V4: nothing shown before its window is complete (m + 50 <= t); control a schedule releasing at m: fails
+[deep] PASS C: the error video's colours (<= 10 %) equal stage 9's cells right on the map; control 5 % in place of 10 %: fails
+[deep] PASS P1 perfect: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] PASS P1 map: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] PASS P1 all: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] control only the standard control: N mirrored must not give a usable map (>= 1,000 cells at >= 97 % right); control N with the mirrored path's poses: fails
+[deep] end perfect: {'cells': 162995, 'right': 0.9999202429522378, 'coverage': 0.8684393361067033, 'gross': 0}
+[deep] end real: {'cells': 162580, 'right': 0.9986283675728872, 'coverage': 0.3886520564395077, 'gross': 122}
+[deep] end every cell N reported: {'cells': 255743, 'right': 0.981590893983413, 'coverage': 0.44485139597718404}
+[deep] validation: on the cells whose dominant reference's window leaves the line (the turn's arc, N's per-frame path), is the map >= 97 % right? yes; references whose window is on one line: {'cells': 84226, 'right': 0.9992995037161921, 'gross': 19}; references whose window leaves the line (the turn's arc): {'cells': 78354, 'right': 0.9979069351915665, 'gross': 103}
+[deep] perfect: {'path': 'runs/demo5-r0/r0_tour_perfect.ply', 'points': 162995, 'mb': 3.42}
+[deep] map: {'path': 'runs/demo5-r0/r0_tour_map.ply', 'points': 162580, 'mb': 3.58}
+[deep] all: {'path': 'runs/demo5-r0/r0_tour_all.ply', 'points': 255743, 'mb': 5.63}
+exit 0
