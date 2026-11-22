@@ -1,0 +1,213 @@
+{
+ "command": "stage14",
+ "checks": [
+  {
+   "check": "G0: N's per-frame path forced on the straight path gives N's line path back (>= 99.9 % same decisions, zeta to 1e-9, cells right and coverage to 0.05 points)",
+   "ok": true,
+   "control": "the per-frame path given the mirrored path's poses must fall below 50 % right",
+   "control_fails": true,
+   "control_value": {
+    "cells": 4,
+    "right": 0.0,
+    "coverage": 0.0
+   }
+  },
+  {
+   "check": "G2: on the turn at 1024 spp, N covers >= 2 x B1024's coverage at cells right >= B1024's - 2 points",
+   "ok": true,
+   "values": {
+    "N right": 1.0,
+    "N coverage": 0.5627925117004681,
+    "B1024 right": 0.9979877895410788,
+    "B1024 coverage": 0.18280762480499219
+   },
+   "n_all_per_frame": true,
+   "control": "N given the mirrored path's poses must fall below 50 % right",
+   "control_fails": true,
+   "control_value": {
+    "right": 0.12
+   }
+  }
+ ],
+ "g0": {
+  "check": "G0: N's per-frame path forced on the straight path gives N's line path back (>= 99.9 % same decisions, zeta to 1e-9, cells right and coverage to 0.05 points)",
+  "ok": true,
+  "anchors": 403152,
+  "same_decision": 1.0,
+  "accepted_both": 235335,
+  "max_rel_zeta": 2.567176189532511e-11,
+  "line": {
+   "cells": 161375,
+   "right": 0.9986367157242447,
+   "coverage": 0.5896180335075465
+  },
+  "per_frame": {
+   "cells": 161375,
+   "right": 0.9986367157242447,
+   "coverage": 0.5896180335075465
+  },
+  "all_per_frame": true,
+  "control": "the per-frame path given the mirrored path's poses must fall below 50 % right",
+  "control_fails": true,
+  "control_value": {
+   "cells": 4,
+   "right": 0.0,
+   "coverage": 0.0
+  },
+  "seconds": 1027.0
+ },
+ "sources_straight": {
+  "dry_run": "a synthetic room of M4's fixture planes (deep/straight.py synthetic_room), Chat sandbox, not gated",
+  "noise": {
+   "1024": 0.005,
+   "128": 0.014142135623730952
+  }
+ },
+ "sources_turn": {
+  "dry_run": "#26's synthetic room along an arc of radius 1.0 m (deep/arcs.py), Chat sandbox, not gated"
+ },
+ "g2": {
+  "references": [
+   50,
+   60
+  ],
+  "rows": {
+   "perfect": {
+    "cells": 90354,
+    "right": 0.9999778648427297,
+    "confirmed_right": 1.0,
+    "coverage": 0.835133092823713,
+    "surface_cells": 82048,
+    "points": 100791,
+    "tried": 100800,
+    "accepted_share": 0.9999107142857143,
+    "accepted_surface_right": null
+   },
+   "B128": {
+    "cells": 43498,
+    "right": 0.9977240332888868,
+    "confirmed_right": 1.0,
+    "coverage": 0.18322201638065522,
+    "surface_cells": 82048,
+    "points": 54875,
+    "tried": 60480,
+    "accepted_share": 0.9073247354497355,
+    "accepted_surface_right": 0.9981958997722096,
+    "covers_of_perfect": 0.201441893726011
+   },
+   "B1024": {
+    "cells": 43733,
+    "right": 0.9979877895410788,
+    "confirmed_right": 1.0,
+    "coverage": 0.18280762480499219,
+    "surface_cells": 82048,
+    "points": 55495,
+    "tried": 60480,
+    "accepted_share": 0.9175760582010583,
+    "accepted_surface_right": 0.998414271555996,
+    "covers_of_perfect": 0.2007267844894266
+   },
+   "N1024": {
+    "cells": 142039,
+    "right": 1.0,
+    "confirmed_right": 1.0,
+    "coverage": 0.5627925117004681,
+    "surface_cells": 82048,
+    "points": 212315,
+    "tried": 403152,
+    "accepted_share": 0.5266375957455253,
+    "accepted_surface_right": 1.0,
+    "covers_of_perfect": 0.5776477284336189
+   },
+   "N1024 mirrored (C3 control)": {
+    "cells": 75,
+    "right": 0.12,
+    "confirmed_right": 0.6666666666666666,
+    "coverage": 0.0,
+    "surface_cells": 82048,
+    "points": 114,
+    "tried": 403152,
+    "accepted_share": 0.00028277175854268366,
+    "accepted_surface_right": 0.12280701754385964,
+    "covers_of_perfect": 0.0
+   }
+  },
+  "checks": [
+   {
+    "check": "G2: on the turn at 1024 spp, N covers >= 2 x B1024's coverage at cells right >= B1024's - 2 points",
+    "ok": true,
+    "values": {
+     "N right": 1.0,
+     "N coverage": 0.5627925117004681,
+     "B1024 right": 0.9979877895410788,
+     "B1024 coverage": 0.18280762480499219
+    },
+    "n_all_per_frame": true,
+    "control": "N given the mirrored path's poses must fall below 50 % right",
+    "control_fails": true,
+    "control_value": {
+     "right": 0.12
+    }
+   }
+  ],
+  "n_all_per_frame": true,
+  "n_by_sector": {
+   "result": "pass",
+   "parts": {
+    "overall": {
+     "cells": 142039,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "0-15": {
+     "cells": 2695,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "15-60": {
+     "cells": 36035,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "60-120": {
+     "cells": 54122,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "120-165": {
+     "cells": 45259,
+     "right": 1.0,
+     "result": "pass"
+    },
+    "165-180": {
+     "cells": 3928,
+     "right": 1.0,
+     "result": "pass"
+    }
+   },
+   "unverified": [],
+   "gate_right": 0.995,
+   "min_cells": 1000,
+   "standard": "S2"
+  },
+  "seconds": 1242.9
+ },
+ "standard": "S2",
+ "profile": "dry",
+ "values": {
+  "scene": "synthetic room of M4's fixture planes, ray-cast",
+  "gated": false
+ },
+ "departures": {},
+ "standard_controls": [
+  "mirrored poses"
+ ],
+ "check_record": [],
+ "computed_by": {
+  "deep-motion": {
+   "commit": "ffb4fd2e389418498c5b50d39f6accfa4bedfce0",
+   "clean": true
+  }
+ },
+ "seconds_total": 3578.0
+}
