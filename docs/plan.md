@@ -1214,3 +1214,21 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
   - **Chat's mistake:** the bound was set from one bit-identical CPU test.
 - **The turn's render** at 1024 spp took 10 min 38 s.
 - **A one-off crash:** signal 11 in the NVIDIA driver, not reproduced.
+
+### Demo D5: D2 redone on the L-tour, the perfect matcher beside the coverage map (#35)
+
+**The run** (measured by Code on the workstation, at `d360177`; record `docs/runs/dm-issue-35/demo5.json`).
+- **The tour:** D2's, 418 looks with 32 references.
+- **The perfect matcher:** D2's, end map reproduced exactly (V0).
+- **The map:** P-D8's coverage map, with N's line path at the 14 references on one line and its per-frame path at the
+  18 whose windows leave it.
+- **The checks:** V0, V2, V3, V4, C and P1 pass, and every control fails.
+- **The time:** 26 min.
+
+**The validation, declared before data: yes.** Where N's windows leave the line (data P-D8 was not chosen on), the map
+is 97.76 % right on 272,609 cells, against 97.60 % on the 328,313 cells from windows on one line.
+
+**The whole map:** 600,922 cells, 97.67 % right, 38.1 % coverage (the perfect matcher 88.9 %).
+- **By sector:** about 99 % right in 15–60°, 96.2–96.7 % at the sides (60–165°), where #26 located N's weakness.
+
+**The files:** the RGB match video, the error video and three PLY files stay on the workstation (`runs/demo5-classroom/`).
