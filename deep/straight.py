@@ -104,7 +104,7 @@ def b_short(looks, truth, j, fan, all_pixels=False):
             "accepted": int(mk.sum()), "right_acc": int(right[mk].sum())}
 
 
-def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_all=False, keep_edge=False):
+def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_all=False, keep_edge=False, general=None):
     """N at reference j over the frames j + 10 i, i in offsets; mirror: frame k given look 2j - k's pose. keep_all:
     also every anchor's pixel and rejection reason (stage 11b's reasons by class). keep_edge: also, for every anchor,
     its ray, zeta, reason before the depth-edge test and both deviations (stage 11c's variants)."""
@@ -112,13 +112,14 @@ def n_reference(looks, truth, j, fan, offsets=WIN, mirror=False, dev=None, keep_
     ks = [j + STEP_LOOKS * i for i in offsets]
     poses = [(looks[2 * j - k][1], looks[2 * j - k][2]) if mirror else (looks[k][1], looks[k][2]) for k in ks]
     P, idx = truth[j]
-    r = nt.match_reference(img, c, R, [looks[k][3] for k in ks], poses, fan.width, mask=idx >= 0, dev=dev)
+    r = nt.match_reference(img, c, R, [looks[k][3] for k in ks], poses, fan.width, mask=idx >= 0, dev=dev, general=general)
     acc = (r["reason"] == 0) & (r["zeta"] > 0)
     rng = np.where(r["zeta"] > 0, 1.0 / np.maximum(r["zeta"], 1e-12), np.inf)
     right = _nb_right(c, P, idx, r["px"], rng)
     o = {"j": j, "X": c + r["u"][acc] * rng[acc][:, None], "psi": np.degrees(r["psi"][acc]), "tried": int(len(acc)),
          "accepted": int(acc.sum()), "right_acc": int(right[acc].sum()), "px_acc": r["px"][acc],
-         "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))}}
+         "reasons": {nt.REASONS[k]: int((r["reason"] == k).sum()) for k in range(len(nt.REASONS))},
+         "general": bool(r.get("general", False))}
     if keep_all or keep_edge:
         o.update({"px_all": r["px"].astype(np.int16), "reason_all": r["reason"].astype(np.int8)})
     if keep_edge:

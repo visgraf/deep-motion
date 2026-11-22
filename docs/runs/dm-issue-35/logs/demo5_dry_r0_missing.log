@@ -1,0 +1,54 @@
+2026-11-21T23:09:37-03:00 $ .venv/bin/python -X faulthandler -m deep demo5 --r0 --no-video --cache runs/demo5-r0-cache --ply-dir runs/demo5-r0 --out docs/runs/dm-issue-35 (at d360177)
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/lvelho/rd/deep-motion/deep/__main__.py", line 1051, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/lvelho/rd/deep-motion/deep/__main__.py", line 1046, in main
+    return {"stage11": stage11, "stage11b": stage11b, "stage11c": stage11c, "stage12": stage12, "stage12b": stage12b, "demo3": demo3, "stage13a": stage13a, "stage14-fixtures": stage14_fixtures, "stage14": stage14, "demo5": demo5, "standard-selftest": standard_selftest, "stage11-selftest": stage11_selftest, "stage11-fixtures": stage11_fixtures, "demo2-ply": demo2_ply, "demo2": demo2, "assess": assess, "stage8": stage8, "stage7a": stage7a, "note-figs": note_figs, "moebius": moebius, "compare": compare, "demo": demo, "stage5b2-render": stage5b2_render, "stage5b2": stage5b2, "stage5a-table": stage5a_table, "selftest": selftest, "figures": figures, "stage4-render": stage4_render, "stage5a-render": stage5a_render,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvelho/rd/deep-motion/deep/__main__.py", line 727, in demo5
+    T, looks, truth, vis, fan, refs = d2.r0_tour()
+                                      ^^^^^^^^^^^^
+  File "/home/lvelho/rd/deep-motion/deep/demo2.py", line 77, in r0_tour
+    P, g, Wd = mt.r0_world()
+               ^^^^^^^^^^^^^
+  File "/home/lvelho/rd/deep-motion/deep/match.py", line 30, in r0_world
+    rec = orc.record(ref)
+          ^^^^^^^^^^^^^^^
+  File "/home/lvelho/rd/deep-motion/deep/oracle.py", line 63, in record
+    return SampleRecord.load(path, access="oracle")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lvelho/rd/deep-motion/external/fov-render/fov_render/record.py", line 106, in load
+    z = np.load(path)
+        ^^^^^^^^^^^^^
+  File "/home/lvelho/rd/deep-motion/.venv/lib/python3.12/site-packages/numpy/lib/_npyio_impl.py", line 451, in load
+    fid = stack.enter_context(open(os.fspath(file), "rb"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'runs/r0-ref/k0000/record_C.npz'
+Command exited with non-zero status 1
+	Command being timed: ".venv/bin/python -X faulthandler -m deep demo5 --r0 --no-video --cache runs/demo5-r0-cache --ply-dir runs/demo5-r0 --out docs/runs/dm-issue-35"
+	User time (seconds): 3.31
+	System time (seconds): 0.12
+	Percent of CPU this job got: 382%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.89
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 643048
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 84553
+	Voluntary context switches: 96
+	Involuntary context switches: 620
+	Swaps: 0
+	File system inputs: 112
+	File system outputs: 144
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+2026-11-21T23:09:38-03:00 exit 1

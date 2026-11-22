@@ -211,6 +211,15 @@ Later decisions, numbered P-D1, P-D2, …:
   - **By sector:** 99.0–99.1 % right in 0–60°, 96.5–96.8 % at the sides (60–165°).
   - **Next:** demo D4 of this map, video and PLY (#32).
   - **Not a validation:** like P-D6, it was chosen on the data the demo shows.
+- **P-D9** (Luiz, 2026-11-21, in Chat, after demo D4, #32). **Validate on the tour,** by redoing demo D2 (#23) on the
+  Classroom's L-tour, the straight path's first 2 m then the turn.
+  - **The demo** stands the perfect matcher beside the coverage map (P-D8), renders the match video's 3-D maps in the
+    scene's RGB colours, and writes the PLY files.
+  - **First, N on curved paths.** N runs only where a reference's whole window is on one line. On the tour, 18 of the
+    32 references touch the turn's arc and are refused, and the other 14 lie where the settings were chosen. So N is
+    extended to arcs first (#34), then the demo (D5).
+- **P-D10** (Luiz, 2026-11-21, in Chat; #34). Go on to D5 with G0 recorded as failed on its ζ bound alone; its cause is
+  found, and its bound is not moved.
 
 ## The plan
 
@@ -1179,3 +1188,47 @@ Renders and matcher at `a0fc8a6`. Records are on `experiment/p7c-r2`, in `docs/r
   - This points to the change of appearance over the window, a viewpoint sweep of about 31° at 1.8 m, which N's patch model (shift, slope along the trace, gain and offset) does not capture.
   - In the Classroom, range and sector are confounded.
   - At high SNR to the side every matcher is only 75–88 % right. Code reads these as likely occlusion boundaries; that is not measured.
+
+### Stage 14: N on curved paths (#34)
+
+**The method** (accepted by Luiz, 2026-11-21).
+- **Off the reference's line,** N's coarse search takes one pencil per frame, about its baseline from the reference.
+  Both images are sampled on it by world direction, so the motion is a pure translation and N's row-shift law holds
+  per frame.
+- **Pixels per unit ζ** are taken per anchor, from the baselines.
+- **Unchanged:** the fine fit, the patch, every threshold, and the line's path.
+
+**Results** (Classroom numbers measured by Code on the workstation; records in `docs/runs/dm-issue-34/`).
+- **G1 passes** (Chat sandbox). M4's fixtures, rendered along a 1.0 m arc, pass M4's gates on the per-frame path:
+  front 96.6 % accepted at a median of 0.033 px. All three controls fail.
+- **G2 passes.** On R3's turn at 1024 spp, all 12 references on the arc, N covers 26.61 % at 98.24 % right, against
+  B1024's 13.12 % at 94.07 %. That beats N on the straight path (21.63 % at 97.23 %). The control fails.
+- **C0 passes:** stage 9's turn numbers are reproduced exactly.
+- **G0 fails on its ζ bound alone.**
+  - Decisions (2,345,468 of 2,345,469), cells right and coverage pass.
+  - Three anchors' ζ differ by up to 2.2e-8 relative, against the declared 1e-9.
+  - **The cause, measured (Chat sandbox):** for frames behind the reference, the per-frame grid is N's grid mirrored,
+    equal up to the last bits.
+  - **The cause, inferred:** the float32 coarse sums round differently, and the fixed 8-iteration fit keeps a trace of
+    the different start.
+  - **Chat's mistake:** the bound was set from one bit-identical CPU test.
+- **The turn's render** at 1024 spp took 10 min 38 s.
+- **A one-off crash:** signal 11 in the NVIDIA driver, not reproduced.
+
+### Demo D5: D2 redone on the L-tour, the perfect matcher beside the coverage map (#35)
+
+**The run** (measured by Code on the workstation, at `d360177`; record `docs/runs/dm-issue-35/demo5.json`).
+- **The tour:** D2's, 418 looks with 32 references.
+- **The perfect matcher:** D2's, end map reproduced exactly (V0).
+- **The map:** P-D8's coverage map, with N's line path at the 14 references on one line and its per-frame path at the
+  18 whose windows leave it.
+- **The checks:** V0, V2, V3, V4, C and P1 pass, and every control fails.
+- **The time:** 26 min.
+
+**The validation, declared before data: yes.** Where N's windows leave the line (data P-D8 was not chosen on), the map
+is 97.76 % right on 272,609 cells, against 97.60 % on the 328,313 cells from windows on one line.
+
+**The whole map:** 600,922 cells, 97.67 % right, 38.1 % coverage (the perfect matcher 88.9 %).
+- **By sector:** about 99 % right in 15–60°, 96.2–96.7 % at the sides (60–165°), where #26 located N's weakness.
+
+**The files:** the RGB match video, the error video and three PLY files stay on the workstation (`runs/demo5-classroom/`).

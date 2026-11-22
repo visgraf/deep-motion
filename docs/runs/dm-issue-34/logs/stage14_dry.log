@@ -1,0 +1,24 @@
+2026-11-21T20:54:45-03:00 $ .venv/bin/python -m deep stage14 --dry-run --cache runs/stage11-dry --turn-cache runs/stage14-arc-dry --out runs/stage14-dry (at ffb4fd2, Chat sandbox)
+[stage11 dry run] 111 panorama looks at two noise levels (0 s)
+[deep] [stage11] B128: 58957 accepted
+[deep] [stage11] N1024: 235335 accepted of 403152 (0 s)
+[deep] [stage11] N1024, every anchor's reason: 235335 accepted of 403152 (0 s)
+[deep] [stage14 G0] N1024, per-frame path forced: 235335 accepted (515 s)
+[deep] [stage14 G0] N1024 mirrored, per-frame path forced (1015 s)
+[deep] [stage14 dry run] 111 panorama looks along the arc at two noise levels (1288 s)
+[deep] [stage11] B128: 54875 accepted
+[deep] [stage11] perfect (143 s)
+[deep] [stage11] B1024: 55495 accepted of 60480 (42 s)
+[deep] [stage11] N1024: 212315 accepted of 403152 (498 s)
+[deep] [stage11] N1024 mirrored (C3 control): 114 accepted of 403152 (506 s)
+[deep] S2 record: dry, problems: none
+[deep] PASS G0: N's per-frame path forced on the straight path gives N's line path back (>= 99.9 % same decisions, zeta to 1e-9, cells right and coverage to 0.05 points); control the per-frame path given the mirrored path's poses must fall below 50 % right: fails ({'cells': 4, 'right': 0.0, 'coverage': 0.0})
+[deep] PASS G2: on the turn at 1024 spp, N covers >= 2 x B1024's coverage at cells right >= B1024's - 2 points; control N given the mirrored path's poses must fall below 50 % right: fails ({'right': 0.12})
+[deep] G0: 403,152 anchors, same decision 1.0, max rel zeta 2.57e-11; line {'cells': 161375, 'right': 0.9986367157242447, 'coverage': 0.5896180335075465}; per-frame {'cells': 161375, 'right': 0.9986367157242447, 'coverage': 0.5896180335075465}
+[deep] turn perfect: 90,354 cells, right 0.9999778648427297, coverage 0.8351
+[deep] turn B128: 43,498 cells, right 0.9977240332888868, coverage 0.1832
+[deep] turn B1024: 43,733 cells, right 0.9979877895410788, coverage 0.1828
+[deep] turn N1024: 142,039 cells, right 1.0, coverage 0.5628
+[deep] turn N1024 mirrored (C3 control): 75 cells, right 0.12, coverage 0.0000
+[deep] turn N by sector: overall 142,039 at 1.0; 0-15 2,695 at 1.0; 15-60 36,035 at 1.0; 60-120 54,122 at 1.0; 120-165 45,259 at 1.0; 165-180 3,928 at 1.0
+exit 0
