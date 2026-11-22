@@ -1,0 +1,24 @@
+{
+ "r3-turn-1024": {
+  "device": "OPTIX",
+  "width": 720,
+  "spp": 1024,
+  "looks": 218,
+  "run_seconds": 637.76,
+  "wall_seconds_per_look": {
+   "n": 218,
+   "median": 2.92,
+   "min": 2.85,
+   "max": 3.43,
+   "sum": 637.0899999999999
+  },
+  "render_seconds_per_look": {
+   "n": 218,
+   "median": 2.4106261389970314,
+   "min": 2.349427764012944,
+   "max": 2.910372507001739,
+   "sum": 525.8320439258823
+  },
+  "disk_GB": 2.09
+ }
+}

@@ -1,0 +1,33 @@
+references [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160]; checked (60, 110, 130, 160)
+
+ref 60 (line runs general=[False, False], per-frame runs general=[True, True])
+  line now #1 vs line now #2: {'accepted': (23248, 23248), 'common': 23248, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs stage 11's cache: {'accepted': (23248, 23248), 'common': 23248, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs per-frame now #2: {'accepted': (23248, 23248), 'common': 23248, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs stage 14's cache: {'accepted': (23248, 23248), 'common': 23248, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs per-frame now #1 (G0's comparison): {'accepted': (23248, 23248), 'common': 23248, 'max_rel': 1.9402354841957752e-08, 'n_gt_1e-9': 1, 'n_nonzero': 6, 'decisions_differ': []}
+  stage 11's cache vs stage 14's cache (G0 as run): {'accepted': (23248, 23248), 'common': 23248, 'max_rel': 1.9402354841957752e-08, 'n_gt_1e-9': 1, 'n_nonzero': 6, 'decisions_differ': []}
+
+ref 110 (line runs general=[False, False], per-frame runs general=[True, True])
+  line now #1 vs line now #2: {'accepted': (25521, 25521), 'common': 25521, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs stage 11's cache: {'accepted': (25521, 25521), 'common': 25521, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs per-frame now #2: {'accepted': (25522, 25522), 'common': 25522, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs stage 14's cache: {'accepted': (25522, 25522), 'common': 25522, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs per-frame now #1 (G0's comparison): {'accepted': (25521, 25522), 'common': 25521, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': [((180, 363), 4, 0)]}
+  stage 11's cache vs stage 14's cache (G0 as run): {'accepted': (25521, 25522), 'common': 25521, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': [((180, 363), 4, 0)]}
+
+ref 130 (line runs general=[False, False], per-frame runs general=[True, True])
+  line now #1 vs line now #2: {'accepted': (26407, 26407), 'common': 26407, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs stage 11's cache: {'accepted': (26407, 26407), 'common': 26407, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs per-frame now #2: {'accepted': (26407, 26407), 'common': 26407, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs stage 14's cache: {'accepted': (26407, 26407), 'common': 26407, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs per-frame now #1 (G0's comparison): {'accepted': (26407, 26407), 'common': 26407, 'max_rel': 1.2205454819655009e-09, 'n_gt_1e-9': 1, 'n_nonzero': 4, 'decisions_differ': []}
+  stage 11's cache vs stage 14's cache (G0 as run): {'accepted': (26407, 26407), 'common': 26407, 'max_rel': 1.2205454819655009e-09, 'n_gt_1e-9': 1, 'n_nonzero': 4, 'decisions_differ': []}
+
+ref 160 (line runs general=[False, False], per-frame runs general=[True, True])
+  line now #1 vs line now #2: {'accepted': (27039, 27039), 'common': 27039, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs stage 11's cache: {'accepted': (27039, 27039), 'common': 27039, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs per-frame now #2: {'accepted': (27039, 27039), 'common': 27039, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  per-frame now #1 vs stage 14's cache: {'accepted': (27039, 27039), 'common': 27039, 'max_rel': 0.0, 'n_gt_1e-9': 0, 'n_nonzero': 0, 'decisions_differ': []}
+  line now #1 vs per-frame now #1 (G0's comparison): {'accepted': (27039, 27039), 'common': 27039, 'max_rel': 2.196692857128051e-08, 'n_gt_1e-9': 1, 'n_nonzero': 5, 'decisions_differ': []}
+  stage 11's cache vs stage 14's cache (G0 as run): {'accepted': (27039, 27039), 'common': 27039, 'max_rel': 2.196692857128051e-08, 'n_gt_1e-9': 1, 'n_nonzero': 5, 'decisions_differ': []}

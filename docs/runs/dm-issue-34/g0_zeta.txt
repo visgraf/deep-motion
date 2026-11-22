@@ -1,0 +1,13 @@
+ref 50: common  22745, rel max 6.88e-12, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 2, exactly 0: 22743; decisions differ: []; general True
+ref 60: common  23248, rel max 1.94e-08, p99 0.00e+00, median 0.00e+00, > 1e-9: 1, > 1e-12: 6, exactly 0: 23242; decisions differ: []; general True
+ref 70: common  23817, rel max 0.00e+00, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 0, exactly 0: 23817; decisions differ: []; general True
+ref 80: common  24041, rel max 5.95e-12, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 1, exactly 0: 24040; decisions differ: []; general True
+ref 90: common  24612, rel max 2.73e-10, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 6, exactly 0: 24606; decisions differ: []; general True
+ref 100: common  25310, rel max 1.94e-12, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 2, exactly 0: 25308; decisions differ: []; general True
+ref 110: common  25521, rel max 0.00e+00, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 0, exactly 0: 25521; decisions differ: [((180, 363), 4, 0)]; general True
+ref 120: common  25673, rel max 2.17e-13, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 0, exactly 0: 25672; decisions differ: []; general True
+ref 130: common  26407, rel max 1.22e-09, p99 0.00e+00, median 0.00e+00, > 1e-9: 1, > 1e-12: 4, exactly 0: 26403; decisions differ: []; general True
+ref 140: common  26612, rel max 8.04e-12, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 5, exactly 0: 26607; decisions differ: []; general True
+ref 150: common  26556, rel max 2.00e-11, p99 0.00e+00, median 0.00e+00, > 1e-9: 0, > 1e-12: 2, exactly 0: 26554; decisions differ: []; general True
+ref 160: common  27039, rel max 2.20e-08, p99 0.00e+00, median 0.00e+00, > 1e-9: 1, > 1e-12: 5, exactly 0: 27034; decisions differ: []; general True
+all: 301581 common, max 2.197e-08, > 1e-9: 3 (0.0010%), > 1e-10: 6, > 1e-12: 33, exactly 0: 301547, median 0.00e+00, p99.9 0.00e+00
