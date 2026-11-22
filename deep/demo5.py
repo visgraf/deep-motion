@@ -267,7 +267,7 @@ def run(T, looks128, looks1024, truth, vis_fn, fan, refs, rgb_of, out, ply_dir, 
     pf_refs = sorted(j for j, u in paths_used.items() if u["long"] == "per-frame")     # windows that leave the line
     turn = np.isin(rm["dom"], pf_refs)
     seg = {}
-    for lab, msk in (("references on one line (where P-D8 was chosen's kind of data)", ~turn),
+    for lab, msk in (("references whose window is on one line", ~turn),
                      ("references whose window leaves the line (the turn's arc)", turn)):
         n_ = int(msk.sum())
         seg[lab] = {"cells": n_, "right": float(rm["right"][msk].mean()) if n_ else None,

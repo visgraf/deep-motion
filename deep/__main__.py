@@ -749,7 +749,8 @@ def demo5(a) -> int:
     rec = d5.run(T, looks128, looks1024, truth, vis, fan, refs, rgb_of, a.out, a.ply_dir, v2, cache=a.cache, rec_d2=rec_d2,
                  limit=a.limit, best=a.best, videos=not a.no_video, log=lambda m: print(f"{PREFIX} {m}", flush=True), name=name)
     if a.r0:
-        std = sd.stamp("dry", {"scene": "R0's calibration room (demo D2's dry tour)", "gated": False}, controls=["mirrored poses"])
+        std = sd.stamp("dry", {"scene": "R0's calibration room (demo D2's dry tour)", "gated": False}, controls=["mirrored poses"],
+                       departures={"scene": "R0's calibration room, as D2's dry run (#23): the tour needs a room along both paths"})
     else:
         values = dict(sd.PROFILES["build"]["values"], path="the L-tour", frames=[11, 5], confirm_rule="neighbours >= 3",
                       confirm_span_m=0.0, gate_right=d5.FLOOR)
