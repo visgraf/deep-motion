@@ -1,0 +1,291 @@
+{
+ "command": "stage14",
+ "checks": [
+  {
+   "check": "G0: N's per-frame path forced on the straight path gives N's line path back (>= 99.9 % same decisions, zeta to 1e-9, cells right and coverage to 0.05 points)",
+   "ok": false,
+   "control": "the per-frame path given the mirrored path's poses must fall below 50 % right",
+   "control_fails": true,
+   "control_value": {
+    "cells": 2207,
+    "right": 0.0,
+    "coverage": 0.0
+   }
+  },
+  {
+   "check": "C0 (turn): B128 and the perfect matcher reproduce stage 9's turn numbers exactly",
+   "ok": true,
+   "want": {
+    "B right": 0.9398349759339903,
+    "B coverage": 0.10625338623136481,
+    "perfect right": 0.9999044519042736,
+    "perfect coverage": 0.8615446458220459
+   },
+   "got": {
+    "B right": 0.9398349759339903,
+    "B coverage": 0.10625338623136481,
+    "perfect right": 0.9999044519042736,
+    "perfect coverage": 0.8615446458220459
+   },
+   "control": "B on the 1024-spp renders must not reproduce them",
+   "control_fails": true,
+   "control_value": {
+    "B right": 0.9407330262367314,
+    "B coverage": 0.13121974238425643
+   }
+  },
+  {
+   "check": "G2: on the turn at 1024 spp, N covers >= 2 x B1024's coverage at cells right >= B1024's - 2 points",
+   "ok": true,
+   "values": {
+    "N right": 0.9824344404505948,
+    "N coverage": 0.26610972263488125,
+    "B1024 right": 0.9407330262367314,
+    "B1024 coverage": 0.13121974238425643
+   },
+   "n_all_per_frame": true,
+   "control": "N given the mirrored path's poses must fall below 50 % right",
+   "control_fails": true,
+   "control_value": {
+    "right": 0.0
+   }
+  }
+ ],
+ "g0": {
+  "check": "G0: N's per-frame path forced on the straight path gives N's line path back (>= 99.9 % same decisions, zeta to 1e-9, cells right and coverage to 0.05 points)",
+  "ok": false,
+  "anchors": 2345469,
+  "same_decision": 0.9999995736460384,
+  "accepted_both": 301581,
+  "max_rel_zeta": 2.196692857128051e-08,
+  "line": {
+   "cells": 179823,
+   "right": 0.9723172230471074,
+   "coverage": 0.21629883540706096
+  },
+  "per_frame": {
+   "cells": 179824,
+   "right": 0.9723118159978645,
+   "coverage": 0.21629883540706096
+  },
+  "all_per_frame": true,
+  "control": "the per-frame path given the mirrored path's poses must fall below 50 % right",
+  "control_fails": true,
+  "control_value": {
+   "cells": 2207,
+   "right": 0.0,
+   "coverage": 0.0
+  },
+  "seconds": 141.6
+ },
+ "sources_straight": {
+  "r128": "runs/r3-straight",
+  "r1024": "runs/r3-straight-1024",
+  "m4": []
+ },
+ "sources_turn": {
+  "turn128": "runs/r3-turn",
+  "turn1024": "runs/r3-turn-1024"
+ },
+ "g2": {
+  "references": [
+   50,
+   60,
+   70,
+   80,
+   90,
+   100,
+   110,
+   120,
+   130,
+   140,
+   150,
+   160
+  ],
+  "rows": {
+   "perfect": {
+    "cells": 313978,
+    "right": 0.9999044519042736,
+    "confirmed_right": 1.0,
+    "coverage": 0.8615446458220459,
+    "surface_cells": 228868,
+    "points": 587326,
+    "tried": 588388,
+    "accepted_share": 0.9981950685602018,
+    "accepted_surface_right": null
+   },
+   "B128": {
+    "cells": 87260,
+    "right": 0.9398349759339903,
+    "confirmed_right": 0.9735183795948987,
+    "coverage": 0.10625338623136481,
+    "surface_cells": 228868,
+    "points": 158530,
+    "tried": 349998,
+    "accepted_share": 0.45294544540254517,
+    "accepted_surface_right": 0.9587333627704535,
+    "covers_of_perfect": 0.11746120296176082
+   },
+   "B1024": {
+    "cells": 124825,
+    "right": 0.9407330262367314,
+    "confirmed_right": 0.9774535495903864,
+    "coverage": 0.13121974238425643,
+    "surface_cells": 228868,
+    "points": 244835,
+    "tried": 349998,
+    "accepted_share": 0.6995325687575358,
+    "accepted_surface_right": 0.9627095799211715,
+    "covers_of_perfect": 0.14381783142306523
+   },
+   "N1024": {
+    "cells": 120463,
+    "right": 0.9824344404505948,
+    "confirmed_right": 0.9943650897654305,
+    "coverage": 0.26610972263488125,
+    "surface_cells": 228868,
+    "points": 255611,
+    "tried": 2353467,
+    "accepted_share": 0.10861040329012474,
+    "accepted_surface_right": 0.9890028206923802,
+    "covers_of_perfect": 0.2958819352875545
+   },
+   "N1024 mirrored (C3 control)": {
+    "cells": 38,
+    "right": 0.0,
+    "confirmed_right": null,
+    "coverage": 0.0,
+    "surface_cells": 228868,
+    "points": 59,
+    "tried": 2353467,
+    "accepted_share": 2.506939761636768e-05,
+    "accepted_surface_right": 0.0,
+    "covers_of_perfect": 0.0
+   }
+  },
+  "checks": [
+   {
+    "check": "C0 (turn): B128 and the perfect matcher reproduce stage 9's turn numbers exactly",
+    "ok": true,
+    "want": {
+     "B right": 0.9398349759339903,
+     "B coverage": 0.10625338623136481,
+     "perfect right": 0.9999044519042736,
+     "perfect coverage": 0.8615446458220459
+    },
+    "got": {
+     "B right": 0.9398349759339903,
+     "B coverage": 0.10625338623136481,
+     "perfect right": 0.9999044519042736,
+     "perfect coverage": 0.8615446458220459
+    },
+    "control": "B on the 1024-spp renders must not reproduce them",
+    "control_fails": true,
+    "control_value": {
+     "B right": 0.9407330262367314,
+     "B coverage": 0.13121974238425643
+    }
+   },
+   {
+    "check": "G2: on the turn at 1024 spp, N covers >= 2 x B1024's coverage at cells right >= B1024's - 2 points",
+    "ok": true,
+    "values": {
+     "N right": 0.9824344404505948,
+     "N coverage": 0.26610972263488125,
+     "B1024 right": 0.9407330262367314,
+     "B1024 coverage": 0.13121974238425643
+    },
+    "n_all_per_frame": true,
+    "control": "N given the mirrored path's poses must fall below 50 % right",
+    "control_fails": true,
+    "control_value": {
+     "right": 0.0
+    }
+   }
+  ],
+  "n_all_per_frame": true,
+  "n_by_sector": {
+   "result": "fail",
+   "parts": {
+    "overall": {
+     "cells": 120463,
+     "right": 0.9824344404505948,
+     "result": "fail"
+    },
+    "0-15": {
+     "cells": 3844,
+     "right": 0.9903746097814776,
+     "result": "fail"
+    },
+    "15-60": {
+     "cells": 50733,
+     "right": 0.9932588256164626,
+     "result": "fail"
+    },
+    "60-120": {
+     "cells": 41522,
+     "right": 0.9775781513414575,
+     "result": "fail"
+    },
+    "120-165": {
+     "cells": 23063,
+     "right": 0.9696917140007805,
+     "result": "fail"
+    },
+    "165-180": {
+     "cells": 1301,
+     "right": 0.9177555726364335,
+     "result": "fail"
+    }
+   },
+   "unverified": [],
+   "gate_right": 0.995,
+   "min_cells": 1000,
+   "standard": "S2"
+  },
+  "n_straight_stage11": {
+   "cells": 179823,
+   "right": 0.9723172230471074,
+   "coverage": 0.21629883540706096
+  },
+  "seconds": 572.0
+ },
+ "standard": "S2",
+ "profile": "ablation",
+ "values": {
+  "scene": "classroom",
+  "spp": 1024,
+  "noise_measured": true,
+  "look_spacing_m": 0.01,
+  "sensor": "panorama",
+  "width": 720,
+  "psi_deg": [
+   1.0,
+   179.0
+  ],
+  "lat_max_deg": 70.0,
+  "frames": 11,
+  "frame_spacing_m": 0.1,
+  "cell_m": 0.02,
+  "metric": "stage 9",
+  "confirm_span_m": 0.0,
+  "confirm_rule": "none",
+  "gate_right": 0.995,
+  "gate_min_cells": 1000
+ },
+ "departures": {
+  "confirm_rule": "C3's form: every cell, no confirmation (#34)",
+  "confirm_span_m": "no confirmation (#34)"
+ },
+ "standard_controls": [
+  "mirrored poses"
+ ],
+ "check_record": [],
+ "computed_by": {
+  "deep-motion": {
+   "commit": "9da6a654977344791103c4667f208937f9db9f3e",
+   "clean": true
+  }
+ },
+ "seconds_total": 764.9
+}
