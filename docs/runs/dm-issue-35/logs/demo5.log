@@ -1,0 +1,109 @@
+2026-11-21T23:19:13-03:00 $ .venv/bin/python -X faulthandler -m deep demo5 --straight runs/r3-straight --turn runs/r3-turn --straight1024 runs/r3-straight-1024 --turn1024 runs/r3-turn-1024 --cache runs/demo5-cache --ply-dir runs/demo5-classroom --out docs/runs/dm-issue-35 (at d360177)
+[deep] [demo5] the judge's windows (347 s)
+[deep] [demo5] the perfect matcher (528 s)
+[deep] [demo5] reference 50: N 22745 + 28654 points (line, line) (0 s)
+[deep] [demo5] reference 60: N 23248 + 28828 points (line, line) (19 s)
+[deep] [demo5] reference 70: N 23817 + 28723 points (line, line) (38 s)
+[deep] [demo5] reference 80: N 24041 + 29560 points (line, line) (57 s)
+[deep] [demo5] reference 90: N 24612 + 30145 points (line, line) (57 s)
+[deep] [demo5] reference 100: N 25310 + 32132 points (line, line) (75 s)
+[deep] [demo5] reference 110: N 25521 + 33582 points (line, line) (94 s)
+[deep] [demo5] reference 120: N 25673 + 33776 points (line, line) (113 s)
+[deep] [demo5] reference 130: N 26407 + 34220 points (line, line) (113 s)
+[deep] [demo5] reference 140: N 26612 + 34951 points (line, line) (132 s)
+[deep] [demo5] reference 150: N 26461 + 34228 points (line, line) (151 s)
+[deep] [demo5] reference 160: N 27180 + 35613 points (line, line) (170 s)
+[deep] [demo5] reference 170: N 27162 + 35188 points (line, line) (170 s)
+[deep] [demo5] reference 180: N 26799 + 34830 points (line, line) (188 s)
+[deep] [demo5] reference 190: N 25813 + 34417 points (per-frame, line) (208 s)
+[deep] [demo5] reference 200: N 26067 + 34833 points (per-frame, line) (227 s)
+[deep] [demo5] reference 210: N 24830 + 34406 points (per-frame, line) (227 s)
+[deep] [demo5] reference 220: N 24768 + 34624 points (per-frame, per-frame) (247 s)
+[deep] [demo5] reference 230: N 24456 + 34199 points (per-frame, per-frame) (267 s)
+[deep] [demo5] reference 240: N 23432 + 33762 points (per-frame, per-frame) (286 s)
+[deep] [demo5] reference 250: N 23815 + 34763 points (per-frame, per-frame) (286 s)
+[deep] [demo5] reference 260: N 23836 + 36671 points (per-frame, per-frame) (306 s)
+[deep] [demo5] reference 270: N 23518 + 38393 points (per-frame, per-frame) (326 s)
+[deep] [demo5] reference 280: N 22498 + 37967 points (per-frame, per-frame) (346 s)
+[deep] [demo5] reference 290: N 22651 + 39199 points (per-frame, per-frame) (346 s)
+[deep] [demo5] reference 300: N 21314 + 39557 points (per-frame, per-frame) (365 s)
+[deep] [demo5] reference 310: N 21060 + 40200 points (per-frame, per-frame) (385 s)
+[deep] [demo5] reference 320: N 20781 + 39297 points (per-frame, per-frame) (405 s)
+[deep] [demo5] reference 330: N 19906 + 38786 points (per-frame, per-frame) (405 s)
+[deep] [demo5] reference 340: N 19218 + 38014 points (per-frame, per-frame) (425 s)
+[deep] [demo5] reference 350: N 18493 + 35933 points (per-frame, per-frame) (445 s)
+[deep] [demo5] reference 360: N 18519 + 35542 points (per-frame, per-frame) (464 s)
+[deep] [demo5] look 1: 0 references, perfect 0 cells, map 0 (993 s)
+[deep] [demo5] look 101: 1 references, perfect 44,890 cells, map 15,848 (999 s)
+[deep] [demo5] look 111: 2 references, perfect 80,720 cells, map 36,717 (1002 s)
+[deep] [demo5] look 121: 3 references, perfect 112,146 cells, map 60,016 (1007 s)
+[deep] [demo5] look 131: 4 references, perfect 140,759 cells, map 84,595 (1012 s)
+[deep] [demo5] look 141: 5 references, perfect 167,675 cells, map 109,894 (1018 s)
+[deep] [demo5] look 151: 6 references, perfect 193,399 cells, map 135,697 (1025 s)
+[deep] [demo5] look 161: 7 references, perfect 218,039 cells, map 161,321 (1033 s)
+[deep] [demo5] look 171: 8 references, perfect 241,769 cells, map 186,811 (1042 s)
+[deep] [demo5] look 181: 9 references, perfect 264,618 cells, map 211,987 (1051 s)
+[deep] [demo5] look 191: 10 references, perfect 286,700 cells, map 236,345 (1061 s)
+[deep] [demo5] look 201: 11 references, perfect 308,067 cells, map 260,007 (1072 s)
+[deep] [demo5] look 211: 12 references, perfect 328,957 cells, map 284,370 (1084 s)
+[deep] [demo5] look 221: 13 references, perfect 349,383 cells, map 308,550 (1097 s)
+[deep] [demo5] look 231: 14 references, perfect 369,208 cells, map 331,520 (1110 s)
+[deep] [demo5] look 241: 15 references, perfect 388,693 cells, map 353,670 (1123 s)
+[deep] [demo5] look 251: 16 references, perfect 407,739 cells, map 375,118 (1138 s)
+[deep] [demo5] look 261: 17 references, perfect 426,353 cells, map 395,029 (1153 s)
+[deep] [demo5] look 271: 18 references, perfect 444,587 cells, map 413,994 (1169 s)
+[deep] [demo5] look 281: 19 references, perfect 462,386 cells, map 431,119 (1185 s)
+[deep] [demo5] look 291: 20 references, perfect 479,470 cells, map 446,683 (1202 s)
+[deep] [demo5] look 301: 21 references, perfect 496,332 cells, map 462,016 (1220 s)
+[deep] [demo5] look 311: 22 references, perfect 512,858 cells, map 476,641 (1238 s)
+[deep] [demo5] look 321: 23 references, perfect 528,771 cells, map 490,757 (1257 s)
+[deep] [demo5] look 331: 24 references, perfect 544,202 cells, map 503,963 (1276 s)
+[deep] [demo5] look 341: 25 references, perfect 559,167 cells, map 517,066 (1296 s)
+[deep] [demo5] look 351: 26 references, perfect 573,404 cells, map 529,558 (1316 s)
+[deep] [demo5] look 361: 27 references, perfect 587,159 cells, map 542,488 (1336 s)
+[deep] [demo5] look 371: 28 references, perfect 600,470 cells, map 554,975 (1357 s)
+[deep] [demo5] look 381: 29 references, perfect 613,257 cells, map 566,872 (1378 s)
+[deep] [demo5] look 391: 30 references, perfect 625,571 cells, map 578,439 (1400 s)
+[deep] [demo5] look 401: 31 references, perfect 637,551 cells, map 589,669 (1422 s)
+[deep] [demo5] look 411: 32 references, perfect 649,153 cells, map 600,922 (1445 s)
+[deep] S2 record: build, problems: none
+[deep] PASS V0: the perfect side's end map equals demo D2's (cells, cells right); control the map without the last reference: fails
+[deep] PASS V2: the tour is the planned L-curve sampled evenly; control the turn's looks shifted 1 cm sideways: fails
+[deep] PASS V3: both end maps equal their batch fusion (the map with its neighbour filter); control the batch without the last reference: fails
+[deep] PASS V4: nothing shown before its window is complete (m + 50 <= t); control a schedule releasing at m: fails
+[deep] PASS C: the error video's colours (<= 10 %) equal stage 9's cells right on the map; control 5 % in place of 10 %: fails
+[deep] PASS P1 perfect: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] PASS P1 map: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] PASS P1 all: the file read back holds exactly its map; control the map without the last reference: fails
+[deep] control only the standard control: N mirrored must not give a usable map (>= 1,000 cells at >= 97 % right); control N with the mirrored path's poses: fails
+[deep] end perfect: {'cells': 649153, 'right': 0.9997150132557348, 'coverage': 0.8890312129633943, 'gross': 4}
+[deep] end real: {'cells': 600922, 'right': 0.9767374135079095, 'coverage': 0.3806263294362414, 'gross': 7785}
+[deep] end every cell N reported: {'cells': 720727, 'right': 0.947304596608702, 'coverage': 0.40601953203844304}
+[deep] validation: on the cells whose dominant reference's window leaves the line (the turn's arc, N's per-frame path), is the map >= 97 % right? yes; references on one line (where P-D8 was chosen's kind of data): {'cells': 328313, 'right': 0.9759832842439988, 'gross': 4495}; references whose window leaves the line (the turn's arc): {'cells': 272609, 'right': 0.9776456389921095, 'gross': 3290}
+[deep] perfect: {'path': 'runs/demo5-classroom/classroom_tour_perfect.ply', 'points': 649153, 'mb': 13.63}
+[deep] map: {'path': 'runs/demo5-classroom/classroom_tour_map.ply', 'points': 600922, 'mb': 13.22}
+[deep] all: {'path': 'runs/demo5-classroom/classroom_tour_all.ply', 'points': 720727, 'mb': 15.86}
+	Command being timed: ".venv/bin/python -X faulthandler -m deep demo5 --straight runs/r3-straight --turn runs/r3-turn --straight1024 runs/r3-straight-1024 --turn1024 runs/r3-turn-1024 --cache runs/demo5-cache --ply-dir runs/demo5-classroom --out docs/runs/dm-issue-35"
+	User time (seconds): 5131.24
+	System time (seconds): 38.84
+	Percent of CPU this job got: 327%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 26:17.60
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3661704
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 4
+	Minor (reclaiming a frame) page faults: 2345061
+	Voluntary context switches: 466004
+	Involuntary context switches: 486150
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 482064
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2026-11-21T23:45:30-03:00 exit 0
